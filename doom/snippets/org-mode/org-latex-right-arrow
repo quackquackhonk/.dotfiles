@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: org-latex-right-arrow
+# key: -->
+# --
+\xrightarrow{}$0

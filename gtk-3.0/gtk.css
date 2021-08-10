@@ -1,0 +1,7 @@
+#pane #menubar
+#pane #menubar GtkMenuShell,
+#pane #menubar GtkMenuShell *
+{
+    font-family: "Fira Code";
+    font-size: 18px;
+}

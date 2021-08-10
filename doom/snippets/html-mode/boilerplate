@@ -1,0 +1,16 @@
+# -*- mode: snippet -*-
+# name: html-boilerplate
+# uuid: html-boilerplate
+# key: bp
+# --
+<doctype! HTML>
+  <html>
+    <head>
+      <!-- Webpage metadata -->
+      <title>${1:Title}</title>
+    </head>
+    <body>
+      <!-- Webpage body -->
+      $0
+    </body>
+  </html>

@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: org-latex-implies
+# key: ==>
+# --
+\implies$0
