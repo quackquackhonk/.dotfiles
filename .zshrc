@@ -8,7 +8,7 @@ export PATH=$HOME/.local/bin:$PATH
 export SPICETIFY_INSTALL="/home/varun/spicetify-cli"
 export PATH="$SPICETIFY_INSTALL:$PATH"
 # Path to your oh-my-zsh installation.
-export ZSH="/home/varun/.oh-my-zsh"
+export ZSH="/home/sahana/.oh-my-zsh"
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
