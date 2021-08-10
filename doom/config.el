@@ -4,19 +4,14 @@
 ;; --------------------------------------------------------------------------------------
 
 ;; Name and Email
-(setq user-full-name "Varun Tankala"
-      user-mail-address "tankalavarun@gmail.com")
-
-;; Set the font for DOOM
-(if (or (eq (x-display-pixel-height) 1080) (eq (x-display-pixel-width) 1920))
-  (setq doom-font (font-spec :family "JetBrains Mono" :size 16 :weight 'Regular)
-        doom-variable-font (font-spec :family "Source Sans Pro" :size 16 :weight 'Regular))
-  (setq doom-font (font-spec :family "JetBrains Mono" :size 28 :weight 'Regular)
-        doom-variable-font (font-spec :family "Source Sans Pro" :size 28 :weight 'Regular)))
-;; If you want to configure the "big-font", use `doom-big-font'
+(setq user-full-name "Sahana Tankala"
+      user-mail-address "sahanatankala@gmail.com")
 
 ;; Theme
 (setq doom-theme 'doom-nord)
+
+;; Font
+(setq doom-font (font-spec :family "JetBrains Mono" :size 14 :weight 'Regular))
 
 ;; Default line numbers
 (setq display-line-numbers-type 'relative)
@@ -29,7 +24,7 @@
 ;; put this in the doom-dashboard-widget-banner function
 ;; '("^...^"
 ;;             "/ o,o \\"
-;;             "|):::(|"
+;;             "|):::(|git clone --depth 1 https://github.com/hlissner/doom-emacs ~/.emacs.d"
 ;;             "===w=w==="
 ;;             ""
 ;;             ""
@@ -94,11 +89,11 @@
 ;; one view with no schedule, just homework, work, readings, etc for finding what to do
 
 ;; Configuring org-gcal package
-(use-package! org-gcal
-  :init
-  (setq org-gcal-client-id "498090252798-s85ohiag6e608s8pt2arh85faqr4e351.apps.googleusercontent.com"
-      org-gcal-client-secret "ecr3iD4XShO_2YXSHaHeyupE"
-      org-gcal-file-alist '(("tankalavarun@gmail.com" . "~/Dropbox/agenda/gcal.org"))))
+;; (use-package! org-gcal
+;;   :init
+;;   (setq org-gcal-client-id "498090252798-s85ohiag6e608s8pt2arh85faqr4e351.apps.googleusercontent.com"
+;;       org-gcal-client-secret "ecr3iD4XShO_2YXSHaHeyupE"
+;;       org-gcal-file-alist '(("tankalavarun@gmail.com" . "~/Dropbox/agenda/gcal.org"))))
 
 ;; Make LaTeX previews much larger in org files
 (after! org

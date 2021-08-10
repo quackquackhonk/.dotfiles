@@ -27,10 +27,6 @@ Plug 'sheerun/vim-polyglot'
 " Color highlighting
 Plug 'norcalli/nvim-colorizer.lua'
 
-" Themes
-" Airline status bar
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
 
 " Nord
 Plug 'arcticicestudio/nord-vim'
