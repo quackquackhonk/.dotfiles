@@ -4,8 +4,8 @@
 ;; --------------------------------------------------------------------------------------
 
 ;; Name and Email
-(setq user-full-name "Varun Tankala"
-      user-mail-address "tankalavarun@gmail.com")
+(setq user-full-name "Sahana Tankala"
+      user-mail-address "sahanatankala@gmail.com")
 
 ;; Set the font for DOOM
 (if (or (eq (x-display-pixel-height) 1080) (eq (x-display-pixel-width) 1920))
@@ -97,8 +97,7 @@
 (use-package! org-gcal
   :init
   (setq org-gcal-client-id "498090252798-s85ohiag6e608s8pt2arh85faqr4e351.apps.googleusercontent.com"
-      org-gcal-client-secret "ecr3iD4XShO_2YXSHaHeyupE"
-      org-gcal-file-alist '(("tankalavarun@gmail.com" . "~/Dropbox/agenda/gcal.org"))))
+      org-gcal-client-secret "ecr3iD4XShO_2YXSHaHeyupE"))
 
 ;; Make LaTeX previews much larger in org files
 (after! org

@@ -5,10 +5,9 @@ export PATH=$PATH:$HOME/.emacs.d/bin:$PATH
 export PATH=$HOME/.cabal/bin:$PATH
 export PATH=${GHCUP_INSTALL_BASE_PREFIX:=$HOME}/.ghcup/bin:$PATH
 export PATH=$HOME/.local/bin:$PATH
-export SPICETIFY_INSTALL="/home/varun/spicetify-cli"
 export PATH="$SPICETIFY_INSTALL:$PATH"
 # Path to your oh-my-zsh installation.
-export ZSH="/home/varun/.oh-my-zsh"
+export ZSH="/home/sahana/.oh-my-zsh"
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
@@ -103,6 +102,7 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
+alias setkeys="./.sources/BigBagKbdTrixXKB/setxkb.sh 4ca us us"
 alias la="ls -a"
 alias mv="mv -i"
 alias rm="rm -i"
