@@ -1,8 +1,0 @@
-# -*- mode: snippet -*-
-# name: equation
-# uuid: equation
-# key: <beq
-# --
-\begin{equation*}
-  $0
-\end{equation*}

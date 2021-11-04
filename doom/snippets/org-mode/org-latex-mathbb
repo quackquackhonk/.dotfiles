@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: org-latex-mathbb
-# key: \bb
-# --
-\mathbb{$0}

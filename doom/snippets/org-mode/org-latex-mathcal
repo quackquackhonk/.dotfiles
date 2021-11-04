@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: org-latex-mathcal
-# key: \cal
-# --
-\mathcal{$0}

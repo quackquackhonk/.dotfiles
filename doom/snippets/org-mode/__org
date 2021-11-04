@@ -1,9 +1,0 @@
-# -*- mode: snippet -*-
-# name: Org template
-# --
-#+TITLE: ${1:Title}
-#+DESCRIPTION: ${2:Description}
-#+AUTHOR: Varun Tankala
-#+STARTUP: overview
-
-$0
