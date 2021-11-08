@@ -1,5 +1,3 @@
 #!/bin/bash
 ln -s $HOME/dotfiles/nvim $HOME/.config/nvim
-ln -s $HOME/dotfiles/zshrc $HOME/.zshrc
-ln -s $HOME/dotfiles/omz $HOME/.config/omz
-cp -r $HOME/dotfiles/monalisa $HOME/.local/share/fonts/monolisa
+ln -s $HOME/dotfiles/fish $HOME/.config/fish
