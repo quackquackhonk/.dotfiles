@@ -1,3 +1,4 @@
 #!/bin/bash
-ln -s $HOME/dotfiles/nvim $HOME/.config/nvim
-ln -s $HOME/dotfiles/fish $HOME/.config/fish
+ln -s $HOME/dotfiles/nvim $HOME/.config/
+ln -s $HOME/dotfiles/fish $HOME/.config/
+ln -s $HOME/dotfiles/.tmux.conf $HOME/
