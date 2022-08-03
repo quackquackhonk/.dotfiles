@@ -1,4 +1,4 @@
-function keymap(mode, lhs, rhs)
+local function keymap(mode, lhs, rhs)
     local options = { noremap = true, silent = true }
     vim.keymap.set(mode, lhs, rhs, options)
 end
@@ -20,10 +20,13 @@ wk.register({
     -- k = pacKer
     -- b = Buffer
     f = {
-        name = "File",
+        name = "buFfers",
         f = { telescope.find_files, "Find File" },
         r = { telescope.oldfiles, "Recent Files" },
-        n = "New File"
+        n = { ":enew<cr>", "New File" },
+        s = { ":w<cr>", "Save Buffer" },
+        q = { ":bd<cr>", "Close Buffer" },
+        Q = { ":bd!<cr>", "Force Close Buffer"},
     },
     e = {
         name = "Editor",
@@ -39,7 +42,7 @@ wk.register({
         t = "Go To Type Definition",
         i = "Go To Implementation",
         r = "Show References",
-        c = "Change Symbol"
+        c = "Change Symbol",
     },
     d = {
         name = "Diagnostics",
@@ -47,24 +50,19 @@ wk.register({
         n = {vim.diagnostic.goto_next, "Next Diagnostic"},
         N = {vim.diagnostic.goto_prev, "Previous Diagnostic"},
     },
-    b = {
-        name = "Buffer",
-        s = {"<cmd>w<cr>", "Save"},
-    },
     k = {
         name = "Packer",
         s = {":PackerSync<cr>", "Packer Sync"},
     },
     g = {
-        name = "Git",
+        name = "Git Projects",
         g = {":LazyGit<cr>", "Git Status"},
+        r = {":Telescope projects<cr>", "Recent Projects"}
     },
+    [","] = {"<c-6>", "Open Previous Buffer"},
+    ["<Leader>"] = { telescope.buffers, "Show Open Buffers"},
 }, { prefix = "<Leader>" })
 
--- This needed to be in it's own section i think
-wk.register({
-    ["<Leader><Leader>"] = { telescope.buffers, "Show Open Buffers" }
-})
 
 -- Visual Mode
 -- Stay in visual mode when indenting

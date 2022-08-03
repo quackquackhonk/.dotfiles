@@ -23,12 +23,18 @@ return require('packer').startup(function(use)
     use {
         'folke/which-key.nvim',
         config = function()
-            require('which-key').setup {}
+            require('which-key').setup({})
         end
     }
 
     -- Git Integration
     use 'kdheepak/lazygit.nvim'
+    use {
+        'ahmedkhalf/project.nvim',
+        config = function()
+            require('project_nvim').setup ({})
+        end
+    }
 
     -- LSP / Completion / Treesitter
     use {
@@ -84,6 +90,10 @@ return require('packer').startup(function(use)
     }
     use {
         'nvim-telescope/telescope.nvim', tag = '0.1.0',
-        requires = { {'nvim-lua/plenary.nvim'} }
+        requires = { {'nvim-lua/plenary.nvim'} },
+        config = function()
+            local tele = require('telescope')
+            tele.load_extension('projects')
+        end
     }
 end)
