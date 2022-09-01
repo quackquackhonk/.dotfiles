@@ -1,8 +1,29 @@
 -- Configuration for LSP / Treesitter / Completion
 
+local colors = require("gruvbox.palette")
+
 -- Setup lspconfig.
 local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
 
+local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
+require("null-ls").setup({
+    sources = {
+        require("null-ls").builtins.formatting.rustfmt
+    },
+    on_attach = function(client, bufnr)
+        if client.supports_method("textDocument/formatting") then
+            vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
+            vim.api.nvim_create_autocmd("BufWritePre", {
+                group = augroup,
+                buffer = bufnr,
+                callback = function()
+                    -- on 0.8, you should use vim.lsp.buf.format({ bufnr = bufnr }) instead
+                    vim.lsp.buf.formatting_sync()
+                end,
+            })
+        end
+    end,
+})
 -- LSP Configuration
 
 local custom_on_attach = function(client, bufnr)
@@ -18,10 +39,56 @@ local custom_on_attach = function(client, bufnr)
 end
 
 -- Rust
-require'lspconfig'.rust_analyzer.setup{
-    on_attach = custom_on_attach,
-    capabilities = capabilities
+require('rust-tools').setup{
+    tools = {
+        autoSetHints = true,
+        hover_with_actions = false,
+        inlay_hints = {
+            show_parameter_hints = false,
+            parameter_hints_prefix = "",
+            other_hints_prefix = "",
+        }
+    },
+    server = {
+        on_attach = custom_on_attach,
+        capabilities = capabilities,
+        settings = {
+            ["rust-analyzer"] = {
+                cargo = {
+                    buildScripts = {
+                        enable = true,
+                    },
+                },
+                checkOnSave = {
+                    command = "clippy",
+                },
+                imports = {
+                    granularity = {
+                        group = "module",
+                    },
+                    prefix = "self",
+                },
+                lens = {
+                    enable = true,
+                },
+                procMacro = {
+                    enable = true,
+                },
+            },
+        },
+    }
 }
+
+vim.cmd[[autocmd CursorHold * lua vim.diagnostic.open_float(nil, {focusable = false})]]
+
+vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
+    vim.lsp.diagnostic.on_publish_diagnostics, {
+        virtual_text = false,
+        signs = true,
+        underline = true,
+        update_in_insert = false,
+    }
+)
 
 -- Lua
 require'lspconfig'.sumneko_lua.setup{
@@ -45,15 +112,26 @@ require'nvim-treesitter.configs'.setup {
         -- Using this option may slow down your editor, and you may see some duplicate highlights.
         -- Instead of true it can also be a list of languages
         additional_vim_regex_highlighting = false,
+    },
+    rainbow = {
+        enable = true,
+        extended_mode = false,
+        colors = {
+            colors.bright_orange,
+            colors.bright_purple,
+            colors.bright_green,
+            colors.bright_blue,
+        }
     }
 }
 
 -- Completion Config
-vim.opt.completeopt={"menu","menuone","noselect"}
+vim.opt.completeopt={"menu","menuone","noselect","noinsert"}
 
 -- Setup nvim-cmp.
 local cmp = require'cmp'
 local luasnip = require'luasnip'
+local lspkind = require('lspkind')
 
 -- helper function
 local has_words_before = function()
@@ -69,7 +147,7 @@ cmp.setup({
         end,
     },
     mapping = cmp.mapping.preset.insert({
-        ['<Esc>'] = cmp.mapping.abort(),
+        ['<C-e>'] = cmp.mapping.abort(),
         ["<Tab>"] = cmp.mapping(function(fallback)
             if cmp.visible() then
                 cmp.select_next_item()
@@ -94,9 +172,28 @@ cmp.setup({
          -- only confirm explicitly selected items.
         ['<CR>'] = cmp.mapping.confirm({ select = true }),
     }),
-    sources = cmp.config.sources({
-        { name = 'luasnip' }, -- For luasnip users.
-    }, {
+    sources = {
+        { name = 'nvim_lsp'},
         { name = 'buffer' },
-    })
+    },
+    formatting = {
+        fields = { "kind", "abbr", "menu" },
+        format = function(entry, vim_item)
+          local kind = require("lspkind").cmp_format({ mode = "symbol_text", maxwidth = 50 })(entry, vim_item)
+          local strings = vim.split(kind.kind, "%s", { trimempty = true })
+          if #strings > 2 then
+              kind.kind = " " .. strings[1] .. " "
+              kind.menu = "    (" .. strings[2] .. ")"
+          end
+          return kind
+        end,
+    },
+    window = {
+        completion = {
+            winhighlight = "Normal:Pmenu,FloatBorder:Pmenu,Search:None",
+            col_offset = -3,
+            side_padding = 0,
+        },
+    },
 })
+
