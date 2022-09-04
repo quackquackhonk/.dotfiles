@@ -186,7 +186,6 @@ return require('packer').startup(function(use)
     use 'saadparwaiz1/cmp_luasnip'
     use 'onsails/lspkind.nvim'
     use 'simrat39/rust-tools.nvim'
-    use 'jose-elias-alvarez/null-ls.nvim'
 
     -- Theme / UI
     use 'nvim-lua/popup.nvim'

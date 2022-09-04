@@ -216,11 +216,6 @@ _G.packer_plugins = {
     path = "/home/sahana/.local/share/nvim/site/pack/packer/start/neotest-rust",
     url = "https://github.com/rouge8/neotest-rust"
   },
-  ["null-ls.nvim"] = {
-    loaded = true,
-    path = "/home/sahana/.local/share/nvim/site/pack/packer/start/null-ls.nvim",
-    url = "https://github.com/jose-elias-alvarez/null-ls.nvim"
-  },
   ["nvim-autopairs"] = {
     config = { "\27LJ\2\2@\0\0\2\0\3\0\a6\0\0\0'\1\1\0B\0\2\0029\0\2\0004\1\0\0B\0\2\1K\0\1\0\nsetup\19nvim-autopairs\frequire\0" },
     loaded = true,
@@ -368,10 +363,10 @@ time([[Config for nvim-autopairs]], false)
 time([[Config for project.nvim]], true)
 try_loadstring("\27LJ\2\2>\0\0\2\0\3\0\a6\0\0\0'\1\1\0B\0\2\0029\0\2\0004\1\0\0B\0\2\1K\0\1\0\nsetup\17project_nvim\frequire\0", "config", "project.nvim")
 time([[Config for project.nvim]], false)
--- Config for: neotest
-time([[Config for neotest]], true)
-try_loadstring("\27LJ\2\2®\2\0\0\5\0\b\1\0156\0\0\0'\1\1\0B\0\2\0029\0\2\0005\1\4\0004\2\3\0006\3\0\0'\4\3\0B\3\2\0?\3\0\0=\2\5\0015\2\6\0=\2\a\1B\0\2\1K\0\1\0\nicons\1\0\f\23final_child_indent\6 \frunning\6.\23final_child_prefix\bâ•°\17child_indent\bâ”‚\17child_prefix\bâ”œ\20non_collapsible\bâ”€\14collapsed\bâ”€\fskipped\6x\funknown\6?\vpassed\6O\vfailed\6!\rexpanded\bâ•®\radapters\1\0\0\17neotest-rust\nsetup\fneotest\frequire\3€€À™\4\0", "config", "neotest")
-time([[Config for neotest]], false)
+-- Config for: dressing.nvim
+time([[Config for dressing.nvim]], true)
+try_loadstring("\27LJ\2\2³\1\0\0\5\0\v\0\0186\0\0\0'\1\1\0B\0\2\0029\0\2\0005\1\4\0005\2\3\0=\2\5\0015\2\b\0006\3\0\0'\4\6\0B\3\2\0029\3\a\0034\4\0\0B\3\2\2=\3\t\2=\2\n\1B\0\2\1K\0\1\0\vselect\14telescope\1\0\0\15get_cursor\21telescope.themes\ninput\1\0\0\1\0\1\19default_prompt\6>\nsetup\rdressing\frequire\0", "config", "dressing.nvim")
+time([[Config for dressing.nvim]], false)
 -- Config for: nvim-colorizer.lua
 time([[Config for nvim-colorizer.lua]], true)
 try_loadstring("\27LJ\2\0027\0\0\2\0\3\0\0066\0\0\0'\1\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\14colorizer\frequire\0", "config", "nvim-colorizer.lua")
@@ -380,38 +375,38 @@ time([[Config for nvim-colorizer.lua]], false)
 time([[Config for neoscroll.nvim]], true)
 try_loadstring("\27LJ\2\0027\0\0\2\0\3\0\0066\0\0\0'\1\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\14neoscroll\frequire\0", "config", "neoscroll.nvim")
 time([[Config for neoscroll.nvim]], false)
--- Config for: dressing.nvim
-time([[Config for dressing.nvim]], true)
-try_loadstring("\27LJ\2\2³\1\0\0\5\0\v\0\0186\0\0\0'\1\1\0B\0\2\0029\0\2\0005\1\4\0005\2\3\0=\2\5\0015\2\b\0006\3\0\0'\4\6\0B\3\2\0029\3\a\0034\4\0\0B\3\2\2=\3\t\2=\2\n\1B\0\2\1K\0\1\0\vselect\14telescope\1\0\0\15get_cursor\21telescope.themes\ninput\1\0\0\1\0\1\19default_prompt\6>\nsetup\rdressing\frequire\0", "config", "dressing.nvim")
-time([[Config for dressing.nvim]], false)
--- Config for: nvim-tree.lua
-time([[Config for nvim-tree.lua]], true)
-try_loadstring("\27LJ\2\0027\0\0\2\0\3\0\0066\0\0\0'\1\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\14nvim-tree\frequire\0", "config", "nvim-tree.lua")
-time([[Config for nvim-tree.lua]], false)
--- Config for: gitsigns.nvim
-time([[Config for gitsigns.nvim]], true)
-try_loadstring("\27LJ\2\2:\0\0\2\0\3\0\a6\0\0\0'\1\1\0B\0\2\0029\0\2\0004\1\0\0B\0\2\1K\0\1\0\nsetup\rgitsigns\frequire\0", "config", "gitsigns.nvim")
-time([[Config for gitsigns.nvim]], false)
 -- Config for: mason-lspconfig.nvim
 time([[Config for mason-lspconfig.nvim]], true)
 try_loadstring("\27LJ\2\2=\0\0\2\0\3\0\0066\0\0\0'\1\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\20mason-lspconfig\frequire\0", "config", "mason-lspconfig.nvim")
 time([[Config for mason-lspconfig.nvim]], false)
--- Config for: telescope.nvim
-time([[Config for telescope.nvim]], true)
-try_loadstring("\27LJ\2\2Ž\n\0\0\a\0001\0M6\0\0\0'\1\1\0B\0\2\0026\1\2\0009\1\3\1+\2\2\0=\2\4\0015\1,\0005\2\6\0005\3\5\0=\3\a\0025\3\t\0005\4\b\0=\4\n\0035\4\v\0=\4\f\3=\3\r\0026\3\0\0'\4\14\0B\3\2\0029\3\15\3=\3\16\0025\3\17\0=\3\18\0026\3\0\0'\4\14\0B\3\2\0029\3\19\3=\3\20\0025\3\21\0=\3\22\0024\3\0\0=\3\23\0025\3\24\0=\3\25\0025\3\26\0=\3\27\0026\3\0\0'\4\28\0B\3\2\0029\3\29\0039\3\30\3=\3\31\0026\3\0\0'\4\28\0B\3\2\0029\3 \0039\3\30\3=\3!\0026\3\0\0'\4\28\0B\3\2\0029\3\"\0039\3\30\3=\3#\0026\3\0\0'\4\28\0B\3\2\0029\3$\3=\3$\0025\3)\0005\4'\0006\5\0\0'\6%\0B\5\2\0029\5&\5=\5(\4=\4*\3=\3+\2=\2-\0019\2.\0\18\3\1\0B\2\2\0019\2/\0'\0030\0B\2\2\1K\0\1\0\rprojects\19load_extension\nsetup\rdefaults\1\0\0\rmappings\6i\1\0\0\n<esc>\1\0\0\nclose\22telescope.actions\27buffer_previewer_maker\21qflist_previewer\22vim_buffer_qflist\19grep_previewer\23vim_buffer_vimgrep\19file_previewer\bnew\19vim_buffer_cat\25telescope.previewers\fset_env\1\0\1\14COLORTERM\14truecolor\16borderchars\1\t\0\0\bâ”€\bâ”‚\bâ”€\bâ”‚\bâ•­\bâ•®\bâ•¯\bâ•°\vborder\17path_display\1\2\0\0\rtruncate\19generic_sorter\29get_generic_fuzzy_sorter\25file_ignore_patterns\1\2\0\0\17node_modules\16file_sorter\19get_fuzzy_file\22telescope.sorters\18layout_config\rvertical\1\0\1\vmirror\1\15horizontal\1\0\3\vheight\4š³æÌ\t™³¦ÿ\3\19preview_cutoff\3x\nwidth\4×ÇÂë\3Š®¯ÿ\3\1\0\3\18preview_width\4š³æÌ\t™³†ÿ\3\20prompt_position\btop\18results_width\4š³æÌ\t™³¦ÿ\3\22vimgrep_arguments\1\0\t\23selection_strategy\nreset\20layout_strategy\15horizontal\17entry_prefix\a  \21sorting_strategy\14ascending\18prompt_prefix\v ï€‚  \17initial_mode\vinsert\rwinblend\3\0\19color_devicons\2\20selection_caret\a  \1\b\0\0\arg\18--color=never\17--no-heading\20--with-filename\18--line-number\r--column\17--smart-case\26theme_switcher_loaded\6g\bvim\14telescope\frequire\0", "config", "telescope.nvim")
-time([[Config for telescope.nvim]], false)
--- Config for: Comment.nvim
-time([[Config for Comment.nvim]], true)
-try_loadstring("\27LJ\2\0025\0\0\2\0\3\0\0066\0\0\0'\1\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\fComment\frequire\0", "config", "Comment.nvim")
-time([[Config for Comment.nvim]], false)
--- Config for: cheatsheet.nvim
-time([[Config for cheatsheet.nvim]], true)
-try_loadstring("\27LJ\2\2<\0\0\2\0\3\0\a6\0\0\0'\1\1\0B\0\2\0029\0\2\0004\1\0\0B\0\2\1K\0\1\0\nsetup\15cheatsheet\frequire\0", "config", "cheatsheet.nvim")
-time([[Config for cheatsheet.nvim]], false)
 -- Config for: mason.nvim
 time([[Config for mason.nvim]], true)
 try_loadstring("\27LJ\2\0023\0\0\2\0\3\0\0066\0\0\0'\1\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\nmason\frequire\0", "config", "mason.nvim")
 time([[Config for mason.nvim]], false)
+-- Config for: gitsigns.nvim
+time([[Config for gitsigns.nvim]], true)
+try_loadstring("\27LJ\2\2:\0\0\2\0\3\0\a6\0\0\0'\1\1\0B\0\2\0029\0\2\0004\1\0\0B\0\2\1K\0\1\0\nsetup\rgitsigns\frequire\0", "config", "gitsigns.nvim")
+time([[Config for gitsigns.nvim]], false)
+-- Config for: cheatsheet.nvim
+time([[Config for cheatsheet.nvim]], true)
+try_loadstring("\27LJ\2\2<\0\0\2\0\3\0\a6\0\0\0'\1\1\0B\0\2\0029\0\2\0004\1\0\0B\0\2\1K\0\1\0\nsetup\15cheatsheet\frequire\0", "config", "cheatsheet.nvim")
+time([[Config for cheatsheet.nvim]], false)
+-- Config for: neotest
+time([[Config for neotest]], true)
+try_loadstring("\27LJ\2\2®\2\0\0\5\0\b\1\0156\0\0\0'\1\1\0B\0\2\0029\0\2\0005\1\4\0004\2\3\0006\3\0\0'\4\3\0B\3\2\0?\3\0\0=\2\5\0015\2\6\0=\2\a\1B\0\2\1K\0\1\0\nicons\1\0\f\23final_child_indent\6 \frunning\6.\23final_child_prefix\bâ•°\17child_indent\bâ”‚\17child_prefix\bâ”œ\20non_collapsible\bâ”€\14collapsed\bâ”€\fskipped\6x\funknown\6?\vpassed\6O\vfailed\6!\rexpanded\bâ•®\radapters\1\0\0\17neotest-rust\nsetup\fneotest\frequire\3€€À™\4\0", "config", "neotest")
+time([[Config for neotest]], false)
+-- Config for: Comment.nvim
+time([[Config for Comment.nvim]], true)
+try_loadstring("\27LJ\2\0025\0\0\2\0\3\0\0066\0\0\0'\1\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\fComment\frequire\0", "config", "Comment.nvim")
+time([[Config for Comment.nvim]], false)
+-- Config for: telescope.nvim
+time([[Config for telescope.nvim]], true)
+try_loadstring("\27LJ\2\2Ž\n\0\0\a\0001\0M6\0\0\0'\1\1\0B\0\2\0026\1\2\0009\1\3\1+\2\2\0=\2\4\0015\1,\0005\2\6\0005\3\5\0=\3\a\0025\3\t\0005\4\b\0=\4\n\0035\4\v\0=\4\f\3=\3\r\0026\3\0\0'\4\14\0B\3\2\0029\3\15\3=\3\16\0025\3\17\0=\3\18\0026\3\0\0'\4\14\0B\3\2\0029\3\19\3=\3\20\0025\3\21\0=\3\22\0024\3\0\0=\3\23\0025\3\24\0=\3\25\0025\3\26\0=\3\27\0026\3\0\0'\4\28\0B\3\2\0029\3\29\0039\3\30\3=\3\31\0026\3\0\0'\4\28\0B\3\2\0029\3 \0039\3\30\3=\3!\0026\3\0\0'\4\28\0B\3\2\0029\3\"\0039\3\30\3=\3#\0026\3\0\0'\4\28\0B\3\2\0029\3$\3=\3$\0025\3)\0005\4'\0006\5\0\0'\6%\0B\5\2\0029\5&\5=\5(\4=\4*\3=\3+\2=\2-\0019\2.\0\18\3\1\0B\2\2\0019\2/\0'\0030\0B\2\2\1K\0\1\0\rprojects\19load_extension\nsetup\rdefaults\1\0\0\rmappings\6i\1\0\0\n<esc>\1\0\0\nclose\22telescope.actions\27buffer_previewer_maker\21qflist_previewer\22vim_buffer_qflist\19grep_previewer\23vim_buffer_vimgrep\19file_previewer\bnew\19vim_buffer_cat\25telescope.previewers\fset_env\1\0\1\14COLORTERM\14truecolor\16borderchars\1\t\0\0\bâ”€\bâ”‚\bâ”€\bâ”‚\bâ•­\bâ•®\bâ•¯\bâ•°\vborder\17path_display\1\2\0\0\rtruncate\19generic_sorter\29get_generic_fuzzy_sorter\25file_ignore_patterns\1\2\0\0\17node_modules\16file_sorter\19get_fuzzy_file\22telescope.sorters\18layout_config\rvertical\1\0\1\vmirror\1\15horizontal\1\0\3\vheight\4š³æÌ\t™³¦ÿ\3\19preview_cutoff\3x\nwidth\4×ÇÂë\3Š®¯ÿ\3\1\0\3\18preview_width\4š³æÌ\t™³†ÿ\3\20prompt_position\btop\18results_width\4š³æÌ\t™³¦ÿ\3\22vimgrep_arguments\1\0\t\23selection_strategy\nreset\20layout_strategy\15horizontal\17entry_prefix\a  \21sorting_strategy\14ascending\18prompt_prefix\v ï€‚  \17initial_mode\vinsert\rwinblend\3\0\19color_devicons\2\20selection_caret\a  \1\b\0\0\arg\18--color=never\17--no-heading\20--with-filename\18--line-number\r--column\17--smart-case\26theme_switcher_loaded\6g\bvim\14telescope\frequire\0", "config", "telescope.nvim")
+time([[Config for telescope.nvim]], false)
+-- Config for: nvim-tree.lua
+time([[Config for nvim-tree.lua]], true)
+try_loadstring("\27LJ\2\0027\0\0\2\0\3\0\0066\0\0\0'\1\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\14nvim-tree\frequire\0", "config", "nvim-tree.lua")
+time([[Config for nvim-tree.lua]], false)
 
 _G._packer.inside_compile = false
 if _G._packer.needs_bufread == true then
