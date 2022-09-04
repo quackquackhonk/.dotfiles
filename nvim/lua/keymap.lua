@@ -133,6 +133,19 @@ vim.api.nvim_set_keymap("v", "g<C-a>", require("dial.map").inc_gvisual(), {norem
 vim.api.nvim_set_keymap("v", "g<C-x>", require("dial.map").dec_gvisual(), {noremap = true})
 
 -- Convenience Keybindings
+-- arrows for laptop
+keymap('n', '×', '<Left>')
+keymap('n', '–', '<Down>')
+keymap('n', '€', '<Up>')
+keymap('n', '—', '<Right>')
+keymap('v', '×', '<Left>')
+keymap('v', '–', '<Down>')
+keymap('v', '€', '<Up>')
+keymap('v', '—', '<Right>')
+keymap('i', '×', '<Left>')
+keymap('i', '–', '<Down>')
+keymap('i', '€', '<Up>')
+keymap('i', '—', '<Right>')
 -- Toggles
 keymap('n', '<F2>', ':NvimTreeToggle<cr>')
 keymap('n', '<F3>', ':lua require("neotest").summary.toggle()<CR>')
