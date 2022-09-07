@@ -147,6 +147,7 @@ return require('packer').startup(function(use)
             nullls.setup({
                 sources = {
                     nullls.builtins.formatting.black,
+                    nullls.builtins.formatting.clang_format,
                 }
             })
         end

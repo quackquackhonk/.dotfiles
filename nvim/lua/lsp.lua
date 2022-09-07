@@ -6,8 +6,20 @@ local colors = require("gruvbox.palette")
 local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
 
 -- LSP Configuration
+local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
 local custom_on_attach = function(client, bufnr)
     local bufopts = { noremap = true, silent = true, buffer = bufnr }
+        if client.supports_method("textDocument/formatting") then
+            vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
+            vim.api.nvim_create_autocmd("BufWritePre", {
+                group = augroup,
+                buffer = bufnr,
+                callback = function()
+                    -- on 0.8, you should use vim.lsp.buf.format({ bufnr = bufnr }) instead
+                    vim.lsp.buf.formatting_sync()
+                end,
+            })
+        end
     vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
     vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, bufopts)
     vim.keymap.set('n', '<Leader>lD', vim.lsp.buf.declaration, bufopts)
@@ -29,6 +41,12 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
         update_in_insert = false,
     }
 )
+
+-- Formatting
+require("null-ls").setup({
+    -- you can reuse a shared lspconfig on_attach callback here
+    on_attach = custom_on_attach
+})
 
 -- Rust
 require('rust-tools').setup {
