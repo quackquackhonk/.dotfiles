@@ -6,10 +6,10 @@ local colors = require("gruvbox.palette")
 local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
 
 -- LSP Configuration
-
 local custom_on_attach = function(client, bufnr)
-    local bufopts = { noremap=true, silent=true, buffer=bufnr }
-    vim.keymap.set('n', '<Leader>ll', vim.lsp.buf.hover, bufopts)
+    local bufopts = { noremap = true, silent = true, buffer = bufnr }
+    vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
+    vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, bufopts)
     vim.keymap.set('n', '<Leader>lD', vim.lsp.buf.declaration, bufopts)
     vim.keymap.set('n', '<Leader>ld', vim.lsp.buf.definition, bufopts)
     vim.keymap.set('n', '<Leader>lt', vim.lsp.buf.type_definition, bufopts)
@@ -19,8 +19,19 @@ local custom_on_attach = function(client, bufnr)
     vim.keymap.set('n', '<Leader>l<Leader>', vim.lsp.buf.code_action, bufopts)
 end
 
+vim.cmd [[autocmd CursorHold * lua vim.diagnostic.open_float(nil, {focusable = false})]]
+
+vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
+    vim.lsp.diagnostic.on_publish_diagnostics, {
+        virtual_text = false,
+        signs = true,
+        underline = true,
+        update_in_insert = false,
+    }
+)
+
 -- Rust
-require('rust-tools').setup{
+require('rust-tools').setup {
     tools = {
         autoSetHints = true,
         hover_with_actions = false,
@@ -60,25 +71,21 @@ require('rust-tools').setup{
     }
 }
 
-vim.cmd[[autocmd CursorHold * lua vim.diagnostic.open_float(nil, {focusable = false})]]
-
-vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
-    vim.lsp.diagnostic.on_publish_diagnostics, {
-        virtual_text = false,
-        signs = true,
-        underline = true,
-        update_in_insert = false,
-    }
-)
 
 -- Lua
-require'lspconfig'.sumneko_lua.setup{
+require 'lspconfig'.sumneko_lua.setup {
+    on_attach = custom_on_attach,
+    capabilities = capabilities
+}
+
+-- Python
+require 'lspconfig'.pyright.setup {
     on_attach = custom_on_attach,
     capabilities = capabilities
 }
 
 -- Treesitter configuration
-require'nvim-treesitter.configs'.setup {
+require 'nvim-treesitter.configs'.setup {
     -- A list of parser names, or "all"
     ensure_installed = "all",
     -- Install parsers synchronously (only applied to `ensure_installed`)
@@ -107,12 +114,11 @@ require'nvim-treesitter.configs'.setup {
 }
 
 -- Completion Config
-vim.opt.completeopt={"menu","menuone","noselect","noinsert"}
+vim.opt.completeopt = { "menu", "menuone", "noselect", "noinsert" }
 
 -- Setup nvim-cmp.
-local cmp = require'cmp'
-local luasnip = require'luasnip'
-local lspkind = require('lspkind')
+local cmp = require 'cmp'
+local luasnip = require 'luasnip'
 
 -- helper function
 local has_words_before = function()
@@ -149,24 +155,24 @@ cmp.setup({
                 fallback()
             end
         end, { "i", "s" }),
-         -- Accept currently selected item. Set `select` to `false` to
-         -- only confirm explicitly selected items.
+        -- Accept currently selected item. Set `select` to `false` to
+        -- only confirm explicitly selected items.
         ['<CR>'] = cmp.mapping.confirm({ select = true }),
     }),
     sources = {
-        { name = 'nvim_lsp'},
+        { name = 'nvim_lsp' },
         { name = 'buffer' },
     },
     formatting = {
         fields = { "kind", "abbr", "menu" },
         format = function(entry, vim_item)
-          local kind = require("lspkind").cmp_format({ mode = "symbol_text", maxwidth = 50 })(entry, vim_item)
-          local strings = vim.split(kind.kind, "%s", { trimempty = true })
-          if #strings > 2 then
-              kind.kind = " " .. strings[1] .. " "
-              kind.menu = "    (" .. strings[2] .. ")"
-          end
-          return kind
+            local kind = require("lspkind").cmp_format({ mode = "symbol_text", maxwidth = 50 })(entry, vim_item)
+            local strings = vim.split(kind.kind, "%s", { trimempty = true })
+            if #strings > 2 then
+                kind.kind = " " .. strings[1] .. " "
+                kind.menu = "    (" .. strings[2] .. ")"
+            end
+            return kind
         end,
     },
     window = {
@@ -177,4 +183,3 @@ cmp.setup({
         },
     },
 })
-
