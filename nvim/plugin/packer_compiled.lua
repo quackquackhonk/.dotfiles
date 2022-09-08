@@ -217,7 +217,7 @@ _G.packer_plugins = {
     url = "https://github.com/rouge8/neotest-rust"
   },
   ["null-ls.nvim"] = {
-    config = { "\27LJ\2\2v\0\0\5\0\b\0\r6\0\0\0'\1\1\0B\0\2\0029\1\2\0005\2\6\0004\3\3\0009\4\3\0009\4\4\0049\4\5\4>\4\1\3=\3\a\2B\1\2\1K\0\1\0\fsources\1\0\0\nblack\15formatting\rbuiltins\nsetup\fnull-ls\frequire\0" },
+    config = { "\27LJ\2\2“\1\0\0\5\0\t\0\0176\0\0\0'\1\1\0B\0\2\0029\1\2\0005\2\a\0004\3\3\0009\4\3\0009\4\4\0049\4\5\4>\4\1\0039\4\3\0009\4\4\0049\4\6\4>\4\2\3=\3\b\2B\1\2\1K\0\1\0\fsources\1\0\0\17clang_format\nblack\15formatting\rbuiltins\nsetup\fnull-ls\frequire\0" },
     loaded = true,
     path = "/home/sahana/.local/share/nvim/site/pack/packer/start/null-ls.nvim",
     url = "https://github.com/jose-elias-alvarez/null-ls.nvim"
@@ -314,6 +314,11 @@ _G.packer_plugins = {
     path = "/home/sahana/.local/share/nvim/site/pack/packer/start/trouble.nvim",
     url = "https://github.com/folke/trouble.nvim"
   },
+  ["vim-better-sml"] = {
+    loaded = true,
+    path = "/home/sahana/.local/share/nvim/site/pack/packer/start/vim-better-sml",
+    url = "https://github.com/jez/vim-better-sml"
+  },
   ["vim-maximizer"] = {
     loaded = true,
     path = "/home/sahana/.local/share/nvim/site/pack/packer/start/vim-maximizer",
@@ -347,10 +352,10 @@ time([[Defining packer_plugins]], false)
 time([[Config for hop.nvim]], true)
 try_loadstring("\27LJ\2\2Q\0\0\2\0\4\0\a6\0\0\0'\1\1\0B\0\2\0029\0\2\0005\1\3\0B\0\2\1K\0\1\0\1\0\1\tkeys\24ntesiroamglpufywqjb\nsetup\bhop\frequire\0", "config", "hop.nvim")
 time([[Config for hop.nvim]], false)
--- Config for: symbols-outline.nvim
-time([[Config for symbols-outline.nvim]], true)
-try_loadstring("\27LJ\2\2R\0\0\2\0\4\0\a6\0\0\0'\1\1\0B\0\2\0029\0\2\0005\1\3\0B\0\2\1K\0\1\0\1\0\1\rposition\tleft\nsetup\20symbols-outline\frequire\0", "config", "symbols-outline.nvim")
-time([[Config for symbols-outline.nvim]], false)
+-- Config for: which-key.nvim
+time([[Config for which-key.nvim]], true)
+try_loadstring("\27LJ\2\2;\0\0\2\0\3\0\a6\0\0\0'\1\1\0B\0\2\0029\0\2\0004\1\0\0B\0\2\1K\0\1\0\nsetup\14which-key\frequire\0", "config", "which-key.nvim")
+time([[Config for which-key.nvim]], false)
 -- Config for: barbar.nvim
 time([[Config for barbar.nvim]], true)
 try_loadstring("\27LJ\2\2J\0\0\2\0\4\0\a6\0\0\0'\1\1\0B\0\2\0029\0\2\0005\1\3\0B\0\2\1K\0\1\0\1\0\1\14auto_hide\1\nsetup\15bufferline\frequire\0", "config", "barbar.nvim")
@@ -375,26 +380,26 @@ time([[Config for nvim-autopairs]], false)
 time([[Config for project.nvim]], true)
 try_loadstring("\27LJ\2\2>\0\0\2\0\3\0\a6\0\0\0'\1\1\0B\0\2\0029\0\2\0004\1\0\0B\0\2\1K\0\1\0\nsetup\17project_nvim\frequire\0", "config", "project.nvim")
 time([[Config for project.nvim]], false)
--- Config for: neotest
-time([[Config for neotest]], true)
-try_loadstring("\27LJ\2\2®\2\0\0\5\0\b\1\0156\0\0\0'\1\1\0B\0\2\0029\0\2\0005\1\4\0004\2\3\0006\3\0\0'\4\3\0B\3\2\0?\3\0\0=\2\5\0015\2\6\0=\2\a\1B\0\2\1K\0\1\0\nicons\1\0\f\23final_child_indent\6 \frunning\6.\23final_child_prefix\bâ•°\17child_indent\bâ”‚\17child_prefix\bâ”œ\20non_collapsible\bâ”€\14collapsed\bâ”€\fskipped\6x\funknown\6?\vpassed\6O\vfailed\6!\rexpanded\bâ•®\radapters\1\0\0\17neotest-rust\nsetup\fneotest\frequire\3€€À™\4\0", "config", "neotest")
-time([[Config for neotest]], false)
+-- Config for: dressing.nvim
+time([[Config for dressing.nvim]], true)
+try_loadstring("\27LJ\2\2³\1\0\0\5\0\v\0\0186\0\0\0'\1\1\0B\0\2\0029\0\2\0005\1\4\0005\2\3\0=\2\5\0015\2\b\0006\3\0\0'\4\6\0B\3\2\0029\3\a\0034\4\0\0B\3\2\2=\3\t\2=\2\n\1B\0\2\1K\0\1\0\vselect\14telescope\1\0\0\15get_cursor\21telescope.themes\ninput\1\0\0\1\0\1\19default_prompt\6>\nsetup\rdressing\frequire\0", "config", "dressing.nvim")
+time([[Config for dressing.nvim]], false)
 -- Config for: nvim-tree.lua
 time([[Config for nvim-tree.lua]], true)
 try_loadstring("\27LJ\2\0027\0\0\2\0\3\0\0066\0\0\0'\1\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\14nvim-tree\frequire\0", "config", "nvim-tree.lua")
 time([[Config for nvim-tree.lua]], false)
--- Config for: neoscroll.nvim
-time([[Config for neoscroll.nvim]], true)
-try_loadstring("\27LJ\2\0027\0\0\2\0\3\0\0066\0\0\0'\1\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\14neoscroll\frequire\0", "config", "neoscroll.nvim")
-time([[Config for neoscroll.nvim]], false)
 -- Config for: mason-lspconfig.nvim
 time([[Config for mason-lspconfig.nvim]], true)
 try_loadstring("\27LJ\2\2=\0\0\2\0\3\0\0066\0\0\0'\1\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\20mason-lspconfig\frequire\0", "config", "mason-lspconfig.nvim")
 time([[Config for mason-lspconfig.nvim]], false)
--- Config for: cheatsheet.nvim
-time([[Config for cheatsheet.nvim]], true)
-try_loadstring("\27LJ\2\2<\0\0\2\0\3\0\a6\0\0\0'\1\1\0B\0\2\0029\0\2\0004\1\0\0B\0\2\1K\0\1\0\nsetup\15cheatsheet\frequire\0", "config", "cheatsheet.nvim")
-time([[Config for cheatsheet.nvim]], false)
+-- Config for: mason.nvim
+time([[Config for mason.nvim]], true)
+try_loadstring("\27LJ\2\0023\0\0\2\0\3\0\0066\0\0\0'\1\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\nmason\frequire\0", "config", "mason.nvim")
+time([[Config for mason.nvim]], false)
+-- Config for: neoscroll.nvim
+time([[Config for neoscroll.nvim]], true)
+try_loadstring("\27LJ\2\0027\0\0\2\0\3\0\0066\0\0\0'\1\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\14neoscroll\frequire\0", "config", "neoscroll.nvim")
+time([[Config for neoscroll.nvim]], false)
 -- Config for: nvim-colorizer.lua
 time([[Config for nvim-colorizer.lua]], true)
 try_loadstring("\27LJ\2\0027\0\0\2\0\3\0\0066\0\0\0'\1\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\14colorizer\frequire\0", "config", "nvim-colorizer.lua")
@@ -407,26 +412,26 @@ time([[Config for telescope.nvim]], false)
 time([[Config for gitsigns.nvim]], true)
 try_loadstring("\27LJ\2\2:\0\0\2\0\3\0\a6\0\0\0'\1\1\0B\0\2\0029\0\2\0004\1\0\0B\0\2\1K\0\1\0\nsetup\rgitsigns\frequire\0", "config", "gitsigns.nvim")
 time([[Config for gitsigns.nvim]], false)
--- Config for: dressing.nvim
-time([[Config for dressing.nvim]], true)
-try_loadstring("\27LJ\2\2³\1\0\0\5\0\v\0\0186\0\0\0'\1\1\0B\0\2\0029\0\2\0005\1\4\0005\2\3\0=\2\5\0015\2\b\0006\3\0\0'\4\6\0B\3\2\0029\3\a\0034\4\0\0B\3\2\2=\3\t\2=\2\n\1B\0\2\1K\0\1\0\vselect\14telescope\1\0\0\15get_cursor\21telescope.themes\ninput\1\0\0\1\0\1\19default_prompt\6>\nsetup\rdressing\frequire\0", "config", "dressing.nvim")
-time([[Config for dressing.nvim]], false)
--- Config for: which-key.nvim
-time([[Config for which-key.nvim]], true)
-try_loadstring("\27LJ\2\2;\0\0\2\0\3\0\a6\0\0\0'\1\1\0B\0\2\0029\0\2\0004\1\0\0B\0\2\1K\0\1\0\nsetup\14which-key\frequire\0", "config", "which-key.nvim")
-time([[Config for which-key.nvim]], false)
+-- Config for: cheatsheet.nvim
+time([[Config for cheatsheet.nvim]], true)
+try_loadstring("\27LJ\2\2<\0\0\2\0\3\0\a6\0\0\0'\1\1\0B\0\2\0029\0\2\0004\1\0\0B\0\2\1K\0\1\0\nsetup\15cheatsheet\frequire\0", "config", "cheatsheet.nvim")
+time([[Config for cheatsheet.nvim]], false)
+-- Config for: symbols-outline.nvim
+time([[Config for symbols-outline.nvim]], true)
+try_loadstring("\27LJ\2\2R\0\0\2\0\4\0\a6\0\0\0'\1\1\0B\0\2\0029\0\2\0005\1\3\0B\0\2\1K\0\1\0\1\0\1\rposition\tleft\nsetup\20symbols-outline\frequire\0", "config", "symbols-outline.nvim")
+time([[Config for symbols-outline.nvim]], false)
 -- Config for: Comment.nvim
 time([[Config for Comment.nvim]], true)
 try_loadstring("\27LJ\2\0025\0\0\2\0\3\0\0066\0\0\0'\1\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\fComment\frequire\0", "config", "Comment.nvim")
 time([[Config for Comment.nvim]], false)
 -- Config for: null-ls.nvim
 time([[Config for null-ls.nvim]], true)
-try_loadstring("\27LJ\2\2v\0\0\5\0\b\0\r6\0\0\0'\1\1\0B\0\2\0029\1\2\0005\2\6\0004\3\3\0009\4\3\0009\4\4\0049\4\5\4>\4\1\3=\3\a\2B\1\2\1K\0\1\0\fsources\1\0\0\nblack\15formatting\rbuiltins\nsetup\fnull-ls\frequire\0", "config", "null-ls.nvim")
+try_loadstring("\27LJ\2\2“\1\0\0\5\0\t\0\0176\0\0\0'\1\1\0B\0\2\0029\1\2\0005\2\a\0004\3\3\0009\4\3\0009\4\4\0049\4\5\4>\4\1\0039\4\3\0009\4\4\0049\4\6\4>\4\2\3=\3\b\2B\1\2\1K\0\1\0\fsources\1\0\0\17clang_format\nblack\15formatting\rbuiltins\nsetup\fnull-ls\frequire\0", "config", "null-ls.nvim")
 time([[Config for null-ls.nvim]], false)
--- Config for: mason.nvim
-time([[Config for mason.nvim]], true)
-try_loadstring("\27LJ\2\0023\0\0\2\0\3\0\0066\0\0\0'\1\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\nmason\frequire\0", "config", "mason.nvim")
-time([[Config for mason.nvim]], false)
+-- Config for: neotest
+time([[Config for neotest]], true)
+try_loadstring("\27LJ\2\2®\2\0\0\5\0\b\1\0156\0\0\0'\1\1\0B\0\2\0029\0\2\0005\1\4\0004\2\3\0006\3\0\0'\4\3\0B\3\2\0?\3\0\0=\2\5\0015\2\6\0=\2\a\1B\0\2\1K\0\1\0\nicons\1\0\f\23final_child_indent\6 \frunning\6.\23final_child_prefix\bâ•°\17child_indent\bâ”‚\17child_prefix\bâ”œ\20non_collapsible\bâ”€\14collapsed\bâ”€\fskipped\6x\funknown\6?\vpassed\6O\vfailed\6!\rexpanded\bâ•®\radapters\1\0\0\17neotest-rust\nsetup\fneotest\frequire\3€€À™\4\0", "config", "neotest")
+time([[Config for neotest]], false)
 
 _G._packer.inside_compile = false
 if _G._packer.needs_bufread == true then

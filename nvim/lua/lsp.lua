@@ -9,17 +9,17 @@ local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protoco
 local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
 local custom_on_attach = function(client, bufnr)
     local bufopts = { noremap = true, silent = true, buffer = bufnr }
-        if client.supports_method("textDocument/formatting") then
-            vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
-            vim.api.nvim_create_autocmd("BufWritePre", {
-                group = augroup,
-                buffer = bufnr,
-                callback = function()
-                    -- on 0.8, you should use vim.lsp.buf.format({ bufnr = bufnr }) instead
-                    vim.lsp.buf.formatting_sync()
-                end,
-            })
-        end
+    if client.supports_method("textDocument/formatting") then
+        vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
+        vim.api.nvim_create_autocmd("BufWritePre", {
+            group = augroup,
+            buffer = bufnr,
+            callback = function()
+                -- on 0.8, you should use vim.lsp.buf.format({ bufnr = bufnr }) instead
+                vim.lsp.buf.formatting_sync()
+            end,
+        })
+    end
     vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
     vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, bufopts)
     vim.keymap.set('n', '<Leader>lD', vim.lsp.buf.declaration, bufopts)
@@ -35,11 +35,11 @@ vim.cmd [[autocmd CursorHold * lua vim.diagnostic.open_float(nil, {focusable = f
 
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
     vim.lsp.diagnostic.on_publish_diagnostics, {
-        virtual_text = false,
-        signs = true,
-        underline = true,
-        update_in_insert = false,
-    }
+    virtual_text = false,
+    signs = true,
+    underline = true,
+    update_in_insert = false,
+}
 )
 
 -- Formatting
@@ -100,6 +100,13 @@ require 'lspconfig'.sumneko_lua.setup {
 require 'lspconfig'.pyright.setup {
     on_attach = custom_on_attach,
     capabilities = capabilities
+}
+
+-- C/C++
+require 'lspconfig'.clangd.setup {
+    on_attach = custom_on_attach,
+    capabilities = capabilities,
+    cmd = { "clangd-12" },
 }
 
 -- Treesitter configuration

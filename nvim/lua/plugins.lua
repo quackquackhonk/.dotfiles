@@ -99,6 +99,7 @@ return require('packer').startup(function(use)
     }
 
     -- LSP / Completion / Treesitter
+    use 'jez/vim-better-sml'
     use {
         'nvim-telescope/telescope.nvim',
         tag = '0.1.0',

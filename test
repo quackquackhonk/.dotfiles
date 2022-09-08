@@ -1,0 +1,16 @@
+ know how to remove ^M in my files (%s/^M//g), but this one is just one line I'd like to replace ^M with enter... what's the enter character in VIM (to use in commnad-line mode).
+vim
+Share
+Edit
+Follow
+Get updates on questions and answers
+edited Nov 13, 2014 at 8:01
+user avatar
+Ciro Santilli Путлер Капут 六四事
+309k8585 gold badges11111111 silver badges895895 bronze badges
+asked May 9, 2011 at 15:35
+user avatar
+igorgue
+17.3k1313 gold badges3636 silver badges5252 bronze badges
+
+    The general "replace by newline" question can be found at: stackoverflow.com/questions/71323/… But since finding carriage return is a bit special beca
