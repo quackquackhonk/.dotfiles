@@ -103,10 +103,14 @@ require 'lspconfig'.pyright.setup {
 }
 
 -- C/C++
-require 'lspconfig'.clangd.setup {
+require 'lspconfig'.ccls.setup {
     on_attach = custom_on_attach,
     capabilities = capabilities,
-    cmd = { "clangd-12" },
+    init_options = {
+        clang = {
+            extraArgs = { "--gcc-toolchain=/usr" }
+        }
+    }
 }
 
 -- Treesitter configuration
