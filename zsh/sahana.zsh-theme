@@ -1,8 +1,8 @@
-if [ "$USERNAME" = "root" ]; then CARETCOLOR="red"; else CARETCOLOR="blue"; fi
+if [ "$USERNAME" = "root" ]; then CARET="#"; else CARET="$"; fi
 
 local return_code="%(?..%{$fg[red]%}%? ↵%{$reset_color%})"
 
-PROMPT='%{$fg_bold[yellow]%}%n%{$reset_color%} @ %{$fg_bold[yellow]%}%m%{$reset_color%} :: %{${fg[green]}%}%3~ ${reset_color}:: $(git_prompt_info)%{${reset_color}%}| '
+PROMPT='%{$fg_bold[yellow]%}%n%{$reset_color%} @ %{$fg_bold[yellow]%}%m%{$reset_color%} :: %{${fg[green]}%}%3~ ${reset_color}:: $(git_prompt_info)%{${reset_color}%}${CARET} '
 
 RPS1="${return_code}"
 
