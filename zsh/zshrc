@@ -32,5 +32,20 @@ source $ZSH/oh-my-zsh.sh
 # For a full list of active aliases, run `alias`.
 #
 # Example aliases
-# alias zshconfig="mate ~/.zshrc"
-# alias ohmyzsh="mate ~/.oh-my-zsh"
+alias zshconfig="nvim ~/dotfiles/zsh/zshrc"
+alias ohmyzsh="nvim ~/.oh-my-zsh"
+alias gs='git status'
+alias cdc='cd /mnt/c/'
+alias cd~='cd /mnt/c/Users/sahan'
+alias cdd='cd /mnt/d/'
+alias cde='cd /mnt/f/'
+alias cdcode='cd ~/code'
+alias fish_reload='source $HOME/.config/fish/config.fish'
+alias nv='nvim'
+alias vi='nvim'
+alias em='emacs -nw'
+alias ta='tmux a'
+alias cgt='cargo nextest run'
+alias cgr='cargo run'
+alias cgb='cargo build'
+export TERM=screen-256color
