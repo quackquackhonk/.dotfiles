@@ -131,6 +131,7 @@ return require('packer').startup(function(use)
     use 'hrsh7th/cmp-path'
     use 'L3MON4D3/LuaSnip'
     use 'saadparwaiz1/cmp_luasnip'
+    use 'rafamadriz/friendly-snippets'
     use 'onsails/lspkind.nvim'
     use 'simrat39/rust-tools.nvim'
     use {

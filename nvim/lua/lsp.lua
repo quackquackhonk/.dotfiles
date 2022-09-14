@@ -104,12 +104,14 @@ require 'lspconfig'.pyright.setup {
 
 -- C/C++
 require 'lspconfig'.ccls.setup {
-    on_attach = custom_on_attach,
-    capabilities = capabilities,
     init_options = {
+        compilationDatabaseDirectory = "build";
+        index = {
+            threads = 0;
+        };
         clang = {
-            extraArgs = { "--gcc-toolchain=/usr" }
-        }
+            excludeArgs = { "-frounding-math" };
+        };
     }
 }
 
@@ -148,6 +150,7 @@ vim.opt.completeopt = { "menu", "menuone", "noselect", "noinsert" }
 -- Setup nvim-cmp.
 local cmp = require 'cmp'
 local luasnip = require 'luasnip'
+require('luasnip.loaders.from_vscode').lazy_load()
 
 -- helper function
 local has_words_before = function()
