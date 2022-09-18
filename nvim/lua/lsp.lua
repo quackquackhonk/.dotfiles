@@ -103,16 +103,9 @@ require 'lspconfig'.pyright.setup {
 }
 
 -- C/C++
-require 'lspconfig'.ccls.setup {
-    init_options = {
-        compilationDatabaseDirectory = "build";
-        index = {
-            threads = 0;
-        };
-        clang = {
-            excludeArgs = { "-frounding-math" };
-        };
-    }
+require 'lspconfig'.clangd.setup {
+    on_attach = custom_on_attach,
+    capabilities = capabilities,
 }
 
 -- Treesitter configuration

@@ -17,11 +17,12 @@ vim.g.localmapleader = ' '
 -- Leader key mappings with Which-Key
 local telescope = require 'telescope.builtin'
 local tele_themes = require 'telescope.themes'
+local dap = require 'dap'
 wk.register({
     -- f = buFfers
     -- e = Editor
     -- l = Language (sep in lsp.lua)
-    -- d = diagnostics
+    -- d = Debugging
     -- g = git
     -- k = pacKer
     -- t = Test
@@ -59,10 +60,12 @@ wk.register({
         r = { cmd("Telescope projects"), "Recent Projects" }
     },
     d = {
-        name = "Diagnostics",
-        f = { cmd("TroubleToggle document_diagnostics"), "Show File Diagnostics" },
-        n = { vim.diagnostic.goto_next, "Next Diagnostic" },
-        N = { vim.diagnostic.goto_prev, "Previous Diagnostic" },
+        name = "Debugging",
+        b = { dap.toggle_breakpoint, "Toggle Breakpoint" },
+        c = { dap.continue, "DAP Continue" },
+        r = { dap.repl.open, "Open DAP REPL" },
+        o = { dap.step_over, "Step Over" },
+        i = { dap.step_into, "Step Into" },
     },
     k = {
         name = "Packer",

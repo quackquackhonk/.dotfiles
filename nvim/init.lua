@@ -1,6 +1,6 @@
 require("plugins")
-require("lsp")
 require("options")
+require("lsp")
+require("dap-conf")
 require("keymap")
 require("theme")
-

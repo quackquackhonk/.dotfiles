@@ -99,6 +99,15 @@ return require('packer').startup(function(use)
     }
 
     -- LSP / Completion / Treesitter
+    use {
+        'mfussenegger/nvim-dap',
+        requires = {
+            'nvim-telescope/telescope-dap.nvim',
+            'rcarriga/nvim-dap-ui',
+            'theHamsta/nvim-dap-virtual-text',
+            'jbyuki/one-small-step-form-vimkind',
+        }
+    }
     use 'jez/vim-better-sml'
     use {
         'nvim-telescope/telescope.nvim',
