@@ -105,7 +105,7 @@ return require('packer').startup(function(use)
             'nvim-telescope/telescope-dap.nvim',
             'rcarriga/nvim-dap-ui',
             'theHamsta/nvim-dap-virtual-text',
-            'jbyuki/one-small-step-form-vimkind',
+            'jbyuki/one-small-step-for-vimkind',
         }
     }
     use 'jez/vim-better-sml'
@@ -163,6 +163,7 @@ return require('packer').startup(function(use)
             })
         end
     }
+    use 'mfussenegger/nvim-jdtls'
 
     -- Theme / UI
     use 'nvim-lua/popup.nvim'
