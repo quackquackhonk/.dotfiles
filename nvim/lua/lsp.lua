@@ -107,11 +107,21 @@ require 'lspconfig'.clangd.setup {
     on_attach = custom_on_attach,
     capabilities = capabilities,
 }
+-- require 'lspconfig'.ccls.setup {
+--     init_options = {
+--         cache = {
+--             directory = ".ccls-cache";
+--         };
+--     }
+-- }
+
+-- Java ???
+
 
 -- Treesitter configuration
 require 'nvim-treesitter.configs'.setup {
     -- A list of parser names, or "all"
-    ensure_installed = "all",
+    ensure_installed = "maintained",
     -- Install parsers synchronously (only applied to `ensure_installed`)
     sync_install = false,
     -- Automatically install missing parsers when entering buffer
