@@ -4,6 +4,18 @@ local workspace_root = os.getenv("HOME") .. "/code/java/"
 local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ':p:h:t')
 local workspace_dir = workspace_root .. project_name
 -- See `:help vim.lsp.start_client` for an overview of the supported `config` options.
+local custom_on_attach = function(client, bufnr)
+    vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
+    vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, bufopts)
+    vim.keymap.set('n', '<Leader>lD', vim.lsp.buf.declaration, bufopts)
+    vim.keymap.set('n', '<Leader>ld', vim.lsp.buf.definition, bufopts)
+    vim.keymap.set('n', '<Leader>lt', vim.lsp.buf.type_definition, bufopts)
+    vim.keymap.set('n', '<Leader>li', vim.lsp.buf.implementation, bufopts)
+    vim.keymap.set('n', '<Leader>lc', vim.lsp.buf.rename, bufopts)
+    vim.keymap.set('n', '<Leader>lr', '<cmd>Telescope lsp_references<cr>', bufopts)
+    vim.keymap.set('n', '<Leader>l<Leader>', vim.lsp.buf.code_action, bufopts)
+end
+
 local config = {
     -- The command that starts the language server
     -- See: https://github.com/eclipse/eclipse.jdt.ls#running-from-the-command-line

@@ -1,6 +1,8 @@
 # If you come from bash you might have to change your $PATH.
 export PATH=$HOME/bin:/usr/local/bin:$PATH
 export PATH=$HOME/.local/bin:$PATH
+export PATH=$HOME/.sources/smlnj/bin:$PATH
+export PATH=$HOME/.cargo/bin:$PATH
 
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
@@ -39,6 +41,8 @@ alias zshsrc="source ~/.zshrc"
 alias ohmyzsh="nvim ~/.oh-my-zsh"
 alias nvimconf="nvim ~/.config/nvim/init.lua"
 alias gs='git status'
+alias gc='git commit'
+alias ga='git add'
 alias cdc='cd /mnt/c/'
 alias cd~='cd /mnt/c/Users/sahan'
 alias cdd='cd /mnt/d/'
