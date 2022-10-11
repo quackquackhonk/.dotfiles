@@ -11,9 +11,9 @@ local options = {
     signcolumn = "yes",
     number = true,
     relativenumber = true,
-    foldexpr = "nvim_treesitter#foldexpr()",
-    foldmethod = "expr",
-    sessionoptions="blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal",
+    -- foldexpr = "nvim_treesitter#foldexpr()",
+    -- foldmethod = "expr",
+    sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal",
     -- tabs
     tabstop = 4,
     softtabstop = 4,
@@ -27,4 +27,3 @@ local options = {
 for k, v in pairs(options) do
     vim.opt[k] = v
 end
-
