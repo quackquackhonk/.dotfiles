@@ -29,6 +29,8 @@ wk.register({
     f = {
         name = "buFfers",
         f = { telescope.find_files, "Find File" },
+        b = { require("telescope").extensions.file_browser.file_browser, "File Browser" },
+        g = { telescope.git_files, "Git Files" },
         r = { telescope.oldfiles, "Recent Files" },
         n = { cmd("enew"), "New File" },
         s = { cmd("w"), "Save Buffer" },
@@ -66,6 +68,8 @@ wk.register({
         r = { dap.repl.open, "Open DAP REPL" },
         o = { dap.step_over, "Step Over" },
         i = { dap.step_into, "Step Into" },
+        n = { vim.diagnostic.goto_next, "Next Diagnostic" },
+        N = { vim.diagnostic.goto_prev, "Prev Diagnostic" },
     },
     k = {
         name = "Packer",

@@ -3,7 +3,7 @@
 local colors = require("gruvbox.palette")
 
 -- Setup lspconfig.
-local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
 -- LSP Configuration
 local augroup = vim.api.nvim_create_augroup("LspFormatting", {})

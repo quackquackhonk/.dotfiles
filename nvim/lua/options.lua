@@ -20,8 +20,6 @@ local options = {
     shiftwidth = 4,
     expandtab = true,
     incsearch = true,
-    smartindent = true,
-    wrap = false
 }
 
 for k, v in pairs(options) do

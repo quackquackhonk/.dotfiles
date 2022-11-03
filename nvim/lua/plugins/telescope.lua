@@ -48,5 +48,11 @@ require('telescope').setup({
             i = { ["<esc>"] = require("telescope.actions").close },
         },
     },
+    extensions = {
+        file_browser = {
+            hijack_netrw = true,
+        }
+    }
 })
 require('telescope').load_extension('projects')
+require('telescope').load_extension('file_browser')
