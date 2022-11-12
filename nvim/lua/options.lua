@@ -25,3 +25,6 @@ local options = {
 for k, v in pairs(options) do
     vim.opt[k] = v
 end
+
+vim.cmd('set t_ZH=[3m')
+vim.cmd('set t_ZH=[23m')

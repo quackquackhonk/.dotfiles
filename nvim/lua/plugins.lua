@@ -227,11 +227,10 @@ return require('packer').startup(function(use)
     }
     use 'ellisonleao/gruvbox.nvim'
     use 'EdenEast/nightfox.nvim'
-    use 'sainnhe/sonokai'
-    use 'navarasu/onedark.nvim'
-    use 'rafamadriz/neon'
+    use { 'Everblush/everblush.nvim', as = 'everblush' }
     use 'marko-cerovac/material.nvim'
-    use 'folke/lsp-colors.nvim'
+    use 'savq/melange'
+    -- use 'folke/lsp-colors.nvim'
     use {
         'nvim-lualine/lualine.nvim',
         config = function()
