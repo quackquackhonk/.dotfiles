@@ -91,6 +91,31 @@ require("gruvbox").setup({
             fg = colors.light1,
             bg = colors.dark0_hard,
         },
+        -- Trouble overrides
+        TroubleNormal = {
+            fg = colors.light1,
+            bg = colors.dark0_hard,
+        },
+        TroubleCount = {
+            fg = colors.neutral_green,
+            bg = colors.dark0_hard,
+        },
+        TroubleFoldIcon = {
+            fg = colors.bright_yellow,
+            bg = colors.dark0_hard,
+        },
+        TroubleSignError = {
+            fg = colors.bright_red,
+            bg = colors.dark0_hard,
+        },
+        TroubleSignWarning = {
+            fg = colors.bright_yellow,
+            bg = colors.dark0_hard,
+        },
+        TroubleSignHint = {
+            fg = colors.bright_aqua,
+            bg = colors.dark0_hard,
+        },
         TelescopeSelection = { bg = colors.dark0_soft, fg = colors.light0 },
         TelescopeResultsDiffAdd = { fg = colors.faded_green },
         TelescopeResultsDiffChange = { fg = colors.faded_yellow },

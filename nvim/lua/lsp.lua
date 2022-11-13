@@ -20,6 +20,15 @@ local custom_on_attach = function(client, bufnr)
             end,
         })
     end
+
+    --- diagnostic configs
+    vim.diagnostic.config({
+        virtual_lines = {
+            only_current_line = true,
+        },
+        virtual_text = false,
+        float = false,
+    })
     vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
     vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, bufopts)
     vim.keymap.set('n', '<Leader>lD', vim.lsp.buf.declaration, bufopts)
