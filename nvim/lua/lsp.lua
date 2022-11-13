@@ -31,8 +31,6 @@ local custom_on_attach = function(client, bufnr)
     vim.keymap.set('n', '<Leader>l<Leader>', vim.lsp.buf.code_action, bufopts)
 end
 
-vim.cmd [[autocmd CursorHold * lua vim.diagnostic.open_float(nil, {focusable = false})]]
-
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
     vim.lsp.diagnostic.on_publish_diagnostics, {
     virtual_text = false,
@@ -54,13 +52,20 @@ require('rust-tools').setup {
         autoSetHints = true,
         hover_with_actions = false,
         inlay_hints = {
-            show_parameter_hints = false,
-            parameter_hints_prefix = "",
-            other_hints_prefix = "",
+            show_parameter_hints = true,
+            parameter_hints_prefix = " <- ",
+            other_hints_prefix = " => ",
         }
     },
     server = {
-        on_attach = custom_on_attach,
+        on_attach = function(client, bufnr)
+            custom_on_attach(client, bufnr)
+            require('which-key').register({
+                l = {
+                    C = { ":RustOpenCargo<CR>", "Open Cargo.toml" }
+                }
+            }, { prefix = "<leader>" })
+        end,
         capabilities = capabilities,
         settings = {
             ["rust-analyzer"] = {

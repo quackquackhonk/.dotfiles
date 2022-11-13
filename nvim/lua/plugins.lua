@@ -6,32 +6,6 @@ return require('packer').startup(function(use)
     use 'wbthomason/packer.nvim'
 
     -- editor
-    use {
-        'jbyuki/venn.nvim',
-        config = function()
-            function _G.Toggle_venn()
-                local venn_enabled = vim.inspect(vim.b.venn_enabled)
-                if venn_enabled == "nil" then
-                    vim.b.venn_enabled = true
-                    vim.cmd [[setlocal ve=all]]
-                    -- draw a line on HJKL keystokes
-                    vim.api.nvim_buf_set_keymap(0, "n", "<Down>", "<C-v>j:VBox<CR>", { noremap = true })
-                    vim.api.nvim_buf_set_keymap(0, "n", "<Up>", "<C-v>k:VBox<CR>", { noremap = true })
-                    vim.api.nvim_buf_set_keymap(0, "n", "<Right>", "<C-v>l:VBox<CR>", { noremap = true })
-                    vim.api.nvim_buf_set_keymap(0, "n", "<Left>", "<C-v>h:VBox<CR>", { noremap = true })
-                    -- draw a box by pressing "f" with visual selection
-                    vim.api.nvim_buf_set_keymap(0, "v", "f", ":VBox<CR>", { noremap = true })
-                else
-                    vim.cmd [[setlocal ve=]]
-                    vim.cmd [[mapclear <buffer>]]
-                    vim.b.venn_enabled = nil
-                end
-            end
-
-            -- toggle keymappings for venn using <leader>v
-            vim.api.nvim_set_keymap('n', '<leader>v', ":lua Toggle_venn()<CR>", { noremap = true })
-        end
-    }
     use 'monaqa/dial.nvim'
     use 'tpope/vim-sensible'
     use 'tpope/vim-surround'
@@ -142,17 +116,20 @@ return require('packer').startup(function(use)
     }
     use {
         'nvim-telescope/telescope.nvim',
-        tag = '0.1.0',
+        tag = '0.1.x',
         config = function()
             require('plugins.telescope')
         end
+    }
+    use {
+        'nvim-telescope/telescope-fzf-native.nvim',
+        run = 'make'
     }
     use { 'nvim-telescope/telescope-file-browser.nvim' }
     use {
         'nvim-treesitter/nvim-treesitter',
         run = ':TSUpdate'
     }
-    use 'p00f/nvim-ts-rainbow'
     use 'neovim/nvim-lspconfig'
     use {
         'williamboman/mason.nvim',
@@ -227,10 +204,13 @@ return require('packer').startup(function(use)
     }
     use 'ellisonleao/gruvbox.nvim'
     use 'EdenEast/nightfox.nvim'
-    use { 'Everblush/everblush.nvim', as = 'everblush' }
-    use 'marko-cerovac/material.nvim'
-    use 'savq/melange'
-    -- use 'folke/lsp-colors.nvim'
+    use 'folke/lsp-colors.nvim'
+    use({
+        "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
+        config = function()
+            require("lsp_lines").setup()
+        end,
+    })
     use {
         'nvim-lualine/lualine.nvim',
         config = function()

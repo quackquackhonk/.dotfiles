@@ -16,7 +16,6 @@ vim.g.localmapleader = ' '
 
 -- Leader key mappings with Which-Key
 local telescope = require 'telescope.builtin'
-local tele_themes = require 'telescope.themes'
 local dap = require 'dap'
 wk.register({
     -- f = buFfers
@@ -27,13 +26,11 @@ wk.register({
     -- k = pacKer
     -- t = Test
     f = {
-        name = "buFfers",
+        name = "Find",
         f = { telescope.find_files, "Find File" },
         b = { require("telescope").extensions.file_browser.file_browser, "File Browser" },
         g = { telescope.git_files, "Git Files" },
         r = { telescope.oldfiles, "Recent Files" },
-        n = { cmd("enew"), "New File" },
-        s = { cmd("w"), "Save Buffer" },
         q = { cmd("bd"), "Close Buffer" },
         Q = { cmd("bd!"), "Force Close Buffer" },
     },
@@ -70,6 +67,19 @@ wk.register({
         i = { dap.step_into, "Step Into" },
         n = { vim.diagnostic.goto_next, "Next Diagnostic" },
         N = { vim.diagnostic.goto_prev, "Prev Diagnostic" },
+    },
+    o = {
+        name = "Open",
+        t = { "Terminal" },
+        T = { cmd("lua require('neotest').summary.toggle()"), "NeoTest" },
+        f = { cmd("NvimTreeToggle"), "File Tree" },
+        d = { cmd("TroubleToggle"), "Diagnostics" },
+        s = { cmd("SymbolsOutline"), "Symbol Outline" },
+        m = { cmd("MaximizerToggle"), "Maximize Split" },
+    },
+    s = {
+        name = "Settings",
+        r = { cmd("set rnu!"), "Relative Numbers" },
     },
     k = {
         name = "Packer",
@@ -161,12 +171,6 @@ keymap('i', '<M-m>', '<Left>')
 keymap('i', '<M-n>', '<Down>')
 keymap('i', '<M-e>', '<Up>')
 keymap('i', '<M-i>', '<Right>')
--- Toggles
-keymap('n', '<F4>', ':NvimTreeToggle<cr>')
-keymap('n', '<F5>', cmd("MaximizerToggle!"))
-keymap('n', '<F6>', ':lua require("neotest").summary.toggle()<CR>')
-keymap('n', '<F7>', ':TroubleToggle<cr>')
-keymap('n', '<F8>', cmd("SymbolsOutline"))
 
 -- Visual Mode
 -- Stay in visual mode when indenting

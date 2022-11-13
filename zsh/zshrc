@@ -55,6 +55,7 @@ alias fish_reload='source $HOME/.config/fish/config.fish'
 alias nv='nvim'
 alias vi='nvim'
 alias em='emacs -nw'
+alias tmux="env TERM=screen-256color tmux"
 alias ta='tmux a'
 alias cgt='cargo nextest run'
 alias cgr='cargo run'

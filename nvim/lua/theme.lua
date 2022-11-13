@@ -36,104 +36,98 @@
   faded_orange = "#af3a03",
   gray = "#928374", ]]
 
--- require("gruvbox").setup({
---     undercurl = true,
---     underline = true,
---     bold = true,
---     italic = false,
---     strikethrough = true,
---     invert_selection = false,
---     invert_signs = false,
---     invert_tabline = false,
---     invert_intend_guides = false,
---     inverse = true, -- invert background for search, diffs, statuslines and errors
---     contrast = "", -- can be "hard", "soft" or empty string
---     overrides = {
---         -- Telescope Overrides
---         TelescopeNormal = {
---             bg = colors.dark0_hard,
---             fg = colors.dark0_hard,
---         },
---         TelescopePromptNormal = {
---             fg = colors.light0,
---             bg = colors.dark0_soft,
---         },
---         TelescopeResultsNormal = {
---             bg = colors.dark0_hard,
---             fg = colors.light1,
---         },
---         TelescopePreviewNormal = {
---             bg = colors.dark0_hard,
---             fg = colors.light1,
---         },
---         TelescopeBorder = {
---             fg = colors.dark0_hard,
---             bg = colors.dark0_hard,
---         },
---         TelescopePromptBorder = {
---             fg = colors.dark0_soft,
---             bg = colors.dark0_soft,
---         },
---         TelescopePromptPrefix = {
---             fg = colors.faded_purple,
---             bg = colors.dark0_soft,
---         },
---         -- Title
---         TelescopePreviewTitle = {
---             fg = colors.dark0,
---             bg = colors.neutral_blue,
---         },
---         TelescopePromptTitle = {
---             fg = colors.dark0,
---             bg = colors.faded_purple,
---         },
---         TelescopeResultsTitle = {
---             fg = colors.dark0_hard,
---             bg = colors.dark0_hard,
---         },
---         TelescopeSelection = { bg = colors.dark0_soft, fg = colors.light0 },
---         TelescopeResultsDiffAdd = { fg = colors.faded_green },
---         TelescopeResultsDiffChange = { fg = colors.faded_yellow },
---         TelescopeResultsDiffDelete = { fg = colors.faded_purple },
---         -- CMP menu overrides
---         CmpItemAbbr = { fg = colors.light0, bg = "NONE" },
---         CmpItemMenu = { fg = colors.neutral_purple, bg = "NONE" },
---         CmpItemKindText = { fg = colors.light1, bg = colors.neutral_orange },
---         CmpItemKindMethod = { fg = colors.light1, bg = colors.neutral_blue },
---         CmpItemKindFunction = { fg = colors.light1, bg = colors.neutral_blue },
---         CmpItemKindConstructor = { fg = colors.light1, bg = colors.neutral_yellow },
---         CmpItemKindField = { fg = colors.light1, bg = colors.neutral_blue },
---         CmpItemKindClass = { fg = colors.light1, bg = colors.neutral_yellow },
---         CmpItemKindInterface = { fg = colors.light1, bg = colors.neutral_yellow },
---         CmpItemKindModule = { fg = colors.light1, bg = colors.neutral_blue },
---         CmpItemKindProperty = { fg = colors.light1, bg = colors.neutral_blue },
---         CmpItemKindValue = { fg = colors.light1, bg = colors.neutral_orange },
---         CmpItemKindEnum = { fg = colors.light1, bg = colors.neutral_yellow },
---         CmpItemKindKeyword = { fg = colors.light1, bg = colors.neutral_purple },
---         CmpItemKindSnippet = { fg = colors.light1, bg = colors.neutral_green },
---         CmpItemKindFile = { fg = colors.light1, bg = colors.neutral_blue },
---         CmpItemKindEnumMember = { fg = colors.light1, bg = colors.neutral_aqua },
---         CmpItemKindConstant = { fg = colors.light1, bg = colors.neutral_orange },
---         CmpItemKindStruct = { fg = colors.light1, bg = colors.neutral_yellow },
---         CmpItemKindTypeParameter = { fg = colors.light1, bg = colors.neutral_yellow },
---     },
--- })
+local colors = require("gruvbox.palette")
+require("gruvbox").setup({
+    undercurl = true,
+    underline = true,
+    bold = true,
+    italic = true,
+    strikethrough = true,
+    invert_selection = false,
+    invert_signs = false,
+    invert_tabline = false,
+    invert_intend_guides = false,
+    inverse = true, -- invert background for search, diffs, statuslines and errors
+    overrides = {
+        -- Telescope Overrides
+        TelescopeNormal = {
+            bg = colors.dark0_hard,
+            fg = colors.light1,
+        },
+        TelescopePromptNormal = {
+            fg = colors.light1,
+            bg = colors.dark0_hard,
+        },
+        TelescopeResultsNormal = {
+            bg = colors.dark0_hard,
+            fg = colors.light1,
+        },
+        TelescopePreviewNormal = {
+            bg = colors.dark0_hard,
+            fg = colors.light1,
+        },
+        TelescopeBorder = {
+            fg = colors.light1,
+            bg = colors.dark0_hard,
+        },
+        TelescopePromptBorder = {
+            fg = colors.light1,
+            bg = colors.dark0_hard,
+        },
+        TelescopePromptPrefix = {
+            fg = colors.neutral_red,
+            bg = colors.dark0_hard,
+        },
+        -- Title
+        TelescopePreviewTitle = {
+            fg = colors.light1,
+            bg = colors.dark0_hard,
+        },
+        TelescopePromptTitle = {
+            fg = colors.light1,
+            bg = colors.dark0_hard,
+        },
+        TelescopeResultsTitle = {
+            fg = colors.light1,
+            bg = colors.dark0_hard,
+        },
+        TelescopeSelection = { bg = colors.dark0_soft, fg = colors.light0 },
+        TelescopeResultsDiffAdd = { fg = colors.faded_green },
+        TelescopeResultsDiffChange = { fg = colors.faded_yellow },
+        TelescopeResultsDiffDelete = { fg = colors.faded_purple },
+        -- CMP menu overrides
+        CmpItemAbbr = { fg = colors.light0, bg = "NONE" },
+        CmpItemMenu = { fg = colors.neutral_purple, bg = "NONE" },
+        CmpItemKindText = { fg = colors.light1, bg = colors.neutral_orange },
+        CmpItemKindMethod = { fg = colors.light1, bg = colors.neutral_blue },
+        CmpItemKindFunction = { fg = colors.light1, bg = colors.neutral_blue },
+        CmpItemKindConstructor = { fg = colors.light1, bg = colors.neutral_yellow },
+        CmpItemKindField = { fg = colors.light1, bg = colors.neutral_blue },
+        CmpItemKindClass = { fg = colors.light1, bg = colors.neutral_yellow },
+        CmpItemKindInterface = { fg = colors.light1, bg = colors.neutral_yellow },
+        CmpItemKindModule = { fg = colors.light1, bg = colors.neutral_blue },
+        CmpItemKindProperty = { fg = colors.light1, bg = colors.neutral_blue },
+        CmpItemKindValue = { fg = colors.light1, bg = colors.neutral_orange },
+        CmpItemKindEnum = { fg = colors.light1, bg = colors.neutral_yellow },
+        CmpItemKindKeyword = { fg = colors.light1, bg = colors.neutral_purple },
+        CmpItemKindSnippet = { fg = colors.light1, bg = colors.neutral_green },
+        CmpItemKindFile = { fg = colors.light1, bg = colors.neutral_blue },
+        CmpItemKindEnumMember = { fg = colors.light1, bg = colors.neutral_aqua },
+        CmpItemKindConstant = { fg = colors.light1, bg = colors.neutral_orange },
+        CmpItemKindStruct = { fg = colors.light1, bg = colors.neutral_yellow },
+        CmpItemKindTypeParameter = { fg = colors.light1, bg = colors.neutral_yellow },
+    },
+})
 vim.opt.termguicolors = true
-vim.cmd('colorscheme melange')
--- require('everblush').setup({
---     nvim_tree = { contrast = true },
--- })
+vim.cmd('colorscheme gruvbox')
 
--- LUA LINE CONFIG
 
--- Eviline config for lualine
--- Author: shadmansaleh
 -- Credit: glepnir
 local lualine = require('lualine')
 
 -- Color table for highlights
 lualine.setup {
     options = {
-        theme = 'everblush'
+        theme = 'gruvbox'
     }
 }
