@@ -65,12 +65,8 @@ wk.register({
         r = { dap.repl.open, "Open DAP REPL" },
         o = { dap.step_over, "Step Over" },
         i = { dap.step_into, "Step Into" },
-        n = { function()
-            vim.diagnostic.goto_next({ float = false })
-        end, "Next Diagnostic" },
-        N = { function()
-            vim.diagnostic.goto_prev({ float = false })
-        end, "Previous Diagnostic" },
+        n = { vim.diagnostic.goto_next, "Next Diagnostic" },
+        N = { vim.diagnostic.goto_prev, "Previous Diagnostic" },
     },
     o = {
         name = "Open",
@@ -84,7 +80,6 @@ wk.register({
     s = {
         name = "Settings",
         r = { cmd("set rnu!"), "Relative Numbers" },
-        l = { require('lsp_lines').toggle, "LSP Lines" }
     },
     k = {
         name = "Packer",

@@ -23,10 +23,7 @@ local custom_on_attach = function(client, bufnr)
 
     --- diagnostic configs
     vim.diagnostic.config({
-        virtual_lines = {
-            only_current_line = true,
-        },
-        virtual_text = false,
+        virtual_text = true,
         float = false,
     })
     vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
@@ -42,7 +39,7 @@ end
 
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
     vim.lsp.diagnostic.on_publish_diagnostics, {
-    virtual_text = false,
+    virtual_text = true,
     signs = true,
     underline = true,
     update_in_insert = false,

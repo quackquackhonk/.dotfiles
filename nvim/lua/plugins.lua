@@ -205,12 +205,6 @@ return require('packer').startup(function(use)
     use 'ellisonleao/gruvbox.nvim'
     use 'EdenEast/nightfox.nvim'
     use 'folke/lsp-colors.nvim'
-    use({
-        "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
-        config = function()
-            require("lsp_lines").setup()
-        end,
-    })
     use {
         'nvim-lualine/lualine.nvim',
         config = function()
