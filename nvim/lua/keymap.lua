@@ -65,6 +65,7 @@ wk.register({
         r = { dap.repl.open, "Open DAP REPL" },
         o = { dap.step_over, "Step Over" },
         i = { dap.step_into, "Step Into" },
+        k = { vim.diagnostic.open_float, "Next Diagnostic" },
         n = { vim.diagnostic.goto_next, "Next Diagnostic" },
         N = { vim.diagnostic.goto_prev, "Previous Diagnostic" },
     },
