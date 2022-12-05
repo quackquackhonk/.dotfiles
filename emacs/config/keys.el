@@ -56,6 +56,8 @@
   "," 'switch-to-prev-buffer
   "." 'switch-to-next-buffer
   "q" 'kill-current-buffer
+  ;; projectile
+  "p" 'projectile-command-map
   ;; git bindings
   "gg" 'magit
   ;; file bindings: f

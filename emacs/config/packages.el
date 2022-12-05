@@ -71,6 +71,13 @@
 (use-package vterm
   :ensure t)
 
+(use-package projectile
+  :config (projectile-mode)
+  :custom ((projectile-completion-system 'ivy))
+  :init
+  (when (file-directory-p "~/code")
+    (setq projectile-project-search-path '("~/code"))))
+
 (use-package magit
   :ensure t)
 
