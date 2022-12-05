@@ -54,7 +54,10 @@
   ;; top level bindings
   "SPC" 'switch-to-buffer
   "," 'switch-to-prev-buffer
+  "." 'switch-to-next-buffer
   "q" 'kill-current-buffer
+  ;; git bindings
+  "gg" 'magit
   ;; file bindings: f
   "ff" 'find-file
   "fq" 'kill-buffer)
