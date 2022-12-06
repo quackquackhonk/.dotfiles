@@ -20,7 +20,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(projectile exec-path-from-shell rustic tree-sitter-langs tree-sitter counsel swiper company evil-surround evil-numbers evil use-package rainbow-delimiters ivy doom-themes doom-modeline command-log-mode)))
+   '(solaire-mode counsel swiper company evil-surround evil-numbers evil use-package rainbow-delimiters ivy doom-themes doom-modeline command-log-mode)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

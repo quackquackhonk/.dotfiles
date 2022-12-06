@@ -48,19 +48,24 @@
   :config
   (setq which-key-idle-delay 0.5))
 
-(use-package general
-  :config
-  (general-create-definer my/leader-keys
-    :keymaps '(normal insert visual emacs)
-    :prefix "SPC"
-    :global-prefix "S-SPC"))
 
 (defun my/emacs-reload ()
   (interactive)
   (load-file user-init-file))
 
+(use-package general)
+
+(defconst my/leader "SPC")
+(defconst my/global-leader "S-SPC")
+
+;; keybindings
+(general-create-definer my/leader-top
+  :keymaps '(normal insert visual emacs)
+  :prefix my/leader
+  :global-prefix my/global-leader)
+
 ;; defines leader key bindings
-(my/leader-keys
+(my/leader-top
   ;; top level bindings
   "SPC" 'switch-to-buffer
   "," 'switch-to-prev-buffer
@@ -72,8 +77,9 @@
   "p" 'projectile-command-map
   ;; git bindings
   "gg" 'magit
-  ;; file bindings: f
+  ;; files
   "ff" 'find-file
+  "fs" 'swiper
   "fq" 'kill-buffer)
 
-
+(use-package hydra)

@@ -27,8 +27,6 @@
   ;; so we can switch away
   (define-key ivy-minibuffer-map (kbd "C-w") 'evil-window-map))
 
-;; Use for auto-complete. Why?
-;; .. saves typing, allows multiple back-ends based on the current language/mode.
 (use-package company
   :commands (company-complete-common company-dabbrev)
   :config
@@ -55,7 +53,6 @@
   (define-key company-search-map (kbd "C-k") 'company-select-previous))
 
 ;; Use `swiper' for interactive buffer search. Why?
-;; .. quickly search the buffer if useful.
 (use-package swiper
   :commands (swiper)
   :config
@@ -78,8 +75,20 @@
   (when (file-directory-p "~/code")
     (setq projectile-project-search-path '("~/code"))))
 
+(use-package persp-mode
+  :config
+    (with-eval-after-load "persp-mode"
+      (setq wg-morph-on nil)
+      (setq persp-autokill-buffer-on-remove 'kill-weak)
+      (add-hook 'window-setup-hook #'(lambda () (persp-mode 1))))
+    (require 'persp-mode))
+
 (use-package magit
   :ensure t)
+
+(use-package yasnippet
+  :config
+  (yas-global-mode 1))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
