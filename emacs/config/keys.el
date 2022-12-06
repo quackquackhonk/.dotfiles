@@ -23,6 +23,12 @@
   (evil-set-initial-state 'messages-buffer-mode 'normal)
   (evil-set-initial-state 'dashboard-mode 'normal))
 
+(use-package evil-collection
+  :after evil
+  :ensure t
+  :config
+  (evil-collection-init))
+
 ;; TODO: needs to actually bind these
 (use-package evil-numbers)
 
@@ -49,6 +55,10 @@
     :prefix "SPC"
     :global-prefix "S-SPC"))
 
+(defun my/emacs-reload ()
+  (interactive)
+  (load-file user-init-file))
+
 ;; defines leader key bindings
 (my/leader-keys
   ;; top level bindings
@@ -56,6 +66,8 @@
   "," 'switch-to-prev-buffer
   "." 'switch-to-next-buffer
   "q" 'kill-current-buffer
+  ;; misc
+  "/r" 'my/emacs-reload
   ;; projectile
   "p" 'projectile-command-map
   ;; git bindings

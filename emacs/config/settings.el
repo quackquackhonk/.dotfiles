@@ -1,5 +1,3 @@
-
-
 (scroll-bar-mode -1)        ; Disable visible scrollbar
 (tool-bar-mode -1)          ; Disable the toolbar
 (tooltip-mode -1)           ; Disable tooltips
@@ -8,13 +6,15 @@
 (menu-bar-mode -1)          ; Disable the menu b
 (electric-pair-mode)        ; auto pairs
 (setq visible-bell t)       ; Set up the visible bell
+(setq vc-follow-symlinks t) ; auto follow VC links
 (setq indicate-empty-lines t)
 
-;; disable file backups 
+;; only "y or n" prompts
+(defalias 'yes-or-no-p 'y-or-n-p)
+
+;; disable file backups
 (setq backup-inhibited t)
 (setq auto-save-default nil)
 
 ;; expand tabs into spaces
-(setq default-tab-width 4)
 (setq tab-width 4)
-
