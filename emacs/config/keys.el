@@ -48,6 +48,18 @@
   :config
   (setq which-key-idle-delay 0.5))
 
+(use-package hydra)
+(defhydra hydra-windows (:hint nil :rows 1)
+  "Window Navigation..."
+  ;; navigating windows
+  ("<left>" evil-window-left)
+  ("<up>" evil-window-up)
+  ("<down>" evil-window-down)
+  ("<right>" evil-window-right)
+  ;; make windows  
+  ("v" evil-window-vsplit)
+  ("s" evil-window-split)
+  ("q" evil-quit))
 
 (defun my/emacs-reload ()
   (interactive)
@@ -75,6 +87,8 @@
   "/r" 'my/emacs-reload
   ;; projectile
   "p" 'projectile-command-map
+  ;; windows
+  "w" 'hydra-windows/body
   ;; git bindings
   "gg" 'magit
   ;; files
@@ -82,4 +96,3 @@
   "fs" 'swiper
   "fq" 'kill-buffer)
 
-(use-package hydra)

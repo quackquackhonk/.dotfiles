@@ -9,9 +9,11 @@
 (use-package doom-themes
   :ensure t
   :config
-  (doom-themes-visual-bell-config)
+  (setq doom-themes-enable-bold t
+	doom-themes-enable-italic t)
+  (load-theme 'doom-gruvbox 1)
+  (doom-themes-visual-bell-config))
 
-  (load-theme 'doom-gruvbox 1))
 
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
