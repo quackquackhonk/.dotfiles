@@ -60,6 +60,8 @@
   ;; .. allows us to operate on the term just jumped to (look up reference for e.g.)
   (setq swiper-goto-start-of-match t))
 
+(use-package ripgrep)
+
 ;; Use counsel for project wide searches. Why?
 ;; .. interactive project wide search is incredibly useful.
 (use-package counsel
@@ -89,6 +91,15 @@
 (use-package yasnippet
   :config
   (yas-global-mode 1))
+
+(use-package hl-todo
+  :config
+   (setq hl-todo-keyword-faces
+         '(("TODO"   . "#FF0000")
+           ("FIXME"  . "#FF0000")
+           ("DEBUG"  . "#A020F0")
+           ("GOTCHA" . "#FF4500")
+           ("STUB"   . "#1E90FF"))))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.

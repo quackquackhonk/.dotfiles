@@ -29,8 +29,10 @@
   :config
   (evil-collection-init))
 
-;; TODO: needs to actually bind these
-(use-package evil-numbers)
+(use-package evil-numbers
+  :config
+  (define-key evil-normal-state-map (kbd "g +") 'evil-numbers/inc-at-pt)
+  (define-key evil-normal-state-map (kbd "g -") 'evil-numbers/dec-at-pt))
 
 (use-package evil-surround
   :ensure t
@@ -46,7 +48,7 @@
   :init (which-key-mode)
   :diminish
   :config
-  (setq which-key-idle-delay 0.5))
+  (setq which-key-idle-delay 1.5))
 
 (use-package hydra)
 (defhydra hydra-windows (:hint nil :rows 1)
@@ -60,6 +62,12 @@
   ("v" evil-window-vsplit)
   ("s" evil-window-split)
   ("q" evil-quit))
+
+(defun my/toggle-relative-line ()
+  (interactive)
+  (if (eq display-line-numbers 'relative)
+      (setq display-line-numbers t)
+      (setq display-line-numbers 'relative)))
 
 (defun my/emacs-reload ()
   (interactive)
@@ -85,8 +93,16 @@
   "q" 'kill-current-buffer
   ;; misc
   "/r" 'my/emacs-reload
+  ;; toggles (t)
+  "tr" 'my/toggle-relative-line
   ;; projectile
   "p" 'projectile-command-map
+  ;; LSP
+  "ld" 'lsp-find-definition
+  "lr" 'lsp-ui-peek-find-references
+  "lc" 'lsp-rename
+  "lI" 'lsp-ui-imenu
+  "l SPC" 'lsp-execute-code-action
   ;; windows
   "w" 'hydra-windows/body
   ;; git bindings
