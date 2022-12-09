@@ -72,27 +72,35 @@
 (defun my/emacs-reload ()
   (interactive)
   (load-file user-init-file))
+(defun my/kill-current-buffer ()
+  (interactive)
+  (kill-buffer (current-buffer)))
 
 (use-package general)
 
 (defconst my/leader "SPC")
+(defconst my/local-leader "SPC /")
 (defconst my/global-leader "S-SPC")
 
 ;; keybindings
-(general-create-definer my/leader-top
-  :keymaps '(normal insert visual emacs)
+(general-create-definer my/leader-definer
+  :keymaps '(normal visual emacs)
   :prefix my/leader
   :global-prefix my/global-leader)
 
+(general-create-definer my/local-leader-definer
+  :keymaps '(normal visual emacs)
+  :prefix my/local-leader)
+
 ;; defines leader key bindings
-(my/leader-top
+(my/leader-definer
   ;; top level bindings
   "SPC" 'switch-to-buffer
   "," 'switch-to-prev-buffer
   "." 'switch-to-next-buffer
-  "q" 'kill-current-buffer
-  ;; misc
-  "/r" 'my/emacs-reload
+  "q" 'my/kill-current-buffer
+  ;; misc (;)
+  ";r" 'my/emacs-reload
   ;; toggles (t)
   "tr" 'my/toggle-relative-line
   ;; projectile
@@ -112,3 +120,4 @@
   "fs" 'swiper
   "fq" 'kill-buffer)
 
+(provide 'my/keys)

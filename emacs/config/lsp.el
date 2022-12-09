@@ -71,6 +71,7 @@
   (setq sml-indent-level 2))
 
 ;; RACKET
-(use-package racket-mdoe)
-
-(provide 'lsp)
+(use-package racket-mode
+  :after format-all)
+(add-hook 'racket-mode-hook 'format-all-mode)
+(define-key racket-mode-map (kbd "SPC / f") 'format-all-buffer)
