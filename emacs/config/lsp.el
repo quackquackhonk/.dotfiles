@@ -29,9 +29,9 @@
   :config
   (setq
     ;; sideline congfig
-    lsp-ui-sideline-show-code-actions nil
+    lsp-ui-sideline-show-code-actions t
     lsp-ui-sideline-show-diagnostics t
-	lsp-ui-sideline-delay 0.2
+    lsp-ui-sideline-delay 0.2
     ;; documentation settings
     lsp-ui-doc-enable t
     lsp-ui-doc-show-with-cursor nil
@@ -47,8 +47,14 @@
 
 ;; RUST
 (use-package rustic
+  :hook ((rust-mode). lsp-deferred)
   :config
+  (setq rustic-lsp-server 'rust-analyzer)
   (setq rustic-format-on-save t))
+
+(use-package cargo
+  :after rustic)
+;; (define-key cargo-mode-map (kbd "SPC l c") 'cargo-minor-mode-command-map)
 
 ;; C/C++
 (use-package ccls

@@ -108,7 +108,7 @@
   ;; LSP
   "ld" 'lsp-find-definition
   "lr" 'lsp-ui-peek-find-references
-  "lc" 'lsp-rename
+  "lR" 'lsp-rename
   "lI" 'lsp-ui-imenu
   "l SPC" 'lsp-execute-code-action
   ;; windows
