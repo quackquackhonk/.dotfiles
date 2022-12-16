@@ -93,8 +93,8 @@ some general settings. enabling the mouse, column numbers, things of that sort.
   ;; defines leader key bindings
   (my/leader-definer
     ;; top level bindings
-    "SPC" 'switch-to-buffer
-    "x" 'execute-extended-command
+    "SPC" 'helm-buffers-list
+    "x" 'helm-M-x
     "," 'switch-to-prev-buffer
     "." 'switch-to-next-buffer
     "q" 'my/kill-current-buffer
@@ -109,7 +109,8 @@ some general settings. enabling the mouse, column numbers, things of that sort.
     "lr" 'lsp-ui-peek-find-references
     "lR" 'lsp-rename
     "lI" 'lsp-ui-imenu
-    "l SPC" 'lsp-execute-code-action
+    "le" 'helm-lsp-diagnostics
+    "l SPC" 'helm-lsp-code-actions
     ;; windows
     "w" 'hydra-windows/body
     ;; git bindings
@@ -192,19 +193,26 @@ some general settings. enabling the mouse, column numbers, things of that sort.
 * packages
 ** completion
 
-Configuration for ~ivy~, ~company~, ~counsel~, and ~swiper~
+Configuration for ~ivy~ / `helm`, ~company~, ~counsel~, and ~swiper~
 
 #+begin_src emacs-lisp 
   ;; IVY COMPLETION
-  (use-package ivy
-    :demand t
+  ;; (use-package ivy
+  ;;   :demand t
+  ;;   :config
+  ;;   (ivy-mode)
+  ;;   (define-key ivy-minibuffer-map (kbd "<C-return>") 'ivy-done)
+  ;;   ;; so we can switch away
+  ;;   (define-key ivy-minibuffer-map (kbd "C-w") 'evil-window-map))
+  (use-package helm
+    :ensure t
     :config
-    (ivy-mode)
-
-    (define-key ivy-minibuffer-map (kbd "<C-return>") 'ivy-done)
-
-    ;; so we can switch away
-    (define-key ivy-minibuffer-map (kbd "C-w") 'evil-window-map))
+    (global-set-key (kbd "M-x") 'helm-M-x)
+    ;; completion window settings
+    (setq helm-display-header-line nil)
+    (helm-autoresize-mode 1)
+    (setq helm-autoresize-max-height 25)
+    (setq helm-autoresize-min-height 25))
 
   ;; company for text auto completion
   (use-package company
@@ -257,10 +265,13 @@ comfig
 #+begin_src emacs-lisp 
   (use-package projectile
     :config (projectile-mode)
-    :custom ((projectile-completion-system 'ivy))
+    :custom ((projectile-completion-system 'helm))
     :init
     (when (file-directory-p "~/code")
       (setq projectile-project-search-path '("~/code"))))
+
+  (use-package helm-projectile
+    :config (helm-projectile-on))
 
   (use-package persp-mode
     :config
@@ -329,7 +340,8 @@ comfig
       lsp-modeline-diagnostics-enable t
       lsp-modeline-code-actions-enable t))
 
-  (use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
+  (use-package helm-lsp)
+  (use-package helm-xref)
 #+end_src
 
 ** C/C++
@@ -362,8 +374,20 @@ comfig
 ** racket
 #+begin_src emacs-lisp 
   (use-package racket-mode
-    :hook ((racket-mode . format-all-mode)
-           (racket-mode . racket-xp-mode)))
+      :hook ((racket-mode . format-all-mode)
+             (racket-mode . racket-xp-mode)))
+  (general-define-key
+   :prefix "SPC"
+   :keymaps 'racket-mode-map
+   :states '(normal visual)
+   ;; language bindings
+   "ld" 'xref-find-definitions
+   "lr" 'xref-find-references
+   "lR" 'racket-xp-rename
+   ;; racket bindings
+   "/f" 'format-all-buffer
+   "/r" 'racket-run-and-switch-to-repl
+   "/R" 'racket-run-module-at-point)
 #+end_src
 ** rust
 #+begin_src emacs-lisp 

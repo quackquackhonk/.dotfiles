@@ -63,7 +63,7 @@ alias vi='nvim'
 alias em='emacsclient -nw'
 alias emd='emacs --daemon'
 alias emdkill='emacsclient -e "(kill-emacs)"'
-alias emconf='emacsclient -nw ~/.emacs.d/init.el'
+alias emconf='emacsclient -nw ~/.emacs.d/config.org'
 alias emreload='emacsclient -e "(load-file user-init-file)"'
 
 alias tmux="env TERM=screen-256color tmux"
