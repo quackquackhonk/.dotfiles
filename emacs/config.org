@@ -8,7 +8,6 @@ It's my org config!
                            ("org" . "https://orgmode.org/elpa/")
                            ("elpa" . "https://elpa.gnu.org/packages/")))
 
-  (package-initialize)
   (unless package-archive-contents
    (package-refresh-contents))
   
@@ -85,14 +84,11 @@ some general settings. enabling the mouse, column numbers, things of that sort.
   ;; general is used for custom key bindings
   (use-package general)
 
-  (defconst my/leader "SPC")
-  (defconst my/global-leader "S-SPC")
-
   ;; keybindings
   (general-create-definer my/leader-definer
     :keymaps '(normal visual emacs)
-    :prefix my/leader
-    :global-prefix my/global-leader)
+    :prefix "SPC"
+    :global-prefix "C-SPC")
 
   ;; defines leader key bindings
   (my/leader-definer
@@ -118,8 +114,10 @@ some general settings. enabling the mouse, column numbers, things of that sort.
     "w" 'hydra-windows/body
     ;; git bindings
     "gg" 'magit
+    "gp" 'magit-pull
     ;; files
     "ff" 'find-file
+    "fp" 'counsel-rg
     "fs" 'swiper
     "fq" 'kill-buffer)
 #+end_src
@@ -334,8 +332,7 @@ comfig
   (use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
 #+end_src
 
-** language specific configs
-*** C/C++
+** C/C++
 
 #+begin_src emacs-lisp 
   ;; C/C++
@@ -350,26 +347,25 @@ comfig
              projectile-project-root-files-top-down-recurring))
     :config (add-to-list 'projectile-globally-ignored-directories ".ccls-cache"))
 #+end_src
-*** GLSL
+** GLSL
 #+begin_src emacs-lisp 
   ;; GLSL
   (use-package glsl-mode)
 #+end_src
-*** SML
+** SML
 #+begin_src emacs-lisp 
   ;; SML
   (use-package sml-mode
     :config
     (setq sml-indent-level 2))
 #+end_src
-*** racket
+** racket
 #+begin_src emacs-lisp 
   (use-package racket-mode
     :hook ((racket-mode . format-all-mode)
            (racket-mode . racket-xp-mode)))
-  
 #+end_src
-*** rust
+** rust
 #+begin_src emacs-lisp 
   ;; RUST
   (use-package rust-mode
