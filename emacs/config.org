@@ -1,3 +1,5 @@
+#+TITLE: Emacs Configuration
+#+STARTUP: showall
 It's my org config!
 
 * initialization
@@ -66,6 +68,9 @@ some general settings. enabling the mouse, column numbers, things of that sort.
   (defun my/emacs-reload ()
     (interactive)
     (load-file user-init-file))
+  (defun my/open-emacs-config ()
+    (interactive)
+    (find-file "~/.dotfiles/emacs/config.org"))
 
   (defun my/kill-current-buffer ()
     (interactive)
@@ -82,7 +87,9 @@ some general settings. enabling the mouse, column numbers, things of that sort.
     (setq which-key-idle-delay 1.5))
 
   ;; general is used for custom key bindings
-  (use-package general)
+  (use-package general
+    :config
+    (general-evil-setup))
 
   ;; keybindings
   (general-create-definer my/leader-definer
@@ -100,6 +107,7 @@ some general settings. enabling the mouse, column numbers, things of that sort.
     "q" 'my/kill-current-buffer
     ;; misc (;)
     ";r" 'my/emacs-reload
+    ";c" 'my/open-emacs-config
     ;; toggles (t)
     "tr" 'my/toggle-relative-line
     ;; projectile (p)
@@ -197,13 +205,13 @@ Configuration for ~ivy~ / `helm`, ~company~, ~counsel~, and ~swiper~
 
 #+begin_src emacs-lisp 
   ;; IVY COMPLETION
-  ;; (use-package ivy
-  ;;   :demand t
-  ;;   :config
-  ;;   (ivy-mode)
-  ;;   (define-key ivy-minibuffer-map (kbd "<C-return>") 'ivy-done)
-  ;;   ;; so we can switch away
-  ;;   (define-key ivy-minibuffer-map (kbd "C-w") 'evil-window-map))
+  (use-package ivy
+    :demand t
+    :config
+    (ivy-mode)
+    (define-key ivy-minibuffer-map (kbd "<C-return>") 'ivy-done)
+    ;; so we can switch away
+    (define-key ivy-minibuffer-map (kbd "C-w") 'evil-window-map))
   (use-package helm
     :ensure t
     :config
@@ -284,6 +292,15 @@ comfig
   (use-package magit
     :ensure t)
 #+end_src
+** org mode
+
+#+begin_src emacs-lisp
+  (require 'org)
+
+  (setq org-directory "~/dropbox/org")
+  
+  (setq org-todo-keywords '((sequence "TODO(t)" "STARTED(s)" "WAITING(w)" "|" "DONE(d)" "KILLED(K)")))
+#+end_src
 ** misc packages
 #+begin_src emacs-lisp
   ;; i forget what this does
@@ -300,6 +317,7 @@ comfig
 * LSP configuration
 
 #+begin_src emacs-lisp 
+  (use-package tree-sitter-langs)
   (use-package tree-sitter
     :config
     (require 'tree-sitter-langs)
@@ -388,6 +406,10 @@ comfig
    "/f" 'format-all-buffer
    "/r" 'racket-run-and-switch-to-repl
    "/R" 'racket-run-module-at-point)
+
+  (general-nmap
+   :keymaps 'racket-mode-map
+   "K" 'racket-xp-describe)
 #+end_src
 ** rust
 #+begin_src emacs-lisp 

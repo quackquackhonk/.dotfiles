@@ -74,3 +74,6 @@ alias cgr='cargo run'
 alias cgb='cargo build'
 
 export TERM=xterm-256color
+
+# opam configuration
+[[ ! -r /home/sahana/.opam/opam-init/init.zsh ]] || source /home/sahana/.opam/opam-init/init.zsh  > /dev/null 2> /dev/null
