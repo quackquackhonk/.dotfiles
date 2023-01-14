@@ -125,7 +125,7 @@ some general settings. enabling the mouse, column numbers, things of that sort.
     "gg" 'magit
     "gp" 'magit-pull
     ;; files
-    "ff" 'find-file
+    "ff" 'helm-find-files
     "fp" 'counsel-rg
     "fs" 'swiper
     "fq" 'kill-buffer)
@@ -134,7 +134,7 @@ some general settings. enabling the mouse, column numbers, things of that sort.
 ** evil mode
 #+begin_src emacs-lisp 
   (use-package evil
-    :demand t
+    :ensure t
     :init
     (setq evil-want-integration t)
     (setq evil-want-keybinding nil)

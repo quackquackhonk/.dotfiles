@@ -11,8 +11,9 @@
  '(helm-minibuffer-history-key "M-p")
  '(org-agenda-files '("~/dropbox/org/gtd/personal.org"))
  '(package-selected-packages
-   '(helm-rg helm-xref helm-lsp helm evil-snipe counsel swiper company evil-surround evil-numbers evil use-package rainbow-delimiters ivy doom-themes doom-modeline command-log-mode))
- '(warning-suppress-log-types '((use-package))))
+   '(ccls lsp-ui lsp-mode magit helm-rg helm-xref helm-lsp helm evil-snipe counsel swiper company evil-surround evil-numbers evil use-package rainbow-delimiters ivy doom-themes doom-modeline command-log-mode))
+ '(warning-suppress-log-types '((use-package)))
+ '(warning-suppress-types '((comp))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
