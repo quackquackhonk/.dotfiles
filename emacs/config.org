@@ -40,6 +40,10 @@ some general settings. enabling the mouse, column numbers, things of that sort.
   ;; column numbers
   (column-number-mode)
   (global-display-line-numbers-mode t)
+  (dolist (mode '(term-mode-hook
+                  vterm-mode-hook
+                  shell-mode-hook))
+  (add-hook mode (lambda() (display-line-numbers-mode -1))))
 
   ;; Make ESC quit prompts
   (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
@@ -75,6 +79,10 @@ some general settings. enabling the mouse, column numbers, things of that sort.
   (defun my/kill-current-buffer ()
     (interactive)
     (kill-buffer (current-buffer)))
+
+  (defun my/ssh-to-khoury-linux ()
+    (interactive)
+    (dired "/ssh:tankalav@login.ccs.neu.edu:/home/tankalav"))
 #+end_src
 
 * keybindings
@@ -125,7 +133,7 @@ some general settings. enabling the mouse, column numbers, things of that sort.
     "gg" 'magit
     "gp" 'magit-pull
     ;; files
-    "ff" 'helm-find-files
+    "ff" 'find-file
     "fp" 'counsel-rg
     "fs" 'swiper
     "fq" 'kill-buffer)
@@ -136,8 +144,8 @@ some general settings. enabling the mouse, column numbers, things of that sort.
   (use-package evil
     :ensure t
     :init
-    (setq evil-want-integration t)
     (setq evil-want-keybinding nil)
+    (setq evil-want-integration t)
     (setq evil-want-C-u-scroll t)
     (setq evil-want-C-i-jump nil)
     :config
@@ -201,7 +209,7 @@ some general settings. enabling the mouse, column numbers, things of that sort.
 * packages
 ** completion
 
-Configuration for ~ivy~ / `helm`, ~company~, ~counsel~, and ~swiper~
+Configuration for ~ivy~ / ~helm~, ~company~, ~counsel~, and ~swiper~
 
 #+begin_src emacs-lisp 
   ;; IVY COMPLETION
