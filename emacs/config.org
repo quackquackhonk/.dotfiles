@@ -159,6 +159,13 @@ some general settings. enabling the mouse, column numbers, things of that sort.
     (evil-global-set-key 'motion "j" 'evil-next-visual-line)
     (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
 
+    (general-def
+      :states '(normal visual insert)
+      "M-m" 'evil-backward-char
+      "M-n" 'evil-next-visual-line
+      "M-e" 'evil-previous-visual-line
+      "M-i" 'evil-forward-char)
+
     (evil-set-initial-state 'messages-buffer-mode 'normal)
     (evil-set-initial-state 'dashboard-mode 'normal))
 
