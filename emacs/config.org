@@ -1,5 +1,4 @@
 #+TITLE: Emacs Configuration
-#+STARTUP: showall
 It's my org config!
 
 * initialization
@@ -109,6 +108,7 @@ some general settings. enabling the mouse, column numbers, things of that sort.
   (my/leader-definer
     ;; top level bindings
     "SPC" 'helm-buffers-list
+    "TAB" 'other-window
     "x" 'helm-M-x
     "," 'switch-to-prev-buffer
     "." 'switch-to-next-buffer
@@ -200,6 +200,11 @@ some general settings. enabling the mouse, column numbers, things of that sort.
     ("<up>" evil-window-up)
     ("<down>" evil-window-down)
     ("<right>" evil-window-right)
+    ;; resizing windows
+    ("<C-left>" evil-window-decrease-width)
+    ("<C-up>" evil-window-increase-height)
+    ("<C-down>" evil-window-decrease-height)
+    ("<C-right>" evil-window-increase-width)
     ;; make windows  
     ("v" evil-window-vsplit)
     ("s" evil-window-split)
@@ -305,18 +310,37 @@ comfig
 #+begin_src emacs-lisp
   (require 'org)
 
-  (setq org-directory "~/dropbox/org")
-  
-  (setq org-todo-keywords '((sequence "TODO(t)" "STARTED(s)" "WAITING(w)" "|" "DONE(d)" "KILLED(K)")))
+  (setq org-directory "~/dropbox")
+
+  (setq org-todo-keywords '((sequence "TODO(t)" "STARTED(s)" "WAITING(w)" "|" "DONE(d)" "KILLED(k)")))
+
+  (defun my/open-notes ()
+    (interactive)
+    (helm-find-files-1 "~/dropbox/"))
+
+  (my/leader-definer
+    "oa" 'org-agenda
+    "of" 'my/open-notes)
+#+end_src
+** terminal
+#+begin_src emacs-lisp
+  ;; vterm as a terminal
+  (use-package vterm
+    :ensure t)
+  (use-package multi-vterm
+    :ensure t
+    :after vterm)
+
+  (my/leader-definer
+    "tt" 'multi-vterm-dedicated-toggle
+    "to" 'multi-vterm
+    "tn" 'multi-vterm-next
+    "te" 'multi-veterm-prev)
 #+end_src
 ** misc packages
 #+begin_src emacs-lisp
   ;; i forget what this does
   (use-package command-log-mode)
-
-  ;; vterm as a terminal
-  (use-package vterm
-    :ensure t)
 
   ;; formatting for most lanugages
   (use-package format-all)
@@ -346,6 +370,7 @@ comfig
            (lsp-mode . lsp-enable-which-key-integration))
     :commands (lsp lsp-deferred)
     :config
+    (setq lsp-warn-no-matched-clients nil)
     (setq lsp-auto-execute-action nil))
 
   (use-package lsp-ui
@@ -376,7 +401,7 @@ comfig
   ;; C/C++
   (use-package ccls
     :after projectile
-    :hook ((c-mode c++-mode objc-mode cuda-mode) . lsp-deferred)
+    :hook ((c-mode c++-mode objc-mode cuda-mode) . lsp)
     :custom
     (ccls-args nil)
     (ccls-executable (executable-find "ccls"))
