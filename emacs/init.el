@@ -12,7 +12,7 @@
  '(org-agenda-files
    '("~/dropbox/agenda/classes/cs7850.org" "/home/sahana/dropbox/agenda/research.org" "/home/sahana/dropbox/agenda/personal.org"))
  '(package-selected-packages
-   '(multi-vterm helm-fuzzy-find vterm-toggle ccls lsp-ui lsp-mode magit helm-rg helm-xref helm-lsp helm evil-snipe counsel swiper company evil-surround evil-numbers evil use-package rainbow-delimiters ivy doom-themes doom-modeline command-log-mode))
+   '(hl-todo multi-vterm helm-fuzzy-find vterm-toggle ccls lsp-ui lsp-mode magit helm-rg helm-xref helm-lsp helm evil-snipe counsel swiper company evil-surround evil-numbers evil use-package rainbow-delimiters ivy doom-themes doom-modeline command-log-mode))
  '(warning-suppress-log-types '((use-package)))
  '(warning-suppress-types '((comp))))
 (custom-set-faces

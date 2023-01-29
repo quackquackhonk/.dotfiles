@@ -28,6 +28,7 @@ some general settings. enabling the mouse, column numbers, things of that sort.
   (tooltip-mode -1)           ; Disable tooltips
   (set-fringe-mode 10)        ; Give some breathing room
   (xterm-mouse-mode)          ; enable mouse control in terminal
+  (global-hl-todo-mode)       ; highlight TODO
   (global-hl-line-mode)       ; cursor line
   (menu-bar-mode -1)          ; Disable the menu b
   (electric-pair-mode)        ; auto pairs
@@ -127,6 +128,9 @@ some general settings. enabling the mouse, column numbers, things of that sort.
     "lI" 'lsp-ui-imenu
     "le" 'helm-lsp-diagnostics
     "l SPC" 'helm-lsp-code-actions
+    ;; code
+    "cc" 'compile
+    "ch" 'man
     ;; windows
     "w" 'hydra-windows/body
     ;; git bindings
@@ -480,7 +484,6 @@ comfig
     (doom-themes-visual-bell-config))
 
   (use-package melancholy-theme)
-  (use-package gruvbox-theme)
 
   (load-theme 'doom-gruvbox t)
 
@@ -489,6 +492,13 @@ comfig
 
   (use-package rainbow-mode
     :hook (prog-mode . rainbow-delimiters-mode))
+
+  (use-package hl-todo
+    :config
+    (setq hl-todo-keyword-faces
+      '(("TODO"   . "#fabd2f")
+        ("FIXME"  . "#fb4934")
+        ("DEBUG"  . "#8ec07c"))))
 
   (use-package solaire-mode
     :config
