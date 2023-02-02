@@ -1,4 +1,5 @@
 #+TITLE: Emacs Configuration
+#+STARTUP: contents
 It's my org config!
 
 * initialization
@@ -28,7 +29,6 @@ some general settings. enabling the mouse, column numbers, things of that sort.
   (tooltip-mode -1)           ; Disable tooltips
   (set-fringe-mode 10)        ; Give some breathing room
   (xterm-mouse-mode)          ; enable mouse control in terminal
-  (global-hl-todo-mode)       ; highlight TODO
   (global-hl-line-mode)       ; cursor line
   (menu-bar-mode -1)          ; Disable the menu b
   (electric-pair-mode)        ; auto pairs
@@ -39,7 +39,7 @@ some general settings. enabling the mouse, column numbers, things of that sort.
 
   ;; column numbers
   (column-number-mode)
-  (global-display-line-numbers-mode t)
+  (global-display-line-numbers-mode 'relative)
   (dolist (mode '(term-mode-hook
                   vterm-mode-hook
                   shell-mode-hook))
@@ -495,6 +495,7 @@ comfig
 
   (use-package hl-todo
     :config
+    (global-hl-todo-mode)       ; highlight TODO
     (setq hl-todo-keyword-faces
       '(("TODO"   . "#fabd2f")
         ("FIXME"  . "#fb4934")
