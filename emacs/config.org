@@ -211,6 +211,7 @@ some general settings. enabling the mouse, column numbers, things of that sort.
     ("<up>" evil-window-up)
     ("<down>" evil-window-down)
     ("<right>" evil-window-right)
+    ("TAB" other-window )
     ;; resizing windows
     ("<C-left>" evil-window-decrease-width)
     ("<C-up>" evil-window-increase-height)
