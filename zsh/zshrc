@@ -62,7 +62,9 @@ alias vi='nvim'
 
 alias em='emacsclient -nw'
 alias emd='emacs --daemon'
+alias emde='emacs --daemon && emacsclient -nw'
 alias emdkill='emacsclient -e "(kill-emacs)"'
+alias emdr='emacsclient -e "(kill-emacs)" && emacs --daemon'
 alias emconf='emacsclient -nw ~/.emacs.d/config.org'
 alias emreload='emacsclient -e "(load-file user-init-file)"'
 

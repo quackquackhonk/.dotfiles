@@ -19,6 +19,7 @@ It's my org config!
   (require 'use-package)
   (setq use-package-always-ensure t)
 #+end_src
+
 * settings
 
 some general settings. enabling the mouse, column numbers, things of that sort.
@@ -38,7 +39,7 @@ some general settings. enabling the mouse, column numbers, things of that sort.
   (setq indicate-empty-lines t)
 
   ;; column numbers
-  (column-number-mode)
+  (setq display-line-numbers 'relative)
   (global-display-line-numbers-mode 'relative)
   (dolist (mode '(term-mode-hook
                   vterm-mode-hook
@@ -82,7 +83,7 @@ some general settings. enabling the mouse, column numbers, things of that sort.
 
   (defun my/ssh-to-khoury-linux ()
     (interactive)
-    (dired "/ssh:tankalav@login.ccs.neu.edu:/home/tankalav"))
+    (find-file "/ssh:tankalav@login.ccs.neu.edu:/home/tankalav"))
 #+end_src
 
 * keybindings
@@ -92,7 +93,7 @@ some general settings. enabling the mouse, column numbers, things of that sort.
     :init (which-key-mode)
     :diminish
     :config
-    (setq which-key-idle-delay 1.5))
+    (setq which-key-idle-delay 1.0))
 
   ;; general is used for custom key bindings
   (use-package general
@@ -130,6 +131,7 @@ some general settings. enabling the mouse, column numbers, things of that sort.
     "l SPC" 'helm-lsp-code-actions
     ;; code
     "cc" 'compile
+    "cC" 'compile-interactive
     "ch" 'man
     ;; windows
     "w" 'hydra-windows/body
@@ -137,6 +139,7 @@ some general settings. enabling the mouse, column numbers, things of that sort.
     "gg" 'magit
     "gp" 'magit-pull
     ;; files
+    "fk" 'my/ssh-to-khoury-linux
     "ff" 'find-file
     "fp" 'counsel-rg
     "fs" 'swiper
@@ -152,6 +155,7 @@ some general settings. enabling the mouse, column numbers, things of that sort.
     (setq evil-want-integration t)
     (setq evil-want-C-u-scroll t)
     (setq evil-want-C-i-jump nil)
+    (setq evil-shift-width 2)
     :config
     (evil-mode 1)
     (evil-set-undo-system 'undo-redo)
@@ -170,6 +174,14 @@ some general settings. enabling the mouse, column numbers, things of that sort.
       "M-e" 'evil-previous-visual-line
       "M-i" 'evil-forward-char)
 
+    ;; Universal argument: C-u -> C-l
+    (global-unset-key (kbd "C-l"))
+    (general-define-key
+     "C-l" 'universal-argument)
+    (general-define-key
+     :keymaps 'universal-argument-map
+     "C-l" 'universal-argument-more)
+
     (evil-set-initial-state 'messages-buffer-mode 'normal)
     (evil-set-initial-state 'dashboard-mode 'normal))
 
@@ -184,11 +196,6 @@ some general settings. enabling the mouse, column numbers, things of that sort.
     (define-key evil-normal-state-map (kbd "g +") 'evil-numbers/inc-at-pt)
     (define-key evil-normal-state-map (kbd "g -") 'evil-numbers/dec-at-pt))
 
-  (use-package evil-surround
-    :ensure t
-    :config
-    (global-evil-surround-mode 1))
-
   (use-package evil-commentary
     :after evil
     :config
@@ -199,6 +206,11 @@ some general settings. enabling the mouse, column numbers, things of that sort.
     :config
     (evil-snipe-mode +1)
     (evil-snipe-override-mode +1))
+
+  (use-package evil-surround
+    :ensure t
+    :config
+    (global-evil-surround-mode 1))
 #+end_src
 
 ** hydra
@@ -306,14 +318,6 @@ comfig
   (use-package helm-projectile
     :config (helm-projectile-on))
 
-  (use-package persp-mode
-    :config
-      (with-eval-after-load "persp-mode"
-        (setq wg-morph-on nil)
-        (setq persp-autokill-buffer-on-remove 'kill-weak)
-        (add-hook 'window-setup-hook #'(lambda () (persp-mode 1))))
-      (require 'persp-mode))
-
   (use-package magit
     :ensure t)
 #+end_src
@@ -322,18 +326,23 @@ comfig
 #+begin_src emacs-lisp
   (require 'org)
 
+  (use-package org-roam
+    :config
+    (setq org-roam-directory (file-truename "~/dropbox/"))
+    (org-roam-db-autosync-mode))
+
   (setq org-directory "~/dropbox")
 
   (setq org-todo-keywords '((sequence "TODO(t)" "STARTED(s)" "WAITING(w)" "|" "DONE(d)" "KILLED(k)")))
 
-  (defun my/open-notes ()
-    (interactive)
-    (helm-find-files-1 "~/dropbox/"))
-
+  ;; org mode keybindings, "SPC o"
   (my/leader-definer
     "oa" 'org-agenda
-    "of" 'my/open-notes)
+    "oc" 'org-roam-capture
+    "ol" 'org-roam-node-insert
+    "on" 'org-roam-node-find)
 #+end_src
+
 ** terminal
 #+begin_src emacs-lisp
   ;; vterm as a terminal
