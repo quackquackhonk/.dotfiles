@@ -204,6 +204,9 @@ some general settings. enabling the mouse, column numbers, things of that sort.
   (use-package evil-snipe
     :after evil
     :config
+    (evil-define-key '(normal) evil-snipe-local-mode-map
+      "s" 'evil-snipe-s
+      "S" 'evil-snipe-S)
     (evil-snipe-mode +1)
     (evil-snipe-override-mode +1))
 
@@ -367,7 +370,9 @@ comfig
   (use-package format-all)
 #+end_src
 
-* LSP configuration
+* Language configuration
+
+Mostly LSP, other sections will have other stuff idk
 
 #+begin_src emacs-lisp 
   (use-package tree-sitter-langs)
@@ -435,6 +440,34 @@ comfig
 #+begin_src emacs-lisp 
   ;; GLSL
   (use-package glsl-mode)
+#+end_src
+** Ocaml
+#+begin_src emacs-lisp
+  (use-package tuareg
+    :ensure t
+    :mode (("\\.ocamlinit\\'" . tuareg-mode)))
+
+  (use-package dune
+    :ensure t)
+
+  ;; Merlin configuration
+  (use-package merlin
+    :ensure t
+    :config
+    (add-hook 'tuareg-mode-hook #'merlin-mode)
+    (add-hook 'merlin-mode-hook #'company-mode)
+    ;; we're using flycheck instead
+    (setq merlin-error-after-save nil))
+
+  (use-package merlin-eldoc
+    :ensure t
+    :hook ((tuareg-mode) . merlin-eldoc-setup))
+
+  ;; This uses Merlin internally
+  (use-package flycheck-ocaml
+    :ensure t
+    :config
+    (flycheck-ocaml-setup))
 #+end_src
 ** SML
 #+begin_src emacs-lisp 
