@@ -69,9 +69,6 @@ alias emdr='emacsclient -e "(kill-emacs)" && emacs --daemon'
 alias emconf='emacsclient -nw ~/.emacs.d/config.org'
 alias emreload='emacsclient -e "(load-file user-init-file)"'
 
-alias tmux="env TERM=screen-256color tmux"
-alias ta='tmux a'
-
 alias cgt='cargo nextest run'
 alias cgr='cargo run'
 alias cgb='cargo build'
@@ -80,3 +77,6 @@ export TERM=xterm-256color
 
 # opam configuration
 [[ ! -r /home/sahana/.opam/opam-init/init.zsh ]] || source /home/sahana/.opam/opam-init/init.zsh  > /dev/null 2> /dev/null
+
+#[ -f "/home/sahana/.ghcup/env" ] && source "/home/sahana/.ghcup/env" # ghcup-env
+[ -f "/home/sahana/.ghcup/env" ] && source "/home/sahana/.ghcup/env" # ghcup-env

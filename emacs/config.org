@@ -59,6 +59,10 @@ some general settings. enabling the mouse, column numbers, things of that sort.
   ;; expand tabs into spaces
   (setq-default indent-tabs-mode nil)
   (setq-default tab-width 2)
+
+  (use-package exec-path-from-shell
+    :config
+    (exec-path-from-shell-initialize))
 #+end_src
 * defs
 ** commands
@@ -132,6 +136,7 @@ some general settings. enabling the mouse, column numbers, things of that sort.
     ;; code
     "cc" 'compile
     "cC" 'compile-interactive
+    "ce" 'eval-defun
     "ch" 'man
     ;; windows
     "w" 'hydra-windows/body
@@ -435,6 +440,21 @@ Mostly LSP, other sections will have other stuff idk
      (append '("compile_commands.json" ".ccls")
              projectile-project-root-files-top-down-recurring))
     :config (add-to-list 'projectile-globally-ignored-directories ".ccls-cache"))
+#+end_src
+** Haskell
+#+begin_src emacs-lisp
+  (use-package haskell-mode)
+  (use-package lsp-haskell)
+
+  (add-hook 'haskell-mode-hook #'lsp)
+  (add-hook 'haskell-literate-mode-hook #'lsp)
+
+  (general-define-key
+   :prefix "SPC"
+   :keymaps 'haskell-mode-map
+   :states '(normal visual)
+   "/f" 'format-all-buffer
+   "/l" 'haskell-process-load-file)
 #+end_src
 ** GLSL
 #+begin_src emacs-lisp 

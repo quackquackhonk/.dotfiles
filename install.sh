@@ -8,3 +8,6 @@ ln -s $HOME/.dotfiles/bacon $HOME/.config/
 ln -s $HOME/.dotfiles/.tmux.conf $HOME/
 ln -s $HOME/.dotfiles/zsh/zshrc $HOME/.zshrc
 ln -s $HOME/.dotfiles/zsh/sahana.zsh-theme $HOME/.oh-my-zsh/themes/sahana.zsh-theme
+ln -s $HOME/.dotfiles/nu/config.nu $HOME/.config/nushell/config.nu
+ln -s $HOME/.dotfiles/nu/env.nu $HOME/.config/nushell/env.nu
+ln -s $HOME/.dotfiles/starship.toml $HOME/.config/starship.toml

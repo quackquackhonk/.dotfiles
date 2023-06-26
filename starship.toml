@@ -1,0 +1,114 @@
+format = """
+[░▒▓█](red)\
+$username\
+[](fg:red bg:orange)\
+$hostname\
+[](fg:orange bg:yellow)\
+$directory\
+[](fg:yellow bg:cyan)\
+$git_branch\
+$git_status\
+[](fg:cyan bg:blue)\
+$c\
+$java\
+$nodejs\
+$rust\
+[](fg:blue bg:purple)\
+$docker_context\
+[](fg:purple)\
+$newline
+$status\
+$character
+"""
+
+palette = 'gruvbox'
+
+# Define custom colors
+[palettes.gruvbox]
+black = '#282828'
+gray = '#928374'
+red = '#cc241d'
+bright-red = '#fb4934'
+green = '#98971a'
+bright-green = '#b8bb26'
+yellow = '#d79921'
+bright-yellow = '#fabd2f'
+blue = '#458588'
+bright-blue = '#83a598'
+purple = '#b16286'
+bright-purple = '#d3869b'
+cyan = '#689d6a'
+bright-cyan = '#8ec07c'
+white = '#a89984'
+bright-white = '#ebdbb2'
+orange = '#d65d0e'
+bright-orange = '#fe8019'
+
+# Disable the blank line at the start of the prompt
+# add_newline = false
+
+# You can also replace your username with a neat symbol like   or disable this
+# and use the os module below
+[username]
+show_always = true
+style_user = "bg:red"
+style_root = "bg:red"
+format = '[ $user ]($style)'
+disabled = false
+
+[hostname]
+ssh_only = false
+ssh_symbol='ssh:'
+format ='[ $ssh_symbol$hostname ]($style)'
+style = "bg:orange"
+
+[directory]
+style = "bg:yellow"
+format = "[ $path ]($style)"
+truncation_length = 3
+truncation_symbol = "…/"
+
+# Here is how you can shorten some long paths by text replacement
+# similar to mapped_locations in Oh My Posh:
+[directory.substitutions]
+"Downloads" = " "
+"Music" = " "
+"Pictures" = " "
+# Keep in mind that the order matters. For example:
+# "Important Documents" = " 󰈙 "
+# will not be replaced, because "Documents" was already substituted before.
+# So either put "Important Documents" before "Documents" or use the substituted version:
+# "Important 󰈙 " = " 󰈙 "
+
+[docker_context]
+symbol = " "
+style = "bg:purple"
+format = '[ $symbol $context ]($style) $path'
+
+[git_branch]
+symbol = ""
+style = "bg:cyan"
+format = '[ $symbol $branch ]($style)'
+
+[git_status]
+style = "bg:cyan"
+format = '[$all_status$ahead_behind ]($style)'
+
+[c]
+symbol = " "
+style = "bg:blue"
+format = '[ $symbol ($version) ]($style)'
+
+[nodejs]
+symbol = ""
+style = "bg:blue"
+format = '[ $symbol ($version) ]($style)'
+
+[rust]
+symbol = ""
+style = "bg:blue"
+format = '[ $symbol ($version) ]($style)'
+
+[character]
+success_symbol = '[ λ ](green)'
+error_symbol = '[!λ ](red)'
