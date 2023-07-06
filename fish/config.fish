@@ -15,5 +15,6 @@ if status is-interactive
     alias cgt='cargo nextest run'
     alias cgr='cargo run'
     alias cgb='cargo build'
+    
     export TERM=screen-256color
 end
