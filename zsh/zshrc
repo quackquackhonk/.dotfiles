@@ -23,9 +23,13 @@ unsetopt PROMPT_SP
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(git ssh-agent)
 
-source $ZSH/oh-my-zsh.sh
+# source $ZSH/oh-my-zsh.sh
 
+<<<<<<< HEAD
 export EDITOR="nvim"
+=======
+# export EDITOR="emacsclient -nw"
+>>>>>>> 11da3ab (gaming)
 
 # User configuration
 
@@ -94,5 +98,10 @@ export TERM=xterm-256color
 #[ -f "/home/sahana/.ghcup/env" ] && source "/home/sahana/.ghcup/env" # ghcup-env
 [ -f "/home/sahana/.ghcup/env" ] && source "/home/sahana/.ghcup/env" # ghcup-env
 
+<<<<<<< HEAD
 eval "$(starship init zsh)"
 eval "$(zellij setup --generate-auto-start zsh)"
+=======
+# starship
+eval "$(starship init zsh)"
+>>>>>>> 11da3ab (gaming)
