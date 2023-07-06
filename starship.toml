@@ -1,10 +1,11 @@
 format = """
 [](red)\
 $username\
-[](fg:red bg:orange)\
 $hostname\
-[](fg:orange bg:yellow)\
+[](fg:red bg:orange)\
 $directory\
+[](fg:orange bg:yellow)\
+$aws\
 [](fg:yellow bg:cyan)\
 $git_branch\
 $git_status\
@@ -49,6 +50,10 @@ bright-orange = '#fe8019'
 
 # You can also replace your username with a neat symbol like   or disable this
 # and use the os module below
+[aws]
+format = '[ $symbol ($profile )(\($region\) ) ]($style)'
+style = 'bg:yellow'
+
 [username]
 show_always = true
 style_user = "bg:red"
@@ -59,11 +64,11 @@ disabled = false
 [hostname]
 ssh_only = false
 ssh_symbol='ssh:'
-format ='[ $ssh_symbol$hostname ]($style)'
-style = "bg:orange"
+format ='[@ $ssh_symbol$hostname ]($style)'
+style = "bg:red"
 
 [directory]
-style = "bg:yellow"
+style = "bg:orange"
 format = "[ $path ]($style)"
 truncation_length = 3
 truncation_symbol = "…/"
