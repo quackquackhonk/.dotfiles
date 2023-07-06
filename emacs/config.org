@@ -337,21 +337,23 @@ comfig
     :ensure t)
 #+end_src
 ** org mode
+testing
 
 #+begin_src emacs-lisp
   (require 'org)
 
   (use-package org-roam
     :config
-    (setq org-roam-directory (file-truename "~/dropbox/"))
+    (setq org-roam-directory (file-truename "~/org/"))
     (org-roam-db-autosync-mode))
 
-  (setq org-directory "~/dropbox")
+  (setq org-directory "~/org")
 
   (setq org-todo-keywords '((sequence "TODO(t)" "STARTED(s)" "WAITING(w)" "|" "DONE(d)" "KILLED(k)")))
 
   ;; org mode keybindings, "SPC o"
   (my/leader-definer
+<<<<<<< HEAD
    "oa" 'org-agenda
    "oc" 'org-roam-capture
    "ol" 'org-roam-node-insert
@@ -362,6 +364,41 @@ comfig
    :keymaps 'org-mode-map
    :states '(normal visual)
    "ois" 'org-insert-structure-template)
+=======
+    "oa" 'org-agenda
+    "oc" 'org-roam-capture
+    "ol" 'org-roam-node-insert
+    "on" 'org-roam-node-find)
+
+  ;; themeing
+  (use-package mixed-pith
+    :hook
+    (text-mode . mixed-pitch-mode)
+    :config
+    (set-face-attribute 'default nil :font "JetBrainsMono Nerd Font" :height 130)
+    (set-face-attribute 'fixed-pitch nil :font "JetBrainsMono Nerd Font")
+    (set-face-attribute 'variable-pitch nil :font "Source Sans Pro"))
+
+  (add-hook 'mixed-pitch-mode-hook #'solaire-mode-reset)
+
+  (use-package company-posframe
+    :config
+    (company-posframe-mode 1))
+
+  (use-package org-appear
+    :hook (org-mode . org-appear-mode))
+
+  ;; Nice bullets
+  (use-package org-superstar
+    :config
+    (setq org-superstar-special-todo-items t)
+    (add-hook 'org-mode-hook (lambda ()
+                               (org-superstar-mode 1))))
+
+  (setq org-hide-emphasis-markers t
+        org-pretty-entities t
+        org-startup-indented t)
+>>>>>>> 976ad03 (WOOOO)
 #+end_src
 
 

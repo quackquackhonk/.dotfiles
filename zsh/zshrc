@@ -13,7 +13,10 @@ export LIBGL_ALWAYS_SOFTWARE=true
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
+<<<<<<< HEAD
 # ZSH_THEME="sahana"
+=======
+>>>>>>> 976ad03 (WOOOO)
 unsetopt PROMPT_SP
 
 # Which plugins would you like to load?
@@ -23,13 +26,17 @@ unsetopt PROMPT_SP
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(git ssh-agent)
 
-# source $ZSH/oh-my-zsh.sh
+source $ZSH/oh-my-zsh.sh
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 export EDITOR="nvim"
 =======
 # export EDITOR="emacsclient -nw"
 >>>>>>> 11da3ab (gaming)
+=======
+export EDITOR="emacsclient -nw"
+>>>>>>> 976ad03 (WOOOO)
 
 # User configuration
 
@@ -65,8 +72,13 @@ alias fish_reload='source $HOME/.config/fish/config.fish'
 alias nv='nvim'
 alias vi='nvim'
 
+<<<<<<< HEAD
 alias ls='exa'
 alias l='exa -lah'
+=======
+alias x='exa'
+alias ex='exa -lha'
+>>>>>>> 976ad03 (WOOOO)
 
 alias em='emacsclient -nw'
 alias emd='emacs --daemon'
