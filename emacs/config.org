@@ -38,13 +38,20 @@ some general settings. enabling the mouse, column numbers, things of that sort.
   (setq vc-follow-symlinks t) ; auto follow VC links
   (setq indicate-empty-lines t)
 
+  ;; macos settings
+  (setq mac-control-modifier 'super)
+  (setq mac-command-modifier 'control)
+
+  ;; GUI font
+  (set-frame-font "JetBrainsMono Nerd Font 14" nil t)
+
   ;; column numbers
   (setq display-line-numbers 'relative)
   (global-display-line-numbers-mode 'relative)
   (dolist (mode '(term-mode-hook
                   vterm-mode-hook
                   shell-mode-hook))
-  (add-hook mode (lambda() (display-line-numbers-mode -1))))
+  (add-hook mode (lambda() (display-line-numbers-mode 'relative))))
 
   ;; Make ESC quit prompts
   (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
