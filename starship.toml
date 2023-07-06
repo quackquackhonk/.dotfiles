@@ -83,7 +83,7 @@ truncation_symbol = "…/"
 [docker_context]
 symbol = " "
 style = "bg:purple"
-format = '[ $symbol $context ]($style) $path'
+format = '[ $symbol $context $path ]($style)'
 
 [git_branch]
 symbol = ""
