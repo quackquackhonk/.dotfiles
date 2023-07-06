@@ -51,7 +51,7 @@ some general settings. enabling the mouse, column numbers, things of that sort.
   (dolist (mode '(term-mode-hook
                   vterm-mode-hook
                   shell-mode-hook))
-  (add-hook mode (lambda() (display-line-numbers-mode 'relative))))
+  (add-hook mode (lambda() (display-line-numbers-mode -1))))
 
   ;; Make ESC quit prompts
   (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
@@ -449,7 +449,7 @@ Mostly LSP, other sections will have other stuff idk
     :hook ((c-mode c++-mode objc-mode cuda-mode) . lsp)
     :custom
     (ccls-args nil)
-    (ccls-executable (executable-find "ccls"))
+    (ccls-executable (executable-find "ccls"))
     (projectile-project-root-files-top-down-recurring
      (append '("compile_commands.json" ".ccls")
              projectile-project-root-files-top-down-recurring))
