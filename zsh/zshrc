@@ -23,9 +23,9 @@ unsetopt PROMPT_SP
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(git)
 
-source $ZSH/oh-my-zsh.sh
+# source $ZSH/oh-my-zsh.sh
 
-export EDITOR="emacsclient -nw"
+# export EDITOR="emacsclient -nw"
 
 # User configuration
 
@@ -80,3 +80,6 @@ export TERM=xterm-256color
 
 #[ -f "/home/sahana/.ghcup/env" ] && source "/home/sahana/.ghcup/env" # ghcup-env
 [ -f "/home/sahana/.ghcup/env" ] && source "/home/sahana/.ghcup/env" # ghcup-env
+
+# starship
+eval "$(starship init zsh)"
