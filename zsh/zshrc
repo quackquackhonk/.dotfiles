@@ -73,12 +73,17 @@ alias nv='nvim'
 alias vi='nvim'
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 alias ls='exa'
 alias l='exa -lah'
 =======
 alias x='exa'
 alias ex='exa -lha'
 >>>>>>> 976ad03 (WOOOO)
+=======
+alias ls='exa'
+alias l='exa -lha'
+>>>>>>> cc18b9c (Python configuration)
 
 alias em='emacsclient -nw'
 alias emd='emacs --daemon'
@@ -116,4 +121,23 @@ eval "$(zellij setup --generate-auto-start zsh)"
 =======
 # starship
 eval "$(starship init zsh)"
+<<<<<<< HEAD
 >>>>>>> 11da3ab (gaming)
+=======
+
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/opt/homebrew/Caskroom/miniconda/base/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/opt/homebrew/Caskroom/miniconda/base/etc/profile.d/conda.sh" ]; then
+        . "/opt/homebrew/Caskroom/miniconda/base/etc/profile.d/conda.sh"
+    else
+        export PATH="/opt/homebrew/Caskroom/miniconda/base/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
+
+>>>>>>> cc18b9c (Python configuration)

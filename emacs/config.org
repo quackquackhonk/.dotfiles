@@ -370,21 +370,6 @@ testing
     "ol" 'org-roam-node-insert
     "on" 'org-roam-node-find)
 
-  ;; themeing
-  (use-package mixed-pith
-    :hook
-    (text-mode . mixed-pitch-mode)
-    :config
-    (set-face-attribute 'default nil :font "JetBrainsMono Nerd Font" :height 130)
-    (set-face-attribute 'fixed-pitch nil :font "JetBrainsMono Nerd Font")
-    (set-face-attribute 'variable-pitch nil :font "Source Sans Pro"))
-
-  (add-hook 'mixed-pitch-mode-hook #'solaire-mode-reset)
-
-  (use-package company-posframe
-    :config
-    (company-posframe-mode 1))
-
   (use-package org-appear
     :hook (org-mode . org-appear-mode))
 
@@ -421,8 +406,11 @@ testing
 ** docker
 #+begin_src emacs-lisp
   (use-package docker
-    :ensure "t"
+    :ensure t
     :bind ("C-c d" . docker))
+
+  (use-package docker-compose-mode)
+  (use-package dockerfile-mode)
 
   (my/leader-definer
     "cd" 'docker)
@@ -485,6 +473,13 @@ Mostly LSP, other sections will have other stuff idk
 
   (use-package helm-lsp)
   (use-package helm-xref)
+
+  (use-package dap-mode
+    :ensure t
+    :defer t
+    :after lsp-mode
+    :config
+    (dap-auto-configure-mode))
 #+end_src
 
 ** C/C++
@@ -550,6 +545,51 @@ Mostly LSP, other sections will have other stuff idk
     :config
     (flycheck-ocaml-setup))
 #+end_src
+** Python
+#+begin_src emacs-lisp
+  ;; Built-in Python utilities
+  (use-package python
+    :ensure t
+    :hook (python-mode . lsp-deferred)
+    :custom
+    (dap-python-debugger 'debugpy)
+    (dap-python-executable "python3")
+    (python-shell-interpreter "python3")
+    :config
+    (require 'dap-python)
+    ;; Remove guess indent python message
+    (setq python-indent-guess-indent-offset-verbose nil))
+
+  ;; Required to easily switch virtual envs 
+  ;; via the menu bar or with `pyvenv-workon` 
+  ;; Setting the `WORKON_HOME` environment variable points 
+  ;; at where the envs are located. I use miniconda. 
+  (use-package pyvenv
+    :ensure t
+    :defer t
+    :config
+    ;; Setting work on to easily switch between environments
+    (setenv "WORKON_HOME" (expand-file-name "~/miniconda3/envs/"))
+    ;; Display virtual envs in the menu bar
+    (setq pyvenv-menu t)
+    ;; Restart the python process when switching environments
+    (add-hook 'pyvenv-post-activate-hooks (lambda ()
+              (pyvenv-restart-python)))
+    :hook (python-mode . pyvenv-mode))
+
+  (use-package lsp-pyright
+    :after lsp-mode
+    :custom
+    (lsp-pyright-auto-import-completions nil)
+    (lsp-pyright-typechecking-mode "off")
+    :config
+    (fk/async-process
+     "npm outdated -g | grep pyright | wc -l" nil
+     (lambda (process output)
+       (pcase output
+         ("0\n" (message "Pyright is up to date."))
+         ("1\n" (message "A pyright update is available."))))))
+#+end_src
 ** SML
 #+begin_src emacs-lisp 
   ;; SML
@@ -598,6 +638,8 @@ Mostly LSP, other sections will have other stuff idk
   (use-package doom-modeline
     :ensure t
     :init (doom-modeline-mode 1))
+
+  (use-package nerd-icons)
 
   (use-package doom-themes
     :ensure t
