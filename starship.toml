@@ -51,8 +51,8 @@ bright-orange = '#fe8019'
 # and use the os module below
 [username]
 show_always = true
-style_user = "bg:red"
-style_root = "bg:red"
+style_user = "bg:red fg:white"
+style_root = "bg:red fg:white"
 format = '[ $user ]($style)'
 disabled = false
 
@@ -110,5 +110,5 @@ style = "bg:blue"
 format = '[ $symbol ($version) ]($style)'
 
 [character]
-success_symbol = '[ λ ](green)'
-error_symbol = '[!λ ](red)'
+success_symbol = '[λ>](bold bright-green)'
+error_symbol = '[λ!](bold bright-red)'

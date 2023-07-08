@@ -345,11 +345,18 @@ comfig
 
   ;; org mode keybindings, "SPC o"
   (my/leader-definer
-    "oa" 'org-agenda
-    "oc" 'org-roam-capture
-    "ol" 'org-roam-node-insert
-    "on" 'org-roam-node-find)
+   "oa" 'org-agenda
+   "oc" 'org-roam-capture
+   "ol" 'org-roam-node-insert
+   "on" 'org-roam-node-find)
+
+  (general-define-key
+   :prefix "SPC"
+   :keymaps 'org-mode-map
+   :states '(normal visual)
+   "ois" 'org-insert-structure-template)
 #+end_src
+
 
 ** terminal
 #+begin_src emacs-lisp
