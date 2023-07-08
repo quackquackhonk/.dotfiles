@@ -116,7 +116,7 @@ return require('packer').startup(function(use)
     }
     use {
         'nvim-telescope/telescope.nvim',
-        tag = '0.1.x',
+        branch = '0.1.x',
         config = function()
             require('plugins.telescope')
         end
@@ -177,12 +177,6 @@ return require('packer').startup(function(use)
     -- Theme / UI
     use 'nvim-lua/popup.nvim'
     use 'nvim-lua/plenary.nvim'
-    use {
-        'karb94/neoscroll.nvim',
-        config = function()
-            require("neoscroll").setup()
-        end
-    }
     use {
         'kyazdani42/nvim-tree.lua',
         config = function()

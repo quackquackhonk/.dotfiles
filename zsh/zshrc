@@ -61,6 +61,9 @@ alias fish_reload='source $HOME/.config/fish/config.fish'
 alias nv='nvim'
 alias vi='nvim'
 
+alias ls='exa'
+alias l='exa -lah'
+
 alias em='emacsclient -nw'
 alias emd='emacs --daemon'
 alias emde='emacs --daemon && emacsclient -nw'

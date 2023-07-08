@@ -18,21 +18,21 @@ vim.g.localmapleader = ' '
 local telescope = require 'telescope.builtin'
 local dap = require 'dap'
 wk.register({
-    -- f = buFfers
+    -- f = Files
     -- e = Editor
     -- l = Language (sep in lsp.lua)
     -- d = Debugging
     -- g = git
     -- k = pacKer
     -- t = Test
+    q = { cmd("bd"), "Close Buffer" },
+    Q = { cmd("bd!"), "Force Close Buffer" },
     f = {
         name = "Find",
         f = { telescope.find_files, "Find File" },
         b = { require("telescope").extensions.file_browser.file_browser, "File Browser" },
         g = { telescope.git_files, "Git Files" },
         r = { telescope.oldfiles, "Recent Files" },
-        q = { cmd("bd"), "Close Buffer" },
-        Q = { cmd("bd!"), "Force Close Buffer" },
     },
     e = {
         name = "Editor",
