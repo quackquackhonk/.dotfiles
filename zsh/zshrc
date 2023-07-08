@@ -72,6 +72,12 @@ alias emdr='emacsclient -e "(kill-emacs)" && emacs --daemon'
 alias emconf='emacsclient -nw ~/.emacs.d/config.org'
 alias emreload='emacsclient -e "(load-file user-init-file)"'
 
+alias z='zellij'
+function zr () { zellij run --name "$*" -- zsh -ic "$*";}
+function zrf () { zellij run --name "$*" --floating -- zsh -ic "$*";}
+function ze () { zellij edit "$*";}
+function zef () { zellij edit --floating "$*";}
+
 alias cgt='cargo nextest run'
 alias cgr='cargo run'
 alias cgb='cargo build'
@@ -79,8 +85,8 @@ alias cgb='cargo build'
 export TERM=xterm-256color
 
 # ssh agent
-eval "$(ssh-agent -s)"
-eval "$(ssh-add ~/.ssh/id_ed25519)"
+# eval "$(ssh-agent -s)"
+# eval "$(ssh-add ~/.ssh/id_ed25519)"
 
 # opam configuration
 [[ ! -r /home/sahana/.opam/opam-init/init.zsh ]] || source /home/sahana/.opam/opam-init/init.zsh  > /dev/null 2> /dev/null
@@ -89,3 +95,4 @@ eval "$(ssh-add ~/.ssh/id_ed25519)"
 [ -f "/home/sahana/.ghcup/env" ] && source "/home/sahana/.ghcup/env" # ghcup-env
 
 eval "$(starship init zsh)"
+eval "$(zellij setup --generate-auto-start zsh)"
