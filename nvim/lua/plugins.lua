@@ -102,7 +102,10 @@ require("lazy").setup({
         'nvim-telescope/telescope-fzf-native.nvim',
         run = 'make'
     },
-    { 'nvim-telescope/telescope-file-browser.nvim' },
+    {
+        "nvim-telescope/telescope-frecency.nvim",
+        dependencies = {"kkharji/sqlite.lua"}
+    },
     {
         'nvim-treesitter/nvim-treesitter',
         run = ':TSUpdate'

@@ -20,7 +20,8 @@ local dap = require 'dap'
 wk.register({
     -- f = Files
     -- e = Editor
-    -- l = Language (sep in lsp.lua)
+    -- l = LSP (sep in lsp.lua)
+    -- c = Code
     -- d = Debugging
     -- g = git
     -- ; = Misc
@@ -29,10 +30,10 @@ wk.register({
     Q = { cmd("bd!"), "Force Close Buffer" },
     f = {
         name = "Find",
-        f = { telescope.find_files, "Find File" },
+        f = { cmd("Telescope find_files theme=ivy"), "Find File" },
         g = { telescope.git_files, "Git Files" },
-        r = { telescope.oldfiles, "Recent Files" },
-        s = { telescope.live_grep, "Recent Files" },
+        r = { cmd("Telescope frecency"), "Recent Files" },
+        s = { telescope.live_grep, "Live Grep" },
     },
     e = {
         name = "Editor",
@@ -44,7 +45,7 @@ wk.register({
         u = { cmd("!dos2unix %"), "Dos2Unix current file" }
     },
     l = {
-        name = "Language",
+        name = "LSP",
         l = "Show Documentation",
         d = "Go To Definition",
         D = "Go To Declaration",
@@ -89,7 +90,9 @@ wk.register({
         name = "Zellij",
         d = { cmd("silent!!zellij run -c --floating -- lazydocker"), "Open LazyDocker" },
     },
+    x = { cmd("Telescope commands theme=ivy"), "Command Palette" },
     [","] = { "<c-6>", "Open Previous Buffer" },
+    ["<Tab>"] = { "<C-w><C-p>", "Goto Previous Split" }, 
     ["<Leader>"] = { ":Telescope buffers<cr>", "Show Open Buffers" },
     ["?"] = { cmd("Cheatsheet"), "Open Cheatsheet" }
 }, { prefix = "<Leader>" })
