@@ -1,6 +1,7 @@
 #!/bin/bash
 ln -s $HOME/.dotfiles/nvim $HOME/.config/
 ln -s $HOME/.dotfiles/alacritty $HOME/.config/
+ln -s $HOME/.dotfiles/zellij $HOME/.config
 ln -s $HOME/.dotfiles/emacs/init.el $HOME/.emacs.d/init.el
 ln -s $HOME/.dotfiles/emacs/config.org $HOME/.emacs.d/config.org
 ln -s $HOME/.dotfiles/fish $HOME/.config/
@@ -11,5 +12,3 @@ ln -s $HOME/.dotfiles/zsh/sahana.zsh-theme $HOME/.oh-my-zsh/themes/sahana.zsh-th
 ln -s $HOME/.dotfiles/nu/config.nu $HOME/.config/nushell/config.nu
 ln -s $HOME/.dotfiles/nu/env.nu $HOME/.config/nushell/env.nu
 ln -s $HOME/.dotfiles/starship.toml $HOME/.config/starship.toml
-mkdir -p $HOME/.config/zellij
-ln -s $HOME/.dotfiles/zellij/zellij.kdl $HOME/.config/zellij/config.kdl
