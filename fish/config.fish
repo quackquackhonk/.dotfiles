@@ -34,6 +34,19 @@ if status is-interactive
     alias cgb='cargo build'
 
     export TERM=screen-256color
+
+    function zr
+      command zellij run --name "$argv" -- fish -c "$argv"
+    end
+    function zrf
+      command zellij run --name "$argv" --floating -- fish -c "$argv"
+    end
+    function ze
+      command zellij edit $argv
+    end
+    function zef
+      command zellij edit --floating $argv
+    end
 end
 
 set -g fish_greeting
