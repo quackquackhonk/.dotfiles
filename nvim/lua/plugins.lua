@@ -53,6 +53,7 @@ require("lazy").setup({
         end
     },
     'anuvyklack/hydra.nvim',
+    'kevinhwang91/nvim-bqf',
 
     -- Buffer/Window Management
     {
@@ -67,7 +68,6 @@ require("lazy").setup({
     'sindrets/winshift.nvim',
     'szw/vim-maximizer',
     -- Git Integration
-    'kdheepak/lazygit.nvim',
     {
         'lewis6991/gitsigns.nvim',
         config = function()
@@ -106,6 +106,12 @@ require("lazy").setup({
     {
         'nvim-treesitter/nvim-treesitter',
         run = ':TSUpdate'
+    },
+    {
+        'stevearc/oil.nvim',
+        opts = {},
+        -- Optional dependencies
+        dependencies = { "nvim-tree/nvim-web-devicons" },
     },
     'neovim/nvim-lspconfig',
     {
@@ -153,12 +159,14 @@ require("lazy").setup({
 
     -- Theme / UI
     {
-        'goolord/alpha-nvim',
+        'glepnir/dashboard-nvim',
+        event = 'VimEnter',
         config = function()
-            require 'alpha'.setup(
-                require 'alpha.themes.theta'.config
-            )
+            require('dashboard').setup {
+                -- config
+            }
         end,
+        dependencies = { {'nvim-tree/nvim-web-devicons'}}
     },
     'nvim-lua/popup.nvim',
     'nvim-lua/plenary.nvim',
@@ -182,7 +190,6 @@ require("lazy").setup({
         end
     },
     'ellisonleao/gruvbox.nvim',
-    'EdenEast/nightfox.nvim',
     'folke/lsp-colors.nvim',
     {
         'nvim-lualine/lualine.nvim',
@@ -194,21 +201,10 @@ require("lazy").setup({
             }
         end
     },
-    'kyazdani42/nvim-web-devicons',
     {
         'folke/trouble.nvim',
         config = function()
             require("trouble").setup {}
-        end
-    },
-    {
-        'lukas-reineke/indent-blankline.nvim',
-        config = function()
-            require("indent_blankline").setup({
-                space_char_blankline = " ",
-                show_current_context = true,
-                show_current_context_start = true,
-            })
         end
     },
     {

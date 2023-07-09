@@ -23,16 +23,16 @@ wk.register({
     -- l = Language (sep in lsp.lua)
     -- d = Debugging
     -- g = git
-    -- k = pacKer
+    -- ; = Misc
     -- t = Test
     q = { cmd("bd"), "Close Buffer" },
     Q = { cmd("bd!"), "Force Close Buffer" },
     f = {
         name = "Find",
         f = { telescope.find_files, "Find File" },
-        b = { require("telescope").extensions.file_browser.file_browser, "File Browser" },
         g = { telescope.git_files, "Git Files" },
         r = { telescope.oldfiles, "Recent Files" },
+        s = { telescope.live_grep, "Recent Files" },
     },
     e = {
         name = "Editor",
@@ -55,7 +55,7 @@ wk.register({
     },
     g = {
         name = "Git Projects",
-        g = { cmd("LazyGit"), "Git Status" },
+        g = { cmd("silent!! zellij run -c --floating -- gitui"), "Open GitUi" },
         r = { cmd("Telescope projects"), "Recent Projects" }
     },
     d = {
@@ -71,9 +71,7 @@ wk.register({
     },
     o = {
         name = "Open",
-        t = { "Terminal" },
-        T = { cmd("lua require('neotest').summary.toggle()"), "NeoTest" },
-        f = { cmd("NvimTreeToggle"), "File Tree" },
+        f = { require("oil").open, "File Browser" },
         d = { cmd("TroubleToggle"), "Diagnostics" },
         s = { cmd("SymbolsOutline"), "Symbol Outline" },
         m = { cmd("MaximizerToggle"), "Maximize Split" },
@@ -82,14 +80,14 @@ wk.register({
         name = "Settings",
         r = { cmd("set rnu!"), "Relative Numbers" },
     },
-    k = {
-        name = "Packer",
-        s = { cmd("PackerSync"), "Packer Sync" },
+    [";"] = {
+        name = "Miscellaneous",
+        p = { cmd("Lazy"), "Packages" },
+        c = { cmd("e ~/.config/nvim/init.lua"), "Config" },
     },
-    t = {
-        name = "Tests",
-        r = { ":lua require(\"neotest\").run.run()<cr>", "Run all tests" },
-        f = { ":lua require(\"neotest\").run.run(vim.fn.expand(\"%\"))<cr>", "Run tests for current file" },
+    z = {
+        name = "Zellij",
+        d = { cmd("silent!!zellij run -c --floating -- lazydocker"), "Open LazyDocker" },
     },
     [","] = { "<c-6>", "Open Previous Buffer" },
     ["<Leader>"] = { ":Telescope buffers<cr>", "Show Open Buffers" },
