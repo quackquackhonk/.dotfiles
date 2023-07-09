@@ -19,7 +19,7 @@ if status is-interactive
     alias cdcode='cd ~/code'
 
     alias fishsrc='source $HOME/.config/fish/config.fish'
-    alias fishconf='$EDITOR ~/.config/fish/config.fish'
+    alias fishconf='nvim ~/.config/fish/config.fish'
 
     alias nv='nvim'
     alias vi='nvim'
@@ -39,5 +39,7 @@ end
 set -g fish_greeting
 
 source $XDG_CONFIG_HOME/fish/completions/zellij.fish
+
+fish_ssh_agent
 
 starship init fish | source
