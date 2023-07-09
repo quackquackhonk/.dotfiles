@@ -1,3 +1,5 @@
+vim.o.termguicolors = true
+
 require("plugins")
 require("options")
 require("lsp")
