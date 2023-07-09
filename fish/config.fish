@@ -21,6 +21,8 @@ if status is-interactive
     alias fishsrc='source $HOME/.config/fish/config.fish'
     alias fishconf='nvim ~/.config/fish/config.fish'
 
+    alias nvconf='nvim ~/.config/nvim/init.lua'
+
     alias nv='nvim'
     alias vi='nvim'
 
@@ -56,3 +58,4 @@ source $XDG_CONFIG_HOME/fish/completions/zellij.fish
 fish_ssh_agent
 
 starship init fish | source
+eval (/home/linuxbrew/.linuxbrew/bin/brew shellenv)
