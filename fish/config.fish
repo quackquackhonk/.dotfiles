@@ -35,10 +35,14 @@ if status is-interactive
     alias cgr='cargo run'
     alias cgb='cargo build'
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
     
 >>>>>>> 976ad03 (WOOOO)
+=======
+    
+>>>>>>> 2c8582936514394b71fff793b9a14fb252c82498
     export TERM=screen-256color
 
     function zr
