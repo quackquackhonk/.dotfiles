@@ -337,8 +337,6 @@ comfig
     :ensure t)
 #+end_src
 ** org mode
-testing
-
 #+begin_src emacs-lisp
   (require 'org)
 
@@ -357,27 +355,15 @@ testing
     "oc" 'org-roam-capture
     "ol" 'org-roam-node-insert
     "on" 'org-roam-node-find)
-
-  (use-package org-appear
-    :hook (org-mode . org-appear-mode))
-
-  ;; Nice bullets
-  (use-package org-superstar
-    :config
-    (setq org-superstar-special-todo-items t)
-    (add-hook 'org-mode-hook (lambda ()
-                               (org-superstar-mode 1))))
-
-  (setq org-hide-emphasis-markers t
-        org-pretty-entities t
-        org-startup-indented t)
 #+end_src
 
 ** terminal
 #+begin_src emacs-lisp
   ;; vterm as a terminal
   (use-package vterm
-    :ensure t)
+    :ensure t
+    :config
+    (setq vterm-timer-delay 0.01))
   (use-package multi-vterm
     :ensure t
     :after vterm)
