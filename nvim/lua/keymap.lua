@@ -56,6 +56,9 @@ wk.register({
     g = {
         name = "Git Projects",
         g = { cmd("Git"), "Git Status" },
+        b = { cmd("Git branch"), "Show Branches" },
+        p = { cmd("Git pull"), "Git Pull"},
+        P = { cmd("Git push"), "Git Push"},
         r = { cmd("Telescope projects"), "Recent Projects" }
     },
     d = {
