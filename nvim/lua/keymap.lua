@@ -29,7 +29,7 @@ wk.register({
     Q = { cmd("bd!"), "Force Close Buffer" },
     f = {
         name = "Find",
-        f = { telescope.find_files, "Find File" },
+        f = { cmd("Telescope find_files hidden=true"), "Find File" },
         g = { telescope.git_files, "Git Files" },
         r = { telescope.oldfiles, "Recent Files" },
         s = { telescope.live_grep, "Recent Files" },
@@ -55,7 +55,7 @@ wk.register({
     },
     g = {
         name = "Git Projects",
-        g = { cmd("silent!! zellij run -c --floating -- gitui"), "Open GitUi" },
+        g = { cmd("Git"), "Git Status" },
         r = { cmd("Telescope projects"), "Recent Projects" }
     },
     d = {

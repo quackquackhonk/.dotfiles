@@ -51,13 +51,14 @@ bright-orange = '#fe8019'
 # You can also replace your username with a neat symbol like   or disable this
 # and use the os module below
 [aws]
+disabled = false
 format = '[ $symbol ($profile )(\($region\) ) ]($style)'
 style = 'bg:yellow'
 
 [username]
 show_always = true
-style_user = "bg:red fg:white"
-style_root = "bg:red fg:white"
+style_user = "bg:red"
+style_root = "bg:red"
 format = '[ $user ]($style)'
 disabled = false
 

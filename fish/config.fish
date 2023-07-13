@@ -1,7 +1,4 @@
-if set -q ZELLIJ
-else
-    zellij
-end
+eval (/opt/homebrew/bin/brew shellenv)
 
 if status is-interactive
     # Commands to run in interactive sessions can go here
@@ -26,44 +23,33 @@ if status is-interactive
     alias nv='nvim'
     alias vi='nvim'
 
+    alias ls='exa'
+    alias l='exa -lha'
+
     alias em='emacs -nw'
 
     alias ta='tmux a'
-    alias z='zellij'
 
     alias cgt='cargo nextest run'
     alias cgr='cargo run'
     alias cgb='cargo build'
-<<<<<<< HEAD
-<<<<<<< HEAD
 
-=======
-    
->>>>>>> 976ad03 (WOOOO)
-=======
-    
->>>>>>> 2c8582936514394b71fff793b9a14fb252c82498
     export TERM=screen-256color
-
-    function zr
-      command zellij run --name "$argv" -- fish -c "$argv"
-    end
-    function zrf
-      command zellij run --name "$argv" --floating -- fish -c "$argv"
-    end
-    function ze
-      command zellij edit $argv
-    end
-    function zef
-      command zellij edit --floating $argv
-    end
 end
 
 set -g fish_greeting
-
-source $XDG_CONFIG_HOME/fish/completions/zellij.fish
+set -g CMAKE_EXPORT_COMPILE_COMMANDS
+set -g DOCKER_DEFAULT_PLATFORM linux/amd64
 
 fish_ssh_agent
 
 starship init fish | source
-eval (/home/linuxbrew/.linuxbrew/bin/brew shellenv)
+
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+if test -f /opt/homebrew/Caskroom/miniconda/base/bin/conda
+    eval /opt/homebrew/Caskroom/miniconda/base/bin/conda "shell.fish" "hook" $argv | source
+end
+# <<< conda initialize <<<
+
+export DOCKER_DEFAULT_PLATFORM=linux/amd64

@@ -33,24 +33,31 @@ require("lazy").setup({
         end
     },
     {
-        "nvim-neorg/neorg",
-        build = ":Neorg sync-parsers",
-        dependencies = { "nvim-lua/plenary.nvim" },
-        config = function()
-            require("neorg").setup {
-                load = {
-                    ["core.defaults"] = {}, -- Loads default behaviour
-                    ["core.concealer"] = {}, -- Adds pretty icons to your documents
-                    ["core.dirman"] = { -- Manages Neorg workspaces
-                        config = {
-                            workspaces = {
-                                notes = "~/notes",
-                            },
-                        },
-                    },
+        'nvim-orgmode/orgmode',
+        config = function ()
+            -- init.lua
+
+            -- Load custom treesitter grammar for org filetype
+            require('orgmode').setup_ts_grammar()
+
+            -- Treesitter configuration
+            require('nvim-treesitter.configs').setup {
+                -- If TS highlights are not enabled at all, or disabled via `disable` prop,
+                -- highlighting will fallback to default Vim syntax highlighting
+                highlight = {
+                    enable = true,
+                    -- Required for spellcheck, some LaTex highlights and
+                    -- code block highlights that do not have ts grammar
+                    additional_vim_regex_highlighting = {'org'},
                 },
+                ensure_installed = {'org'}, -- Or run :TSUpdate org
             }
-        end,
+
+            require('orgmode').setup({
+                org_agenda_files = {'~/org/**/*'},
+                org_default_notes_file = '~/org/refile.org',
+            })
+        end
     },
     -- keymap
     {
@@ -88,6 +95,7 @@ require("lazy").setup({
     'sindrets/winshift.nvim',
     'szw/vim-maximizer',
     -- Git Integration
+    'tpope/vim-fugitive',
     {
         'lewis6991/gitsigns.nvim',
         config = function()

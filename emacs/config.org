@@ -351,7 +351,6 @@ comfig
 
   ;; org mode keybindings, "SPC o"
   (my/leader-definer
-<<<<<<< HEAD
    "oa" 'org-agenda
    "oc" 'org-roam-capture
    "ol" 'org-roam-node-insert
@@ -362,12 +361,10 @@ comfig
    :keymaps 'org-mode-map
    :states '(normal visual)
    "ois" 'org-insert-structure-template)
-=======
     "oa" 'org-agenda
     "oc" 'org-roam-capture
     "ol" 'org-roam-node-insert
     "on" 'org-roam-node-find)
-<<<<<<< HEAD
 
   (use-package org-appear
     :hook (org-mode . org-appear-mode))
@@ -382,9 +379,6 @@ comfig
   (setq org-hide-emphasis-markers t
         org-pretty-entities t
         org-startup-indented t)
->>>>>>> 976ad03 (WOOOO)
-=======
->>>>>>> 2c85829 (idk man)
 #+end_src
 
 

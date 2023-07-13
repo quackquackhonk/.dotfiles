@@ -1,6 +1,7 @@
 -- Configuration for LSP / Treesitter / Completion
 
 local colors = require("gruvbox.palette")
+local util = require("lspconfig.util")
 
 -- Setup lspconfig.
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
@@ -11,14 +12,14 @@ local custom_on_attach = function(client, bufnr)
     local bufopts = { noremap = true, silent = true, buffer = bufnr }
     if client.supports_method("textDocument/formatting") then
         vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
-        vim.api.nvim_create_autocmd("BufWritePre", {
-            group = augroup,
-            buffer = bufnr,
-            callback = function()
-                -- on 0.8, you should use vim.lsp.buf.format({ bufnr = bufnr }) instead
-                vim.lsp.buf.formatting_sync()
-            end,
-        })
+        -- vim.api.nvim_create_autocmd("BufWritePre", {
+        --     group = augroup,
+        --     buffer = bufnr,
+        --     callback = function()
+        --         -- on 0.8, you should use vim.lsp.buf.format({ bufnr = bufnr }) instead
+        --         vim.lsp.buf.formatting_sync()
+        --     end,
+        -- })
     end
 
     --- diagnostic configs
@@ -116,6 +117,7 @@ require 'lspconfig'.lua_ls.setup {
             workspace = {
                 -- Make the server aware of Neovim runtime files
                 library = vim.api.nvim_get_runtime_file("", true),
+                checkThirdParty = false,
             },
             -- Do not send telemetry data containing a randomized but unique identifier
             telemetry = {
@@ -127,7 +129,17 @@ require 'lspconfig'.lua_ls.setup {
 -- Python
 require 'lspconfig'.pyright.setup {
     on_attach = custom_on_attach,
-    capabilities = capabilities
+    capabilities = capabilities,
+    settings = {
+        python = {
+            analysis = {
+                autoSearchPaths = true,
+                diagnosticMode = 'openFilesOnly',
+                useLibraryCodeForTypes = true,
+                typeCheckingMode = 'basic'
+            },
+        }
+    }
 }
 
 -- C/C++
@@ -135,13 +147,6 @@ require 'lspconfig'.clangd.setup {
     on_attach = custom_on_attach,
     capabilities = capabilities,
 }
--- require 'lspconfig'.ccls.setup {
---     init_options = {
---         cache = {
---             directory = ".ccls-cache";
---         };
---     }
--- }
 
 -- Java configuration is in ftplugin/java.lua
 
