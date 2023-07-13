@@ -88,10 +88,6 @@ wk.register({
         p = { cmd("Lazy"), "Packages" },
         c = { cmd("e ~/.config/nvim/init.lua"), "Config" },
     },
-    z = {
-        name = "Zellij",
-        d = { cmd("silent!!zellij run -c --floating -- lazydocker"), "Open LazyDocker" },
-    },
     [","] = { "<c-6>", "Open Previous Buffer" },
     ["<Leader>"] = { ":Telescope buffers<cr>", "Show Open Buffers" },
     ["?"] = { cmd("Cheatsheet"), "Open Cheatsheet" }
