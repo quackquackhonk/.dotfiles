@@ -32,6 +32,26 @@ require("lazy").setup({
             vim.g.vim_markdown_folding_disabled = 1
         end
     },
+    {
+        "nvim-neorg/neorg",
+        build = ":Neorg sync-parsers",
+        dependencies = { "nvim-lua/plenary.nvim" },
+        config = function()
+            require("neorg").setup {
+                load = {
+                    ["core.defaults"] = {}, -- Loads default behaviour
+                    ["core.concealer"] = {}, -- Adds pretty icons to your documents
+                    ["core.dirman"] = { -- Manages Neorg workspaces
+                        config = {
+                            workspaces = {
+                                notes = "~/notes",
+                            },
+                        },
+                    },
+                },
+            }
+        end,
+    },
     -- keymap
     {
         'folke/which-key.nvim',
