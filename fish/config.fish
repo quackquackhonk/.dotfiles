@@ -1,5 +1,3 @@
-eval (/opt/homebrew/bin/brew shellenv)
-
 if status is-interactive
     # Commands to run in interactive sessions can go here
     
@@ -42,6 +40,7 @@ set -g CMAKE_EXPORT_COMPILE_COMMANDS
 set -g DOCKER_DEFAULT_PLATFORM linux/amd64
 
 fish_ssh_agent
+ssh-add ~/.ssh/id_ed25519
 
 starship init fish | source
 
