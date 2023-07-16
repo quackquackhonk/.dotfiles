@@ -51,8 +51,8 @@ bright-orange = '#fe8019'
 # and use the os module below
 [username]
 show_always = true
-style_user = "bg:red fg:white"
-style_root = "bg:red fg:white"
+style_user = "bg:red"
+style_root = "bg:red"
 format = '[ $user ]($style)'
 disabled = false
 

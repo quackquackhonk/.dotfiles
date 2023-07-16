@@ -1,8 +1,3 @@
-if set -q ZELLIJ
-else
-    zellij
-end
-
 if status is-interactive
     # Commands to run in interactive sessions can go here
     
@@ -56,6 +51,7 @@ set -g fish_greeting
 source $XDG_CONFIG_HOME/fish/completions/zellij.fish
 
 fish_ssh_agent
+ssh-add ~/.ssh/id_ed25519
 
 starship init fish | source
 eval (/home/linuxbrew/.linuxbrew/bin/brew shellenv)
