@@ -38,6 +38,13 @@ some general settings. enabling the mouse, column numbers, things of that sort.
   (setq vc-follow-symlinks t) ; auto follow VC links
   (setq indicate-empty-lines t)
 
+  ;; macos settings
+  (setq mac-control-modifier 'super)
+  (setq mac-command-modifier 'control)
+
+  ;; GUI font
+  (set-frame-font "JetBrainsMono Nerd Font 14" nil t)
+
   ;; column numbers
   (setq display-line-numbers 'relative)
   (global-display-line-numbers-mode 'relative)
@@ -330,16 +337,15 @@ comfig
     :ensure t)
 #+end_src
 ** org mode
-
 #+begin_src emacs-lisp
   (require 'org)
 
   (use-package org-roam
     :config
-    (setq org-roam-directory (file-truename "~/dropbox/"))
+    (setq org-roam-directory (file-truename "~/org/"))
     (org-roam-db-autosync-mode))
 
-  (setq org-directory "~/dropbox")
+  (setq org-directory "~/org")
 
   (setq org-todo-keywords '((sequence "TODO(t)" "STARTED(s)" "WAITING(w)" "|" "DONE(d)" "KILLED(k)")))
 
@@ -355,6 +361,24 @@ comfig
    :keymaps 'org-mode-map
    :states '(normal visual)
    "ois" 'org-insert-structure-template)
+    "oa" 'org-agenda
+    "oc" 'org-roam-capture
+    "ol" 'org-roam-node-insert
+    "on" 'org-roam-node-find)
+
+  (use-package org-appear
+    :hook (org-mode . org-appear-mode))
+
+  ;; Nice bullets
+  (use-package org-superstar
+    :config
+    (setq org-superstar-special-todo-items t)
+    (add-hook 'org-mode-hook (lambda ()
+                               (org-superstar-mode 1))))
+
+  (setq org-hide-emphasis-markers t
+        org-pretty-entities t
+        org-startup-indented t)
 #+end_src
 
 
@@ -362,7 +386,9 @@ comfig
 #+begin_src emacs-lisp
   ;; vterm as a terminal
   (use-package vterm
-    :ensure t)
+    :ensure t
+    :config
+    (setq vterm-timer-delay 0.01))
   (use-package multi-vterm
     :ensure t
     :after vterm)
@@ -372,6 +398,19 @@ comfig
     "to" 'multi-vterm
     "tn" 'multi-vterm-next
     "te" 'multi-veterm-prev)
+#+end_src
+
+** docker
+#+begin_src emacs-lisp
+  (use-package docker
+    :ensure t
+    :bind ("C-c d" . docker))
+
+  (use-package docker-compose-mode)
+  (use-package dockerfile-mode)
+
+  (my/leader-definer
+    "cd" 'docker)
 #+end_src
 ** misc packages
 #+begin_src emacs-lisp
@@ -431,6 +470,13 @@ Mostly LSP, other sections will have other stuff idk
 
   (use-package helm-lsp)
   (use-package helm-xref)
+
+  (use-package dap-mode
+    :ensure t
+    :defer t
+    :after lsp-mode
+    :config
+    (dap-auto-configure-mode))
 #+end_src
 
 ** C/C++
@@ -442,7 +488,7 @@ Mostly LSP, other sections will have other stuff idk
     :hook ((c-mode c++-mode objc-mode cuda-mode) . lsp)
     :custom
     (ccls-args nil)
-    (ccls-executable (executable-find "ccls"))
+    (ccls-executable (executable-find "ccls"))
     (projectile-project-root-files-top-down-recurring
      (append '("compile_commands.json" ".ccls")
              projectile-project-root-files-top-down-recurring))
@@ -496,6 +542,51 @@ Mostly LSP, other sections will have other stuff idk
     :config
     (flycheck-ocaml-setup))
 #+end_src
+** Python
+#+begin_src emacs-lisp
+  ;; Built-in Python utilities
+  (use-package python
+    :ensure t
+    :hook (python-mode . lsp-deferred)
+    :custom
+    (dap-python-debugger 'debugpy)
+    (dap-python-executable "python3")
+    (python-shell-interpreter "python3")
+    :config
+    (require 'dap-python)
+    ;; Remove guess indent python message
+    (setq python-indent-guess-indent-offset-verbose nil))
+
+  ;; Required to easily switch virtual envs 
+  ;; via the menu bar or with `pyvenv-workon` 
+  ;; Setting the `WORKON_HOME` environment variable points 
+  ;; at where the envs are located. I use miniconda. 
+  (use-package pyvenv
+    :ensure t
+    :defer t
+    :config
+    ;; Setting work on to easily switch between environments
+    (setenv "WORKON_HOME" (expand-file-name "~/miniconda3/envs/"))
+    ;; Display virtual envs in the menu bar
+    (setq pyvenv-menu t)
+    ;; Restart the python process when switching environments
+    (add-hook 'pyvenv-post-activate-hooks (lambda ()
+              (pyvenv-restart-python)))
+    :hook (python-mode . pyvenv-mode))
+
+  (use-package lsp-pyright
+    :after lsp-mode
+    :custom
+    (lsp-pyright-auto-import-completions nil)
+    (lsp-pyright-typechecking-mode "off")
+    :config
+    (fk/async-process
+     "npm outdated -g | grep pyright | wc -l" nil
+     (lambda (process output)
+       (pcase output
+         ("0\n" (message "Pyright is up to date."))
+         ("1\n" (message "A pyright update is available."))))))
+#+end_src
 ** SML
 #+begin_src emacs-lisp 
   ;; SML
@@ -544,6 +635,8 @@ Mostly LSP, other sections will have other stuff idk
   (use-package doom-modeline
     :ensure t
     :init (doom-modeline-mode 1))
+
+  (use-package nerd-icons)
 
   (use-package doom-themes
     :ensure t

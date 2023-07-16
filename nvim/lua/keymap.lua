@@ -56,7 +56,10 @@ wk.register({
     },
     g = {
         name = "Git Projects",
-        g = { cmd("silent!! zellij run -c --floating -- gitui"), "Open GitUi" },
+        g = { cmd("Git"), "Git Status" },
+        b = { cmd("Git branch"), "Show Branches" },
+        p = { cmd("Git pull"), "Git Pull"},
+        P = { cmd("Git push"), "Git Push"},
         r = { cmd("Telescope projects"), "Recent Projects" }
     },
     d = {
@@ -85,10 +88,6 @@ wk.register({
         name = "Miscellaneous",
         p = { cmd("Lazy"), "Packages" },
         c = { cmd("e ~/.config/nvim/init.lua"), "Config" },
-    },
-    z = {
-        name = "Zellij",
-        d = { cmd("silent!!zellij run -c --floating -- lazydocker"), "Open LazyDocker" },
     },
     x = { cmd("Telescope commands theme=ivy"), "Command Palette" },
     [","] = { "<c-6>", "Open Previous Buffer" },
