@@ -16,6 +16,10 @@ vim.g.localmapleader = ' '
 
 -- Leader key mappings with Which-Key
 local telescope = require 'telescope.builtin'
+local ivy_telescope = function (func)
+    local opt = require('telescope.themes').get_ivy {}
+    return function() func(opt) end
+end
 local dap = require 'dap'
 wk.register({
     -- f = Files
@@ -30,10 +34,10 @@ wk.register({
     Q = { cmd("bd!"), "Force Close Buffer" },
     f = {
         name = "Find",
-        f = { cmd("Telescope find_files theme=ivy"), "Find File" },
-        g = { telescope.git_files, "Git Files" },
-        r = { cmd("Telescope frecency"), "Recent Files" },
-        s = { telescope.live_grep, "Live Grep" },
+        f = { ivy_telescope(telescope.find_files), "Find File" },
+        g = { ivy_telescope(telescope.git_files), "Git Files" },
+        r = { cmd("Telescope frecency theme=ivy"), "Recent Files" },
+        s = { ivy_telescope(telescope.live_grep), "Live Grep" },
     },
     e = {
         name = "Editor",
@@ -92,7 +96,7 @@ wk.register({
     x = { cmd("Telescope commands theme=ivy"), "Command Palette" },
     [","] = { "<c-6>", "Open Previous Buffer" },
     ["<Tab>"] = { "<C-w><C-p>", "Goto Previous Split" }, 
-    ["<Leader>"] = { ":Telescope buffers<cr>", "Show Open Buffers" },
+    ["<Leader>"] = { ivy_telescope(telescope.buffers), "Show Open Buffers" },
     ["?"] = { cmd("Cheatsheet"), "Open Cheatsheet" }
 }, { prefix = "<Leader>" })
 
