@@ -70,10 +70,15 @@ require("gruvbox").setup({
        NeogitHunkHeader = {fg = colors.light0, bg = colors.dark2 },
        NeogitHunkHeaderHighlight = {fg = colors.light0, bg = colors.dark2 },
 
-       NeogitUnstagedchanges = {fg = colors.bright_blue, bg = colors.dark0, bold = true},
-       NeogitRecentcommits = {fg = colors.bright_blue, bg = colors.dark0, bold = true},
+       NeogitUnstagedchanges = {fg = colors.bright_green, bg = colors.dark0, bold = true},
+       NeogitRecentcommits = {fg = colors.bright_green, bg = colors.dark0, bold = true},
+       NeogitUntrackedfiles = {fg = colors.bright_green, bg = colors.dark0, bold = true},
+       NeogitUnmergedchanges = {fg = colors.bright_green, bg = colors.dark0, bold = true},
+       NeogitStagedchanges = {fg = colors.bright_green, bg = colors.dark0, bold = true},
+       NeogitStashes = {fg = colors.bright_green, bg = colors.dark0, bold = true},
 
        NeogitObjectId = {fg = colors.neutral_yellow, bg = colors.dark0 },
+       NeogitStash = {fg = colors.neutral_yellow, bg = colors.dark0 },
 
        NeogitPopupSectionTitle = {fg = colors.bright_green, bg = colors.dark0, bold = true},
        NeogitPopupActionKey = {fg = colors.bright_orange, bg = colors.dark0 },
