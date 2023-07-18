@@ -98,7 +98,9 @@ require("lazy").setup({
         },
         config = function ()
             require('neogit').setup {
-                kind = "split_above"
+                kind = "split_above",
+                use_magit_keybindings = true,
+                disable_insert_on_commit = false,
             }
         end
     },
