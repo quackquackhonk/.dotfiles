@@ -23,7 +23,7 @@ export EDITOR="nvim"
 alias zshconf="$EDITOR ~/.zshrc"
 alias zshsrc="source ~/.zshrc"
 alias ohmyzsh="$EDITOR ~/.oh-my-zsh"
-alias nvimconf="$EDITOR ~/.config/nvim/init.lua"
+alias nvconf="$EDITOR ~/.config/nvim/init.lua"
 
 alias gs='git status'
 alias gc='git commit'

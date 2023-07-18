@@ -90,7 +90,18 @@ require("lazy").setup({
     'sindrets/winshift.nvim',
     'szw/vim-maximizer',
     -- Git Integration
-    'tpope/vim-fugitive',
+    {
+        'NeogitOrg/neogit',
+        dependencies = {
+            'nvim-lua/plenary.nvim',
+            'nvim-telescope/telescope.nvim',
+        },
+        config = function ()
+            require('neogit').setup {
+                kind = "split_above"
+            }
+        end
+    },
     {
         'lewis6991/gitsigns.nvim',
         config = function()
@@ -182,6 +193,22 @@ require("lazy").setup({
         end
     },
     'mfussenegger/nvim-jdtls',
+    {
+        'nvim-neotest/neotest',
+        dependencies = {
+            "nvim-lua/plenary.nvim",
+            "nvim-treesitter/nvim-treesitter",
+            "nvim-neotest/neotest-python",
+            "antoinemadec/FixCursorHold.nvim"
+        },
+        config = function ()
+            require("neotest").setup({
+                adapters = {
+                    require("neotest-python")
+                }
+            })
+        end
+    },
 
     -- Theme / UI
     {

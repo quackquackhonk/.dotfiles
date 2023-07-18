@@ -60,11 +60,8 @@ wk.register({
     },
     g = {
         name = "Git Projects",
-        g = { cmd("Git"), "Git Status" },
-        b = { cmd("Git branch"), "Show Branches" },
-        p = { cmd("Git pull"), "Git Pull"},
-        P = { cmd("Git push"), "Git Push"},
-        r = { cmd("Telescope projects"), "Recent Projects" }
+        g = { cmd("Neogit"), "Git Status" },
+        b = { cmd("Neogit branch"), "Show Branches" },
     },
     d = {
         name = "Debugging",
@@ -83,6 +80,14 @@ wk.register({
         d = { cmd("TroubleToggle"), "Diagnostics" },
         s = { cmd("SymbolsOutline"), "Symbol Outline" },
         m = { cmd("MaximizerToggle"), "Maximize Split" },
+        t = { cmd("Neotest summary"), "Test Summary"}
+    },
+    t = {
+        name = "Testing",
+        r = { require('neotest').run.run, "Run nearest test"},
+        f = { function() require('neotest').run.run(vim.fn.expand("%")) end, "Run tests in file"},
+        o = { require('neotest').output.open, "Open test output"},
+        O = { require('neotest').output_panel.toggle, "Toggle output panel" }
     },
     s = {
         name = "Settings",
