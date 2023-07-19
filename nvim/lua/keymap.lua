@@ -24,7 +24,7 @@ local dap = require 'dap'
 wk.register({
     -- f = Files
     -- e = Editor
-    -- l = LSP (sep in lsp.lua)
+    -- l = LSP (set in lsp.lua)
     -- c = Code
     -- d = Debugging
     -- g = git
@@ -47,6 +47,10 @@ wk.register({
         f = "format file",
         h = { cmd("noh"), "Hide Highlighting" },
         u = { cmd("!dos2unix %"), "Dos2Unix current file" }
+    },
+    c = {
+        name = "Code",
+            v = { require('swenv.api').pick_venv, "Pick Virtual Environment"},
     },
     l = {
         name = "LSP",

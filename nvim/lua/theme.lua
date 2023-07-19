@@ -90,13 +90,38 @@ require("gruvbox").setup({
 vim.opt.termguicolors = true
 vim.cmd('colorscheme gruvbox')
 
-
--- Credit: glepnir
 local lualine = require('lualine')
 
--- Color table for highlights
+local custom = require('lualine.themes.gruvbox')
+
+-- normal green
+custom.normal.a = { bg = colors.bright_green, fg = colors.dark0, gui = 'bold'}
+custom.normal.b = { bg = colors.faded_green, fg = colors.light0 }
+custom.normal.c = { bg = colors.dark2, fg = colors.light2}
+-- insert blue
+custom.insert.a = { bg = colors.bright_blue, fg = colors.dark0, gui = 'bold'}
+custom.insert.b = { bg = colors.faded_blue, fg = colors.light0 }
+custom.insert.c = { bg = colors.dark2, fg = colors.light2}
+-- replace red
+custom.replace.a = { bg = colors.bright_red, fg = colors.dark0, gui = 'bold'}
+custom.replace.b = { bg = colors.faded_red, fg = colors.light0 }
+custom.replace.c = { bg = colors.dark2, fg = colors.light2}
+-- visual purple
+custom.visual.a = { bg = colors.bright_purple, fg = colors.dark0, gui = 'bold'}
+custom.visual.b = { bg = colors.faded_purple, fg = colors.light0 }
+custom.visual.c = { bg = colors.dark2, fg = colors.light2}
+-- command orange
+custom.command.a = { bg = colors.bright_orange, fg = colors.dark0, gui = 'bold'}
+custom.command.b = { bg = colors.faded_orange, fg = colors.light0 }
+custom.command.c = { bg = colors.dark2, fg = colors.light2}
+
 lualine.setup {
     options = {
-        theme = 'gruvbox'
+        theme = custom
+    },
+    sections = {
+        lualine_b = {'branch', 'diff'},
+        lualine_c = {'filename', 'diagnostics'}
+
     }
 }

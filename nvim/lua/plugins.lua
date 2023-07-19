@@ -172,6 +172,17 @@ require("lazy").setup({
     'saadparwaiz1/cmp_luasnip',
     'rafamadriz/friendly-snippets',
     'onsails/lspkind.nvim',
+    {
+        'AckslD/swenv.nvim',
+        dependencies = 'stevearc/dressing.nvim',
+        config = function ()
+            require('swenv').setup({
+                post_set_venv = function()
+                    vim.cmd.LspRestart()
+                end
+            })
+        end,
+    },
     'simrat39/rust-tools.nvim',
     {
         'simrat39/symbols-outline.nvim',
