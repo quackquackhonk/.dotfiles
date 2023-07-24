@@ -54,6 +54,19 @@ require("lazy").setup({
         end,
         dependencies = 'nvim-treesitter/nvim-treesitter',
     },
+    {
+        'AckslD/nvim-neoclip.lua',
+        dependencies = {
+            'nvim-telescope/telescope.nvim',
+            'kkharji/sqlite.lua',
+        },
+        config = function()
+            require('neoclip').setup {
+                enable_persistent_history = true,
+                default_register = {'"', '+'}
+            }
+        end,
+    },
     -- keymap
     {
         'folke/which-key.nvim',
@@ -78,31 +91,11 @@ require("lazy").setup({
     'kevinhwang91/nvim-bqf',
 
     -- Buffer/Window Management
-    {
-        'romgrk/barbar.nvim',
-        config = function()
-            require('bufferline').setup {
-                auto_hide = false,
-            }
-        end,
-    },
     'mrjones2014/smart-splits.nvim',
     'sindrets/winshift.nvim',
     'szw/vim-maximizer',
     -- Git Integration
-    {
-        'NeogitOrg/neogit',
-        dependencies = {
-            'nvim-lua/plenary.nvim',
-            'nvim-telescope/telescope.nvim',
-        },
-        config = function ()
-            require('neogit').setup {
-                use_magit_keybindings = true,
-                disable_insert_on_commit = false,
-            }
-        end
-    },
+    'tpope/vim-fugitive',
     {
         'lewis6991/gitsigns.nvim',
         config = function()
@@ -221,6 +214,18 @@ require("lazy").setup({
             })
         end
     },
+    {
+        "utilyre/barbecue.nvim",
+        name = "barbecue",
+        version = "*",
+        dependencies = {
+            "SmiteshP/nvim-navic",
+            "nvim-tree/nvim-web-devicons", -- optional dependency
+        },
+        opts = {
+            -- configurations go here
+        },
+    },
 
     -- Theme / UI
     {
@@ -277,6 +282,19 @@ require("lazy").setup({
         config = function()
             require 'colorizer'.setup()
         end
+    },
+    {
+        'm4xshen/smartcolumn.nvim',
+        opts = {
+            colorcolumn = "100",
+            disabled_filetypes = {
+                "help", "text", "markdown", "org", "lazy", "mason",
+                "dashboard"
+            },
+            custom_colorcolumn = {
+                python = "120"
+            }
+        },
     },
 })
 

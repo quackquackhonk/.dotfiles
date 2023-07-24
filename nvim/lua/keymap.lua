@@ -41,9 +41,6 @@ wk.register({
     },
     e = {
         name = "Editor",
-        p = { '"+p', "System Clipboard Paste" },
-        P = { '"+P', "System Clipboard Paste Above" },
-        y = { '"+y', "System Clipboard Yank" },
         f = "format file",
         h = { cmd("noh"), "Hide Highlighting" },
         u = { cmd("!dos2unix %"), "Dos2Unix current file" }
@@ -64,8 +61,10 @@ wk.register({
     },
     g = {
         name = "Git Projects",
-        g = { cmd("Neogit"), "Git Status" },
-        b = { cmd("Neogit branch"), "Show Branches" },
+        g = { cmd("Git"), "Git Status" },
+        b = { cmd("Git branch"), "Show Branches" },
+        p = { cmd("Git pull"), "Git pull"},
+        P = { cmd("Git push"), "Git push"},
     },
     d = {
         name = "Debugging",
@@ -80,6 +79,7 @@ wk.register({
     },
     o = {
         name = "Open",
+        c = { cmd("Telescope neoclip theme=ivy"), "Open Neoclip"},
         f = { require("oil").open, "File Browser" },
         d = { cmd("TroubleToggle"), "Diagnostics" },
         s = { cmd("SymbolsOutline"), "Symbol Outline" },
@@ -104,7 +104,7 @@ wk.register({
     },
     x = { cmd("Telescope commands theme=ivy"), "Command Palette" },
     [","] = { "<c-6>", "Open Previous Buffer" },
-    ["<Tab>"] = { "<C-w><C-p>", "Goto Previous Split" }, 
+    ["<Tab>"] = { "<C-w><C-p>", "Goto Previous Split" },
     ["<Leader>"] = { ivy_telescope(telescope.buffers), "Show Open Buffers" },
     ["?"] = { cmd("Cheatsheet"), "Open Cheatsheet" }
 }, { prefix = "<Leader>" })

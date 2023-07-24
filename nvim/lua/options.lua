@@ -26,5 +26,6 @@ for k, v in pairs(options) do
     vim.opt[k] = v
 end
 
+vim.cmd('filetype plugin indent on')
 vim.cmd('set t_ZH=[3m')
 vim.cmd('set t_ZH=[23m')
