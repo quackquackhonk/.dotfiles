@@ -79,7 +79,6 @@ wk.register({
     },
     o = {
         name = "Open",
-        c = { cmd("Telescope neoclip theme=ivy"), "Open Neoclip"},
         f = { require("oil").open, "File Browser" },
         d = { cmd("TroubleToggle"), "Diagnostics" },
         s = { cmd("SymbolsOutline"), "Symbol Outline" },
@@ -102,6 +101,7 @@ wk.register({
         p = { cmd("Lazy"), "Packages" },
         c = { cmd("e ~/.config/nvim/init.lua"), "Config" },
     },
+    y = { cmd("Telescope neoclip theme=ivy"), "Open Neoclip"},
     x = { cmd("Telescope commands theme=ivy"), "Command Palette" },
     [","] = { "<c-6>", "Open Previous Buffer" },
     ["<Tab>"] = { "<C-w><C-p>", "Goto Previous Split" },
