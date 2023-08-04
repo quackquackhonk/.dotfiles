@@ -120,6 +120,17 @@ require("lazy").setup({
         }
     },
     {
+        'Shatur/neovim-tasks',
+        dependencies = {
+            'nvim-lua/plenary.nvim',
+            'mfussenegger/nvim-dap',
+        },
+        config = function ()
+            local Path = require('plenary.path')
+            require('tasks').setup({})
+        end,
+    },
+    {
         'nvim-telescope/telescope.nvim',
         branch = '0.1.x',
         config = function()
