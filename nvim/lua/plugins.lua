@@ -192,7 +192,14 @@ require("lazy").setup({
         'simrat39/symbols-outline.nvim',
         config = function()
             require("symbols-outline").setup({
-                position = 'left',
+                position = 'right',
+                keymaps = {
+                    close = "q",
+                    fold = "n",
+                    fold_all = "N",
+                    unfold = "e",
+                    unfold_all = "E"
+                }
             })
         end
     },

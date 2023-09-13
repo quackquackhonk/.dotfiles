@@ -120,7 +120,19 @@ lualine.setup {
         theme = custom
     },
     sections = {
-        lualine_b = {'branch', 'diff'},
+        lualine_b = {
+            {
+                'branch',
+                fmt = function(str)
+                    if string.len(str) > 20 then
+                        return string.sub(str, 0, 18) .. "..."
+                    else 
+                        return str
+                    end
+                end
+            },
+            'diff'
+        },
         lualine_c = {'filename', 'diagnostics'}
 
     }

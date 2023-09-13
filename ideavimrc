@@ -1,0 +1,36 @@
+
+set commentary
+Plug 'tpope/vim-surround'
+set vim-snipe
+
+set clipboard+=unnamed
+set clipboard+=ideaput
+set nu
+set ignorecase
+set smartcase
+set incsearch
+set wrapscan
+
+nnoremap \c :e ~/.ideavimrc<CR>
+nnoremap \r :action IdeaVim.ReloadVimRc.reload<CR>
+
+
+let mapleader = " "
+nnoremap <leader>eh :nohls<CR>
+
+nnoremap <leader>ot :action ActivateTerminalToolWindow<CR>
+nnoremap <leader>oT :action Terminal.OpenInTerminal<CR>
+
+nnoremap <leader>vz :action ToggleDistractionFreeMode<CR>
+
+nnoremap <leader>rr :action Run<CR>
+nnoremap <leader>rr :action Debug<CR>
+nnoremap <leader>rR :action Rerun<CR>
+
+vnoremap < <gv
+vnoremap > >gv
+
+nnoremap <Leader>=  :action ReformatCode<CR>
+
+nnoremap ge :action GotoNextError<CR>
+nnoremap gE :action GotoPreviousError<CR>
