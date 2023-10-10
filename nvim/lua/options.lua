@@ -29,5 +29,6 @@ for k, v in pairs(options) do
 end
 
 vim.cmd('filetype plugin indent on')
+vim.cmd([[autocmd FileType * set formatoptions-=o]])
 vim.cmd('set t_ZH=[3m')
 vim.cmd('set t_ZH=[23m')
