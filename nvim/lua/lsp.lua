@@ -90,7 +90,8 @@ null_ls.setup({
     -- you can reuse a shared lspconfig on_attach callback here
     on_attach = custom_on_attach,
     sources = {
-        null_ls.builtins.formatting.black
+        null_ls.builtins.formatting.black,
+        null_ls.builtins.diagnostics.pylint,
     }
 })
 
@@ -168,19 +169,24 @@ require 'lspconfig'.lua_ls.setup {
     },
 }
 -- Python
-require 'lspconfig'.pyright.setup {
-    on_attach = custom_on_attach,
-    capabilities = capabilities,
-    settings = {
-        python = {
-            analysis = {
-                autoSearchPaths = true,
-                diagnosticMode = 'openFilesOnly',
-                useLibraryCodeForTypes = true,
-                typeCheckingMode = 'basic'
-            },
-        }
+require'lspconfig'.pylsp.setup{
+  settings = {
+    pylsp = {
+      plugins = {
+        pycodestyle = {
+          ignore = {'W391'},
+          maxLineLength = 120
+        },
+        black = {
+            enabled = true,
+            line_length = 120,
+        },
+        autopep8 = { enabled = false },
+        yapf = { enabled = false },
+        pylsp_mypy = { enabled = true },
+      }
     }
+  }
 }
 
 -- C/C++
