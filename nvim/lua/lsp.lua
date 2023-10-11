@@ -38,8 +38,6 @@ local colors = {
   faded_orange = "#af3a03",
   gray = "#928374",
 }
-local util = require("lspconfig.util")
-
 -- Setup lspconfig.
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
@@ -83,18 +81,6 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
     update_in_insert = false,
 }
 )
-
--- Formatting
-local null_ls = require("null-ls")
-null_ls.setup({
-    -- you can reuse a shared lspconfig on_attach callback here
-    on_attach = custom_on_attach,
-    sources = {
-        null_ls.builtins.formatting.black,
-        null_ls.builtins.diagnostics.pylint,
-    }
-})
-
 -- Rust
 require('rust-tools').setup {
     tools = {
@@ -169,26 +155,28 @@ require 'lspconfig'.lua_ls.setup {
     },
 }
 -- Python
-require'lspconfig'.pylsp.setup{
-  settings = {
-    pylsp = {
-      plugins = {
-        pycodestyle = {
-          ignore = {'W391'},
-          maxLineLength = 120
-        },
-        black = {
-            enabled = true,
-            line_length = 120,
-        },
-        autopep8 = { enabled = false },
-        yapf = { enabled = false },
-        pylsp_mypy = { enabled = true },
-      }
+require 'lspconfig'.pyright.setup {
+    on_attach = custom_on_attach,
+    capabilities = capabilities,
+    settings = {
+        python = {
+            analysis = {
+                autoSearchPaths = true,
+                diagnosticMode = 'openFilesOnly',
+                useLibraryCodeForTypes = true,
+                typeCheckingMode = 'basic'
+            },
+        }
     }
-  }
 }
-
+require'lspconfig'.ruff_lsp.setup{
+    init_options = {
+        settings = {
+            -- Any extra CLI arguments for `ruff` go here.
+            args = {},
+        }
+    }
+}
 -- C/C++
 require 'lspconfig'.clangd.setup {
     on_attach = custom_on_attach,
