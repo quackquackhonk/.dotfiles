@@ -13,3 +13,4 @@ ln -s $HOME/.dotfiles/nu/config.nu $HOME/.config/nushell/config.nu
 ln -s $HOME/.dotfiles/nu/env.nu $HOME/.config/nushell/env.nu
 ln -s $HOME/.dotfiles/starship.toml $HOME/.config/starship.toml
 ln -s $HOME/.dotfiles/ideavimrc $HOME/.ideavimrc
+ln -s $HOME/.dotfiles/ruff.toml $HOME/.config/ruff/ruff.toml

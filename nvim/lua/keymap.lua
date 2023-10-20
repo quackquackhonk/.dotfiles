@@ -20,6 +20,10 @@ local ivy_telescope = function (func)
     local opt = require('telescope.themes').get_ivy {}
     return function() func(opt) end
 end
+
+local close_buf = function ()
+    require('bufdelete').bufdelete(0, true)
+end
 local dap = require 'dap'
 wk.register({
     -- f = Files
@@ -30,8 +34,8 @@ wk.register({
     -- g = git
     -- ; = Misc
     -- t = Test
-    q = { cmd("bd"), "Close Buffer" },
-    Q = { cmd("bd!"), "Force Close Buffer" },
+    q = { close_buf, "Close Buffer" },
+    Q = { cmd("bd"), "Close Buffer AND Window" },
     f = {
         name = "Find",
         f = { ivy_telescope(telescope.find_files), "Find File" },
@@ -131,6 +135,8 @@ hydra({
         { '<S-Down>', cmd 'WinShift down' },
         { '<S-Up>', cmd 'WinShift up' },
         { '<S-Right>', cmd 'WinShift right' },
+
+        { 'm', cmd('MaximizerToggle') },
 
         { '<C-Left>', function() splits.resize_left(2) end },
         { '<C-Down>', function() splits.resize_down(2) end },

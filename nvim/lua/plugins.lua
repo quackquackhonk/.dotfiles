@@ -94,6 +94,7 @@ require("lazy").setup({
     'kevinhwang91/nvim-bqf',
 
     -- Buffer/Window Management
+    'famiu/bufdelete.nvim',
     'mrjones2014/smart-splits.nvim',
     'sindrets/winshift.nvim',
     'szw/vim-maximizer',
