@@ -205,13 +205,13 @@ require("lazy").setup({
         end
     },
     {
-        'jose-elias-alvarez/null-ls.nvim',
+        'nvimtools/none-ls.nvim',
         config = function()
-            local nullls = require("null-ls")
-            nullls.setup({
+            local null_ls = require("null-ls")
+            null_ls.setup({
                 sources = {
-                    nullls.builtins.formatting.black,
-                    nullls.builtins.formatting.clang_format,
+                    null_ls.builtins.formatting.black,
+                    null_ls.builtins.formatting.clang_format,
                 }
             })
         end
