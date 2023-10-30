@@ -38,8 +38,7 @@ wk.register({
     Q = { cmd("bd"), "Close Buffer AND Window" },
     f = {
         name = "Find",
-        f = { ivy_telescope(telescope.find_files), "Find File" },
-        g = { ivy_telescope(telescope.git_files), "Git Files" },
+        f = { ivy_telescope(telescope.git_files), "Git Files" },
         r = { cmd("Telescope frecency theme=ivy"), "Recent Files" },
         s = { ivy_telescope(telescope.live_grep), "Live Grep" },
     },
@@ -47,7 +46,9 @@ wk.register({
         name = "Editor",
         f = "format file",
         h = { cmd("noh"), "Hide Highlighting" },
-        u = { cmd("!dos2unix %"), "Dos2Unix current file" }
+        u = { cmd("!dos2unix %"), "Dos2Unix current file" },
+        y = { '"+y', "Copy to system clipboard" },
+        p = { '"+p', "Copy to system clipboard" },
     },
     c = {
         name = "Code",
@@ -66,7 +67,7 @@ wk.register({
     g = {
         name = "Git Projects",
         g = { cmd("Git"), "Git Status" },
-        b = { cmd("Git branch"), "Show Branches" },
+        b = { ivy_telescope(telescope.git_branches), "Show Branches" },
         p = { cmd("Git pull"), "Git pull"},
         P = { cmd("Git push"), "Git push"},
     },
@@ -112,6 +113,12 @@ wk.register({
     ["<Leader>"] = { ivy_telescope(telescope.buffers), "Show Open Buffers" },
     ["?"] = { cmd("Cheatsheet"), "Open Cheatsheet" }
 }, { prefix = "<Leader>" })
+
+-- visual mode leader key bindings
+wk.register({
+    y = { '"+y', "Copy to system clipboard" },
+    p = { '"+p', "Copy to system clipboard" },
+}, { prefix = "<Leader>", mode = "v"})
 
 -- HYDRA keymappings
 -- Window move/resize hydra

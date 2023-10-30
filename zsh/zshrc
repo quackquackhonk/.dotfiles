@@ -1,5 +1,3 @@
-export USER="i34866"
-export USERNAME="i34866"
 # If you come from bash you might have to change your $PATH.
 export PATH=$HOME/bin:/usr/local/bin:$PATH
 export PATH=$HOME/.local/bin:$PATH
@@ -18,7 +16,11 @@ export LIBGL_ALWAYS_SOFTWARE=true
 export DOCKER_DEFAULT_PLATFORM=linux/amd64
 
 export CMAKE_COLOR_DIAGNOSTICS=ON
+export CMAKE_PREFIX_PATH=/storage/stankala/.sources/built/
 export CMAKE_EXPORT_COMPILE_COMMANDS=1
+
+export USER_LIBDIR=/storage/stankala/myenv/.spack-env/view/lib/
+export USER_INCLUDE=/storage/stankala/myenv/.spack-env/view/include/
 
 unsetopt PROMPT_SP
 
@@ -76,12 +78,13 @@ function cirruscp() {
     scp -i ~/.ssh/stankala_id.key $1 stankala@cirrus.veriskweather.net:/storage/stankala
 }
 alias awsnonprod='saml2aws login -a nonprod && eval $(saml2aws script -a nonprod)'
+<<<<<<< Updated upstream
+=======
+alias myenv='spack env activate -d ~/myenv'
+alias projenv='spack env activate -d spack_env/'
+
+>>>>>>> Stashed changes
 export TERM=xterm-256color
-
-export GRPC_INSTALL_PREFIX=/home/i34866/opt/grpc
-export SPACK_INSTALL_PREFIX=/home/i34866/opt/spack/envs/amps_20230623/haswell/.spack-env/view
-
-export PATH=$GRPC_INSTALL_PREFIX/bin:$PATH
 
 export BAT_THEME="gruvbox-dark"
 
@@ -119,4 +122,4 @@ fi
 unset __conda_setup
 # <<< conda initialize <<<
 
-
+. /storage/shared/spack/git/spack/share/spack/setup-env.sh *

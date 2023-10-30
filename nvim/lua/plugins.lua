@@ -308,7 +308,7 @@ require("lazy").setup({
     {
         'm4xshen/smartcolumn.nvim',
         opts = {
-            colorcolumn = "100",
+            colorcolumn = "120",
             disabled_filetypes = {
                 "help", "text", "markdown", "org", "lazy", "mason",
                 "dashboard"
