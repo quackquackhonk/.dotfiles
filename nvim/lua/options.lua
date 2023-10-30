@@ -13,6 +13,7 @@ local options = {
     relativenumber = true,
     conceallevel = 2,
     concealcursor = 'nc',
+    textwidth = 99,
     -- foldexpr = "nvim_treesitter#foldexpr()",
     -- foldmethod = "expr",
     sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal",
@@ -32,3 +33,4 @@ vim.cmd('filetype plugin indent on')
 vim.cmd([[autocmd FileType * set formatoptions-=o]])
 vim.cmd('set t_ZH=[3m')
 vim.cmd('set t_ZH=[23m')
+vim.cmd('set fo-=l')
