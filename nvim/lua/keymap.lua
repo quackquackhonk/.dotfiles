@@ -12,7 +12,7 @@ local pcmd = require('hydra.keymap-util').pcmd
 -- set up leader key
 keymap("", "<Space>", "<Nop>")
 vim.g.mapleader = ' '
-vim.g.localmapleader = ' '
+vim.g.maplocalleader = ','
 
 -- Leader key mappings with Which-Key
 local telescope = require 'telescope.builtin'

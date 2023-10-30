@@ -8,6 +8,7 @@ export PATH=$HOME/.sources/sml/bin:$PATH
 export PATH=$HOME/.sources/smlnj/bin:$PATH
 export PATH=$HOME/.sources/v:$PATH
 export PATH=/opt/homebrew/bin:$PATH
+export PATH=/Library/PostgreSQL/16/bin:$PATH
 export PATH=$HOME/opt/grpc/bin:$PATH
 
 # Path to your oh-my-zsh installation.
@@ -17,6 +18,7 @@ export LIBGL_ALWAYS_SOFTWARE=true
 export DOCKER_DEFAULT_PLATFORM=linux/amd64
 
 export CMAKE_COLOR_DIAGNOSTICS=ON
+export CMAKE_EXPORT_COMPILE_COMMANDS=1
 
 unsetopt PROMPT_SP
 
@@ -45,6 +47,7 @@ alias cd~='cd /mnt/c/Users/sahan'
 alias cdd='cd /mnt/d/'
 alias cde='cd /mnt/f/'
 alias cdcode='cd ~/code'
+alias vwsnotes='cd ~/Dropbox/VWS && nv .'
 
 alias fish_reload='source $HOME/.config/fish/config.fish'
 alias nv='nvim'
@@ -67,8 +70,12 @@ alias cgt='cargo nextest run'
 alias cgr='cargo run'
 alias cgb='cargo build'
 
+# work
+alias cirrus='ssh -i ~/.ssh/stankala_id.key stankala@cirrus.veriskweather.net -t "zsh"'
+function cirruscp() {
+    scp -i ~/.ssh/stankala_id.key $1 stankala@cirrus.veriskweather.net:/storage/stankala
+}
 alias awsnonprod='saml2aws login -a nonprod && eval $(saml2aws script -a nonprod)'
-
 export TERM=xterm-256color
 
 export GRPC_INSTALL_PREFIX=/home/i34866/opt/grpc
@@ -93,6 +100,7 @@ eval "$(starship init zsh)"
 # completion
 autoload bashcompinit && bashcompinit
 autoload -Uz compinit && compinit
+autoload -U zmv
 
 # complete -C '/usr/local/bin/aws_completer' aws
 

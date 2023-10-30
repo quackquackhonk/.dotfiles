@@ -33,26 +33,29 @@ require("lazy").setup({
         end
     },
     {
-        'nvim-orgmode/orgmode',
-        config = function ()
-            require('orgmode').setup_ts_grammar()
-            require('nvim-treesitter.configs').setup {
-                -- If TS highlights are not enabled at all, or disabled via `disable` prop,
-                -- highlighting will fallback to default Vim syntax highlighting
-                highlight = {
-                    enable = true,
-                    -- Required for spellcheck, some LaTex highlights and
-                    -- code block highlights that do not have ts grammar
-                    additional_vim_regex_highlighting = {'org'},
+        "nvim-neorg/neorg",
+        build = ":Neorg sync-parsers",
+        dependencies = { "nvim-lua/plenary.nvim" },
+        config = function()
+            require("neorg").setup {
+                load = {
+                    ["core.defaults"] = {}, -- Loads default behaviour
+                    ["core.concealer"] = {}, -- Adds pretty icons to your documents
+                    ["core.dirman"] = { -- Manages Neorg workspaces
+                        config = {
+                            workspaces = {
+                                notes = "~/Dropbox/",
+                            },
+                        },
+                    },
+                    ["core.keybinds"] = {
+                        config = {
+                            default_keybinds = true,
+                        }
+                    }
                 },
-                ensure_installed = {'org'}, -- Or run :TSUpdate org
             }
-            require('orgmode').setup({
-                org_agenda_files = {'~/org/**/*'},
-                org_default_notes_file = '~/org/refile.org',
-            })
         end,
-        dependencies = 'nvim-treesitter/nvim-treesitter',
     },
     {
         'AckslD/nvim-neoclip.lua',
@@ -205,13 +208,13 @@ require("lazy").setup({
         end
     },
     {
-        'jose-elias-alvarez/null-ls.nvim',
+        'nvimtools/none-ls.nvim',
         config = function()
-            local nullls = require("null-ls")
-            nullls.setup({
+            local null_ls = require("null-ls")
+            null_ls.setup({
                 sources = {
-                    nullls.builtins.formatting.black,
-                    nullls.builtins.formatting.clang_format,
+                    null_ls.builtins.formatting.black,
+                    null_ls.builtins.formatting.clang_format,
                 }
             })
         end
