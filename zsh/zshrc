@@ -122,5 +122,3 @@ else
 fi
 unset __conda_setup
 # <<< conda initialize <<<
-
-. /storage/shared/spack/git/spack/share/spack/setup-env.sh *
