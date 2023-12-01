@@ -98,6 +98,15 @@ require("lazy").setup({
     'mrjones2014/smart-splits.nvim',
     'sindrets/winshift.nvim',
     'szw/vim-maximizer',
+    {
+        's1n7ax/nvim-window-picker',
+        name = 'window-picker',
+        event = 'VeryLazy',
+        version = '2.*',
+        config = function()
+            require'window-picker'.setup()
+        end,
+    },
     -- Git Integration
     'tpope/vim-fugitive',
     {
@@ -155,7 +164,19 @@ require("lazy").setup({
     },
     {
         'stevearc/oil.nvim',
-        opts = {},
+        opts = {
+            default_file_explorer=true,
+            columns = {
+                "icon",
+                "permissions",
+                "mtime"
+            },
+            float = {
+                padding = 10,
+                max_height = 60,
+                max_width = 120,
+            },
+        },
         -- Optional dependencies
         dependencies = { "nvim-tree/nvim-web-devicons" },
     },
@@ -250,16 +271,6 @@ require("lazy").setup({
     },
 
     -- Theme / UI
-    {
-        'glepnir/dashboard-nvim',
-        event = 'VimEnter',
-        config = function()
-            require('dashboard').setup {
-                -- config
-            }
-        end,
-        dependencies = { {'nvim-tree/nvim-web-devicons'}}
-    },
     'nvim-lua/popup.nvim',
     'nvim-lua/plenary.nvim',
     {

@@ -73,6 +73,16 @@ local custom_on_attach = function(client, bufnr)
     vim.keymap.set('n', '<Leader>l<Leader>', vim.lsp.buf.code_action, bufopts)
 end
 
+-- use this for null ls formatting
+local null_ls = require("null-ls")
+null_ls.setup({
+    on_attach = custom_on_attach,
+    sources = {
+        null_ls.builtins.formatting.black,
+        null_ls.builtins.formatting.clang_format,
+    }
+})
+
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
     vim.lsp.diagnostic.on_publish_diagnostics, {
     virtual_text = true,
