@@ -16,12 +16,12 @@ vim.g.maplocalleader = ','
 
 -- Leader key mappings with Which-Key
 local telescope = require 'telescope.builtin'
-local ivy_telescope = function (func)
+local ivy_telescope = function(func)
     local opt = require('telescope.themes').get_ivy {}
     return function() func(opt) end
 end
 
-local close_buf = function ()
+local close_buf = function()
     require('bufdelete').bufdelete(0, true)
 end
 local dap = require 'dap'
@@ -38,20 +38,22 @@ wk.register({
     Q = { cmd("bd"), "Close Buffer AND Window" },
     f = {
         name = "Find",
-        f = { ivy_telescope(telescope.find_files), "Find File" },
+        f = { ivy_telescope(telescope.find_files), "Find Files"},
         g = { ivy_telescope(telescope.git_files), "Git Files" },
         r = { cmd("Telescope frecency theme=ivy"), "Recent Files" },
         s = { ivy_telescope(telescope.live_grep), "Live Grep" },
     },
     e = {
         name = "Editor",
-        f = "format file",
+        f = { vim.lsp.buf.format, "format file" },
         h = { cmd("noh"), "Hide Highlighting" },
-        u = { cmd("!dos2unix %"), "Dos2Unix current file" }
+        u = { cmd("!dos2unix %"), "Dos2Unix current file" },
+        y = { '"+y', "Copy to system clipboard" },
+        p = { '"+p', "Copy to system clipboard" },
     },
     c = {
         name = "Code",
-            v = { require('swenv.api').pick_venv, "Pick Virtual Environment"},
+        v = { require('swenv.api').pick_venv, "Pick Virtual Environment" },
     },
     l = {
         name = "LSP",
@@ -66,9 +68,9 @@ wk.register({
     g = {
         name = "Git Projects",
         g = { cmd("Git"), "Git Status" },
-        b = { cmd("Git branch"), "Show Branches" },
-        p = { cmd("Git pull"), "Git pull"},
-        P = { cmd("Git push"), "Git push"},
+        b = { ivy_telescope(telescope.git_branches), "Show Branches" },
+        p = { cmd("Git pull"), "Git pull" },
+        P = { cmd("Git push"), "Git push" },
     },
     d = {
         name = "Debugging",
@@ -83,17 +85,18 @@ wk.register({
     },
     o = {
         name = "Open",
-        f = { require("oil").open, "File Browser" },
+        f = { require('oil').toggle_float, "File Browser" },
+        o = { require("oil").open, "File Browser" },
         d = { cmd("TroubleToggle"), "Diagnostics" },
         s = { cmd("SymbolsOutline"), "Symbol Outline" },
         m = { cmd("MaximizerToggle"), "Maximize Split" },
-        t = { cmd("Neotest summary"), "Test Summary"}
+        t = { cmd("Neotest summary"), "Test Summary" }
     },
     t = {
         name = "Testing",
-        r = { require('neotest').run.run, "Run nearest test"},
-        f = { function() require('neotest').run.run(vim.fn.expand("%")) end, "Run tests in file"},
-        o = { require('neotest').output.open, "Open test output"},
+        r = { require('neotest').run.run, "Run nearest test" },
+        f = { function() require('neotest').run.run(vim.fn.expand("%")) end, "Run tests in file" },
+        o = { require('neotest').output.open, "Open test output" },
         O = { require('neotest').output_panel.toggle, "Toggle output panel" }
     },
     s = {
@@ -105,13 +108,19 @@ wk.register({
         p = { cmd("Lazy"), "Packages" },
         c = { cmd("e ~/.config/nvim/init.lua"), "Config" },
     },
-    y = { cmd("Telescope neoclip theme=ivy"), "Open Neoclip"},
+    y = { cmd("Telescope neoclip theme=ivy"), "Open Neoclip" },
     x = { cmd("Telescope commands theme=ivy"), "Command Palette" },
     [","] = { "<c-6>", "Open Previous Buffer" },
     ["<Tab>"] = { "<C-w><C-p>", "Goto Previous Split" },
     ["<Leader>"] = { ivy_telescope(telescope.buffers), "Show Open Buffers" },
     ["?"] = { cmd("Cheatsheet"), "Open Cheatsheet" }
 }, { prefix = "<Leader>" })
+
+-- visual mode leader key bindings
+wk.register({
+    y = { '"+y', "Copy to system clipboard" },
+    p = { '"+p', "Copy to system clipboard" },
+}, { prefix = "<Leader>", mode = "v" })
 
 -- HYDRA keymappings
 -- Window move/resize hydra
@@ -126,32 +135,29 @@ hydra({
     mode = 'n',
     body = '<C-w>',
     heads = {
-        { '<Left>', '<C-w>h' },
-        { '<Down>', '<C-w>j' },
-        { '<Up>', pcmd('wincmd k', 'E11', 'close') },
-        { '<Right>', '<C-w>l' },
+        { '<Left>',    '<C-w>h' },
+        { '<Down>',    '<C-w>j' },
+        { '<Up>',      pcmd('wincmd k', 'E11', 'close') },
+        { '<Right>',   '<C-w>l' },
 
-        { '<S-Left>', cmd 'WinShift left' },
-        { '<S-Down>', cmd 'WinShift down' },
-        { '<S-Up>', cmd 'WinShift up' },
+        { '<S-Left>',  cmd 'WinShift left' },
+        { '<S-Down>',  cmd 'WinShift down' },
+        { '<S-Up>',    cmd 'WinShift up' },
         { '<S-Right>', cmd 'WinShift right' },
 
-        { 'm', cmd('MaximizerToggle') },
+        { 'm',         cmd('MaximizerToggle') },
 
-        { '<C-Left>', function() splits.resize_left(2) end },
-        { '<C-Down>', function() splits.resize_down(2) end },
-        { '<C-Up>', function() splits.resize_up(2) end },
+        { '<C-Left>',  function() splits.resize_left(2) end },
+        { '<C-Down>',  function() splits.resize_down(2) end },
+        { '<C-Up>',    function() splits.resize_up(2) end },
         { '<C-Right>', function() splits.resize_right(2) end },
-        { '=', '<C-w>=', { desc = 'equalize' } },
-
-        { 's', pcmd('split', 'E36') },
-        { '<C-s>', pcmd('split', 'E36'), { desc = false } },
-        { 'v', pcmd('vsplit', 'E36') },
-        { '<C-v>', pcmd('vsplit', 'E36'), { desc = false } },
-
-        { 'q', pcmd('close', 'E444'), { desc = 'close window' } },
-
-        { '<Esc>', nil, { exit = true, desc = false } }
+        { '=',         '<C-w>=',                             { desc = 'equalize' } },
+        { 's',         pcmd('split', 'E36') },
+        { '<C-s>',     pcmd('split', 'E36'),                 { desc = false } },
+        { 'v',         pcmd('vsplit', 'E36') },
+        { '<C-v>',     pcmd('vsplit', 'E36'),                { desc = false } },
+        { 'q',         pcmd('close', 'E444'),                { desc = 'close window' } },
+        { '<Esc>',     nil,                                  { exit = true, desc = false } }
     }
 })
 

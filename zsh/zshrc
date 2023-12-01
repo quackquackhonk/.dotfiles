@@ -1,5 +1,3 @@
-export USER="i34866"
-export USERNAME="i34866"
 # If you come from bash you might have to change your $PATH.
 export PATH=$HOME/bin:/usr/local/bin:$PATH
 export PATH=$HOME/.local/bin:$PATH
@@ -18,7 +16,11 @@ export LIBGL_ALWAYS_SOFTWARE=true
 export DOCKER_DEFAULT_PLATFORM=linux/amd64
 
 export CMAKE_COLOR_DIAGNOSTICS=ON
+export CMAKE_PREFIX_PATH=/storage/stankala/.sources/built/
 export CMAKE_EXPORT_COMPILE_COMMANDS=1
+
+export USER_LIBDIR=/storage/stankala/myenv/.spack-env/view/lib/
+export USER_INCLUDE=/storage/stankala/myenv/.spack-env/view/include/
 
 unsetopt PROMPT_SP
 
@@ -58,6 +60,9 @@ alias l='exa -lah'
 
 alias t='tmux'
 
+alias d='docker'
+alias dc='docker compose'
+
 alias em='emacsclient -nw'
 alias emd='emacs --daemon'
 alias emde='emacs --daemon && emacsclient -nw'
@@ -76,12 +81,11 @@ function cirruscp() {
     scp -i ~/.ssh/stankala_id.key $1 stankala@cirrus.veriskweather.net:/storage/stankala
 }
 alias awsnonprod='saml2aws login -a nonprod && eval $(saml2aws script -a nonprod)'
+alias myenv='spack env activate -d ~/myenv'
+alias projenv='spack env activate -d spack_env/'
+alias lzd='lazydocker'
+
 export TERM=xterm-256color
-
-export GRPC_INSTALL_PREFIX=/home/i34866/opt/grpc
-export SPACK_INSTALL_PREFIX=/home/i34866/opt/spack/envs/amps_20230623/haswell/.spack-env/view
-
-export PATH=$GRPC_INSTALL_PREFIX/bin:$PATH
 
 export BAT_THEME="gruvbox-dark"
 
@@ -106,17 +110,17 @@ autoload -U zmv
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/home/i34866/miniconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+__conda_setup="$('/storage/stankala/.miniconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
 if [ $? -eq 0 ]; then
     eval "$__conda_setup"
 else
-    if [ -f "/home/i34866/miniconda3/etc/profile.d/conda.sh" ]; then
-        . "/home/i34866/miniconda3/etc/profile.d/conda.sh"
+    if [ -f "/storage/stankala/.miniconda3/etc/profile.d/conda.sh" ]; then
+        . "/storage/stankala/.miniconda3/etc/profile.d/conda.sh"
     else
-        export PATH="/home/i34866/miniconda3/bin:$PATH"
+        export PATH="/storage/stankala/.miniconda3/bin:$PATH"
     fi
 fi
 unset __conda_setup
 # <<< conda initialize <<<
 
-
+. /storage/shared/spack/git/spack/share/spack/setup-env.sh *
