@@ -57,6 +57,7 @@ alias vi='nvim'
 
 alias ls='exa'
 alias l='exa -lah'
+alias b='bat'
 
 alias t='tmux'
 

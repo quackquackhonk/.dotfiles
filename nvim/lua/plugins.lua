@@ -163,6 +163,11 @@ require("lazy").setup({
         run = ':TSUpdate'
     },
     {
+      "NoahTheDuke/vim-just",
+      event = { "BufReadPre", "BufNewFile" },
+      ft = { "\\cjustfile", "*.just", ".justfile" },
+    },
+    {
         'stevearc/oil.nvim',
         opts = {
             default_file_explorer=true,
