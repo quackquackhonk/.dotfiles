@@ -85,8 +85,7 @@ wk.register({
     },
     o = {
         name = "Open",
-        f = { require('oil').toggle_float, "File Browser" },
-        o = { require("oil").open, "File Browser" },
+        f = { cmd("lua MiniFiles.open()"), "File Browser" },
         d = { cmd("TroubleToggle"), "Diagnostics" },
         s = { cmd("SymbolsOutline"), "Symbol Outline" },
         m = { cmd("MaximizerToggle"), "Maximize Split" },
