@@ -1,14 +1,14 @@
 -- install lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
-  vim.fn.system({
-    "git",
-    "clone",
-    "--filter=blob:none",
-    "https://github.com/folke/lazy.nvim.git",
-    "--branch=stable", -- latest stable release
-    lazypath,
-  })
+    vim.fn.system({
+        "git",
+        "clone",
+        "--filter=blob:none",
+        "https://github.com/folke/lazy.nvim.git",
+        "--branch=stable", -- latest stable release
+        lazypath,
+    })
 end
 vim.opt.rtp:prepend(lazypath)
 
@@ -39,9 +39,9 @@ require("lazy").setup({
         config = function()
             require("neorg").setup {
                 load = {
-                    ["core.defaults"] = {}, -- Loads default behaviour
+                    ["core.defaults"] = {},  -- Loads default behaviour
                     ["core.concealer"] = {}, -- Adds pretty icons to your documents
-                    ["core.dirman"] = { -- Manages Neorg workspaces
+                    ["core.dirman"] = {      -- Manages Neorg workspaces
                         config = {
                             workspaces = {
                                 notes = "~/Dropbox/",
@@ -66,7 +66,7 @@ require("lazy").setup({
         config = function()
             require('neoclip').setup {
                 enable_persistent_history = true,
-                default_register = {'"', '+'}
+                default_register = { '"', '+' }
             }
         end,
     },
@@ -104,7 +104,7 @@ require("lazy").setup({
         event = 'VeryLazy',
         version = '2.*',
         config = function()
-            require'window-picker'.setup()
+            require 'window-picker'.setup()
         end,
     },
     -- Git Integration
@@ -138,7 +138,7 @@ require("lazy").setup({
             'nvim-lua/plenary.nvim',
             'mfussenegger/nvim-dap',
         },
-        config = function ()
+        config = function()
             local Path = require('plenary.path')
             require('tasks').setup({})
         end,
@@ -156,7 +156,7 @@ require("lazy").setup({
     },
     {
         "nvim-telescope/telescope-frecency.nvim",
-        dependencies = {"kkharji/sqlite.lua"}
+        dependencies = { "kkharji/sqlite.lua" }
     },
     {
         'nvim-treesitter/nvim-treesitter',
@@ -164,8 +164,8 @@ require("lazy").setup({
     },
     {
         'echasnovski/mini.files',
-        version=false,
-        config = function ()
+        version = false,
+        config = function()
             require('mini.files').setup({
                 mappings = {
                     close       = 'q',
@@ -191,6 +191,11 @@ require("lazy").setup({
         end
     },
     {
+        "NoahTheDuke/vim-just",
+        event = { "BufReadPre", "BufNewFile" },
+        ft = { "\\cjustfile", "*.just", ".justfile" },
+    },
+    {
         'williamboman/mason-lspconfig.nvim',
         config = function()
             require('mason-lspconfig').setup()
@@ -207,7 +212,7 @@ require("lazy").setup({
     {
         'AckslD/swenv.nvim',
         dependencies = 'stevearc/dressing.nvim',
-        config = function ()
+        config = function()
             require('swenv').setup({
                 post_set_venv = function()
                     vim.cmd.LspRestart()
@@ -252,7 +257,7 @@ require("lazy").setup({
             "nvim-neotest/neotest-python",
             "antoinemadec/FixCursorHold.nvim"
         },
-        config = function ()
+        config = function()
             require("neotest").setup({
                 adapters = {
                     require("neotest-python")
@@ -335,4 +340,3 @@ require("lazy").setup({
 })
 
 vim.g.mapleader = " "
-
