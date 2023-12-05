@@ -163,27 +163,25 @@ require("lazy").setup({
         run = ':TSUpdate'
     },
     {
-      "NoahTheDuke/vim-just",
-      event = { "BufReadPre", "BufNewFile" },
-      ft = { "\\cjustfile", "*.just", ".justfile" },
-    },
-    {
-        'stevearc/oil.nvim',
-        opts = {
-            default_file_explorer=true,
-            columns = {
-                "icon",
-                "permissions",
-                "mtime"
-            },
-            float = {
-                padding = 10,
-                max_height = 60,
-                max_width = 120,
-            },
-        },
-        -- Optional dependencies
-        dependencies = { "nvim-tree/nvim-web-devicons" },
+        'echasnovski/mini.files',
+        version=false,
+        config = function ()
+            require('mini.files').setup({
+                mappings = {
+                    close       = 'q',
+                    go_in       = '<Return>',
+                    go_in_plus  = '<C-Return>',
+                    go_out      = '<BS>',
+                    go_out_plus = '<C-BS>',
+                    reset       = '<C-r>',
+                    reveal_cwd  = '@',
+                    show_help   = 'g?',
+                    synchronize = '=',
+                    trim_left   = '<',
+                    trim_right  = '>',
+                },
+            })
+        end
     },
     'neovim/nvim-lspconfig',
     {

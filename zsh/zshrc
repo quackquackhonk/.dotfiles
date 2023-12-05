@@ -57,7 +57,6 @@ alias vi='nvim'
 
 alias ls='exa'
 alias l='exa -lah'
-alias b='bat'
 
 alias t='tmux'
 
@@ -123,3 +122,9 @@ else
 fi
 unset __conda_setup
 # <<< conda initialize <<<
+
+. /storage/shared/spack/git/spack/share/spack/setup-env.sh *
+
+eval "$(zoxide init zsh)"
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
