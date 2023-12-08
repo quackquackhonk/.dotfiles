@@ -123,8 +123,6 @@ fi
 unset __conda_setup
 # <<< conda initialize <<<
 
-. /storage/shared/spack/git/spack/share/spack/setup-env.sh *
-
 eval "$(zoxide init zsh)"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
