@@ -341,6 +341,16 @@ require("lazy").setup({
             }
         },
     },
+    {
+        "lukas-reineke/indent-blankline.nvim",
+        main = "ibl",
+        opts = {
+            indent = {
+                char = "┆",
+            },
+            scope = { enabled = false },
+        },
+    }
 })
 
 vim.g.mapleader = " "
