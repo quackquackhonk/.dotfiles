@@ -67,10 +67,8 @@ wk.register({
     },
     g = {
         name = "Git Projects",
-        g = { cmd("Git"), "Git Status" },
+        g = { cmd("Neogit"), "Git Status" },
         b = { ivy_telescope(telescope.git_branches), "Show Branches" },
-        p = { cmd("Git pull"), "Git pull" },
-        P = { cmd("Git push"), "Git push" },
     },
     d = {
         name = "Debugging",
@@ -108,7 +106,6 @@ wk.register({
         c = { cmd("e ~/.config/nvim/init.lua"), "Config" },
     },
     y = { cmd("Telescope neoclip theme=ivy"), "Open Neoclip" },
-    x = { cmd("Telescope commands theme=ivy"), "Command Palette" },
     [","] = { "<c-6>", "Open Previous Buffer" },
     ["<Tab>"] = { "<C-w><C-p>", "Goto Previous Split" },
     ["<Leader>"] = { ivy_telescope(telescope.buffers), "Show Open Buffers" },

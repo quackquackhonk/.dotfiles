@@ -85,6 +85,16 @@ require("gruvbox").setup({
        NeogitPopupSwitchKey = {fg = colors.bright_orange, bg = colors.dark0 },
        NeogitPopupOptionKey = {fg = colors.bright_orange, bg = colors.dark0 },
        NeogitPopupActionDisabled = {fg = colors.dark4, bg = colors.dark0 },
+
+       -- for noice
+       NoiceCmdlinePopup = {bg = colors.dark0},
+       NoiceCmdlinePopupBorder = {bg = colors.dark0, fg = colors.bright_blue},
+       NoiceCmdlinePopupPrompt = {bg = colors.dark0, fg = colors.bright_blue},
+       NoiceCmdlinePopupTitle = {bg = colors.dark0, fg = colors.bright_blue},
+       NoiceCmdlineIcon = {bg = colors.dark0, fg = colors.bright_green},
+
+       NoiceConfirmBorder = {bg = colors.dark0, fg = colors.bright_blue},
+       NoiceFormatConfirmDefault = {bg = colors.faded_green, fg = colors.light0},
     }
 })
 vim.opt.termguicolors = true
@@ -126,7 +136,7 @@ lualine.setup {
                 fmt = function(str)
                     if string.len(str) > 20 then
                         return string.sub(str, 0, 18) .. "..."
-                    else 
+                    else
                         return str
                     end
                 end
