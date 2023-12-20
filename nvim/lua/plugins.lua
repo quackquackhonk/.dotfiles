@@ -321,7 +321,6 @@ require("lazy").setup({
         },
         dependencies = {
             "MunifTanjim/nui.nvim",
-            "rcarriga/nvim-notify",
         }
     },
     'nvim-lua/popup.nvim',
