@@ -7,7 +7,9 @@ return {
             require("mini.operators").setup()
             require("mini.surround").setup()
             require("mini.jump").setup()
-            require("mini.jump2d").setup()
+            require("mini.jump2d").setup({
+                labels = 'tnseriaoplfuwyqbjgmvhdcxzk'
+            })
             require('mini.files').setup({
                 mappings = {
                     close       = 'q',
@@ -23,6 +25,7 @@ return {
                     trim_right  = '>',
                 },
             })
+            require('mini.indentscope').setup()
         end
     },
 }
