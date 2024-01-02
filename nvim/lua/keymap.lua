@@ -102,7 +102,8 @@ wk.register({
         r = { cmd("set rnu!"), "Relative Numbers" },
     },
     [";"] = {
-        name = "Miscellaneous",
+        name = "Configuration Commands",
+        s = {cmd("so %"), "Source current file"},
         p = { cmd("Lazy"), "Packages" },
         c = { cmd("e ~/.config/nvim/init.lua"), "Config" },
     },

@@ -48,24 +48,21 @@ require("gruvbox").setup({
         operators = false,
         folds = false,
     },
+    contrast = "hard",
     strikethrough = true,
     invert_selection = false,
     invert_signs = false,
     invert_tabline = false,
     invert_intend_guides = false,
-    inverse = true, -- invert background for search, diffs, statuslines and errors
+    inverse = false, -- invert background for search, diffs, statuslines and errors
     overrides = {
-        -- Telescope
-        TelescopeTitle = {fg = colors.light1, bg = colors.dark0_hard},
-        TelescopeNormal = {fg = colors.light1, bg = colors.dark0_hard},
-        TelescopeBorder = {fg = colors.light1, bg = colors.dark0_hard},
-        TelescopePrompt = {fg = colors.light1, bg = colors.dark0_hard},
+        SignColumn = { bg = colors.dark0 },
         -- MiniFiles
-        MiniFilesTitle = {fg = colors.light1, bg = colors.dark0_hard},
-        MiniFilesTitleFocused = {fg = colors.neutral_green, bg = colors.dark0_hard},
-        MiniFilesNormal = {fg = colors.light1, bg = colors.dark0_hard},
-        MiniFilesBorder = {fg = colors.light1, bg = colors.dark0_hard},
-        MiniFilesBorderModified = {fg = colors.bright_red, bg = colors.dark0_hard},
+        MiniFilesTitle = { fg = colors.light1, bg = colors.dark0_hard },
+        MiniFilesTitleFocused = { fg = colors.neutral_green, bg = colors.dark0_hard },
+        MiniFilesNormal = { fg = colors.light1, bg = colors.dark0_hard },
+        MiniFilesBorder = { fg = colors.light1, bg = colors.dark0_hard },
+        MiniFilesBorderModified = { fg = colors.bright_red, bg = colors.dark0_hard },
         -- NeoGit
         NeogitBranch = { fg = colors.bright_orange, bg = colors.dark0, bold = true },
         NeogitRemote = { fg = colors.bright_purple, bg = colors.dark0, bold = true },
@@ -93,10 +90,10 @@ require("gruvbox").setup({
         NeogitPopupActionDisabled = { fg = colors.dark4, bg = colors.dark0 },
 
         -- for noice
-        NoiceCmdlinePopup = { bg = colors.dark0 },
-        NoiceCmdlinePopupBorder = { bg = colors.dark0, fg = colors.bright_blue },
-        NoiceCmdlinePopupPrompt = { bg = colors.dark0, fg = colors.bright_blue },
-        NoiceCmdlinePopupTitle = { bg = colors.dark0, fg = colors.bright_blue },
+        NoiceCmdlinePopup = { bg = colors.dark0_hard },
+        NoiceCmdlinePopupBorder = { bg = colors.dark0_hard, fg = colors.bright_blue },
+        NoiceCmdlinePopupPrompt = { bg = colors.dark0_hard, fg = colors.bright_blue },
+        NoiceCmdlinePopupTitle = { bg = colors.dark0_hard, fg = colors.bright_blue },
         NoiceCmdlineIcon = { bg = colors.dark0, fg = colors.bright_green },
 
         NoiceConfirmBorder = { bg = colors.dark0, fg = colors.bright_blue },
@@ -106,50 +103,225 @@ require("gruvbox").setup({
 vim.opt.termguicolors = true
 vim.cmd('colorscheme gruvbox')
 
+
+-- Eviline config for lualine
+-- Author: shadmansaleh
+-- Credit: glepnir
 local lualine = require('lualine')
 
-local custom = require('lualine.themes.gruvbox')
+-- Color table for highlights
+-- stylua: ignore
+local colors = {
+    bg       = colors.dark0,
+    fg       = colors.light0,
+    yellow   = colors.bright_yellow,
+    cyan     = colors.bright_aqua,
+    darkblue = colors.neutral_blue,
+    green    = colors.bright_green,
+    orange   = colors.bright_blue,
+    violet   = colors.bright_blue,
+    magenta  = colors.bright_blue,
+    blue     = colors.bright_blue,
+    red      = colors.bright_blue,
+}
 
--- normal green
-custom.normal.a = { bg = colors.bright_green, fg = colors.dark0, gui = 'bold' }
-custom.normal.b = { bg = colors.faded_green, fg = colors.light0 }
-custom.normal.c = { bg = colors.dark2, fg = colors.light2 }
--- insert blue
-custom.insert.a = { bg = colors.bright_blue, fg = colors.dark0, gui = 'bold' }
-custom.insert.b = { bg = colors.faded_blue, fg = colors.light0 }
-custom.insert.c = { bg = colors.dark2, fg = colors.light2 }
--- replace red
-custom.replace.a = { bg = colors.bright_red, fg = colors.dark0, gui = 'bold' }
-custom.replace.b = { bg = colors.faded_red, fg = colors.light0 }
-custom.replace.c = { bg = colors.dark2, fg = colors.light2 }
--- visual purple
-custom.visual.a = { bg = colors.bright_purple, fg = colors.dark0, gui = 'bold' }
-custom.visual.b = { bg = colors.faded_purple, fg = colors.light0 }
-custom.visual.c = { bg = colors.dark2, fg = colors.light2 }
--- command orange
-custom.command.a = { bg = colors.bright_orange, fg = colors.dark0, gui = 'bold' }
-custom.command.b = { bg = colors.faded_orange, fg = colors.light0 }
-custom.command.c = { bg = colors.dark2, fg = colors.light2 }
+local conditions = {
+    buffer_not_empty = function()
+        return vim.fn.empty(vim.fn.expand('%:t')) ~= 1
+    end,
+    hide_in_width = function()
+        return vim.fn.winwidth(0) > 80
+    end,
+    check_git_workspace = function()
+        local filepath = vim.fn.expand('%:p:h')
+        local gitdir = vim.fn.finddir('.git', filepath .. ';')
+        return gitdir and #gitdir > 0 and #gitdir < #filepath
+    end,
+}
 
-lualine.setup {
+-- Config
+local config = {
     options = {
-        theme = custom
+        -- Disable sections and component separators
+        component_separators = '',
+        section_separators = '',
+        theme = {
+            -- We are going to use lualine_c an lualine_x as left and
+            -- right section. Both are highlighted by c theme .  So we
+            -- are just setting default looks o statusline
+            normal = { c = { fg = colors.fg, bg = colors.bg } },
+            inactive = { c = { fg = colors.fg, bg = colors.bg } },
+        },
     },
     sections = {
-        lualine_b = {
-            {
-                'branch',
-                fmt = function(str)
-                    if string.len(str) > 20 then
-                        return string.sub(str, 0, 18) .. "..."
-                    else
-                        return str
-                    end
-                end
-            },
-            'diff'
-        },
-        lualine_c = { 'filename', 'diagnostics' }
-
-    }
+        -- these are to remove the defaults
+        lualine_a = {},
+        lualine_b = {},
+        lualine_y = {},
+        lualine_z = {},
+        -- These will be filled later
+        lualine_c = {},
+        lualine_x = {},
+    },
+    inactive_sections = {
+        -- these are to remove the defaults
+        lualine_a = {},
+        lualine_b = {},
+        lualine_y = {},
+        lualine_z = {},
+        lualine_c = {},
+        lualine_x = {},
+    },
 }
+
+-- Inserts a component in lualine_c at left section
+local function ins_left(component)
+    table.insert(config.sections.lualine_c, component)
+end
+
+-- Inserts a component in lualine_x at right section
+local function ins_right(component)
+    table.insert(config.sections.lualine_x, component)
+end
+
+ins_left {
+    function()
+        return '▊'
+    end,
+    color = { fg = colors.blue },    -- Sets highlighting of component
+    padding = { left = 0, right = 1 }, -- We don't need space before this
+}
+
+ins_left {
+    -- mode component
+    function()
+        return ''
+    end,
+    color = function()
+        -- auto change color according to neovims mode
+        local mode_color = {
+            n = colors.red,
+            i = colors.green,
+            v = colors.blue,
+            [''] = colors.blue,
+            V = colors.blue,
+            c = colors.magenta,
+            no = colors.red,
+            s = colors.orange,
+            S = colors.orange,
+            [''] = colors.orange,
+            ic = colors.yellow,
+            R = colors.violet,
+            Rv = colors.violet,
+            cv = colors.red,
+            ce = colors.red,
+            r = colors.cyan,
+            rm = colors.cyan,
+            ['r?'] = colors.cyan,
+            ['!'] = colors.red,
+            t = colors.red,
+        }
+        return { fg = mode_color[vim.fn.mode()] }
+    end,
+    padding = { right = 1 },
+}
+
+ins_left {
+    -- filesize component
+    'filesize',
+    cond = conditions.buffer_not_empty,
+}
+
+ins_left {
+    'filename',
+    cond = conditions.buffer_not_empty,
+    color = { fg = colors.magenta, gui = 'bold' },
+}
+
+ins_left { 'location' }
+
+ins_left { 'progress', color = { fg = colors.fg, gui = 'bold' } }
+
+ins_left {
+    'diagnostics',
+    sources = { 'nvim_diagnostic' },
+    symbols = { error = ' ', warn = ' ', info = ' ' },
+    diagnostics_color = {
+        color_error = { fg = colors.red },
+        color_warn = { fg = colors.yellow },
+        color_info = { fg = colors.cyan },
+    },
+}
+
+-- Insert mid section. You can make any number of sections in neovim :)
+-- for lualine it's any number greater then 2
+ins_left {
+    function()
+        return '%='
+    end,
+}
+
+ins_left {
+    -- Lsp server name .
+    function()
+        local msg = 'No Active Lsp'
+        local buf_ft = vim.api.nvim_buf_get_option(0, 'filetype')
+        local clients = vim.lsp.get_active_clients()
+        if next(clients) == nil then
+            return msg
+        end
+        for _, client in ipairs(clients) do
+            local filetypes = client.config.filetypes
+            if filetypes and vim.fn.index(filetypes, buf_ft) ~= -1 then
+                return client.name
+            end
+        end
+        return msg
+    end,
+    icon = ' LSP:',
+    color = { fg = colors.fg, gui = 'bold' },
+}
+
+-- Add components to right sections
+ins_right {
+    'o:encoding',     -- option component same as &encoding in viml
+    fmt = string.upper, -- I'm not sure why it's upper case either ;)
+    cond = conditions.hide_in_width,
+    color = { fg = colors.green, gui = 'bold' },
+}
+
+ins_right {
+    'fileformat',
+    fmt = string.upper,
+    icons_enabled = false, -- I think icons are cool but Eviline doesn't have them. sigh
+    color = { fg = colors.green, gui = 'bold' },
+}
+
+ins_right {
+    'branch',
+    icon = '',
+    color = { fg = colors.violet, gui = 'bold' },
+}
+
+ins_right {
+    'diff',
+    -- Is it me or the symbol for modified us really weird
+    symbols = { added = ' ', modified = '󰝤 ', removed = ' ' },
+    diff_color = {
+        added = { fg = colors.green },
+        modified = { fg = colors.orange },
+        removed = { fg = colors.red },
+    },
+    cond = conditions.hide_in_width,
+}
+
+ins_right {
+    function()
+        return '▊'
+    end,
+    color = { fg = colors.blue },
+    padding = { left = 1 },
+}
+
+-- Now don't forget to initialize lualine
+lualine.setup(config)
