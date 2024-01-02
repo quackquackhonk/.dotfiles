@@ -1,48 +1,42 @@
 -- vim.opt.background = "dark"
 local colors = {
-  dark0_hard = "#1d2021",
-  dark0 = "#282828",
-  dark0_soft = "#32302f",
-  dark1 = "#3c3836",
-  dark2 = "#504945",
-  dark3 = "#665c54",
-  dark4 = "#7c6f64",
-  light0_hard = "#f9f5d7",
-  light0 = "#fbf1c7",
-  light0_soft = "#f2e5bc",
-  light1 = "#ebdbb2",
-  light2 = "#d5c4a1",
-  light3 = "#bdae93",
-  light4 = "#a89984",
-  bright_red = "#fb4934",
-  bright_green = "#b8bb26",
-  bright_yellow = "#fabd2f",
-  bright_blue = "#83a598",
-  bright_purple = "#d3869b",
-  bright_aqua = "#8ec07c",
-  bright_orange = "#fe8019",
-  neutral_red = "#cc241d",
-  neutral_green = "#98971a",
-  neutral_yellow = "#d79921",
-  neutral_blue = "#458588",
-  neutral_purple = "#b16286",
-  neutral_aqua = "#689d6a",
-  neutral_orange = "#d65d0e",
-  faded_red = "#9d0006",
-  faded_green = "#79740e",
-  faded_yellow = "#b57614",
-  faded_blue = "#076678",
-  faded_purple = "#8f3f71",
-  faded_aqua = "#427b58",
-  faded_orange = "#af3a03",
-  gray = "#928374",
+    dark0_hard = "#1d2021",
+    dark0 = "#282828",
+    dark0_soft = "#32302f",
+    dark1 = "#3c3836",
+    dark2 = "#504945",
+    dark3 = "#665c54",
+    dark4 = "#7c6f64",
+    light0_hard = "#f9f5d7",
+    light0 = "#fbf1c7",
+    light0_soft = "#f2e5bc",
+    light1 = "#ebdbb2",
+    light2 = "#d5c4a1",
+    light3 = "#bdae93",
+    light4 = "#a89984",
+    bright_red = "#fb4934",
+    bright_green = "#b8bb26",
+    bright_yellow = "#fabd2f",
+    bright_blue = "#83a598",
+    bright_purple = "#d3869b",
+    bright_aqua = "#8ec07c",
+    bright_orange = "#fe8019",
+    neutral_red = "#cc241d",
+    neutral_green = "#98971a",
+    neutral_yellow = "#d79921",
+    neutral_blue = "#458588",
+    neutral_purple = "#b16286",
+    neutral_aqua = "#689d6a",
+    neutral_orange = "#d65d0e",
+    faded_red = "#9d0006",
+    faded_green = "#79740e",
+    faded_yellow = "#b57614",
+    faded_blue = "#076678",
+    faded_purple = "#8f3f71",
+    faded_aqua = "#427b58",
+    faded_orange = "#af3a03",
+    gray = "#928374",
 }
--- hi def NeogitDiffAddHighlight guibg=#404040 guifg=#859900
--- hi def NeogitDiffDeleteHighlight guibg=#404040 guifg=#dc322f
--- hi def NeogitDiffContextHighlight guibg=#333333 guifg=#b2b2b2
--- hi def NeogitDiffContext guibg=#262626 guifg=#b2b2b2
--- hi def NeogitHunkHeader guifg=#cccccc guibg=#404040
--- hi def NeogitHunkHeaderHighlight guifg=#cccccc guibg=#4d4d4d
 
 require("gruvbox").setup({
     undercurl = true,
@@ -61,40 +55,52 @@ require("gruvbox").setup({
     invert_intend_guides = false,
     inverse = true, -- invert background for search, diffs, statuslines and errors
     overrides = {
-       NeogitBranch = {fg = colors.bright_orange, bg = colors.dark0, bold = true},
-       NeogitRemote = {fg = colors.bright_purple, bg = colors.dark0, bold = true},
+        -- Telescope
+        TelescopeTitle = {fg = colors.light1, bg = colors.dark0_hard},
+        TelescopeNormal = {fg = colors.light1, bg = colors.dark0_hard},
+        TelescopeBorder = {fg = colors.light1, bg = colors.dark0_hard},
+        TelescopePrompt = {fg = colors.light1, bg = colors.dark0_hard},
+        -- MiniFiles
+        MiniFilesTitle = {fg = colors.light1, bg = colors.dark0_hard},
+        MiniFilesTitleFocused = {fg = colors.neutral_green, bg = colors.dark0_hard},
+        MiniFilesNormal = {fg = colors.light1, bg = colors.dark0_hard},
+        MiniFilesBorder = {fg = colors.light1, bg = colors.dark0_hard},
+        MiniFilesBorderModified = {fg = colors.bright_red, bg = colors.dark0_hard},
+        -- NeoGit
+        NeogitBranch = { fg = colors.bright_orange, bg = colors.dark0, bold = true },
+        NeogitRemote = { fg = colors.bright_purple, bg = colors.dark0, bold = true },
 
-       NeogitDiffAdd = {fg = colors.light0, bg = colors.faded_green },
-       NeogitDiffDelete = {fg = colors.light0, bg = colors.faded_red },
+        NeogitDiffAdd = { fg = colors.light0, bg = colors.faded_green },
+        NeogitDiffDelete = { fg = colors.light0, bg = colors.faded_red },
 
-       NeogitHunkHeader = {fg = colors.light0, bg = colors.dark2 },
-       NeogitHunkHeaderHighlight = {fg = colors.light0, bg = colors.dark2 },
+        NeogitHunkHeader = { fg = colors.light0, bg = colors.dark2 },
+        NeogitHunkHeaderHighlight = { fg = colors.light0, bg = colors.dark2 },
 
-       NeogitUnstagedchanges = {fg = colors.bright_green, bg = colors.dark0, bold = true},
-       NeogitRecentcommits = {fg = colors.bright_green, bg = colors.dark0, bold = true},
-       NeogitUntrackedfiles = {fg = colors.bright_green, bg = colors.dark0, bold = true},
-       NeogitUnmergedchanges = {fg = colors.bright_green, bg = colors.dark0, bold = true},
-       NeogitStagedchanges = {fg = colors.bright_green, bg = colors.dark0, bold = true},
-       NeogitStashes = {fg = colors.bright_green, bg = colors.dark0, bold = true},
+        NeogitUnstagedchanges = { fg = colors.bright_green, bg = colors.dark0, bold = true },
+        NeogitRecentcommits = { fg = colors.bright_green, bg = colors.dark0, bold = true },
+        NeogitUntrackedfiles = { fg = colors.bright_green, bg = colors.dark0, bold = true },
+        NeogitUnmergedchanges = { fg = colors.bright_green, bg = colors.dark0, bold = true },
+        NeogitStagedchanges = { fg = colors.bright_green, bg = colors.dark0, bold = true },
+        NeogitStashes = { fg = colors.bright_green, bg = colors.dark0, bold = true },
 
-       NeogitObjectId = {fg = colors.neutral_yellow, bg = colors.dark0 },
-       NeogitStash = {fg = colors.neutral_yellow, bg = colors.dark0 },
+        NeogitObjectId = { fg = colors.neutral_yellow, bg = colors.dark0 },
+        NeogitStash = { fg = colors.neutral_yellow, bg = colors.dark0 },
 
-       NeogitPopupSectionTitle = {fg = colors.bright_green, bg = colors.dark0, bold = true},
-       NeogitPopupActionKey = {fg = colors.bright_orange, bg = colors.dark0 },
-       NeogitPopupSwitchKey = {fg = colors.bright_orange, bg = colors.dark0 },
-       NeogitPopupOptionKey = {fg = colors.bright_orange, bg = colors.dark0 },
-       NeogitPopupActionDisabled = {fg = colors.dark4, bg = colors.dark0 },
+        NeogitPopupSectionTitle = { fg = colors.bright_green, bg = colors.dark0, bold = true },
+        NeogitPopupActionKey = { fg = colors.bright_orange, bg = colors.dark0 },
+        NeogitPopupSwitchKey = { fg = colors.bright_orange, bg = colors.dark0 },
+        NeogitPopupOptionKey = { fg = colors.bright_orange, bg = colors.dark0 },
+        NeogitPopupActionDisabled = { fg = colors.dark4, bg = colors.dark0 },
 
-       -- for noice
-       NoiceCmdlinePopup = {bg = colors.dark0},
-       NoiceCmdlinePopupBorder = {bg = colors.dark0, fg = colors.bright_blue},
-       NoiceCmdlinePopupPrompt = {bg = colors.dark0, fg = colors.bright_blue},
-       NoiceCmdlinePopupTitle = {bg = colors.dark0, fg = colors.bright_blue},
-       NoiceCmdlineIcon = {bg = colors.dark0, fg = colors.bright_green},
+        -- for noice
+        NoiceCmdlinePopup = { bg = colors.dark0 },
+        NoiceCmdlinePopupBorder = { bg = colors.dark0, fg = colors.bright_blue },
+        NoiceCmdlinePopupPrompt = { bg = colors.dark0, fg = colors.bright_blue },
+        NoiceCmdlinePopupTitle = { bg = colors.dark0, fg = colors.bright_blue },
+        NoiceCmdlineIcon = { bg = colors.dark0, fg = colors.bright_green },
 
-       NoiceConfirmBorder = {bg = colors.dark0, fg = colors.bright_blue},
-       NoiceFormatConfirmDefault = {bg = colors.faded_green, fg = colors.light0},
+        NoiceConfirmBorder = { bg = colors.dark0, fg = colors.bright_blue },
+        NoiceFormatConfirmDefault = { bg = colors.faded_green, fg = colors.light0 },
     }
 })
 vim.opt.termguicolors = true
@@ -105,25 +111,25 @@ local lualine = require('lualine')
 local custom = require('lualine.themes.gruvbox')
 
 -- normal green
-custom.normal.a = { bg = colors.bright_green, fg = colors.dark0, gui = 'bold'}
+custom.normal.a = { bg = colors.bright_green, fg = colors.dark0, gui = 'bold' }
 custom.normal.b = { bg = colors.faded_green, fg = colors.light0 }
-custom.normal.c = { bg = colors.dark2, fg = colors.light2}
+custom.normal.c = { bg = colors.dark2, fg = colors.light2 }
 -- insert blue
-custom.insert.a = { bg = colors.bright_blue, fg = colors.dark0, gui = 'bold'}
+custom.insert.a = { bg = colors.bright_blue, fg = colors.dark0, gui = 'bold' }
 custom.insert.b = { bg = colors.faded_blue, fg = colors.light0 }
-custom.insert.c = { bg = colors.dark2, fg = colors.light2}
+custom.insert.c = { bg = colors.dark2, fg = colors.light2 }
 -- replace red
-custom.replace.a = { bg = colors.bright_red, fg = colors.dark0, gui = 'bold'}
+custom.replace.a = { bg = colors.bright_red, fg = colors.dark0, gui = 'bold' }
 custom.replace.b = { bg = colors.faded_red, fg = colors.light0 }
-custom.replace.c = { bg = colors.dark2, fg = colors.light2}
+custom.replace.c = { bg = colors.dark2, fg = colors.light2 }
 -- visual purple
-custom.visual.a = { bg = colors.bright_purple, fg = colors.dark0, gui = 'bold'}
+custom.visual.a = { bg = colors.bright_purple, fg = colors.dark0, gui = 'bold' }
 custom.visual.b = { bg = colors.faded_purple, fg = colors.light0 }
-custom.visual.c = { bg = colors.dark2, fg = colors.light2}
+custom.visual.c = { bg = colors.dark2, fg = colors.light2 }
 -- command orange
-custom.command.a = { bg = colors.bright_orange, fg = colors.dark0, gui = 'bold'}
+custom.command.a = { bg = colors.bright_orange, fg = colors.dark0, gui = 'bold' }
 custom.command.b = { bg = colors.faded_orange, fg = colors.light0 }
-custom.command.c = { bg = colors.dark2, fg = colors.light2}
+custom.command.c = { bg = colors.dark2, fg = colors.light2 }
 
 lualine.setup {
     options = {
@@ -143,7 +149,7 @@ lualine.setup {
             },
             'diff'
         },
-        lualine_c = {'filename', 'diagnostics'}
+        lualine_c = { 'filename', 'diagnostics' }
 
     }
 }

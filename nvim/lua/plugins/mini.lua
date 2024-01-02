@@ -25,7 +25,6 @@ return {
                     trim_right  = '>',
                 },
             })
-            require('mini.indentscope').setup()
         end
     },
 }

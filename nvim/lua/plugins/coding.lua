@@ -7,9 +7,7 @@ return {
             "sindrets/diffview.nvim",        -- optional - Diff integration
             "nvim-telescope/telescope.nvim", -- optional
         },
-        opts = {
-            kind = "split"
-        }
+        opts = {}
     },
     {
         'ahmedkhalf/project.nvim',
