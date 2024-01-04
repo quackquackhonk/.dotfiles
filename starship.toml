@@ -15,7 +15,7 @@ $java\
 $nodejs\
 $rust\
 [](fg:blue bg:purple)\
-$docker_context\
+$spack\
 [](fg:purple)\
 $newline
 $status\
@@ -91,6 +91,12 @@ truncation_symbol = "…/"
 symbol = " "
 style = "bg:purple"
 format = '[ $symbol $context $path ]($style)'
+
+[spack]
+style = "bg:purple"
+truncation_length = 2
+format = '[ $symbol $environment ]($style)'
+
 
 [git_branch]
 symbol = ""
