@@ -44,12 +44,6 @@ return {
     'nvim-lua/popup.nvim',
     'nvim-lua/plenary.nvim',
     {
-        'kyazdani42/nvim-tree.lua',
-        config = function()
-            require("nvim-tree").setup()
-        end
-    },
-    {
         'stevearc/dressing.nvim',
         config = function()
             require('dressing').setup({
