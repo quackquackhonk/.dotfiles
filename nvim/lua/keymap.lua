@@ -8,6 +8,26 @@ local hydra = require('hydra')
 local splits = require('smart-splits')
 local cmd = require('hydra.keymap-util').cmd
 local pcmd = require('hydra.keymap-util').pcmd
+local harpoon = require('harpoon')
+
+-- function for telescope harpoon picking
+local conf = require("telescope.config").values
+local function harpoon_telescope(harpoon_files)
+    local file_paths = {}
+    for _, item in ipairs(harpoon_files.items) do
+        table.insert(file_paths, item.value)
+    end
+    local opts = require('telescope.themes').get_ivy{}
+
+    require("telescope.pickers").new(opts, {
+        prompt_title = "Harpoon",
+        finder = require("telescope.finders").new_table({
+            results = file_paths,
+        }),
+        previewer = conf.file_previewer(opts),
+        sorter = conf.generic_sorter(opts),
+    }):find()
+end
 
 -- set up leader key
 keymap("", "<Space>", "<Nop>")
@@ -38,7 +58,7 @@ wk.register({
     Q = { cmd("bd"), "Close Buffer AND Window" },
     f = {
         name = "Find",
-        f = { ivy_telescope(telescope.find_files), "Find Files"},
+        f = { ivy_telescope(telescope.find_files), "Find Files" },
         g = { ivy_telescope(telescope.git_files), "Git Files" },
         r = { cmd("Telescope frecency theme=ivy"), "Recent Files" },
         s = { ivy_telescope(telescope.live_grep), "Live Grep" },
@@ -54,7 +74,7 @@ wk.register({
     c = {
         name = "Code",
         v = { require('swenv.api').pick_venv, "Pick Virtual Environment" },
-	c = { cmd("Neogen"), "Generate Comment" },
+        c = { cmd("Neogen"), "Generate Comment" },
     },
     l = {
         name = "LSP",
@@ -101,6 +121,16 @@ wk.register({
         name = "Settings",
         r = { cmd("set rnu!"), "Relative Numbers" },
     },
+    ["."] = {
+        name = "Harpoon",
+        ["."] =  { function() harpoon:list():append() end, "Add buffer to harpoon" },
+        [","] =  { function() harpoon:list():append() end, "Add buffer to harpoon" },
+        ["<Leader>"] = {function() harpoon_telescope(harpoon:list()) end, "Show quick list"},
+        a = {function() harpoon:list():select(1) end, "Goto mark 1"},
+        r = {function() harpoon:list():select(2) end, "Goto mark 2"},
+        s = {function() harpoon:list():select(3) end, "Goto mark 3"},
+        t = {function() harpoon:list():select(4) end, "Goto mark 4"},
+    },
     [";"] = {
         name = "Miscellaneous",
         p = { cmd("Lazy"), "Packages" },
@@ -110,7 +140,6 @@ wk.register({
     [","] = { "<c-6>", "Open Previous Buffer" },
     ["<Tab>"] = { "<C-w><C-p>", "Goto Previous Split" },
     ["<Leader>"] = { ivy_telescope(telescope.buffers), "Show Open Buffers" },
-    ["?"] = { cmd("Cheatsheet"), "Open Cheatsheet" }
 }, { prefix = "<Leader>" })
 
 -- visual mode leader key bindings
@@ -158,6 +187,23 @@ hydra({
     }
 })
 
+-- HOP keybinding-- place this in one of your configuration file(s)
+local hop = require('hop')
+local directions = require('hop.hint').HintDirection
+vim.keymap.set('', 'f', function()
+    hop.hint_char1({ direction = directions.AFTER_CURSOR, current_line_only = true })
+end, { remap = true })
+vim.keymap.set('', 'F', function()
+    hop.hint_char1({ direction = directions.BEFORE_CURSOR, current_line_only = true })
+end, { remap = true })
+vim.keymap.set('', 't', function()
+    hop.hint_char1({ direction = directions.AFTER_CURSOR, current_line_only = true, hint_offset = -1 })
+end, { remap = true })
+vim.keymap.set('', 'T', function()
+    hop.hint_char1({ direction = directions.BEFORE_CURSOR, current_line_only = true, hint_offset = 1 })
+end, { remap = true })
+vim.keymap.set('', '<Return>', cmd('HopAnywhere'), { remap = true })
+
 -- DIAL keybindings
 vim.api.nvim_set_keymap("n", "<C-a>", require("dial.map").inc_normal(), { noremap = true })
 vim.api.nvim_set_keymap("n", "<C-x>", require("dial.map").dec_normal(), { noremap = true })
@@ -165,21 +211,6 @@ vim.api.nvim_set_keymap("v", "<C-a>", require("dial.map").inc_visual(), { norema
 vim.api.nvim_set_keymap("v", "<C-x>", require("dial.map").dec_visual(), { noremap = true })
 vim.api.nvim_set_keymap("v", "g<C-a>", require("dial.map").inc_gvisual(), { noremap = true })
 vim.api.nvim_set_keymap("v", "g<C-x>", require("dial.map").dec_gvisual(), { noremap = true })
-
--- Convenience Keybindings
--- arrows for laptop
-keymap('n', '<M-m>', '<Left>')
-keymap('n', '<M-n>', '<Down>')
-keymap('n', '<M-e>', '<Up>')
-keymap('n', '<M-i>', '<Right>')
-keymap('v', '<M-m>', '<Left>')
-keymap('v', '<M-n>', '<Down>')
-keymap('v', '<M-e>', '<Up>')
-keymap('v', '<M-i>', '<Right>')
-keymap('i', '<M-m>', '<Left>')
-keymap('i', '<M-n>', '<Down>')
-keymap('i', '<M-e>', '<Up>')
-keymap('i', '<M-i>', '<Right>')
 
 -- Visual Mode
 -- Stay in visual mode when indenting
