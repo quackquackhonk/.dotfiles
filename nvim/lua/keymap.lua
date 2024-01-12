@@ -10,25 +10,6 @@ local cmd = require('hydra.keymap-util').cmd
 local pcmd = require('hydra.keymap-util').pcmd
 local harpoon = require('harpoon')
 
--- function for telescope harpoon picking
-local conf = require("telescope.config").values
-local function harpoon_telescope(harpoon_files)
-    local file_paths = {}
-    for _, item in ipairs(harpoon_files.items) do
-        table.insert(file_paths, item.value)
-    end
-    local opts = require('telescope.themes').get_ivy{}
-
-    require("telescope.pickers").new(opts, {
-        prompt_title = "Harpoon",
-        finder = require("telescope.finders").new_table({
-            results = file_paths,
-        }),
-        previewer = conf.file_previewer(opts),
-        sorter = conf.generic_sorter(opts),
-    }):find()
-end
-
 -- set up leader key
 keymap("", "<Space>", "<Nop>")
 vim.g.mapleader = ' '
@@ -104,7 +85,8 @@ wk.register({
     },
     o = {
         name = "Open",
-        f = { cmd("lua MiniFiles.open()"), "File Browser" },
+        p = { cmd("lua MiniFiles.open()"), "Open project directory" },
+        f = { cmd("lua MiniFiles.open(vim.api.nvim_buf_get_name(0), false)"), "Open current file directory" },
         d = { cmd("TroubleToggle"), "Diagnostics" },
         s = { cmd("SymbolsOutline"), "Symbol Outline" },
         m = { cmd("MaximizerToggle"), "Maximize Split" },
@@ -124,12 +106,11 @@ wk.register({
     ["."] = {
         name = "Harpoon",
         ["."] =  { function() harpoon:list():append() end, "Add buffer to harpoon" },
-        [","] =  { function() harpoon:list():append() end, "Add buffer to harpoon" },
-        ["<Leader>"] = {function() harpoon_telescope(harpoon:list()) end, "Show quick list"},
-        a = {function() harpoon:list():select(1) end, "Goto mark 1"},
-        r = {function() harpoon:list():select(2) end, "Goto mark 2"},
-        s = {function() harpoon:list():select(3) end, "Goto mark 3"},
-        t = {function() harpoon:list():select(4) end, "Goto mark 4"},
+        ["<Leader>"] = { function() harpoon.ui:toggle_quick_menu(harpoon:list()) end, "Show quick list"},
+        a = { function() harpoon:list():select(1) end, "Goto mark 1"},
+        r = { function() harpoon:list():select(2) end, "Goto mark 2"},
+        s = { function() harpoon:list():select(3) end, "Goto mark 3"},
+        t = { function() harpoon:list():select(4) end, "Goto mark 4"},
     },
     [";"] = {
         name = "Miscellaneous",
