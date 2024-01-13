@@ -44,6 +44,12 @@ return {
     'nvim-lua/popup.nvim',
     'nvim-lua/plenary.nvim',
     {
+        'kyazdani42/nvim-tree.lua',
+        config = function()
+            require("nvim-tree").setup()
+        end
+    },
+    {
         'stevearc/dressing.nvim',
         config = function()
             require('dressing').setup({
@@ -63,7 +69,7 @@ return {
         config = function()
             require('lualine').setup {
                 options = {
-                    theme = 'auto'
+                    theme = 'gruvbox'
                 }
             }
         end
@@ -93,4 +99,14 @@ return {
             }
         },
     },
+    {
+        "lukas-reineke/indent-blankline.nvim",
+        main = "ibl",
+        opts = {
+            indent = {
+                char = "┆",
+            },
+            scope = { enabled = false },
+        },
+    }
 }
