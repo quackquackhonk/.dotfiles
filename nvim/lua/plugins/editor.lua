@@ -84,10 +84,15 @@ return {
     'kevinhwang91/nvim-bqf',
 
     -- Buffer/Window Management
+    {
+        'tiagovla/scope.nvim',
+        config = function()
+            require('scope').setup {}
+        end
+    },
     'famiu/bufdelete.nvim',
     'mrjones2014/smart-splits.nvim',
     'sindrets/winshift.nvim',
-    'szw/vim-maximizer',
     {
         's1n7ax/nvim-window-picker',
         name = 'window-picker',
