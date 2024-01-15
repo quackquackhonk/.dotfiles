@@ -6,8 +6,6 @@ return {
             require("mini.ai").setup()
             require("mini.operators").setup()
             require("mini.surround").setup()
-            require("mini.jump").setup()
-            require("mini.jump2d").setup()
             require('mini.files').setup({
                 mappings = {
                     close       = 'q',
