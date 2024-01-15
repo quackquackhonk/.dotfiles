@@ -101,9 +101,14 @@ require("gruvbox").setup({
 
         -- Tabby HL
         TabLineFill = { bg = colors.dark0_hard, fg = colors.light0 },
-        TabLine = { bg = colors.dark0_soft, fg = colors.light2 },
-        TabLineSel = { bg = colors.neutral_blue, fg = colors.dark0 },
+        TabLine = { bg = colors.dark0_soft, fg = colors.gray },
+        TabLineSel = { bg = colors.dark3, fg = colors.light0 },
         TabLineEdge = { bg = colors.bright_purple, fg = colors.dark0 },
+
+        -- Popup menus
+        Pmenu = { bg = colors.dark0_hard, fg = colors.light0 },
+        PmenuThumb = { bg = colors.dark0_hard, fg = colors.light0 },
+        PmenuSbar = { bg = colors.dark0_hard, fg = colors.light0 },
     }
 })
 vim.opt.termguicolors = true
