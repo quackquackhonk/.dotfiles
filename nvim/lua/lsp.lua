@@ -199,7 +199,7 @@ require'lspconfig'.bufls.setup{}
 -- Java configuration is in ftplugin/java.lua
 
 -- Treesitter configuration
-require 'nvim-treesitter.configs'.setup {
+require('nvim-treesitter.configs').setup({
     -- A list of parser names, or "all"
     ensure_installed = "all",
     -- Install parsers synchronously (only applied to `ensure_installed`)
@@ -225,7 +225,7 @@ require 'nvim-treesitter.configs'.setup {
             colors.bright_blue,
         }
     }
-}
+})
 
 -- Completion Config
 vim.opt.completeopt = { "menu", "menuone", "noselect", "noinsert" }

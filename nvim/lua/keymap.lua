@@ -37,6 +37,7 @@ wk.register({
     -- t = Test
     q = { close_buf, "Close Buffer" },
     Q = { cmd("bd"), "Close Buffer AND Window" },
+    ["<C-q>"] = { cmd("tabclose"), "Close tab" },
     f = {
         name = "Find",
         f = { ivy_telescope(telescope.find_files), "Find Files" },
@@ -89,8 +90,8 @@ wk.register({
         f = { cmd("lua MiniFiles.open(vim.api.nvim_buf_get_name(0), false)"), "Open current file directory" },
         d = { cmd("TroubleToggle"), "Diagnostics" },
         s = { cmd("SymbolsOutline"), "Symbol Outline" },
-        m = { cmd("MaximizerToggle"), "Maximize Split" },
-        t = { cmd("Neotest summary"), "Test Summary" }
+        t = { cmd("Neotest summary"), "Test Summary" },
+        o = { cmd("tabnew"), "Open tab" }
     },
     t = {
         name = "Testing",
@@ -105,12 +106,12 @@ wk.register({
     },
     ["."] = {
         name = "Harpoon",
-        ["."] =  { function() harpoon:list():append() end, "Add buffer to harpoon" },
-        ["<Leader>"] = { function() harpoon.ui:toggle_quick_menu(harpoon:list()) end, "Show quick list"},
-        a = { function() harpoon:list():select(1) end, "Goto mark 1"},
-        r = { function() harpoon:list():select(2) end, "Goto mark 2"},
-        s = { function() harpoon:list():select(3) end, "Goto mark 3"},
-        t = { function() harpoon:list():select(4) end, "Goto mark 4"},
+        ["."] = { function() harpoon:list():append() end, "Add buffer to harpoon" },
+        ["<Leader>"] = { function() harpoon.ui:toggle_quick_menu(harpoon:list()) end, "Show quick list" },
+        a = { function() harpoon:list():select(1) end, "Goto mark 1" },
+        r = { function() harpoon:list():select(2) end, "Goto mark 2" },
+        s = { function() harpoon:list():select(3) end, "Goto mark 3" },
+        t = { function() harpoon:list():select(4) end, "Goto mark 4" },
     },
     [";"] = {
         name = "Miscellaneous",
@@ -122,6 +123,11 @@ wk.register({
     ["<Tab>"] = { "<C-w><C-p>", "Goto Previous Split" },
     ["<Leader>"] = { ivy_telescope(telescope.buffers), "Show Open Buffers" },
 }, { prefix = "<Leader>" })
+
+wk.register({
+    ['<F3>'] = { cmd("tabprev"), "Previous tab" },
+    ['<F4>'] = { cmd("tabnext"), "Previous tab" },
+})
 
 -- visual mode leader key bindings
 wk.register({

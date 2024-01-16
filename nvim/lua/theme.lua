@@ -98,11 +98,38 @@ require("gruvbox").setup({
 
         NoiceConfirmBorder = { bg = colors.dark0, fg = colors.bright_blue },
         NoiceFormatConfirmDefault = { bg = colors.faded_green, fg = colors.light0 },
+
+        -- Tabby HL
+        TabLineFill = { bg = colors.dark0_hard, fg = colors.light0 },
+        TabLine = { bg = colors.dark0_soft, fg = colors.gray },
+        TabLineSel = { bg = colors.dark3, fg = colors.light0 },
+        TabLineEdge = { bg = colors.bright_purple, fg = colors.dark0 },
+
+        -- Popup menus
+        Pmenu = { bg = colors.dark0_hard, fg = colors.light0 },
+        PmenuThumb = { bg = colors.dark0_hard, fg = colors.light0 },
+        PmenuSbar = { bg = colors.dark0_hard, fg = colors.light0 },
     }
 })
 vim.opt.termguicolors = true
 vim.cmd('colorscheme gruvbox')
 
+
+require('tabby.tabline').use_preset('tab_only', {
+  theme = {
+    fill = 'TabLineFill',
+    head = 'TabLineEdge',
+    current_tab = 'TabLineSel',
+    tab = 'TabLine',
+    win = 'TabLine',
+    tail = 'TabLineEdge',
+  },
+  nerdfont = true,              -- whether use nerdfont
+  buf_name = {
+    mode = "'unique'|'relative'|'tail'|'shorten'",
+  },
+
+})
 
 -- Eviline config for lualine
 -- Author: shadmansaleh
@@ -188,7 +215,7 @@ ins_left {
     function()
         return '▊'
     end,
-    color = { fg = colors.blue },    -- Sets highlighting of component
+    color = { fg = colors.blue },      -- Sets highlighting of component
     padding = { left = 0, right = 1 }, -- We don't need space before this
 }
 
@@ -284,7 +311,7 @@ ins_left {
 
 -- Add components to right sections
 ins_right {
-    'o:encoding',     -- option component same as &encoding in viml
+    'o:encoding',       -- option component same as &encoding in viml
     fmt = string.upper, -- I'm not sure why it's upper case either ;)
     cond = conditions.hide_in_width,
     color = { fg = colors.green, gui = 'bold' },
