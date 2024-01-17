@@ -7,15 +7,7 @@ return {
             "sindrets/diffview.nvim",        -- optional - Diff integration
             "nvim-telescope/telescope.nvim", -- optional
         },
-        opts = {
-            kind = "split"
-        }
-    },
-    {
-        'ahmedkhalf/project.nvim',
-        config = function()
-            require('project_nvim').setup({})
-        end,
+        opts = {}
     },
     {
         'mfussenegger/nvim-dap',
@@ -39,7 +31,7 @@ return {
     },
     {
         'nvim-treesitter/nvim-treesitter',
-        run = ':TSUpdate'
+        build = ':TSUpdate'
     },
     'neovim/nvim-lspconfig',
     {

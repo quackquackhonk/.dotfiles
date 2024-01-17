@@ -104,30 +104,53 @@ require("gruvbox").setup({
         TabLine = { bg = colors.dark0_soft, fg = colors.gray },
         TabLineSel = { bg = colors.dark3, fg = colors.light0 },
         TabLineEdge = { bg = colors.bright_purple, fg = colors.dark0 },
-
-        -- Popup menus
-        Pmenu = { bg = colors.dark0_hard, fg = colors.light0 },
-        PmenuThumb = { bg = colors.dark0_hard, fg = colors.light0 },
-        PmenuSbar = { bg = colors.dark0_hard, fg = colors.light0 },
     }
 })
 vim.opt.termguicolors = true
 vim.cmd('colorscheme gruvbox')
 
+-- Rainbow Delimiters / indent blankline setup
+local highlight = {
+    "RainbowRed",
+    "RainbowYellow",
+    "RainbowBlue",
+    "RainbowOrange",
+    "RainbowGreen",
+    "RainbowViolet",
+    "RainbowCyan",
+}
+local hooks = require "ibl.hooks"
+-- create the highlight groups in the highlight setup hook, so they are reset
+-- every time the colorscheme changes
+hooks.register(hooks.type.HIGHLIGHT_SETUP, function()
+    vim.api.nvim_set_hl(0, "RainbowRed", { fg = colors.bright_red })
+    vim.api.nvim_set_hl(0, "RainbowYellow", { fg = colors.bright_yellow })
+    vim.api.nvim_set_hl(0, "RainbowBlue", { fg = colors.bright_blue })
+    vim.api.nvim_set_hl(0, "RainbowOrange", { fg = colors.bright_orange })
+    vim.api.nvim_set_hl(0, "RainbowGreen", { fg = colors.bright_green })
+    vim.api.nvim_set_hl(0, "RainbowViolet", { fg = colors.bright_purple })
+    vim.api.nvim_set_hl(0, "RainbowCyan", { fg = colors.bright_aqua })
+end)
+
+vim.g.rainbow_delimiters = { highlight = highlight }
+require("ibl").setup { scope = { highlight = highlight } }
+
+hooks.register(hooks.type.SCOPE_HIGHLIGHT, hooks.builtin.scope_highlight_from_extmark)
+
 
 require('tabby.tabline').use_preset('tab_only', {
-  theme = {
-    fill = 'TabLineFill',
-    head = 'TabLineEdge',
-    current_tab = 'TabLineSel',
-    tab = 'TabLine',
-    win = 'TabLine',
-    tail = 'TabLineEdge',
-  },
-  nerdfont = true,              -- whether use nerdfont
-  buf_name = {
-    mode = "'unique'|'relative'|'tail'|'shorten'",
-  },
+    theme = {
+        fill = 'TabLineFill',
+        head = 'TabLineEdge',
+        current_tab = 'TabLineSel',
+        tab = 'TabLine',
+        win = 'TabLine',
+        tail = 'TabLineEdge',
+    },
+    nerdfont = true, -- whether use nerdfont
+    buf_name = {
+        mode = "'unique'|'relative'|'tail'|'shorten'",
+    },
 
 })
 

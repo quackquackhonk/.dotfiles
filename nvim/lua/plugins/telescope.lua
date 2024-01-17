@@ -55,9 +55,16 @@ return {
                             ["<C-d>"] = require("telescope.actions").delete_buffer,
                         },
                     },
+                },
+                extensions = {
+                    project = {
+                        base_dirs = {
+                            "~/code"
+                        }
+                    }
                 }
             })
-            require('telescope').load_extension('projects')
+            require('telescope').load_extension('project')
             require('telescope').load_extension("frecency")
             require('telescope').load_extension("neoclip")
         end
@@ -66,6 +73,7 @@ return {
         'nvim-telescope/telescope-fzf-native.nvim',
         run = 'make'
     },
+    'nvim-telescope/telescope-project.nvim',
     {
         "nvim-telescope/telescope-frecency.nvim",
         dependencies = { "kkharji/sqlite.lua" }
