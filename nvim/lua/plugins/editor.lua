@@ -102,4 +102,12 @@ return {
             require 'window-picker'.setup()
         end,
     },
+    -- sessions
+    {
+        "folke/persistence.nvim",
+        event = "BufReadPre",
+        opts = {
+            options = { "buffers", "curdir", "tabpages", "winsize", "globals" },
+        }
+    },
 }

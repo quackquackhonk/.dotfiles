@@ -44,12 +44,6 @@ return {
     'nvim-lua/popup.nvim',
     'nvim-lua/plenary.nvim',
     {
-        'kyazdani42/nvim-tree.lua',
-        config = function()
-            require("nvim-tree").setup()
-        end
-    },
-    {
         'stevearc/dressing.nvim',
         config = function()
             require('dressing').setup({
@@ -99,16 +93,8 @@ return {
             }
         },
     },
-    {
-        "lukas-reineke/indent-blankline.nvim",
-        main = "ibl",
-        opts = {
-            indent = {
-                char = "┆",
-            },
-            scope = { enabled = true },
-        },
-    },
+    "lukas-reineke/indent-blankline.nvim",
+    'HiPhish/rainbow-delimiters.nvim',
     {
         'nanozuki/tabby.nvim',
         dependencies = 'nvim-tree/nvim-web-devicons',
