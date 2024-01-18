@@ -58,16 +58,7 @@ return {
     },
     'ellisonleao/gruvbox.nvim',
     'folke/lsp-colors.nvim',
-    {
-        'nvim-lualine/lualine.nvim',
-        config = function()
-            require('lualine').setup {
-                options = {
-                    theme = 'gruvbox'
-                }
-            }
-        end
-    },
+    'nvim-lualine/lualine.nvim',
     {
         'folke/trouble.nvim',
         config = function()

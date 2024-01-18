@@ -17,7 +17,7 @@ local options = {
     -- foldexpr = "nvim_treesitter#foldexpr()",
     -- foldmethod = "expr",
     sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal",
-    -- tabs
+    showtabline = 2,
     tabstop = 4,
     softtabstop = 4,
     shiftwidth = 4,

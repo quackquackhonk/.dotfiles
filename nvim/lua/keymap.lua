@@ -45,10 +45,14 @@ wk.register({
     e = {
         name = "+editor",
         f = { vim.lsp.buf.format, "format file" },
+        g = { cmd("cd %:h | cd `git rev-parse --show-toplevel`"), "CD to current git repo" },
         h = { cmd("noh"), "Hide Highlighting" },
+        t = {
+            name = "toggle",
+            r = { cmd("set rnu!"), "relative numbers"}
+        },
         u = { cmd("!dos2unix %"), "Dos2Unix current file" },
         y = { '"+y', "Copy to system clipboard" },
-        p = { '"+p', "Copy to system clipboard" },
     },
     c = {
         name = "+code",
@@ -115,7 +119,6 @@ wk.register({
             t = { cmd("so ~/.dotfiles/nvim/lua/theme.lua"), "Source theme file" },
         },
         c = { cmd("tabnew | e ~/.config/nvim/init.lua"), "Open Config" },
-        g = { cmd("cd %:h | cd `git rev-parse --show-toplevel`"), "CD to current git repo" },
         s = {
             name = "+sessions",
             l = { persistence.load, "Load session for current dir" },
