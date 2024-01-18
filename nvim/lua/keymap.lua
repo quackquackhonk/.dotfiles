@@ -128,6 +128,8 @@ wk.register({
         n = {
             name = "notifications",
             d = { cmd("NoiceDismiss"), "Dismiss notifications" },
+            ["<Leader>"] = { cmd("Noice"), "Show message history"},
+            e = { cmd("NoiceErrors"), "Show errors" },
         }
     },
     y = { cmd("Telescope neoclip theme=ivy"), "Open Neoclip" },
