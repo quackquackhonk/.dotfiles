@@ -8,7 +8,6 @@ local hydra = require('hydra')
 local splits = require('smart-splits')
 local cmd = require('hydra.keymap-util').cmd
 local pcmd = require('hydra.keymap-util').pcmd
-local harpoon = require('harpoon')
 local persistence = require('persistence')
 
 -- set up leader key
@@ -16,7 +15,6 @@ keymap("", "<Space>", "<Nop>")
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ','
 
--- Leader key mappings with Which-Key
 local telescope = require 'telescope.builtin'
 local ivy_telescope = function(func)
     local opt = require('telescope.themes').get_ivy {}
@@ -26,39 +24,52 @@ end
 local close_buf = function()
     require('bufdelete').bufdelete(0, true)
 end
+
+local rename_tab = function(input_str)
+    vim.cmd("TabRename " .. input_str)
+end
+
+-- Leader key mappings with Which-Key
 local dap = require 'dap'
 wk.register({
-    -- f = Files
-    -- e = Editor
-    -- l = LSP (set in lsp.lua)
-    -- c = Code
-    -- d = Debugging
-    -- g = git
-    -- ; = Misc
-    -- t = Test
     q = { close_buf, "Close Buffer" },
     Q = { cmd("bd"), "Close Buffer AND Window" },
-    ["<C-q>"] = { cmd("tabclose"), "Close tab" },
     f = {
         name = "+find",
         f = { ivy_telescope(telescope.find_files), "Find Files" },
         g = { ivy_telescope(telescope.git_files), "Git Files" },
         r = { cmd("Telescope frecency theme=ivy"), "Recent Files" },
         s = { ivy_telescope(telescope.live_grep), "Live Grep" },
-        p = { cmd("tabnew | Telescope project theme=ivy"), "Open Project"}
+        p = { cmd("tabnew | Telescope project theme=ivy"), "Open Project" }
     },
     e = {
         name = "+editor",
         f = { vim.lsp.buf.format, "format file" },
+        g = { cmd("cd %:h | cd `git rev-parse --show-toplevel`"), "CD to current git repo" },
         h = { cmd("noh"), "Hide Highlighting" },
+        t = {
+            name = "toggle",
+            r = { cmd("set rnu!"), "relative numbers"}
+        },
         u = { cmd("!dos2unix %"), "Dos2Unix current file" },
         y = { '"+y', "Copy to system clipboard" },
-        p = { '"+p', "Copy to system clipboard" },
     },
     c = {
         name = "+code",
         v = { require('swenv.api').pick_venv, "Pick Virtual Environment" },
         c = { cmd("Neogen"), "Generate Comment" },
+        t = {
+            name = "+testing",
+            r = { require('neotest').run.run, "Run nearest test" },
+            f = { function() require('neotest').run.run(vim.fn.expand("%")) end, "Run tests in file" },
+            o = { require('neotest').output.open, "Open test output" },
+            O = { require('neotest').output_panel.toggle, "Toggle output panel" }
+        },
+    },
+    t = {
+        name = "tab",
+        n = { cmd("tabnew"), "New Tab" },
+        r = { function() vim.ui.input({ prompt = "Rename tab to..." }, rename_tab) end, "Rename current tab" },
     },
     l = {
         name = "+LSP",
@@ -95,41 +106,28 @@ wk.register({
         t = { cmd("Neotest summary"), "Test Summary" },
         o = { cmd("tabnew"), "Open tab" }
     },
-    t = {
-        name = "+testing",
-        r = { require('neotest').run.run, "Run nearest test" },
-        f = { function() require('neotest').run.run(vim.fn.expand("%")) end, "Run tests in file" },
-        o = { require('neotest').output.open, "Open test output" },
-        O = { require('neotest').output_panel.toggle, "Toggle output panel" }
-    },
     s = {
         name = "+settings",
         r = { cmd("set rnu!"), "Relative Numbers" },
     },
-    ["."] = {
-        name = "+marks",
-        ["."] = { function() harpoon:list():append() end, "Add buffer to harpoon" },
-        ["<Leader>"] = { function() harpoon.ui:toggle_quick_menu(harpoon:list()) end, "Show quick list" },
-        a = { function() harpoon:list():select(1) end, "Goto mark 1" },
-        r = { function() harpoon:list():select(2) end, "Goto mark 2" },
-        s = { function() harpoon:list():select(3) end, "Goto mark 3" },
-        t = { function() harpoon:list():select(4) end, "Goto mark 4" },
-    },
     [";"] = {
-        name = "+misc",
+        name = "+neovim",
         p = { cmd("Lazy"), "Packages" },
-        l = { cmd("so %"), "Source current file"},
+        l = {
+            name = "Load",
+            l = { cmd("so %"), "Source current file" },
+            t = { cmd("so ~/.dotfiles/nvim/lua/theme.lua"), "Source theme file" },
+        },
         c = { cmd("tabnew | e ~/.config/nvim/init.lua"), "Open Config" },
-        g = { cmd("cd %:h | cd `git rev-parse --show-toplevel`"), "CD to current git repo"},
         s = {
             name = "+sessions",
             l = { persistence.load, "Load session for current dir" },
-            s = { function() persistence.load({last = true}) end, "Load previous session" },
+            s = { function() persistence.load({ last = true }) end, "Load previous session" },
             x = { persistence.stop, "Stop persistence" },
         },
         n = {
             name = "notifications",
-            d = { cmd("NoiceDismiss"), "Dismiss notifications"},
+            d = { cmd("NoiceDismiss"), "Dismiss notifications" },
         }
     },
     y = { cmd("Telescope neoclip theme=ivy"), "Open Neoclip" },
@@ -142,6 +140,8 @@ keymap('i', "<F3>", "<cmd>tabprev<CR>")
 keymap('i', "<F4>", "<cmd>tabnext<CR>")
 keymap('n', "<F3>", ":tabprev<CR>")
 keymap('n', "<F4>", ":tabnext<CR>")
+keymap('i', "<C-q>", ":tabclose<CR>")
+keymap('n', "<C-q>", ":tabclose<CR>")
 
 -- visual mode leader key bindings
 wk.register({

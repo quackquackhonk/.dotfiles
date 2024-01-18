@@ -30,7 +30,7 @@ return {
             },
             -- you can enable a preset for easier configuration
             presets = {
-                bottom_search = false,        -- use a classic bottom cmdline for search
+                bottom_search = true,        -- use a classic bottom cmdline for search
                 command_palette = true,       -- position the cmdline and popupmenu together
                 long_message_to_split = true, -- long messages will be sent to a split
                 inc_rename = false,           -- enables an input dialog for inc-rename.nvim
@@ -58,16 +58,7 @@ return {
     },
     'ellisonleao/gruvbox.nvim',
     'folke/lsp-colors.nvim',
-    {
-        'nvim-lualine/lualine.nvim',
-        config = function()
-            require('lualine').setup {
-                options = {
-                    theme = 'gruvbox'
-                }
-            }
-        end
-    },
+    'nvim-lualine/lualine.nvim',
     {
         'folke/trouble.nvim',
         config = function()
@@ -96,7 +87,10 @@ return {
     "lukas-reineke/indent-blankline.nvim",
     'HiPhish/rainbow-delimiters.nvim',
     {
-        'nanozuki/tabby.nvim',
-        dependencies = 'nvim-tree/nvim-web-devicons',
+ 
+      'nanozuki/tabby.nvim',
+      event = 'VimEnter',
+      dependencies = 'nvim-tree/nvim-web-devicons',
     }
+
 }
