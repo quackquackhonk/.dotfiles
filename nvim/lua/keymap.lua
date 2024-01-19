@@ -118,7 +118,7 @@ wk.register({
             l = { cmd("so %"), "Source current file" },
             t = { cmd("so ~/.dotfiles/nvim/lua/theme.lua"), "Source theme file" },
         },
-        c = { cmd("tabnew | e ~/.dotfiles/nvim/init.lua | cd ~/.dotfiles"), "Open Config" },
+        c = { cmd("tabnew | e ~/.config/nvim/init.lua"), "Open Config" },
         s = {
             name = "+sessions",
             l = { persistence.load, "Load session for current dir" },
@@ -128,6 +128,8 @@ wk.register({
         n = {
             name = "notifications",
             d = { cmd("NoiceDismiss"), "Dismiss notifications" },
+            ["<Leader>"] = { cmd("Noice"), "Show message history"},
+            e = { cmd("NoiceErrors"), "Show errors" },
         }
     },
     y = { cmd("Telescope neoclip theme=ivy"), "Open Neoclip" },

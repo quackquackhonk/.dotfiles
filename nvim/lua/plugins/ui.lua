@@ -11,6 +11,15 @@ return {
             -- configurations go here
         },
     },
+    {
+        'nvim-treesitter/nvim-treesitter-context',
+        opts = {
+            max_lines = 3,
+            multiline_threshold = 10,
+            on_attach = function(buf) return true end,
+        }
+    },
+
     -- Theme / UI
     {
         "folke/noice.nvim",

@@ -104,6 +104,10 @@ require("gruvbox").setup({
         TabLine = { bg = colors.dark0_soft, fg = colors.gray },
         TabLineSel = { bg = colors.dark3, fg = colors.light0 },
         TabLineEdge = { bg = colors.bright_purple, fg = colors.dark0 },
+
+        -- TSContext
+        NormalFloat = { bg = colors.dark0 },
+
     }
 })
 vim.opt.termguicolors = true
