@@ -1,42 +1,42 @@
 -- Configuration for LSP / Treesitter / Completion
 
 local colors = {
-  dark0_hard = "#1d2021",
-  dark0 = "#282828",
-  dark0_soft = "#32302f",
-  dark1 = "#3c3836",
-  dark2 = "#504945",
-  dark3 = "#665c54",
-  dark4 = "#7c6f64",
-  light0_hard = "#f9f5d7",
-  light0 = "#fbf1c7",
-  light0_soft = "#f2e5bc",
-  light1 = "#ebdbb2",
-  light2 = "#d5c4a1",
-  light3 = "#bdae93",
-  light4 = "#a89984",
-  bright_red = "#fb4934",
-  bright_green = "#b8bb26",
-  bright_yellow = "#fabd2f",
-  bright_blue = "#83a598",
-  bright_purple = "#d3869b",
-  bright_aqua = "#8ec07c",
-  bright_orange = "#fe8019",
-  neutral_red = "#cc241d",
-  neutral_green = "#98971a",
-  neutral_yellow = "#d79921",
-  neutral_blue = "#458588",
-  neutral_purple = "#b16286",
-  neutral_aqua = "#689d6a",
-  neutral_orange = "#d65d0e",
-  faded_red = "#9d0006",
-  faded_green = "#79740e",
-  faded_yellow = "#b57614",
-  faded_blue = "#076678",
-  faded_purple = "#8f3f71",
-  faded_aqua = "#427b58",
-  faded_orange = "#af3a03",
-  gray = "#928374",
+    dark0_hard = "#1d2021",
+    dark0 = "#282828",
+    dark0_soft = "#32302f",
+    dark1 = "#3c3836",
+    dark2 = "#504945",
+    dark3 = "#665c54",
+    dark4 = "#7c6f64",
+    light0_hard = "#f9f5d7",
+    light0 = "#fbf1c7",
+    light0_soft = "#f2e5bc",
+    light1 = "#ebdbb2",
+    light2 = "#d5c4a1",
+    light3 = "#bdae93",
+    light4 = "#a89984",
+    bright_red = "#fb4934",
+    bright_green = "#b8bb26",
+    bright_yellow = "#fabd2f",
+    bright_blue = "#83a598",
+    bright_purple = "#d3869b",
+    bright_aqua = "#8ec07c",
+    bright_orange = "#fe8019",
+    neutral_red = "#cc241d",
+    neutral_green = "#98971a",
+    neutral_yellow = "#d79921",
+    neutral_blue = "#458588",
+    neutral_purple = "#b16286",
+    neutral_aqua = "#689d6a",
+    neutral_orange = "#d65d0e",
+    faded_red = "#9d0006",
+    faded_green = "#79740e",
+    faded_yellow = "#b57614",
+    faded_blue = "#076678",
+    faded_purple = "#8f3f71",
+    faded_aqua = "#427b58",
+    faded_orange = "#af3a03",
+    gray = "#928374",
 }
 -- Setup lspconfig.
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
@@ -85,85 +85,71 @@ null_ls.setup({
 
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
     vim.lsp.diagnostic.on_publish_diagnostics, {
-    virtual_text = true,
-    signs = true,
-    underline = true,
-    update_in_insert = false,
-}
+        virtual_text = true,
+        signs = true,
+        underline = true,
+        update_in_insert = false,
+    }
 )
 -- Rust
-require('rust-tools').setup {
+vim.g.rustaceanvim = {
+    -- Plugin configuration
     tools = {
-        autoSetHints = true,
-        hover_with_actions = false,
+        -- autoSetHints = true,
+        -- hover_with_actions = false,
         inlay_hints = {
             show_parameter_hints = true,
             parameter_hints_prefix = " <- ",
             other_hints_prefix = " => ",
         }
     },
+    -- LSP configuration
     server = {
         on_attach = function(client, bufnr)
             custom_on_attach(client, bufnr)
             require('which-key').register({
                 l = {
-                    C = { ":RustOpenCargo<CR>", "Open Cargo.toml" }
+                    C = { "<cmd>RustLsp openCargo<CR>", "Open Cargo.toml" }
                 }
             }, { prefix = "<leader>" })
         end,
-        capabilities = capabilities,
         settings = {
+            -- rust-analyzer language server configuration
             ["rust-analyzer"] = {
-                cargo = {
-                    buildScripts = {
-                        enable = true,
-                    },
-                },
-                checkOnSave = {
-                    command = "clippy",
-                },
-                imports = {
-                    granularity = {
-                        group = "module",
-                    },
-                    prefix = "self",
-                },
-                lens = {
-                    enable = true,
-                },
-                procMacro = {
-                    enable = true,
-                },
+
             },
         },
-    }
+    },
+    -- DAP configuration
+    dap = {
+    },
 }
 
 
 -- Lua
-require 'lspconfig'.lua_ls.setup {
-    settings = {
-        Lua = {
-            runtime = {
-                -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
-                version = 'LuaJIT',
-            },
-            diagnostics = {
-                -- Get the language server to recognize the `vim` global
-                globals = { 'vim' },
-            },
-            workspace = {
-                -- Make the server aware of Neovim runtime files
-                library = vim.api.nvim_get_runtime_file("", true),
-                checkThirdParty = false,
-            },
-            -- Do not send telemetry data containing a randomized but unique identifier
-            telemetry = {
-                enable = false,
-            },
-        },
-    },
-}
+-- require 'lspconfig'.lua_ls.setup {
+--     settings = {
+--         Lua = {
+--             runtime = {
+--                 -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
+--                 version = 'LuaJIT',
+--             },
+--             diagnostics = {
+--                 -- Get the language server to recognize the `vim` global
+--                 globals = { 'vim' },
+--             },
+--             workspace = {
+--                 -- Make the server aware of Neovim runtime files
+--                 library = vim.api.nvim_get_runtime_file("", true),
+--                 checkThirdParty = false,
+--             },
+--             -- Do not send telemetry data containing a randomized but unique identifier
+--             telemetry = {
+--                 enable = false,
+--             },
+--         },
+--     },
+-- }
 -- Python
 require 'lspconfig'.pyright.setup {
     on_attach = custom_on_attach,
@@ -179,7 +165,7 @@ require 'lspconfig'.pyright.setup {
         }
     }
 }
-require'lspconfig'.ruff_lsp.setup{
+require 'lspconfig'.ruff_lsp.setup {
     init_options = {
         settings = {
             -- Any extra CLI arguments for `ruff` go here.
@@ -191,10 +177,10 @@ require'lspconfig'.ruff_lsp.setup{
 require 'lspconfig'.clangd.setup {
     on_attach = custom_on_attach,
     capabilities = capabilities,
-    filetypes = {"c", "cpp"},
+    filetypes = { "c", "cpp" },
 }
 
-require'lspconfig'.bufls.setup{}
+require 'lspconfig'.bufls.setup {}
 
 -- Java configuration is in ftplugin/java.lua
 

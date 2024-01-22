@@ -129,6 +129,10 @@ return {
             })
         end
     },
-    'simrat39/rust-tools.nvim',
+    {
+  'mrcjkb/rustaceanvim',
+  version = '^3', -- Recommended
+  ft = { 'rust' },
+},
     'folke/neodev.nvim',
 }

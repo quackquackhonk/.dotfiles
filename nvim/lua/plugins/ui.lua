@@ -16,11 +16,21 @@ return {
         opts = {
             max_lines = 3,
             multiline_threshold = 10,
-            on_attach = function(buf) return true end,
+            on_attach = function(_) return true end,
         }
     },
-
+    {
+        'declancm/maximize.nvim',
+        opts = {
+            default_keymaps = false
+        }
+    },
     -- Theme / UI
+    {
+        'folke/todo-comments.nvim',
+        dependencies = { "nvim-lua/plenary.nvim" },
+        opts = {}
+    },
     {
         "folke/noice.nvim",
         event = "VeryLazy",
