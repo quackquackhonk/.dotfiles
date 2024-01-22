@@ -49,7 +49,7 @@ wk.register({
         h = { cmd("noh"), "Hide Highlighting" },
         t = {
             name = "toggle",
-            r = { cmd("set rnu!"), "relative numbers"}
+            r = { cmd("set rnu!"), "relative numbers" }
         },
         u = { cmd("!dos2unix %"), "Dos2Unix current file" },
         y = { '"+y', "Copy to system clipboard" },
@@ -93,7 +93,7 @@ wk.register({
         r = { dap.repl.open, "Open DAP REPL" },
         o = { dap.step_over, "Step Over" },
         i = { dap.step_into, "Step Into" },
-        k = { vim.diagnostic.open_float, "Next Diagnostic" },
+        ["<Leader>"] = { vim.diagnostic.open_float, "Show diagnostic" },
         n = { vim.diagnostic.goto_next, "Next Diagnostic" },
         N = { vim.diagnostic.goto_prev, "Previous Diagnostic" },
     },
@@ -103,7 +103,7 @@ wk.register({
         f = { cmd("lua MiniFiles.open(vim.api.nvim_buf_get_name(0), false)"), "Open current file directory" },
         d = { cmd("TroubleToggle"), "Diagnostics" },
         s = { cmd("SymbolsOutline"), "Symbol Outline" },
-        t = { cmd("Neotest summary"), "Test Summary" },
+        t = { cmd("TodoTelescope theme=ivy"), "Show project TODOs" },
         o = { cmd("tabnew"), "Open tab" }
     },
     s = {
@@ -118,7 +118,7 @@ wk.register({
             l = { cmd("so %"), "Source current file" },
             t = { cmd("so ~/.dotfiles/nvim/lua/theme.lua"), "Source theme file" },
         },
-        c = { cmd("tabnew | e ~/.config/nvim/init.lua"), "Open Config" },
+        c = { cmd("tabnew | e ~/.config/nvim/init.lua | cd ~/.dotfiles/"), "Open Config" },
         s = {
             name = "+sessions",
             l = { persistence.load, "Load session for current dir" },
@@ -128,22 +128,34 @@ wk.register({
         n = {
             name = "notifications",
             d = { cmd("NoiceDismiss"), "Dismiss notifications" },
-            ["<Leader>"] = { cmd("Noice"), "Show message history"},
+            ["<Leader>"] = { cmd("Noice"), "Show message history" },
             e = { cmd("NoiceErrors"), "Show errors" },
         }
     },
     y = { cmd("Telescope neoclip theme=ivy"), "Open Neoclip" },
     [","] = { "<c-6>", "Open Previous Buffer" },
-    ["<Tab>"] = { "<C-w><C-p>", "Goto Previous Split" },
+    ["<Tab>"] = { "<C-w>w", "Goto Previous Split" },
     ["<Leader>"] = { ivy_telescope(telescope.buffers), "Show Open Buffers" },
 }, { prefix = "<Leader>" })
 
+keymap('n', "<F6>", require("maximize").toggle)
+keymap('i', "<F6>", require("maximize").toggle)
 keymap('i', "<F3>", "<cmd>tabprev<CR>")
 keymap('i', "<F4>", "<cmd>tabnext<CR>")
 keymap('n', "<F3>", ":tabprev<CR>")
 keymap('n', "<F4>", ":tabnext<CR>")
 keymap('i', "<C-q>", ":tabclose<CR>")
 keymap('n', "<C-q>", ":tabclose<CR>")
+
+-- C-arrows to move between windows
+keymap('n', "<C-Left>", '<C-w>h')
+keymap('n', "<C-Down>", '<C-w>j')
+keymap('n', "<C-Up>", '<C-w>k')
+keymap('n', "<C-Right>", '<C-w>l')
+keymap('i', "<C-Left>", '<C-w>h')
+keymap('i', "<C-Down>", '<C-w>j')
+keymap('i', "<C-Up>", '<C-w>k')
+keymap('i', "<C-Right>", '<C-w>l')
 
 -- visual mode leader key bindings
 wk.register({
@@ -153,6 +165,8 @@ wk.register({
 
 -- HYDRA keymappings
 -- Window move/resize hydra
+-- TODO: Revamp how window management works
+
 hydra({
     name = 'Windows',
     hint = false,
@@ -164,11 +178,6 @@ hydra({
     mode = 'n',
     body = '<C-w>',
     heads = {
-        { '<Left>',    '<C-w>h' },
-        { '<Down>',    '<C-w>j' },
-        { '<Up>',      pcmd('wincmd k', 'E11', 'close') },
-        { '<Right>',   '<C-w>l' },
-
         { '<S-Left>',  cmd 'WinShift left' },
         { '<S-Down>',  cmd 'WinShift down' },
         { '<S-Up>',    cmd 'WinShift up' },

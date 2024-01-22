@@ -137,7 +137,7 @@ hooks.register(hooks.type.HIGHLIGHT_SETUP, function()
 end)
 
 vim.g.rainbow_delimiters = { highlight = highlight }
-require("ibl").setup { scope = { highlight = highlight } }
+require("ibl").setup { scope = { show_start = false, show_end = false, highlight = highlight } }
 
 hooks.register(hooks.type.SCOPE_HIGHLIGHT, hooks.builtin.scope_highlight_from_extmark)
 
@@ -189,8 +189,8 @@ require('lualine').setup({
         lualine_c = { 'fileformat' },
         lualine_x = {
             {
-                require("noice").api.statusline.mode.get,
-                cond = require("noice").api.statusline.mode.has,
+                require("noice").api.status.mode.get,
+                cond = require("noice").api.status.mode.has,
                 color = { fg = colors.gray },
             }
         },
