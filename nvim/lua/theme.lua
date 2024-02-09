@@ -108,6 +108,48 @@ require("gruvbox").setup({
         -- TSContext
         NormalFloat = { bg = colors.dark0 },
 
+        -- completion menu
+        PmenuSel = { bg = colors.dark1, fg = "NONE" },
+        Pmenu = { fg = colors.light0, bg = colors.dark1 },
+
+        CmpItemAbbrDeprecated = { fg = colors.dark3, bg = "NONE", strikethrough = true },
+        CmpItemAbbrMatch = { fg = colors.bright_blue, bg = "NONE", bold = true },
+        CmpItemAbbrMatchFuzzy = { fg = colors.bright_blue, bg = "NONE", bold = true },
+        CmpItemMenu = { fg = colors.bright_purple, bg = "NONE", italic = true },
+
+        CmpItemKindField = { fg = colors.light0_soft, bg = colors.neutral_red },
+        CmpItemKindProperty = { fg = colors.light0_soft, bg = colors.neutral_red },
+        CmpItemKindEvent = { fg = colors.light0_soft, bg = colors.neutral_red },
+
+        CmpItemKindText = { fg = colors.light0_soft, bg = colors.neutral_green },
+        CmpItemKindEnum = { fg = colors.light0_soft, bg = colors.neutral_green },
+        CmpItemKindKeyword = { fg = colors.light0_soft, bg = colors.neutral_green },
+
+        CmpItemKindConstant = { fg = colors.light0_soft, bg = colors.neutral_yellow },
+        CmpItemKindConstructor = { fg = colors.light0_soft, bg = colors.neutral_yellow },
+        CmpItemKindReference = { fg = colors.light0_soft, bg = colors.neutral_yellow },
+
+        CmpItemKindFunction = { fg = colors.light0_soft, bg = colors.neutral_purple },
+        CmpItemKindStruct = { fg = colors.light0_soft, bg = colors.neutral_purple },
+        CmpItemKindClass = { fg = colors.light0_soft, bg = colors.neutral_purple },
+        CmpItemKindModule = { fg = colors.light0_soft, bg = colors.neutral_purple },
+        CmpItemKindOperator = { fg = colors.light0_soft, bg = colors.neutral_purple },
+
+        CmpItemKindVariable = { fg = colors.light0_soft, bg = colors.gray },
+        CmpItemKindFile = { fg = colors.light0_soft, bg = colors.gray },
+
+        CmpItemKindUnit = { fg = colors.light0_soft, bg = colors.neutral_orange },
+        CmpItemKindSnippet = { fg = colors.light0_soft, bg = colors.neutral_orange },
+        CmpItemKindFolder = { fg = colors.light0_soft, bg = colors.neutral_orange },
+
+        CmpItemKindMethod = { fg = colors.light0_soft, bg = colors.neutral_blue },
+        CmpItemKindValue = { fg = colors.light0_soft, bg = colors.neutral_blue },
+        CmpItemKindEnumMember = { fg = colors.light0_soft, bg = colors.neutral_blue },
+
+        CmpItemKindInterface = { fg = colors.light0_soft, bg = colors.neutral_aqua },
+        CmpItemKindColor = { fg = colors.light0_soft, bg = colors.neutral_aqua },
+        CmpItemKindTypeParameter = { fg = colors.light0_soft, bg = colors.neutral_aqua },
+
     }
 })
 vim.opt.termguicolors = true
