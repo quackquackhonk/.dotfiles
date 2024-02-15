@@ -57,6 +57,7 @@ alias vi='nvim'
 alias ls='exa'
 alias l='exa -lah'
 alias b='bat'
+alias cd='z'
 
 alias t='tmux'
 
@@ -82,7 +83,8 @@ function cirruscp() {
 }
 alias awsnonprod='saml2aws login -a nonprod && eval $(saml2aws script -a nonprod)'
 alias myenv='spack env activate -d ~/myenv'
-alias projenv='spack env activate -d spack_env/'
+alias spackon='spack env activate -d spack_env/'
+alias spackoff='spack env deactivate'
 alias lzd='lazydocker'
 
 export TERM=xterm-256color

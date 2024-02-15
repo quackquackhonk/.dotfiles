@@ -15,6 +15,7 @@ $java\
 $nodejs\
 $rust\
 [](fg:blue bg:purple)\
+$conda\
 $spack\
 [](fg:purple)\
 $newline
@@ -91,6 +92,10 @@ truncation_symbol = "…/"
 symbol = " "
 style = "bg:purple"
 format = '[ $symbol $context $path ]($style)'
+
+[conda]
+style = "bg:purple"
+format = '[ $symbol $environment ]($style)'
 
 [spack]
 style = "bg:purple"
