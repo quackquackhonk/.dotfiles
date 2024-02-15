@@ -112,10 +112,10 @@ require("gruvbox").setup({
         PmenuSel = { bg = colors.dark1, fg = "NONE" },
         Pmenu = { fg = colors.light0, bg = colors.dark1 },
 
-        CmpItemAbbrDeprecated = { fg = colors.dark3, bg = "NONE", strikethrough = true },
-        CmpItemAbbrMatch = { fg = colors.bright_blue, bg = "NONE", bold = true },
-        CmpItemAbbrMatchFuzzy = { fg = colors.bright_blue, bg = "NONE", bold = true },
-        CmpItemMenu = { fg = colors.bright_purple, bg = "NONE", italic = true },
+        CmpItemAbbrDeprecated = { fg = colors.dark3, bg = "NONE", strikethrough = false },
+        CmpItemAbbrMatch = { fg = colors.bright_blue, bg = "NONE", bold = false },
+        CmpItemAbbrMatchFuzzy = { fg = colors.bright_blue, bg = "NONE", bold = false },
+        CmpItemMenu = { fg = colors.bright_purple, bg = "NONE", italic = false },
 
         CmpItemKindField = { fg = colors.light0_soft, bg = colors.neutral_red },
         CmpItemKindProperty = { fg = colors.light0_soft, bg = colors.neutral_red },
