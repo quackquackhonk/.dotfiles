@@ -73,7 +73,9 @@ style = "bg:red"
 [directory]
 style = "bg:orange"
 format = "[ $path ]($style)"
+fish_style_pwd_dir_length = 3
 truncation_length = 3
+truncate_to_repo = false
 truncation_symbol = "…/"
 
 # Here is how you can shorten some long paths by text replacement
