@@ -138,12 +138,12 @@ wk.register({
     ["<Leader>"] = { ivy_telescope(telescope.buffers), "Show Open Buffers" },
 }, { prefix = "<Leader>" })
 
-keymap('n', "<F6>", require("maximize").toggle)
-keymap('i', "<F6>", require("maximize").toggle)
-keymap('i', "<F3>", "<cmd>tabprev<CR>")
-keymap('i', "<F4>", "<cmd>tabnext<CR>")
-keymap('n', "<F3>", ":tabprev<CR>")
-keymap('n', "<F4>", ":tabnext<CR>")
+-- keymap('n', "<F6>", require("maximize").toggle)
+-- keymap('i', "<F6>", require("maximize").toggle)
+keymap('i', "[t", "<cmd>tabprev<CR>")
+keymap('i', "]t", "<cmd>tabnext<CR>")
+keymap('n', "[t", ":tabprev<CR>")
+keymap('n', "]t", ":tabnext<CR>")
 keymap('i', "<C-q>", ":tabclose<CR>")
 keymap('n', "<C-q>", ":tabclose<CR>")
 
