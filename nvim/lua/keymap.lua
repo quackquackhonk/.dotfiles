@@ -140,6 +140,7 @@ wk.register({
 
 -- keymap('n', "<F6>", require("maximize").toggle)
 -- keymap('i', "<F6>", require("maximize").toggle)
+keymap('i', "<C-s>", "<Esc>")
 keymap('i', "[t", "<cmd>tabprev<CR>")
 keymap('i', "]t", "<cmd>tabnext<CR>")
 keymap('n', "[t", ":tabprev<CR>")
