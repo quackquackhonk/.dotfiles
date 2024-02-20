@@ -130,9 +130,8 @@ return {
         end
     },
     {
-  'mrcjkb/rustaceanvim',
-  version = '^3', -- Recommended
-  ft = { 'rust' },
-},
-    'folke/neodev.nvim',
+        'mrcjkb/rustaceanvim',
+        version = '^3', -- Recommended
+        ft = { 'rust' },
+    },
 }

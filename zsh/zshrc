@@ -18,11 +18,11 @@ export LIBGL_ALWAYS_SOFTWARE=true
 export DOCKER_DEFAULT_PLATFORM=linux/amd64
 
 export CMAKE_COLOR_DIAGNOSTICS=ON
-export CMAKE_PREFIX_PATH=/storage/stankala/.sources/built/
+# export CMAKE_PREFIX_PATH=/storage/stankala/.sources/built/
 export CMAKE_EXPORT_COMPILE_COMMANDS=1
 
-export USER_LIBDIR=/storage/stankala/myenv/.spack-env/view/lib/
-export USER_INCLUDE=/storage/stankala/myenv/.spack-env/view/include/
+# export USER_LIBDIR=/storage/stankala/myenv/.spack-env/view/lib/
+# export USER_INCLUDE=/storage/stankala/myenv/.spack-env/view/include/
 
 unsetopt PROMPT_SP
 
@@ -84,7 +84,8 @@ function cirruscp() {
 }
 alias awsnonprod='saml2aws login -a nonprod && eval $(saml2aws script -a nonprod)'
 alias myenv='spack env activate -d ~/myenv'
-alias projenv='spack env activate -d spack_env/'
+alias spackon='spack env activate -d spack_env/'
+alias spackoff='spack env deactivate'
 alias lzd='lazydocker'
 
 export TERM=xterm-256color

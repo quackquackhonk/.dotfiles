@@ -51,6 +51,7 @@ wk.register({
             name = "toggle",
             r = { cmd("set rnu!"), "relative numbers" }
         },
+        s = { cmd("ISwap"), "Swap arguments"},
         u = { cmd("!dos2unix %"), "Dos2Unix current file" },
         y = { '"+y', "Copy to system clipboard" },
     },
@@ -105,6 +106,12 @@ wk.register({
         s = { cmd("SymbolsOutline"), "Symbol Outline" },
         t = { cmd("TodoTelescope theme=ivy"), "Show project TODOs" },
         o = { cmd("tabnew"), "Open tab" }
+    },
+    w = {
+        name = "window",
+        v = { cmd("vsplit"), "Create vertical split" },
+        s = { cmd("split"), "Create vertical split" },
+        q = { cmd("close"), "Create vertical split" },
     },
     s = {
         name = "+settings",
@@ -185,16 +192,11 @@ hydra({
 
         { 'm',         cmd('MaximizerToggle') },
 
-        { '<C-Left>',  function() splits.resize_left(2) end },
-        { '<C-Down>',  function() splits.resize_down(2) end },
-        { '<C-Up>',    function() splits.resize_up(2) end },
-        { '<C-Right>', function() splits.resize_right(2) end },
+        { '<Left>',  function() splits.resize_left(2) end },
+        { '<Down>',  function() splits.resize_down(2) end },
+        { '<Up>',    function() splits.resize_up(2) end },
+        { '<Right>', function() splits.resize_right(2) end },
         { '=',         '<C-w>=',                             { desc = 'equalize' } },
-        { 's',         pcmd('split', 'E36') },
-        { '<C-s>',     pcmd('split', 'E36'),                 { desc = false } },
-        { 'v',         pcmd('vsplit', 'E36') },
-        { '<C-v>',     pcmd('vsplit', 'E36'),                { desc = false } },
-        { 'q',         pcmd('close', 'E444'),                { desc = 'close window' } },
         { '<Esc>',     nil,                                  { exit = true, desc = false } }
     }
 })
