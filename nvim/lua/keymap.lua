@@ -145,8 +145,8 @@ keymap('i', "[t", "<cmd>tabprev<CR>")
 keymap('i', "]t", "<cmd>tabnext<CR>")
 keymap('n', "[t", ":tabprev<CR>")
 keymap('n', "]t", ":tabnext<CR>")
-keymap('i', "<C-q>", ":tabclose<CR>")
-keymap('n', "<C-q>", ":tabclose<CR>")
+keymap('i', "<C-q>", ":close<CR>")
+keymap('n', "<C-q>", ":close<CR>")
 
 -- C-arrows to move between windows
 keymap('n', "<C-Left>", '<C-w>h')
