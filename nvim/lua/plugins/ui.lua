@@ -36,10 +36,9 @@ return {
                     icon = " ", -- icon used for the sign, and in search results
                     color = "error", -- can be a hex color, or a named color (see below)
                     alt = { "FIXME", "BUG", "FIXIT", "ISSUE" }, -- a set of other keywords that all map to this FIX keywords
-                    -- signs = false, -- configure signs for some keywords individually
                 },
                 -- TODO: testing text
-                TODO = { icon = " ", color = "#b8bb26" },
+                TODO = { icon = " ", color = "#fabd2f" },
                 -- HACK: testing text
                 HACK = { icon = " ", color = "error" },
                 -- WARN: testing text
@@ -103,12 +102,7 @@ return {
             require("trouble").setup {}
         end
     },
-    {
-        'norcalli/nvim-colorizer.lua',
-        config = function()
-            require 'colorizer'.setup()
-        end
-    },
+    'norcalli/nvim-colorizer.lua',
     {
         'm4xshen/smartcolumn.nvim',
         opts = {
