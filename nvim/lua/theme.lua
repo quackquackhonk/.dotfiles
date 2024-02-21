@@ -39,9 +39,9 @@ local colors = {
 }
 
 require("gruvbox").setup({
-    undercurl = true,
-    underline = true,
-    bold = true,
+    undercurl = false,
+    underline = false,
+    bold = false,
     italic = {
         strings = false,
         comments = false,
@@ -49,7 +49,7 @@ require("gruvbox").setup({
         folds = false,
     },
     contrast = "hard",
-    strikethrough = true,
+    strikethrough = false,
     invert_selection = false,
     invert_signs = false,
     invert_tabline = false,
@@ -109,12 +109,12 @@ require("gruvbox").setup({
         NormalFloat = { bg = colors.dark0 },
 
         -- completion menu
-        PmenuSel = { bg = colors.dark1, fg = "NONE" },
-        Pmenu = { fg = colors.light0, bg = colors.dark1 },
+        PmenuSel = { bg = colors.grey, fg = "NONE" },
+        Pmenu = { fg = colors.light0, bg = colors.dark0 },
 
         CmpItemAbbrDeprecated = { fg = colors.dark3, bg = "NONE", strikethrough = false },
-        CmpItemAbbrMatch = { fg = colors.bright_blue, bg = "NONE", bold = false },
-        CmpItemAbbrMatchFuzzy = { fg = colors.bright_blue, bg = "NONE", bold = false },
+        CmpItemAbbrMatch = { fg = colors.bright_blue, bg = "NONE", bold = true },
+        CmpItemAbbrMatchFuzzy = { fg = colors.bright_blue, bg = "NONE", bold = true },
         CmpItemMenu = { fg = colors.bright_purple, bg = "NONE", italic = false },
 
         CmpItemKindField = { fg = colors.light0_soft, bg = colors.neutral_red },
@@ -154,6 +154,8 @@ require("gruvbox").setup({
 })
 vim.opt.termguicolors = true
 vim.cmd('colorscheme gruvbox')
+
+require("colorizer").setup()
 
 -- Rainbow Delimiters / indent blankline setup
 local highlight = {
