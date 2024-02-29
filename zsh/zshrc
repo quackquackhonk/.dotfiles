@@ -85,6 +85,10 @@ alias awsnonprod='saml2aws login -a nonprod && eval $(saml2aws script -a nonprod
 alias myenv='spack env activate -d ~/myenv'
 alias spackon='spack env activate -d spack_env/'
 alias spackoff='spack env deactivate'
+function spackcert() {
+    export CERT_PATH=$(python -c 'import site; print(site.getsitepackages()[0] + "/certifi/cacert.pem")')
+    cat ~/cert/ZscalerRootCertificate-2048-SHA256.crt >> $CERT_PATH
+}
 alias lzd='lazydocker'
 
 export TERM=xterm-256color
