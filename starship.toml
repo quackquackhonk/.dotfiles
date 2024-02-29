@@ -23,6 +23,8 @@ $status\
 $character
 """
 
+command_timeout = 1500
+
 palette = 'gruvbox'
 
 # Define custom colors
@@ -54,7 +56,7 @@ bright-orange = '#fe8019'
 [aws]
 disabled = false
 force_display = true
-format = '[ $symbol ($profile )(\($region\) ) ]($style)'
+format = '[ ($profile )(\($region\) ) ]($style)'
 style = 'bg:yellow'
 
 [username]
