@@ -165,6 +165,19 @@ keymap('i', "<C-Down>", '<C-w>j')
 keymap('i', "<C-Up>", '<C-w>k')
 keymap('i', "<C-Right>", '<C-w>l')
 
+keymap('n', "<A-m>", '<Left>')
+keymap('i', "<A-m>", '<Left>')
+keymap('v', "<A-m>", '<Left>')
+keymap('n', "<A-n>", '<Down>')
+keymap('i', "<A-n>", '<Down>')
+keymap('v', "<A-n>", '<Down>')
+keymap('n', "<A-e>", '<Up>')
+keymap('i', "<A-e>", '<Up>')
+keymap('v', "<A-e>", '<Up>')
+keymap('n', "<A-i>", '<Right>')
+keymap('i', "<A-i>", '<Right>')
+keymap('v', "<A-i>", '<Right>')
+
 -- visual mode leader key bindings
 wk.register({
     y = { '"+y', "Copy to system clipboard" },
