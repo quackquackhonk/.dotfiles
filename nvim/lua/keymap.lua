@@ -104,7 +104,7 @@ wk.register({
         f = { cmd("lua MiniFiles.open(vim.api.nvim_buf_get_name(0), false)"), "Open current file directory" },
         d = { cmd("TroubleToggle"), "Diagnostics" },
         s = { cmd("SymbolsOutline"), "Symbol Outline" },
-        t = { cmd("TodoTelescope theme=ivy"), "Show project TODOs" },
+        t = { cmd("TodoTelescope keywords=TODO,FIX,FIXME theme=ivy"), "Show project TODOs" },
         o = { cmd("tabnew"), "Open tab" }
     },
     w = {
@@ -202,28 +202,14 @@ hydra({
     }
 })
 
--- HOP keybinding-- place this in one of your configuration file(s)
-local hop = require('hop')
-local directions = require('hop.hint').HintDirection
-vim.keymap.set('', 'f', function()
-    hop.hint_char1({ direction = directions.AFTER_CURSOR, current_line_only = true })
-end, { remap = true })
-vim.keymap.set('', 'F', function()
-    hop.hint_char1({ direction = directions.BEFORE_CURSOR, current_line_only = true })
-end, { remap = true })
-vim.keymap.set('', 't', function()
-    hop.hint_char1({ direction = directions.AFTER_CURSOR, current_line_only = true, hint_offset = -1 })
-end, { remap = true })
-vim.keymap.set('', 'T', function()
-    hop.hint_char1({ direction = directions.BEFORE_CURSOR, current_line_only = true, hint_offset = 1 })
-end, { remap = true })
-vim.keymap.set('', '<Return>', cmd('HopAnywhere'), { remap = true })
+vim.keymap.set({'n', 'x', 'o'}, '<Return>', '<Plug>(leap-forward)')
+vim.keymap.set({'n', 'x', 'o'}, '<S-Return>', '<Plug>(leap-backward)')
 
 -- DIAL keybindings
 vim.api.nvim_set_keymap("n", "<C-a>", require("dial.map").inc_normal(), { noremap = true })
+vim.api.nvim_set_keymap("v", "<C-a>", require("dial.map").inc_normal(), { noremap = true })
 vim.api.nvim_set_keymap("n", "<C-x>", require("dial.map").dec_normal(), { noremap = true })
-vim.api.nvim_set_keymap("v", "<C-a>", require("dial.map").inc_visual(), { noremap = true })
-vim.api.nvim_set_keymap("v", "<C-x>", require("dial.map").dec_visual(), { noremap = true })
+vim.api.nvim_set_keymap("v", "<C-x>", require("dial.map").dec_normal(), { noremap = true })
 vim.api.nvim_set_keymap("v", "g<C-a>", require("dial.map").inc_gvisual(), { noremap = true })
 vim.api.nvim_set_keymap("v", "g<C-x>", require("dial.map").dec_gvisual(), { noremap = true })
 
