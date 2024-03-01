@@ -141,28 +141,29 @@ wk.register({
     },
     y = { cmd("Telescope neoclip theme=ivy"), "Open Neoclip" },
     [","] = { "<c-6>", "Open Previous Buffer" },
-    ["<Tab>"] = { "<C-w>w", "Goto Previous Split" },
+    ["<Tab>"] = { "<C-w>W", "Open Previous Buffer" },
     ["<Leader>"] = { ivy_telescope(telescope.buffers), "Show Open Buffers" },
 }, { prefix = "<Leader>" })
 
-keymap('n', "<F6>", require("maximize").toggle)
-keymap('i', "<F6>", require("maximize").toggle)
-keymap('i', "<F3>", "<cmd>tabprev<CR>")
-keymap('i', "<F4>", "<cmd>tabnext<CR>")
-keymap('n', "<F3>", ":tabprev<CR>")
-keymap('n', "<F4>", ":tabnext<CR>")
-keymap('i', "<C-q>", ":tabclose<CR>")
-keymap('n', "<C-q>", ":tabclose<CR>")
+-- keymap('n', "<F6>", require("maximize").toggle)
+-- keymap('i', "<F6>", require("maximize").toggle)
+keymap('i', "<C-s>", "<Esc>")
+keymap('i', "[t", "<cmd>tabprev<CR>")
+keymap('i', "]t", "<cmd>tabnext<CR>")
+keymap('n', "[t", ":tabprev<CR>")
+keymap('n', "]t", ":tabnext<CR>")
+keymap('i', "<C-q>", ":close<CR>")
+keymap('n', "<C-q>", ":close<CR>")
 
 -- C-arrows to move between windows
-keymap('n', "<C-Left>", '<C-w>h')
-keymap('n', "<C-Down>", '<C-w>j')
-keymap('n', "<C-Up>", '<C-w>k')
-keymap('n', "<C-Right>", '<C-w>l')
-keymap('i', "<C-Left>", '<C-w>h')
-keymap('i', "<C-Down>", '<C-w>j')
-keymap('i', "<C-Up>", '<C-w>k')
-keymap('i', "<C-Right>", '<C-w>l')
+keymap('n', "<C-Left>", cmd('NavigatorLeft'))
+keymap('i', "<C-Left>", cmd('NavigatorLeft'))
+keymap('n', "<C-Down>", cmd('NavigatorDown'))
+keymap('i', "<C-Down>", cmd('NavigatorDown'))
+keymap('n', "<C-Up>", cmd('NavigatorUp'))
+keymap('i', "<C-Up>", cmd('NavigatorUp'))
+keymap('n', "<C-Right>", cmd('NavigatorRight'))
+keymap('i', "<C-Right>", cmd('NavigatorRight'))
 
 -- visual mode leader key bindings
 wk.register({

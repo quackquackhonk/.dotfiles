@@ -129,6 +129,7 @@ return {
             })
         end
     },
+    'folke/neodev.nvim',
     {
         'mrcjkb/rustaceanvim',
         version = '^3', -- Recommended

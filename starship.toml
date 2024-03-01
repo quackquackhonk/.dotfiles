@@ -15,12 +15,15 @@ $java\
 $nodejs\
 $rust\
 [](fg:blue bg:purple)\
+$conda\
 $spack\
 [](fg:purple)\
 $newline
 $status\
 $character
 """
+
+command_timeout = 1500
 
 palette = 'gruvbox'
 
@@ -53,7 +56,7 @@ bright-orange = '#fe8019'
 [aws]
 disabled = false
 force_display = true
-format = '[ $symbol ($profile )(\($region\) ) ]($style)'
+format = '[ ($profile )(\($region\) ) ]($style)'
 style = 'bg:yellow'
 
 [username]
@@ -72,7 +75,9 @@ style = "bg:red"
 [directory]
 style = "bg:orange"
 format = "[ $path ]($style)"
+fish_style_pwd_dir_length = 3
 truncation_length = 3
+truncate_to_repo = false
 truncation_symbol = "…/"
 
 # Here is how you can shorten some long paths by text replacement
@@ -91,6 +96,10 @@ truncation_symbol = "…/"
 symbol = " "
 style = "bg:purple"
 format = '[ $symbol $context $path ]($style)'
+
+[conda]
+style = "bg:purple"
+format = '[ $symbol $environment ]($style)'
 
 [spack]
 style = "bg:purple"

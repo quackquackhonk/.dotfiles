@@ -104,6 +104,12 @@ return {
             require 'window-picker'.setup()
         end,
     },
+    {
+        'numToStr/Navigator.nvim',
+        config = function()
+            require('Navigator').setup()
+        end
+    },
     -- sessions
     {
         "folke/persistence.nvim",
