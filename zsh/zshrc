@@ -84,8 +84,8 @@ function cirruscp() {
 }
 alias awsnonprod='saml2aws login -a nonprod && eval $(saml2aws script -a nonprod)'
 alias myenv='spack env activate -d ~/myenv'
-alias spackon='spack env activate -d spack_env/'
-alias spackoff='spack env deactivate'
+alias spackon='spack env activate -d spack_env/ && export SPACK_INSTALL_PREFIX=$(pwd)/spack_env/.spack-env/view'
+alias spackoff='spack env deactivate && unset SPACK_INSTALL_PREFIX'
 alias lzd='lazydocker'
 
 export TERM=xterm-256color
