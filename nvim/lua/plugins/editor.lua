@@ -1,9 +1,16 @@
 return {
     {
         'smoka7/hop.nvim',
-        version = '*',
+        version = "*",
         opts = {
-            keys = 'tnseriaoplfuwyqbjgmvhdcxzk'
+            keys = "arstgmneioqwfpbjluyxcdvzkh"
+        },
+    },
+    {
+        'mizlan/iswap.nvim',
+        event = "VeryLazy",
+        opts = {
+            keys = "arstgmneioqwfpbjluyxcdvzkh"
         }
     },
     {

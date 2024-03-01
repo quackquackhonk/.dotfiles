@@ -31,7 +31,6 @@ return {
         dependencies = { "nvim-lua/plenary.nvim" },
         opts = {
             keywords = {
-                -- FIX: testing text
                 FIX = {
                     icon = " ", -- icon used for the sign, and in search results
                     color = "error", -- can be a hex color, or a named color (see below)
