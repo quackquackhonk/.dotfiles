@@ -13,6 +13,13 @@ return {
             keys = "arstgmneioqwfpbjluyxcdvzkh"
         }
     },
+    {
+        'mizlan/iswap.nvim',
+        event = "VeryLazy",
+        opts = {
+            keys = "arstgmneioqwfpbjluyxcdvzkh"
+        }
+    },
     'monaqa/dial.nvim',
     'tpope/vim-sensible',
     {
