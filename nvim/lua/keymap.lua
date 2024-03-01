@@ -173,8 +173,6 @@ wk.register({
 
 -- HYDRA keymappings
 -- Window move/resize hydra
--- TODO: Revamp how window management works
-
 hydra({
     name = 'Windows',
     hint = false,
@@ -202,8 +200,23 @@ hydra({
     }
 })
 
-vim.keymap.set({'n', 'x', 'o'}, '<Return>', '<Plug>(leap-forward)')
-vim.keymap.set({'n', 'x', 'o'}, '<S-Return>', '<Plug>(leap-backward)')
+-- Keybindings for HOP
+-- place this in one of your configuration file(s)
+local hop = require('hop')
+local directions = require('hop.hint').HintDirection
+vim.keymap.set('', 'f', function()
+    hop.hint_char1({ direction = directions.AFTER_CURSOR, current_line_only = true })
+end, {remap=true})
+vim.keymap.set('', 'F', function()
+    hop.hint_char1({ direction = directions.BEFORE_CURSOR, current_line_only = true })
+end, {remap=true})
+vim.keymap.set('', 't', function()
+    hop.hint_char1({ direction = directions.AFTER_CURSOR, current_line_only = true, hint_offset = -1 })
+end, {remap=true})
+vim.keymap.set('', 'T', function()
+    hop.hint_char1({ direction = directions.BEFORE_CURSOR, current_line_only = true, hint_offset = 1 })
+end, {remap=true})
+
 
 -- DIAL keybindings
 vim.api.nvim_set_keymap("n", "<C-a>", require("dial.map").inc_normal(), { noremap = true })
@@ -212,6 +225,7 @@ vim.api.nvim_set_keymap("n", "<C-x>", require("dial.map").dec_normal(), { norema
 vim.api.nvim_set_keymap("v", "<C-x>", require("dial.map").dec_normal(), { noremap = true })
 vim.api.nvim_set_keymap("v", "g<C-a>", require("dial.map").inc_gvisual(), { noremap = true })
 vim.api.nvim_set_keymap("v", "g<C-x>", require("dial.map").dec_gvisual(), { noremap = true })
+keymap({"n", "v"}, "<Return>", cmd("HopChar2"))
 
 -- Visual Mode
 -- Stay in visual mode when indenting
