@@ -36,16 +36,16 @@ wk.register({
     Q = { cmd("bd"), "Close Buffer AND Window" },
     f = {
         name = "+find",
-        f = { ivy_telescope(telescope.find_files), "Find Files" },
-        g = { ivy_telescope(telescope.git_files), "Git Files" },
-        r = { cmd("Telescope frecency theme=ivy"), "Recent Files" },
-        s = { ivy_telescope(telescope.live_grep), "Live Grep" },
-        p = { cmd("tabnew | Telescope project theme=ivy"), "Open Project" }
+        f = { cmd("Telescope find_files"), "Find Files" },
+        g = { cmd("Telescope git_files"), "Git Files" },
+        r = { cmd("Telescope frecency"), "Recent Files" },
+        s = { cmd("Telescope live_grep"), "Live Grep" },
+        p = { cmd("tabnew | Telescope project"), "Find Project" }
     },
     e = {
         name = "+editor",
         f = { vim.lsp.buf.format, "format file" },
-        g = { cmd("cd %:h | cd `git rev-parse --show-toplevel`"), "CD to current git repo" },
+        g = { cmd("tcd %:h | tcd `git rev-parse --show-toplevel`"), "CD to current git repo" },
         h = { cmd("noh"), "Hide Highlighting" },
         t = {
             name = "toggle",
@@ -104,7 +104,7 @@ wk.register({
         f = { cmd("lua MiniFiles.open(vim.api.nvim_buf_get_name(0), false)"), "Open current file directory" },
         d = { cmd("TroubleToggle"), "Diagnostics" },
         s = { cmd("SymbolsOutline"), "Symbol Outline" },
-        t = { cmd("TodoTelescope keywords=TODO,FIX,FIXME theme=ivy"), "Show project TODOs" },
+        t = { cmd("TodoTelescope keywords=TODO,FIX,FIXME"), "Show project TODOs" },
         o = { cmd("tabnew"), "Open tab" }
     },
     w = {
@@ -125,21 +125,16 @@ wk.register({
             l = { cmd("so %"), "Source current file" },
             t = { cmd("so ~/.dotfiles/nvim/lua/theme.lua"), "Source theme file" },
         },
-        c = { cmd("tabnew | e ~/.config/nvim/init.lua | cd ~/.dotfiles/"), "Open Config" },
-        s = {
-            name = "+sessions",
-            l = { persistence.load, "Load session for current dir" },
-            s = { function() persistence.load({ last = true }) end, "Load previous session" },
-            x = { persistence.stop, "Stop persistence" },
-        },
-        n = {
+        c = { cmd("tabnew | e ~/.config/nvim/init.lua | tcd ~/.dotfiles/"), "Open Config" },
+        n = { cmd("tabnew | e ~/Dropbox/index.norg | tcd ~/Dropbox/"), "Open Notes" },
+        m = {
             name = "notifications",
             d = { cmd("NoiceDismiss"), "Dismiss notifications" },
             ["<Leader>"] = { cmd("Noice"), "Show message history" },
             e = { cmd("NoiceErrors"), "Show errors" },
         }
     },
-    y = { cmd("Telescope neoclip theme=ivy"), "Open Neoclip" },
+    y = { cmd("Telescope neoclip"), "Open Neoclip" },
     [","] = { "<c-6>", "Open Previous Buffer" },
     ["<Tab>"] = { "<C-w>W", "Open Previous Buffer" },
     ["<Leader>"] = { ivy_telescope(telescope.buffers), "Show Open Buffers" },
@@ -148,8 +143,6 @@ wk.register({
 -- keymap('n', "<F6>", require("maximize").toggle)
 -- keymap('i', "<F6>", require("maximize").toggle)
 keymap('i', "<C-s>", "<Esc>")
-keymap('i', "[t", "<cmd>tabprev<CR>")
-keymap('i', "]t", "<cmd>tabnext<CR>")
 keymap('n', "[t", ":tabprev<CR>")
 keymap('n', "]t", ":tabnext<CR>")
 keymap('i', "<C-q>", ":close<CR>")
