@@ -276,18 +276,6 @@ cmp.setup({
             return kind
         end,
     },
-    -- formatting = {
-    --     fields = { "kind", "abbr", "menu" },
-    --     format = function(entry, vim_item)
-    --         local kind = require("lspkind").cmp_format({ mode = "symbol_text", maxwidth = 50 })(entry, vim_item)
-    --         local strings = vim.split(kind.kind, "%s", { trimempty = true })
-    --         if #strings > 2 then
-    --             kind.kind = " " .. strings[1] .. " "
-    --             kind.menu = "    (" .. strings[2] .. ")"
-    --         end
-    --         return kind
-    --     end,
-    -- },
     window = {
         completion = {
             winhighlight = "Normal:Pmenu,FloatBorder:Pmenu,Search:None",

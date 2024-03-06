@@ -79,9 +79,6 @@ function cirruscp() {
 alias awsnonprod='saml2aws login -a nonprod && eval $(saml2aws script -a nonprod)'
 function spackon() {
     spack env activate -d spack_env/
-    export SPACK_INSTALL_PREFIX=$SPACK_ENV/.spack_env/view
-    export USER_LIBDIR=$SPACK_ENV/.spack-env/view/lib/
-    export USER_INCLUDE=$SPACK_ENV/.spack-env/view/include/
 }
 function spackoff() {
     unset SPACK_INSTALL_PREFIX

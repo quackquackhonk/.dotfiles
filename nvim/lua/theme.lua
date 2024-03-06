@@ -57,6 +57,13 @@ require("gruvbox").setup({
     inverse = false, -- invert background for search, diffs, statuslines and errors
     overrides = {
         SignColumn = { bg = colors.dark0 },
+        GruvboxRedSign = { bg = colors.dark0 },
+        GruvboxOrangeSign = { bg = colors.dark0 },
+        GruvboxYellowSign = { bg = colors.dark0 },
+        GruvboxGreenSign = { bg = colors.dark0 },
+        GruvboxAquaSign = { bg = colors.dark0 },
+        GruvboxBlueSign = { bg = colors.dark0 },
+        GruvboxPurpleSign = { bg = colors.dark0 },
         -- MiniFiles
         MiniFilesTitle = { fg = colors.light1, bg = colors.dark0_hard },
         MiniFilesTitleFocused = { fg = colors.neutral_green, bg = colors.dark0_hard },
