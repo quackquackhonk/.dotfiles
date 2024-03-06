@@ -16,11 +16,6 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ','
 
 local telescope = require 'telescope.builtin'
-local ivy_telescope = function(func)
-    local opt = require('telescope.themes').get_ivy {}
-    return function() func(opt) end
-end
-
 local close_buf = function()
     require('bufdelete').bufdelete(0, true)
 end
@@ -85,7 +80,6 @@ wk.register({
     g = {
         name = "+git",
         g = { cmd("Neogit"), "Git Status" },
-        b = { ivy_telescope(telescope.git_branches), "Show Branches" },
     },
     d = {
         name = "+debugging",
@@ -126,7 +120,7 @@ wk.register({
             t = { cmd("so ~/.dotfiles/nvim/lua/theme.lua"), "Source theme file" },
         },
         c = { cmd("tabnew | e ~/.config/nvim/init.lua | tcd ~/.dotfiles/"), "Open Config" },
-        n = { cmd("tabnew | e ~/Dropbox/index.norg | tcd ~/Dropbox/"), "Open Notes" },
+        n = { cmd("tabnew | e ~/notes/index.norg | tcd ~/notes/"), "Open Notes" },
         m = {
             name = "notifications",
             d = { cmd("NoiceDismiss"), "Dismiss notifications" },
@@ -137,7 +131,7 @@ wk.register({
     y = { cmd("Telescope neoclip"), "Open Neoclip" },
     [","] = { "<c-6>", "Open Previous Buffer" },
     ["<Tab>"] = { "<C-w>W", "Open Previous Buffer" },
-    ["<Leader>"] = { ivy_telescope(telescope.buffers), "Show Open Buffers" },
+    ["<Leader>"] = { cmd("Telescope buffers"), "Show Open Buffers" },
 }, { prefix = "<Leader>" })
 
 -- keymap('n', "<F6>", require("maximize").toggle)
@@ -149,14 +143,14 @@ keymap('i', "<C-q>", ":close<CR>")
 keymap('n', "<C-q>", ":close<CR>")
 
 -- C-arrows to move between windows
-keymap('n', "<C-Left>", cmd('NavigatorLeft'))
-keymap('i', "<C-Left>", cmd('NavigatorLeft'))
-keymap('n', "<C-Down>", cmd('NavigatorDown'))
-keymap('i', "<C-Down>", cmd('NavigatorDown'))
-keymap('n', "<C-Up>", cmd('NavigatorUp'))
-keymap('i', "<C-Up>", cmd('NavigatorUp'))
-keymap('n', "<C-Right>", cmd('NavigatorRight'))
-keymap('i', "<C-Right>", cmd('NavigatorRight'))
+keymap('n', "<A-Left>", cmd('NavigatorLeft'))
+keymap('i', "<A-Left>", cmd('NavigatorLeft'))
+keymap('n', "<A-Down>", cmd('NavigatorDown'))
+keymap('i', "<A-Down>", cmd('NavigatorDown'))
+keymap('n', "<A-Up>", cmd('NavigatorUp'))
+keymap('i', "<A-Up>", cmd('NavigatorUp'))
+keymap('n', "<A-Right>", cmd('NavigatorRight'))
+keymap('i', "<A-Right>", cmd('NavigatorRight'))
 
 -- visual mode leader key bindings
 wk.register({

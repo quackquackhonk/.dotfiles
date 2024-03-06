@@ -11,6 +11,7 @@ return {
                         "--color=never",
                         "--no-heading",
                         "--with-filename",
+                        "--follow",
                         "--line-number",
                         "--column",
                         "--smart-case",
