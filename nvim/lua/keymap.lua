@@ -35,7 +35,7 @@ wk.register({
         g = { cmd("Telescope git_files"), "Git Files" },
         r = { cmd("Telescope frecency"), "Recent Files" },
         s = { cmd("Telescope live_grep"), "Live Grep" },
-        p = { cmd("tabnew | Telescope project"), "Find Project" }
+        p = { cmd("tabnew | Telescope project"), "Find Project" },
     },
     e = {
         name = "+editor",
@@ -94,10 +94,8 @@ wk.register({
     },
     o = {
         name = "+open",
-        p = { cmd("lua MiniFiles.open()"), "Open project directory" },
-        f = { cmd("lua MiniFiles.open(vim.api.nvim_buf_get_name(0), false)"), "Open current file directory" },
+        f = { cmd("Oil"), "Filebrowser" },
         d = { cmd("TroubleToggle"), "Diagnostics" },
-        s = { cmd("SymbolsOutline"), "Symbol Outline" },
         t = { cmd("TodoTelescope keywords=TODO,FIX,FIXME"), "Show project TODOs" },
         o = { cmd("tabnew"), "Open tab" }
     },

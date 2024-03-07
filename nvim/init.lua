@@ -17,7 +17,6 @@ vim.opt.rtp:prepend(lazypath)
 
 -- TODO: Define color palette in a single place
 
-
 require("lazy").setup("plugins")
 require("options")
 require("lsp")
