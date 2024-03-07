@@ -1,5 +1,37 @@
 return {
     {
+        'stevearc/oil.nvim',
+        opts = {
+            columns = {
+                "icon",
+                "permissions",
+                "size",
+                "mtime",
+            },
+            use_default_keymaps = true,
+            keymaps = {
+                ["g?"] = "actions.show_help",
+                ["<CR>"] = "actions.select",
+                ["<C-CR>"] = "actions.select_vsplit",
+                ["<S-CR>"] = "actions.select_split",
+                ["<C-t>"] = "actions.select_tab",
+                ["<C-p>"] = "actions.preview",
+                ["q"] = "actions.close",
+                ["<C-l>"] = "actions.refresh",
+                ["<BS>"] = "actions.parent",
+                ["_"] = "actions.open_cwd",
+                ["`"] = "actions.cd",
+                ["~"] = "actions.tcd",
+                ["gs"] = "actions.change_sort",
+                ["gx"] = "actions.open_external",
+                ["g."] = "actions.toggle_hidden",
+                ["g\\"] = "actions.toggle_trash",
+            },
+        },
+        -- Optional dependencies
+        dependencies = { "nvim-tree/nvim-web-devicons" },
+    },
+    {
         "utilyre/barbecue.nvim",
         name = "barbecue",
         version = "*",
