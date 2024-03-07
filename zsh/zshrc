@@ -133,9 +133,3 @@ else
 fi
 unset __conda_setup
 # <<< conda initialize <<<
-
-if [[ "$HOST" == "LVV3TW207K" ]]; then
-    . /Users/i34866/opt/git/spack/share/spack/setup-env.sh  *
-else
-    . /storage/shared/spack/git/spack/share/spack/setup-env.sh *
-fi
