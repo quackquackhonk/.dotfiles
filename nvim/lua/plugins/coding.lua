@@ -8,7 +8,10 @@ return {
             "nvim-telescope/telescope.nvim", -- optional
         },
         opts = {
-            kind = "split_above"
+            kind = "split_above",
+            commit_editor = {
+                kind = "replace",
+            },
         }
     },
     {
@@ -21,15 +24,17 @@ return {
         }
     },
     {
-        'Shatur/neovim-tasks',
-        dependencies = {
-            'nvim-lua/plenary.nvim',
-            'mfussenegger/nvim-dap',
-        },
+        'stevearc/overseer.nvim',
         config = function()
-            local Path = require('plenary.path')
-            require('tasks').setup({})
-        end,
+            local overseer = require('overseer')
+            overseer.setup({
+                task_list = {
+                    default_detail = 1,
+                    direction = "right",
+                },
+                templates = { "builtin" },
+            })
+        end
     },
     {
         'nvim-treesitter/nvim-treesitter',
