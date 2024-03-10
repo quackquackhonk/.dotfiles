@@ -24,6 +24,22 @@ local rename_tab = function(input_str)
     vim.cmd("TabRename " .. input_str)
 end
 
+
+local overseer = require('overseer')
+vim.api.nvim_create_user_command("OverseerRestartOrRun", function()
+    local tasks = overseer.list_tasks({ recent_first = true })
+    if vim.tbl_isempty(tasks) then
+        overseer.run_template({}, function(task)
+            if task then
+                overseer.run_action(task, 'open tab')
+            end
+        end)
+    else
+        overseer.run_action(tasks[1], "restart")
+        overseer.run_action(tasks[1], "open tab")
+    end
+end, {})
+
 -- Leader key mappings with Which-Key
 local dap = require 'dap'
 wk.register({
@@ -53,7 +69,8 @@ wk.register({
     c = {
         name = "+code",
         v = { require('swenv.api').pick_venv, "Pick Virtual Environment" },
-        c = { cmd("Neogen"), "Generate Comment" },
+        m = { cmd("Neogen"), "Generate Comment" },
+        c = { cmd("OverseerRestartOrRun"), "Run a command"},
         t = {
             name = "+testing",
             r = { require('neotest').run.run, "Run nearest test" },
@@ -97,7 +114,7 @@ wk.register({
         f = { cmd("Oil"), "Filebrowser" },
         d = { cmd("TroubleToggle"), "Diagnostics" },
         t = { cmd("TodoTelescope keywords=TODO,FIX,FIXME"), "Show project TODOs" },
-        o = { cmd("tabnew"), "Open tab" }
+        o = { cmd("OverseerToggle"), "Open Overseer window" }
     },
     w = {
         name = "window",
