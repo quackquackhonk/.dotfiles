@@ -23,6 +23,7 @@ local options = {
     shiftwidth = 4,
     expandtab = true,
     incsearch = true,
+    formatexpr = "v:lua.require'conform'.formatexpr()"
 }
 
 for k, v in pairs(options) do

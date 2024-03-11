@@ -15,7 +15,10 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
--- TODO: Define color palette in a single place
+-- set up leader key
+vim.keymap.set("", "<Space>", "<Nop>", { noremap = true, silent = true})
+vim.g.mapleader = ' '
+vim.g.maplocalleader = ','
 
 require("lazy").setup("plugins")
 require("options")

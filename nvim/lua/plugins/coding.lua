@@ -25,16 +25,31 @@ return {
     },
     {
         'stevearc/overseer.nvim',
-        config = function()
-            local overseer = require('overseer')
-            overseer.setup({
-                task_list = {
-                    default_detail = 1,
-                    direction = "right",
-                },
-                templates = { "builtin" },
-            })
-        end
+        opts = {
+            task_list = {
+                default_detail = 1,
+                direction = "right",
+            },
+            templates = { "builtin" },
+        }
+    },
+    {
+        'stevearc/aerial.nvim',
+        dependencies = {
+            "nvim-treesitter/nvim-treesitter",
+            "nvim-tree/nvim-web-devicons"
+        },
+        opts = {
+            layout = {
+                width = 0.2,
+            },
+            -- optionally use on_attach to set keymaps when aerial has attached to a buffer
+            on_attach = function(bufnr)
+                -- Jump forwards/backwards with '{' and '}'
+                vim.keymap.set("n", "{", "<cmd>AerialPrev<CR>", { buffer = bufnr })
+                vim.keymap.set("n", "}", "<cmd>AerialNext<CR>", { buffer = bufnr })
+            end,
+        }
     },
     {
         'nvim-treesitter/nvim-treesitter',
@@ -110,6 +125,18 @@ return {
                 }
             })
         end
+    },
+    {
+        'stevearc/conform.nvim',
+        opts = {
+            formatters_by_ft = {
+                lua = { "stylua" },
+                python = { "black" },
+                rust = { "rustfmt" },
+                c = { "clang_format" },
+                cpp = { "clang_format" },
+            },
+        },
     },
     -- language specific plugins
     {

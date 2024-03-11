@@ -3,35 +3,29 @@ local function keymap(mode, lhs, rhs)
     vim.keymap.set(mode, lhs, rhs, options)
 end
 
-local wk = require('which-key')
-local hydra = require('hydra')
-local splits = require('smart-splits')
-local cmd = require('hydra.keymap-util').cmd
-local pcmd = require('hydra.keymap-util').pcmd
-local persistence = require('persistence')
+local wk = require("which-key")
+local hydra = require("hydra")
+local splits = require("smart-splits")
+local cmd = require("hydra.keymap-util").cmd
+local pcmd = require("hydra.keymap-util").pcmd
+local persistence = require("persistence")
 
--- set up leader key
-keymap("", "<Space>", "<Nop>")
-vim.g.mapleader = ' '
-vim.g.maplocalleader = ','
-
-local telescope = require 'telescope.builtin'
+local telescope = require("telescope.builtin")
 local close_buf = function()
-    require('bufdelete').bufdelete(0, true)
+    require("bufdelete").bufdelete(0, true)
 end
 
 local rename_tab = function(input_str)
     vim.cmd("TabRename " .. input_str)
 end
 
-
-local overseer = require('overseer')
+local overseer = require("overseer")
 vim.api.nvim_create_user_command("OverseerRestartOrRun", function()
     local tasks = overseer.list_tasks({ recent_first = true })
     if vim.tbl_isempty(tasks) then
         overseer.run_template({}, function(task)
             if task then
-                overseer.run_action(task, 'open tab')
+                overseer.run_action(task, "open tab")
             end
         end)
     else
@@ -41,7 +35,7 @@ vim.api.nvim_create_user_command("OverseerRestartOrRun", function()
 end, {})
 
 -- Leader key mappings with Which-Key
-local dap = require 'dap'
+local dap = require("dap")
 wk.register({
     q = { close_buf, "Close Buffer" },
     Q = { cmd("bd"), "Close Buffer AND Window" },
@@ -55,34 +49,44 @@ wk.register({
     },
     e = {
         name = "+editor",
-        f = { vim.lsp.buf.format, "format file" },
+        f = { require("conform").format, "format file" },
         g = { cmd("tcd %:h | tcd `git rev-parse --show-toplevel`"), "CD to current git repo" },
         h = { cmd("noh"), "Hide Highlighting" },
         t = {
             name = "toggle",
-            r = { cmd("set rnu!"), "relative numbers" }
+            r = { cmd("set rnu!"), "relative numbers" },
         },
-        s = { cmd("ISwap"), "Swap arguments"},
+        s = { cmd("ISwap"), "Swap arguments" },
         u = { cmd("!dos2unix %"), "Dos2Unix current file" },
         y = { '"+y', "Copy to system clipboard" },
     },
     c = {
         name = "+code",
-        v = { require('swenv.api').pick_venv, "Pick Virtual Environment" },
+        v = { require("swenv.api").pick_venv, "Pick Virtual Environment" },
         m = { cmd("Neogen"), "Generate Comment" },
-        c = { cmd("OverseerRestartOrRun"), "Run a command"},
+        c = { cmd("OverseerRestartOrRun"), "Run a command" },
         t = {
             name = "+testing",
-            r = { require('neotest').run.run, "Run nearest test" },
-            f = { function() require('neotest').run.run(vim.fn.expand("%")) end, "Run tests in file" },
-            o = { require('neotest').output.open, "Open test output" },
-            O = { require('neotest').output_panel.toggle, "Toggle output panel" }
+            r = { require("neotest").run.run, "Run nearest test" },
+            f = {
+                function()
+                    require("neotest").run.run(vim.fn.expand("%"))
+                end,
+                "Run tests in file",
+            },
+            o = { require("neotest").output.open, "Open test output" },
+            O = { require("neotest").output_panel.toggle, "Toggle output panel" },
         },
     },
     t = {
         name = "tab",
         n = { cmd("tabnew"), "New Tab" },
-        r = { function() vim.ui.input({ prompt = "Rename tab to..." }, rename_tab) end, "Rename current tab" },
+        r = {
+            function()
+                vim.ui.input({ prompt = "Rename tab to..." }, rename_tab)
+            end,
+            "Rename current tab",
+        },
     },
     l = {
         name = "+LSP",
@@ -113,8 +117,9 @@ wk.register({
         name = "+open",
         f = { cmd("Oil"), "Filebrowser" },
         d = { cmd("TroubleToggle"), "Diagnostics" },
+        s = { cmd("AerialToggle!"), "Symbol outline" },
         t = { cmd("TodoTelescope keywords=TODO,FIX,FIXME"), "Show project TODOs" },
-        o = { cmd("OverseerToggle"), "Open Overseer window" }
+        o = { cmd("OverseerToggle"), "Open Overseer window" },
     },
     w = {
         name = "window",
@@ -141,7 +146,7 @@ wk.register({
             d = { cmd("NoiceDismiss"), "Dismiss notifications" },
             ["<Leader>"] = { cmd("Noice"), "Show message history" },
             e = { cmd("NoiceErrors"), "Show errors" },
-        }
+        },
     },
     y = { cmd("Telescope neoclip"), "Open Neoclip" },
     [","] = { "<c-6>", "Open Previous Buffer" },
@@ -151,21 +156,21 @@ wk.register({
 
 -- keymap('n', "<F6>", require("maximize").toggle)
 -- keymap('i', "<F6>", require("maximize").toggle)
-keymap('i', "<C-s>", "<Esc>")
-keymap('n', "[t", ":tabprev<CR>")
-keymap('n', "]t", ":tabnext<CR>")
-keymap('i', "<C-q>", ":close<CR>")
-keymap('n', "<C-q>", ":close<CR>")
+keymap("i", "<C-s>", "<Esc>")
+keymap("n", "[t", ":tabprev<CR>")
+keymap("n", "]t", ":tabnext<CR>")
+keymap("i", "<C-q>", ":close<CR>")
+keymap("n", "<C-q>", ":close<CR>")
 
 -- C-arrows to move between windows
-keymap('n', "<A-Left>", cmd('NavigatorLeft'))
-keymap('i', "<A-Left>", cmd('NavigatorLeft'))
-keymap('n', "<A-Down>", cmd('NavigatorDown'))
-keymap('i', "<A-Down>", cmd('NavigatorDown'))
-keymap('n', "<A-Up>", cmd('NavigatorUp'))
-keymap('i', "<A-Up>", cmd('NavigatorUp'))
-keymap('n', "<A-Right>", cmd('NavigatorRight'))
-keymap('i', "<A-Right>", cmd('NavigatorRight'))
+keymap("n", "<A-Left>", cmd("NavigatorLeft"))
+keymap("i", "<A-Left>", cmd("NavigatorLeft"))
+keymap("n", "<A-Down>", cmd("NavigatorDown"))
+keymap("i", "<A-Down>", cmd("NavigatorDown"))
+keymap("n", "<A-Up>", cmd("NavigatorUp"))
+keymap("i", "<A-Up>", cmd("NavigatorUp"))
+keymap("n", "<A-Right>", cmd("NavigatorRight"))
+keymap("i", "<A-Right>", cmd("NavigatorRight"))
 
 -- visual mode leader key bindings
 wk.register({
@@ -176,49 +181,68 @@ wk.register({
 -- HYDRA keymappings
 -- Window move/resize hydra
 hydra({
-    name = 'Windows',
+    name = "Windows",
     hint = false,
     config = {
         invoke_on_body = false,
         hint = false,
     },
     timeout = true,
-    mode = 'n',
-    body = '<C-w>',
+    mode = "n",
+    body = "<C-w>",
     heads = {
-        { '<S-Left>',  cmd 'WinShift left' },
-        { '<S-Down>',  cmd 'WinShift down' },
-        { '<S-Up>',    cmd 'WinShift up' },
-        { '<S-Right>', cmd 'WinShift right' },
+        { "<S-Left>", cmd("WinShift left") },
+        { "<S-Down>", cmd("WinShift down") },
+        { "<S-Up>", cmd("WinShift up") },
+        { "<S-Right>", cmd("WinShift right") },
 
-        { 'm',         cmd('MaximizerToggle') },
+        { "m", cmd("MaximizerToggle") },
 
-        { '<Left>',  function() splits.resize_left(2) end },
-        { '<Down>',  function() splits.resize_down(2) end },
-        { '<Up>',    function() splits.resize_up(2) end },
-        { '<Right>', function() splits.resize_right(2) end },
-        { '=',         '<C-w>=',                             { desc = 'equalize' } },
-        { '<Esc>',     nil,                                  { exit = true, desc = false } }
-    }
+        {
+            "<Left>",
+            function()
+                splits.resize_left(2)
+            end,
+        },
+        {
+            "<Down>",
+            function()
+                splits.resize_down(2)
+            end,
+        },
+        {
+            "<Up>",
+            function()
+                splits.resize_up(2)
+            end,
+        },
+        {
+            "<Right>",
+            function()
+                splits.resize_right(2)
+            end,
+        },
+        { "=", "<C-w>=", { desc = "equalize" } },
+        { "<Esc>", nil, { exit = true, desc = false } },
+    },
 })
 
 -- Keybindings for HOP
 -- place this in one of your configuration file(s)
-local hop = require('hop')
-local directions = require('hop.hint').HintDirection
-vim.keymap.set('', 'f', function()
+local hop = require("hop")
+local directions = require("hop.hint").HintDirection
+vim.keymap.set("", "f", function()
     hop.hint_char1({ direction = directions.AFTER_CURSOR, current_line_only = true })
-end, {remap=true})
-vim.keymap.set('', 'F', function()
+end, { remap = true })
+vim.keymap.set("", "F", function()
     hop.hint_char1({ direction = directions.BEFORE_CURSOR, current_line_only = true })
-end, {remap=true})
-vim.keymap.set('', 't', function()
+end, { remap = true })
+vim.keymap.set("", "t", function()
     hop.hint_char1({ direction = directions.AFTER_CURSOR, current_line_only = true, hint_offset = -1 })
-end, {remap=true})
-vim.keymap.set('', 'T', function()
+end, { remap = true })
+vim.keymap.set("", "T", function()
     hop.hint_char1({ direction = directions.BEFORE_CURSOR, current_line_only = true, hint_offset = 1 })
-end, {remap=true})
-
+end, { remap = true })
 
 -- DIAL keybindings
 vim.api.nvim_set_keymap("n", "<C-a>", require("dial.map").inc_normal(), { noremap = true })
@@ -227,9 +251,9 @@ vim.api.nvim_set_keymap("n", "<C-x>", require("dial.map").dec_normal(), { norema
 vim.api.nvim_set_keymap("v", "<C-x>", require("dial.map").dec_normal(), { noremap = true })
 vim.api.nvim_set_keymap("v", "g<C-a>", require("dial.map").inc_gvisual(), { noremap = true })
 vim.api.nvim_set_keymap("v", "g<C-x>", require("dial.map").dec_gvisual(), { noremap = true })
-keymap({"n", "v"}, "<Return>", cmd("HopChar2"))
+keymap({ "n", "v" }, "<Return>", cmd("HopChar2"))
 
 -- Visual Mode
 -- Stay in visual mode when indenting
-keymap('v', '<', '<gv')
-keymap('v', '>', '>gv')
+keymap("v", "<", "<gv")
+keymap("v", ">", ">gv")
