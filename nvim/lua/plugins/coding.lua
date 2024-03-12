@@ -8,10 +8,7 @@ return {
             "nvim-telescope/telescope.nvim", -- optional
         },
         opts = {
-            kind = "split_above",
-            commit_editor = {
-                kind = "replace",
-            },
+            kind = "tab",
         }
     },
     {
