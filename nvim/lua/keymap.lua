@@ -30,7 +30,6 @@ vim.api.nvim_create_user_command("OverseerRestartOrRun", function()
         end)
     else
         overseer.run_action(tasks[1], "restart")
-        overseer.run_action(tasks[1], "open tab")
     end
 end, {})
 
@@ -98,10 +97,7 @@ wk.register({
         r = "Show References",
         c = "Change Symbol",
     },
-    g = {
-        name = "+git",
-        g = { cmd("Neogit"), "Git Status" },
-    },
+    g = { cmd("Neogit"), "Git Status" },
     d = {
         name = "+debugging",
         b = { dap.toggle_breakpoint, "Toggle Breakpoint" },
@@ -140,8 +136,8 @@ wk.register({
             t = { cmd("so ~/.dotfiles/nvim/lua/theme.lua"), "Source theme file" },
         },
         c = { cmd("tabnew | e ~/.config/nvim/init.lua | tcd ~/.dotfiles/"), "Open Config" },
-        n = { cmd("tabnew | e ~/notes/index.norg | tcd ~/notes/"), "Open Notes" },
-        m = {
+        o = { cmd("tabnew | e ~/notes/index.norg | tcd ~/notes/"), "Open Notes" },
+        n = {
             name = "notifications",
             d = { cmd("NoiceDismiss"), "Dismiss notifications" },
             ["<Leader>"] = { cmd("Noice"), "Show message history" },
@@ -150,7 +146,7 @@ wk.register({
     },
     y = { cmd("Telescope neoclip"), "Open Neoclip" },
     [","] = { "<c-6>", "Open Previous Buffer" },
-    ["<Tab>"] = { "<C-w>W", "Open Previous Buffer" },
+    ["<Tab>"] = { "<C-w>W", "Focus previous split" },
     ["<Leader>"] = { cmd("Telescope buffers"), "Show Open Buffers" },
 }, { prefix = "<Leader>" })
 

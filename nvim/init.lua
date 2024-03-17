@@ -18,7 +18,7 @@ vim.opt.rtp:prepend(lazypath)
 -- set up leader key
 vim.keymap.set("", "<Space>", "<Nop>", { noremap = true, silent = true})
 vim.g.mapleader = ' '
-vim.g.maplocalleader = ','
+vim.g.maplocalleader = '_'
 
 require("lazy").setup("plugins")
 require("options")
