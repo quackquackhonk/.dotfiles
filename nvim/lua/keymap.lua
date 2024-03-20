@@ -42,6 +42,7 @@ wk.register({
         name = "+find",
         f = { cmd("Telescope find_files"), "Find Files" },
         g = { cmd("Telescope git_files"), "Git Files" },
+        a = { cmd("Telescope aerial"), "Symbol in file" },
         r = { cmd("Telescope frecency"), "Recent Files" },
         s = { cmd("Telescope live_grep"), "Live Grep" },
         p = { cmd("tabnew | Telescope project"), "Find Project" },
@@ -87,6 +88,7 @@ wk.register({
             "Rename current tab",
         },
     },
+    -- TODO: go to the default keybindings
     l = {
         name = "+LSP",
         l = "Show Documentation",
@@ -113,7 +115,6 @@ wk.register({
         name = "+open",
         f = { cmd("Oil"), "Filebrowser" },
         d = { cmd("TroubleToggle"), "Diagnostics" },
-        s = { cmd("AerialToggle!"), "Symbol outline" },
         t = { cmd("TodoTelescope keywords=TODO,FIX,FIXME"), "Show project TODOs" },
         o = { cmd("OverseerToggle"), "Open Overseer window" },
     },
