@@ -108,8 +108,6 @@ wk.register({
         o = { dap.step_over, "Step Over" },
         i = { dap.step_into, "Step Into" },
         ["<Leader>"] = { vim.diagnostic.open_float, "Show diagnostic" },
-        n = { vim.diagnostic.goto_next, "Next Diagnostic" },
-        N = { vim.diagnostic.goto_prev, "Previous Diagnostic" },
     },
     o = {
         name = "+open",
