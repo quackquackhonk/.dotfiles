@@ -27,6 +27,16 @@ local p = {
 	crust = "#11111b",
 }
 
+local colors = require("catppuccin.palettes").get_palette("mocha")
+
+colors.white = colors.text
+colors.black = colors.mantle
+colors.gray = colors.overlay1
+colors.grey = colors.gray
+colors.purple = colors.mauve
+colors.aqua = colors.teal
+colors.orange = colors.peach
+
 require("catppuccin").setup({
 	flavour = "mocha",
 	show_end_of_buffer = true,
@@ -35,12 +45,52 @@ require("catppuccin").setup({
 	custom_highlights = function(colors)
 		return {
 			TabLine = { bg = colors.mantle },
+
+			-- completion menu
+			PmenuSel = { bg = colors.surface2, fg = "NONE" },
+			Pmenu = { fg = colors.white, bg = colors.black },
+
+			CmpItemAbbrDeprecated = { fg = colors.grey, bg = "NONE", strikethrough = false },
+			CmpItemAbbrMatch = { fg = colors.sapphire, bg = "NONE", bold = true },
+			CmpItemAbbrMatchFuzzy = { fg = colors.sapphire, bg = "NONE", bold = true },
+			CmpItemMenu = { fg = colors.pink, bg = "NONE", italic = false },
+
+			CmpItemKindField = { fg = colors.base, bg = colors.red },
+			CmpItemKindProperty = { fg = colors.base, bg = colors.red },
+			CmpItemKindEvent = { fg = colors.base, bg = colors.red },
+
+			CmpItemKindText = { fg = colors.base, bg = colors.green },
+			CmpItemKindEnum = { fg = colors.base, bg = colors.green },
+			CmpItemKindKeyword = { fg = colors.base, bg = colors.green },
+
+			CmpItemKindConstant = { fg = colors.base, bg = colors.yellow },
+			CmpItemKindConstructor = { fg = colors.base, bg = colors.yellow },
+			CmpItemKindReference = { fg = colors.base, bg = colors.yellow },
+
+			CmpItemKindFunction = { fg = colors.base, bg = colors.purple },
+			CmpItemKindStruct = { fg = colors.base, bg = colors.purple },
+			CmpItemKindClass = { fg = colors.base, bg = colors.purple },
+			CmpItemKindModule = { fg = colors.base, bg = colors.purple },
+			CmpItemKindOperator = { fg = colors.base, bg = colors.purple },
+
+			CmpItemKindVariable = { fg = colors.base, bg = colors.gray },
+			CmpItemKindFile = { fg = colors.base, bg = colors.gray },
+
+			CmpItemKindUnit = { fg = colors.base, bg = colors.orange },
+			CmpItemKindSnippet = { fg = colors.base, bg = colors.orange },
+			CmpItemKindFolder = { fg = colors.base, bg = colors.orange },
+
+			CmpItemKindMethod = { fg = colors.base, bg = colors.blue },
+			CmpItemKindValue = { fg = colors.base, bg = colors.blue },
+			CmpItemKindEnumMember = { fg = colors.base, bg = colors.blue },
+
+			CmpItemKindInterface = { fg = colors.base, bg = colors.aqua },
+			CmpItemKindColor = { fg = colors.base, bg = colors.aqua },
+			CmpItemKindTypeParameter = { fg = colors.base, bg = colors.aqua },
 		}
 	end,
 })
 vim.cmd("colorscheme catppuccin-mocha")
-
-local colors = require("catppuccin.palettes").get_palette("mocha")
 
 require("lualine").setup({
 	options = {
