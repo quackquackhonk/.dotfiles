@@ -88,17 +88,6 @@ wk.register({
             "Rename current tab",
         },
     },
-    -- TODO: go to the default keybindings
-    l = {
-        name = "+LSP",
-        l = "Show Documentation",
-        d = "Go To Definition",
-        D = "Go To Declaration",
-        t = "Go To Type Definition",
-        i = "Go To Implementation",
-        r = "Show References",
-        c = "Change Symbol",
-    },
     g = { cmd("Neogit"), "Git Status" },
     d = {
         name = "+debugging",

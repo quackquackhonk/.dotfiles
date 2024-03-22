@@ -62,15 +62,18 @@ local custom_on_attach = function(client, bufnr)
         virtual_text = true,
         float = false,
     })
-    vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
-    vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, bufopts)
-    vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
-    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
-    vim.keymap.set('n', 'gt', vim.lsp.buf.type_definition, bufopts)
-    vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
-    vim.keymap.set('n', 'gr', vim.lsp.buf.rename, bufopts)
-    vim.keymap.set('n', 'gR', '<cmd>Telescope lsp_references<cr>', bufopts)
-    vim.keymap.set('n', 'g<Leader>', vim.lsp.buf.code_action, bufopts)
+
+    local wk = require("which-key")
+    wk.register({
+        g = {
+            D = { vim.lsp.buf.declaration, "Goto declaration", buffer = bufnr},
+            d = { vim.lsp.buf.definition, "Goto definition", buffer = bufnr},
+            i = { vim.lsp.buf.implementation, "Goto implementations", buffer = bufnr},
+            r = { vim.lsp.buf.rename, "Rename symbol", buffer = bufnr },
+            R = { '<cmd>Telescope lsp_references<cr>', buffer = bufnr },
+            ["<Leader>"] = { vim.lsp.buf.rename, "Code actions", buffer = bufnr }
+        }
+    })
 end
 
 -- use this for null ls formatting
