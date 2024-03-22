@@ -1,137 +1,160 @@
-format = """
-[](red)\
-$username\
-$hostname\
-[](fg:red bg:orange)\
-$directory\
-[](fg:orange bg:yellow)\
-$aws\
-[](fg:yellow bg:cyan)\
-$git_branch\
-$git_status\
-[](fg:cyan bg:blue)\
-$cmake\
-$java\
-$nodejs\
-$rust\
-[](fg:blue bg:purple)\
-$conda\
-$spack\
-[](fg:purple)\
-$newline
-$status\
-$character
-"""
-
-command_timeout = 1500
-
-palette = 'gruvbox'
-
-# Define custom colors
-[palettes.gruvbox]
-black = '#282828'
-gray = '#928374'
-red = '#cc241d'
-bright-red = '#fb4934'
-green = '#98971a'
-bright-green = '#b8bb26'
-yellow = '#d79921'
-bright-yellow = '#fabd2f'
-blue = '#458588'
-bright-blue = '#83a598'
-purple = '#b16286'
-bright-purple = '#d3869b'
-cyan = '#689d6a'
-bright-cyan = '#8ec07c'
-white = '#a89984'
-bright-white = '#ebdbb2'
-orange = '#d65d0e'
-bright-orange = '#fe8019'
-
-# Disable the blank line at the start of the prompt
-# add_newline = false
-
-# You can also replace your username with a neat symbol like   or disable this
-# and use the os module below
 [aws]
-disabled = false
-force_display = true
-format = '[ ($profile )(\($region\) ) ]($style)'
-style = 'bg:yellow'
+symbol = "  "
 
-[username]
-show_always = true
-style_user = "bg:red"
-style_root = "bg:red"
-format = '[ $user ]($style)'
-disabled = false
+[buf]
+symbol = " "
 
-[hostname]
-ssh_only = false
-ssh_symbol='ssh:'
-format ='[@ $ssh_symbol$hostname ]($style)'
-style = "bg:red"
+[c]
+symbol = " "
+
+[conda]
+symbol = " "
+
+[crystal]
+symbol = " "
+
+[dart]
+symbol = " "
 
 [directory]
-style = "bg:orange"
-format = "[ $path ]($style)"
-fish_style_pwd_dir_length = 3
-truncation_length = 3
-truncate_to_repo = false
-truncation_symbol = "…/"
-
-# Here is how you can shorten some long paths by text replacement
-# similar to mapped_locations in Oh My Posh:
-[directory.substitutions]
-"Downloads" = " "
-"Music" = " "
-"Pictures" = " "
-# Keep in mind that the order matters. For example:
-# "Important Documents" = " 󰈙 "
-# will not be replaced, because "Documents" was already substituted before.
-# So either put "Important Documents" before "Documents" or use the substituted version:
-# "Important 󰈙 " = " 󰈙 "
+read_only = " 󰌾"
 
 [docker_context]
 symbol = " "
-style = "bg:purple"
-format = '[ $symbol $context $path ]($style)'
 
-[conda]
-style = "bg:purple"
-format = '[ $symbol $environment ]($style)'
+[elixir]
+symbol = " "
 
-[spack]
-style = "bg:purple"
-truncation_length = 2
-format = '[ $symbol $environment ]($style)'
+[elm]
+symbol = " "
 
+[fennel]
+symbol = " "
+
+[fossil_branch]
+symbol = " "
 
 [git_branch]
-symbol = ""
-style = "bg:cyan"
-truncation_length = 15
-format = '[ $symbol $branch ]($style)'
+symbol = " "
 
-[git_status]
-style = "bg:cyan"
-format = '[<$all_status$ahead_behind> ]($style)'
+[golang]
+symbol = " "
 
-[cmake]
-symbol = " "
-style = "bg:blue"
-format = '[ $symbol ($version) ]($style)'
+[guix_shell]
+symbol = " "
+
+[haskell]
+symbol = " "
+
+[haxe]
+symbol = " "
+
+[hg_branch]
+symbol = " "
+
+[hostname]
+ssh_symbol = " "
+
+[java]
+symbol = " "
+
+[julia]
+symbol = " "
+
+[kotlin]
+symbol = " "
+
+[lua]
+symbol = " "
+
+[memory_usage]
+symbol = "󰍛 "
+
+[meson]
+symbol = "󰔷 "
+
+[nim]
+symbol = "󰆥 "
+
+[nix_shell]
+symbol = " "
 
 [nodejs]
-symbol = ""
-style = "bg:blue"
-format = '[ $symbol ($version) ]($style)'
+symbol = " "
+
+[ocaml]
+symbol = " "
+
+[os.symbols]
+Alpaquita = " "
+Alpine = " "
+Amazon = " "
+Android = " "
+Arch = " "
+Artix = " "
+CentOS = " "
+Debian = " "
+DragonFly = " "
+Emscripten = " "
+EndeavourOS = " "
+Fedora = " "
+FreeBSD = " "
+Garuda = "󰛓 "
+Gentoo = " "
+HardenedBSD = "󰞌 "
+Illumos = "󰈸 "
+Linux = " "
+Mabox = " "
+Macos = " "
+Manjaro = " "
+Mariner = " "
+MidnightBSD = " "
+Mint = " "
+NetBSD = " "
+NixOS = " "
+OpenBSD = "󰈺 "
+openSUSE = " "
+OracleLinux = "󰌷 "
+Pop = " "
+Raspbian = " "
+Redhat = " "
+RedHatEnterprise = " "
+Redox = "󰀘 "
+Solus = "󰠳 "
+SUSE = " "
+Ubuntu = " "
+Unknown = " "
+Windows = "󰍲 "
+
+[package]
+symbol = "󰏗 "
+
+[perl]
+symbol = " "
+
+[php]
+symbol = " "
+
+[pijul_channel]
+symbol = " "
+
+[python]
+symbol = " "
+
+[rlang]
+symbol = "󰟔 "
+
+[ruby]
+symbol = " "
 
 [rust]
-symbol = ""
-style = "bg:blue"
-format = '[ $symbol ($version) ]($style)'
+symbol = " "
 
-[character]
-success_symbol = '[λ>](bold bright-green)'
-error_symbol = '[λ!](bold bright-red)'
+[scala]
+symbol = " "
+
+[swift]
+symbol = " "
+
+[zig]
+symbol = " "

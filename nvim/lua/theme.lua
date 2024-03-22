@@ -38,6 +38,8 @@ local colors = {
     gray = "#928374",
 }
 
+
+
 require("gruvbox").setup({
     undercurl = false,
     underline = false,
@@ -160,7 +162,8 @@ require("gruvbox").setup({
     }
 })
 vim.opt.termguicolors = true
-vim.cmd('colorscheme gruvbox')
+-- vim.cmd('colorscheme gruvbox')
+vim.cmd('colorscheme catppuccin-mocha')
 
 require("colorizer").setup()
 

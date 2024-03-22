@@ -106,7 +106,6 @@ export BAT_THEME="gruvbox-dark"
 #[ -f "/home/sahana/.ghcup/env" ] && source "/home/sahana/.ghcup/env" # ghcup-env
 [ -f "/home/sahana/.ghcup/env" ] && source "/home/sahana/.ghcup/env" # ghcup-env
 
-eval "$(starship init zsh)"
 
 # completion
 autoload bashcompinit && bashcompinit
@@ -133,3 +132,7 @@ else
 fi
 unset __conda_setup
 # <<< conda initialize <<<
+
+. /Users/i34866/opt/git/spack/share/spack/setup-env.sh *
+
+eval "$(starship init zsh)"
