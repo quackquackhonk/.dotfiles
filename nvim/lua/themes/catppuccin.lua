@@ -39,12 +39,17 @@ colors.orange = colors.peach
 
 require("catppuccin").setup({
 	flavour = "mocha",
+    background = {
+        light = "latte",
+        dark = "mocha",
+    },
 	show_end_of_buffer = true,
 	no_italic = true,
 	no_underline = true,
 	custom_highlights = function(colors)
 		return {
 			TabLine = { bg = colors.mantle },
+			TabLineFill = { bg = colors.mantle },
 
 			-- completion menu
 			PmenuSel = { bg = colors.mantle, fg = "NONE" },
@@ -135,7 +140,6 @@ local highlight = {
 	"RainbowRed",
 	"RainbowYellow",
 	"RainbowBlue",
-	"RainbowOrange",
 	"RainbowGreen",
 	"RainbowViolet",
 	"RainbowCyan",
@@ -147,7 +151,6 @@ hooks.register(hooks.type.HIGHLIGHT_SETUP, function()
 	vim.api.nvim_set_hl(0, "RainbowRed", { fg = colors.red })
 	vim.api.nvim_set_hl(0, "RainbowYellow", { fg = colors.yellow })
 	vim.api.nvim_set_hl(0, "RainbowBlue", { fg = colors.blue })
-	vim.api.nvim_set_hl(0, "RainbowOrange", { fg = colors.orange })
 	vim.api.nvim_set_hl(0, "RainbowGreen", { fg = colors.green })
 	vim.api.nvim_set_hl(0, "RainbowViolet", { fg = colors.purple })
 	vim.api.nvim_set_hl(0, "RainbowCyan", { fg = colors.aqua })

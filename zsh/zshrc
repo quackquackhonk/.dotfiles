@@ -133,6 +133,4 @@ fi
 unset __conda_setup
 # <<< conda initialize <<<
 
-. /Users/i34866/opt/git/spack/share/spack/setup-env.sh *
-
 eval "$(starship init zsh)"
