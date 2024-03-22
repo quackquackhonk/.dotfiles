@@ -30,7 +30,7 @@ local p = {
 local colors = require("catppuccin.palettes").get_palette("mocha")
 
 colors.white = colors.text
-colors.black = colors.mantle
+colors.black = colors.base
 colors.gray = colors.overlay1
 colors.grey = colors.gray
 colors.purple = colors.mauve
@@ -47,12 +47,12 @@ require("catppuccin").setup({
 			TabLine = { bg = colors.mantle },
 
 			-- completion menu
-			PmenuSel = { bg = colors.surface2, fg = "NONE" },
+			PmenuSel = { bg = colors.mantle, fg = "NONE" },
 			Pmenu = { fg = colors.white, bg = colors.black },
 
 			CmpItemAbbrDeprecated = { fg = colors.grey, bg = "NONE", strikethrough = false },
-			CmpItemAbbrMatch = { fg = colors.sapphire, bg = "NONE", bold = true },
-			CmpItemAbbrMatchFuzzy = { fg = colors.sapphire, bg = "NONE", bold = true },
+			CmpItemAbbrMatch = { fg = colors.sapphire, bg = "NONE", bold = false },
+			CmpItemAbbrMatchFuzzy = { fg = colors.sapphire, bg = "NONE", bold = false },
 			CmpItemMenu = { fg = colors.pink, bg = "NONE", italic = false },
 
 			CmpItemKindField = { fg = colors.base, bg = colors.red },
@@ -73,8 +73,8 @@ require("catppuccin").setup({
 			CmpItemKindModule = { fg = colors.base, bg = colors.purple },
 			CmpItemKindOperator = { fg = colors.base, bg = colors.purple },
 
-			CmpItemKindVariable = { fg = colors.base, bg = colors.gray },
-			CmpItemKindFile = { fg = colors.base, bg = colors.gray },
+			CmpItemKindVariable = { fg = colors.base, bg = colors.pink },
+			CmpItemKindFile = { fg = colors.base, bg = colors.pink },
 
 			CmpItemKindUnit = { fg = colors.base, bg = colors.orange },
 			CmpItemKindSnippet = { fg = colors.base, bg = colors.orange },
