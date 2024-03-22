@@ -308,3 +308,6 @@ local tabby = function()
     return presets
 end
 
+require("tabby").setup({
+	tabline = tabby(),
+})

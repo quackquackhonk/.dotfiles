@@ -41,6 +41,7 @@ return {
 		},
 		opts = {
 			-- configurations go here
+            theme = "catppuccin-mocha",
 		},
 	},
 	{
