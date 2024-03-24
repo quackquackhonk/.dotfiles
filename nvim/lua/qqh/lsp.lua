@@ -1,43 +1,4 @@
 -- Configuration for LSP / Treesitter / Completion
-
-local colors = {
-    dark0_hard = "#1d2021",
-    dark0 = "#282828",
-    dark0_soft = "#32302f",
-    dark1 = "#3c3836",
-    dark2 = "#504945",
-    dark3 = "#665c54",
-    dark4 = "#7c6f64",
-    light0_hard = "#f9f5d7",
-    light0 = "#fbf1c7",
-    light0_soft = "#f2e5bc",
-    light1 = "#ebdbb2",
-    light2 = "#d5c4a1",
-    light3 = "#bdae93",
-    light4 = "#a89984",
-    bright_red = "#fb4934",
-    bright_green = "#b8bb26",
-    bright_yellow = "#fabd2f",
-    bright_blue = "#83a598",
-    bright_purple = "#d3869b",
-    bright_aqua = "#8ec07c",
-    bright_orange = "#fe8019",
-    neutral_red = "#cc241d",
-    neutral_green = "#98971a",
-    neutral_yellow = "#d79921",
-    neutral_blue = "#458588",
-    neutral_purple = "#b16286",
-    neutral_aqua = "#689d6a",
-    neutral_orange = "#d65d0e",
-    faded_red = "#9d0006",
-    faded_green = "#79740e",
-    faded_yellow = "#b57614",
-    faded_blue = "#076678",
-    faded_purple = "#8f3f71",
-    faded_aqua = "#427b58",
-    faded_orange = "#af3a03",
-    gray = "#928374",
-}
 -- Setup lspconfig.
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
@@ -65,26 +26,19 @@ local custom_on_attach = function(client, bufnr)
 
     local wk = require("which-key")
     wk.register({
+        K = { vim.lsp.buf.hover, "Hover", buffer = bufnr },
+        ["<C-k>"] = { vim.lsp.buf.signature_help, "Signature Help", buffer = bufnr},
         g = {
             D = { vim.lsp.buf.declaration, "Goto declaration", buffer = bufnr},
             d = { vim.lsp.buf.definition, "Goto definition", buffer = bufnr},
             i = { vim.lsp.buf.implementation, "Goto implementations", buffer = bufnr},
             r = { vim.lsp.buf.rename, "Rename symbol", buffer = bufnr },
             R = { '<cmd>Telescope lsp_references<cr>', buffer = bufnr },
-            ["<Leader>"] = { vim.lsp.buf.rename, "Code actions", buffer = bufnr }
+            ["<Leader>"] = { vim.lsp.buf.code_action, "Code actions", buffer = bufnr }
         }
     })
 end
 
--- use this for null ls formatting
-local null_ls = require("null-ls")
-null_ls.setup({
-    on_attach = custom_on_attach,
-    sources = {
-        null_ls.builtins.formatting.black,
-        null_ls.builtins.formatting.clang_format,
-    }
-})
 
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
     vim.lsp.diagnostic.on_publish_diagnostics, {
@@ -204,86 +158,14 @@ require('nvim-treesitter.configs').setup({
         -- Instead of true it can also be a list of languages
         additional_vim_regex_highlighting = false,
     },
-    rainbow = {
-        enable = true,
-        extended_mode = false,
-        colors = {
-            colors.bright_orange,
-            colors.bright_purple,
-            colors.bright_green,
-            colors.bright_blue,
-        }
-    }
-})
-
--- Completion Config
-vim.opt.completeopt = { "menu", "menuone", "noselect", "noinsert" }
-
--- Setup nvim-cmp.
-local cmp = require 'cmp'
-local luasnip = require 'luasnip'
-require('luasnip.loaders.from_vscode').lazy_load()
-
--- helper function
-local has_words_before = function()
-    local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-    return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
-end
-
-cmp.setup({
-    snippet = {
-        -- REQUIRED - you must specify a snippet engine
-        expand = function(args)
-            require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
-        end,
-    },
-    mapping = cmp.mapping.preset.insert({
-        ['<C-e>'] = cmp.mapping.abort(),
-        ["<Tab>"] = cmp.mapping(function(fallback)
-            if cmp.visible() then
-                cmp.select_next_item()
-            elseif luasnip.expand_or_jumpable() then
-                luasnip.expand_or_jump()
-            elseif has_words_before() then
-                cmp.complete()
-            else
-                fallback()
-            end
-        end, { "i", "s" }),
-        ["<S-Tab>"] = cmp.mapping(function(fallback)
-            if cmp.visible() then
-                cmp.select_prev_item()
-            elseif luasnip.jumpable(-1) then
-                luasnip.jump(-1)
-            else
-                fallback()
-            end
-        end, { "i", "s" }),
-        -- Accept currently selected item. Set `select` to `false` to
-        -- only confirm explicitly selected items.
-        ['<CR>'] = cmp.mapping.confirm({ select = true }),
-    }),
-    sources = {
-        { name = 'nvim_lsp' },
-        { name = 'buffer' },
-        { name = 'neorg' },
-    },
-    formatting = {
-        fields = { "kind", "abbr", "menu" },
-        format = function(entry, vim_item)
-            local kind = require("lspkind").cmp_format({ mode = "symbol_text", maxwidth = 50 })(entry, vim_item)
-            local strings = vim.split(kind.kind, "%s", { trimempty = true })
-            kind.kind = " " .. (strings[1] or "") .. " "
-            kind.menu = "    (" .. (strings[2] or "") .. ")"
-
-            return kind
-        end,
-    },
-    window = {
-        completion = {
-            winhighlight = "Normal:Pmenu,FloatBorder:Pmenu,Search:None",
-            col_offset = -3,
-            side_padding = 0,
-        },
-    },
+    -- rainbow = {
+    --     enable = true,
+    --     extended_mode = false,
+    --     colors = {
+    --         colors.bright_orange,
+    --         colors.bright_purple,
+    --         colors.bright_green,
+    --         colors.bright_blue,
+    --     }
+    -- }
 })

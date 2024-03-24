@@ -1,5 +1,7 @@
-vim.o.termguicolors = true
-vim.g.mapleader = " "
+-- set up leader key
+vim.keymap.set("", "<Space>", "<Nop>", { noremap = true, silent = true})
+vim.g.mapleader = ' '
+vim.g.maplocalleader = '_'
 
 -- install lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
@@ -15,15 +17,12 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
--- set up leader key
-vim.keymap.set("", "<Space>", "<Nop>", { noremap = true, silent = true})
-vim.g.mapleader = ' '
-vim.g.maplocalleader = '_'
 
-require("lazy").setup("plugins")
-require("options")
-require("lsp")
-require("dap-conf")
-require("keymap")
-require("theme")
+require("lazy").setup("qqh.plugins")
+require("qqh.options")
+require("qqh.keymap")
+require("qqh.lsp")
+require("qqh.cmp")
+require("qqh.dap-conf")
+require("qqh.theme")
 

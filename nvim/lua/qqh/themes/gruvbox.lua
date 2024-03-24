@@ -65,12 +65,6 @@ require("gruvbox").setup({
         GruvboxAquaSign = { bg = colors.dark0 },
         GruvboxBlueSign = { bg = colors.dark0 },
         GruvboxPurpleSign = { bg = colors.dark0 },
-        -- MiniFiles
-        MiniFilesTitle = { fg = colors.light1, bg = colors.dark0_hard },
-        MiniFilesTitleFocused = { fg = colors.neutral_green, bg = colors.dark0_hard },
-        MiniFilesNormal = { fg = colors.light1, bg = colors.dark0_hard },
-        MiniFilesBorder = { fg = colors.light1, bg = colors.dark0_hard },
-        MiniFilesBorderModified = { fg = colors.bright_red, bg = colors.dark0_hard },
         -- NeoGit
         NeogitBranch = { fg = colors.bright_orange, bg = colors.dark0, bold = true },
         NeogitRemote = { fg = colors.bright_purple, bg = colors.dark0, bold = true },

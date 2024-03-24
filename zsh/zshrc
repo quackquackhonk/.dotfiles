@@ -92,8 +92,6 @@ function spackcert() {
 }
 alias lzd='lazydocker'
 
-export TERM=xterm-256color
-
 export BAT_THEME="gruvbox-dark"
 
 # ssh agent

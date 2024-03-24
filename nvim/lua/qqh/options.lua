@@ -23,6 +23,8 @@ local options = {
     shiftwidth = 4,
     expandtab = true,
     incsearch = true,
+    splitright = true,
+    splitbelow = true,
     formatexpr = "v:lua.require'conform'.formatexpr()"
 }
 
