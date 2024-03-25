@@ -46,6 +46,7 @@ wk.register({
 		r = { cmd("Telescope frecency"), "Recent Files" },
 		s = { cmd("Telescope live_grep"), "Live Grep" },
 		p = { cmd("tabnew | Telescope project"), "Find Project" },
+		u = { cmd("Telescope undo"), "Find undo" },
 	},
 	e = {
 		name = "+editor",

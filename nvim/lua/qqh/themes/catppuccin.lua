@@ -20,6 +20,9 @@ require("catppuccin").setup({
 	dim_inactive = {
 		enabled = true,
 	},
+	styles = {
+		conditionals = {},
+	},
 	custom_highlights = function(colors)
 		return {
 			-- tabline
