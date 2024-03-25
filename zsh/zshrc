@@ -6,6 +6,7 @@ export PATH=$HOME/.local/bin:$PATH
 export PATH=$HOME/.cargo/bin:$PATH
 export PATH=$HOME/.sources/sml/bin:$PATH
 export PATH=$HOME/.sources/smlnj/bin:$PATH
+export PATH=$HOME/.sources/wabt/bin:$PATH
 export PATH=$HOME/.sources/v:$PATH
 export PATH=/opt/homebrew/bin:$PATH
 export PATH=/Library/PostgreSQL/16/bin:$PATH
@@ -82,7 +83,7 @@ function spackon() {
 }
 function spackoff() {
     unset SPACK_INSTALL_PREFIX
-    unset USER_INCLUDE 
+    unset USER_INCLUDE
     unset USER_LIBDIR
     spack env deactivate
 }

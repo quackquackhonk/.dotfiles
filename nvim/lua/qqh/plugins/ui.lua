@@ -41,8 +41,16 @@ return {
 		},
 		opts = {
 			-- configurations go here
-            theme = "catppuccin-mocha",
+			theme = "catppuccin-mocha",
 		},
+	},
+	{
+		"kosayoda/nvim-lightbulb",
+		config = function()
+			require("nvim-lightbulb").setup({
+				autocmd = { enabled = true },
+			})
+		end,
 	},
 	{
 		"nvim-treesitter/nvim-treesitter-context",
@@ -72,13 +80,13 @@ return {
 					alt = { "FIXME", "BUG", "FIXIT", "ISSUE" }, -- a set of other keywords that all map to this FIX keywords
 				},
 				-- TODO: testing text
-				TODO = { icon = " ", color = "#fabd2f" },
+				TODO = { icon = " " },
 				-- HACK: testing text
 				HACK = { icon = " ", color = "error" },
 				-- WARN: testing text
-				WARN = { icon = " ", color = "#fe8019", alt = { "WARNING", "XXX" } },
+				WARN = { icon = " ", alt = { "WARNING", "XXX" } },
 				-- PERF: testing text
-				PERF = { icon = " ", color = "#d3869b", alt = { "OPTIM", "PERFORMANCE", "OPTIMIZE" } },
+				PERF = { icon = " ", alt = { "OPTIM", "PERFORMANCE", "OPTIMIZE" } },
 				-- NOTE: testing text
 				NOTE = { icon = " ", color = "hint", alt = { "INFO" } },
 			},

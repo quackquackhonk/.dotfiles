@@ -50,6 +50,7 @@ wk.register({
 	e = {
 		name = "+editor",
 		f = { require("conform").format, "format file" },
+		h = { cmd("Telescope highlights"), "Show highlight groups" },
 		g = { cmd("tcd %:h | tcd `git rev-parse --show-toplevel`"), "CD to current git repo" },
 		t = {
 			name = "toggle",
