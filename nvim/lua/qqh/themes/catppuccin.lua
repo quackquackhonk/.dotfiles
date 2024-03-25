@@ -10,66 +10,67 @@ colors.orange = colors.peach
 
 require("catppuccin").setup({
 	flavour = "mocha",
-    background = {
-        light = "latte",
-        dark = "mocha",
-    },
+	background = {
+		light = "latte",
+		dark = "mocha",
+	},
 	show_end_of_buffer = true,
-    no_italic = true,
-	no_underline = true,
-    dim_inactive = {
-        enabled = false,
-    },
+	dim_inactive = {
+		enabled = true,
+	},
+	styles = {
+		conditionals = {},
+	},
 	custom_highlights = function(colors)
 		return {
-            -- tabline
+			-- tabline
 			TabLine = { bg = colors.mantle },
 			TabLineFill = { bg = colors.mantle },
 
-            -- Telescope
-            TelescopeNormal = { fg = colors.blue,  bg = colors.mantle },
-            TelescopeBorder = { fg = colors.blue, bg = colors.mantle },
-            TelescopePromptBorder = { fg = colors.blue, bg = colors.mantle },
-            TelescopeSelection = { bg = colors.base },
-            TelescopeMatching = { fg = colors.pink },
+			-- Telescope
+			TelescopeNormal = { fg = colors.blue, bg = colors.mantle },
+			TelescopeBorder = { fg = colors.blue, bg = colors.mantle },
+			TelescopePromptBorder = { fg = colors.blue, bg = colors.mantle },
+			TelescopeSelection = { bg = colors.base },
+			TelescopeMatching = { fg = colors.pink },
 
-            -- TSContext
-            TreesitterContext = { bg = colors.surface0 },
+			-- TSContext
+			TreesitterContext = { bg = colors.surface0 },
 
 			-- completion menu
-            CmpItemKindSnippet = { fg = colors.base, bg = colors.mauve },
-            CmpItemKindKeyword = { fg = colors.base, bg = colors.red },
-            CmpItemKindText = { fg = colors.base, bg = colors.teal },
-            CmpItemKindMethod = { fg = colors.base, bg = colors.blue },
-            CmpItemKindConstructor = { fg = colors.base, bg = colors.blue },
-            CmpItemKindFunction = { fg = colors.base, bg = colors.blue },
-            CmpItemKindFolder = { fg = colors.base, bg = colors.blue },
-            CmpItemKindModule = { fg = colors.base, bg = colors.blue },
-            CmpItemKindConstant = { fg = colors.base, bg = colors.peach },
-            CmpItemKindField = { fg = colors.base, bg = colors.green },
-            CmpItemKindProperty = { fg = colors.base, bg = colors.green },
-            CmpItemKindEnum = { fg = colors.base, bg = colors.green },
-            CmpItemKindUnit = { fg = colors.base, bg = colors.green },
-            CmpItemKindClass = { fg = colors.base, bg = colors.yellow },
-            CmpItemKindVariable = { fg = colors.base, bg = colors.flamingo },
-            CmpItemKindFile = { fg = colors.base, bg = colors.blue },
-            CmpItemKindInterface = { fg = colors.base, bg = colors.yellow },
-            CmpItemKindColor = { fg = colors.base, bg = colors.red },
-            CmpItemKindReference = { fg = colors.base, bg = colors.red },
-            CmpItemKindEnumMember = { fg = colors.base, bg = colors.red },
-            CmpItemKindStruct = { fg = colors.base, bg = colors.blue },
-            CmpItemKindValue = { fg = colors.base, bg = colors.peach },
-            CmpItemKindEvent = { fg = colors.base, bg = colors.blue },
-            CmpItemKindOperator = { fg = colors.base, bg = colors.blue },
-            CmpItemKindTypeParameter = { fg = colors.base, bg = colors.blue },
-            CmpItemKindCopilot = { fg = colors.base, bg = colors.teal },
+			CmpItemKindSnippet = { fg = colors.base, bg = colors.mauve },
+			CmpItemKindKeyword = { fg = colors.base, bg = colors.red },
+			CmpItemKindText = { fg = colors.base, bg = colors.teal },
+			CmpItemKindMethod = { fg = colors.base, bg = colors.blue },
+			CmpItemKindConstructor = { fg = colors.base, bg = colors.blue },
+			CmpItemKindFunction = { fg = colors.base, bg = colors.blue },
+			CmpItemKindFolder = { fg = colors.base, bg = colors.blue },
+			CmpItemKindModule = { fg = colors.base, bg = colors.blue },
+			CmpItemKindConstant = { fg = colors.base, bg = colors.peach },
+			CmpItemKindField = { fg = colors.base, bg = colors.green },
+			CmpItemKindProperty = { fg = colors.base, bg = colors.green },
+			CmpItemKindEnum = { fg = colors.base, bg = colors.green },
+			CmpItemKindUnit = { fg = colors.base, bg = colors.green },
+			CmpItemKindClass = { fg = colors.base, bg = colors.yellow },
+			CmpItemKindVariable = { fg = colors.base, bg = colors.flamingo },
+			CmpItemKindFile = { fg = colors.base, bg = colors.blue },
+			CmpItemKindInterface = { fg = colors.base, bg = colors.yellow },
+			CmpItemKindColor = { fg = colors.base, bg = colors.red },
+			CmpItemKindReference = { fg = colors.base, bg = colors.red },
+			CmpItemKindEnumMember = { fg = colors.base, bg = colors.red },
+			CmpItemKindStruct = { fg = colors.base, bg = colors.blue },
+			CmpItemKindValue = { fg = colors.base, bg = colors.peach },
+			CmpItemKindEvent = { fg = colors.base, bg = colors.blue },
+			CmpItemKindOperator = { fg = colors.base, bg = colors.blue },
+			CmpItemKindTypeParameter = { fg = colors.base, bg = colors.blue },
+			CmpItemKindCopilot = { fg = colors.base, bg = colors.teal },
 		}
 	end,
 	integrations = {
 		cmp = true,
-        barbecue = {
-            alt_background = false,
-        },
+		barbecue = {
+			alt_background = false,
+		},
 		mason = true,
 		mini = {
 			enabled = true,
@@ -96,7 +97,7 @@ require("catppuccin").setup({
 				background = true,
 			},
 		},
-        which_key = true,
+		which_key = true,
 	},
 })
 vim.opt.termguicolors = true
