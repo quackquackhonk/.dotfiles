@@ -15,8 +15,6 @@ require("catppuccin").setup({
 		dark = "mocha",
 	},
 	show_end_of_buffer = true,
-	no_italic = true,
-	no_underline = false,
 	dim_inactive = {
 		enabled = true,
 	},
