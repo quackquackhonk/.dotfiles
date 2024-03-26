@@ -17,12 +17,16 @@ require("catppuccin").setup({
 	show_end_of_buffer = true,
 	dim_inactive = {
 		enabled = true,
+		shade = "dark",
+		percentage = 0,
 	},
 	styles = {
 		conditionals = {},
 	},
 	custom_highlights = function(colors)
 		return {
+			WinSeparator = { bg = colors.mantle, fg = colors.mantle },
+			VertSplit = { bg = colors.mantle, fg = colors.mantle },
 			-- tabline
 			TabLine = { bg = colors.mantle },
 			TabLineFill = { bg = colors.mantle },
