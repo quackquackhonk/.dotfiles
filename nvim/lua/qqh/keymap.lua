@@ -121,7 +121,7 @@ wk.register({
 		l = {
 			name = "Load",
 			l = { cmd("so %"), "Source current file" },
-			t = { cmd("so ~/.dotfiles/nvim/lua/theme.lua"), "Source theme file" },
+			t = { cmd("so ~/.dotfiles/nvim/lua/qqh/theme.lua"), "Source theme file" },
 		},
 		c = { cmd("tabnew | e ~/.config/nvim/init.lua | tcd ~/.dotfiles/"), "Open Config" },
 		o = { cmd("tabnew | e ~/notes/index.norg | tcd ~/notes/"), "Open Notes" },
