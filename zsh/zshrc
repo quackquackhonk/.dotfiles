@@ -50,8 +50,8 @@ alias fish_reload='source $HOME/.config/fish/config.fish'
 alias nv='nvim'
 alias vi='nvim'
 
-alias ls='exa'
-alias l='exa -lah'
+alias ls='eza'
+alias l='eza -lah'
 alias b='bat'
 alias cd='z'
 
@@ -93,7 +93,7 @@ function spackcert() {
 }
 alias lzd='lazydocker'
 
-export BAT_THEME="gruvbox-dark"
+export BAT_THEME="Catppuccin Mocha"
 
 # ssh agent
 # eval "$(ssh-agent -s)"
