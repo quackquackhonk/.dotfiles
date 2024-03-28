@@ -10,8 +10,8 @@ $git_status\
 $conda\
 $spack\
 $aws\
-$cmd_duration\
 $line_break\
+$cmd_duration\
 $character"""
 
 [aws]
@@ -26,7 +26,7 @@ truncation_symbol = "…/"
 
 [git_branch]
 symbol = " "
-truncation_length = 12
+truncation_length = 20
 
 [hostname]
-ssh_symbol = " "
+ssh_symbol = "ssh "

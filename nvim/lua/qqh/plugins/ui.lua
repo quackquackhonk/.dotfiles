@@ -72,25 +72,6 @@ return {
 	{
 		"folke/todo-comments.nvim",
 		dependencies = { "nvim-lua/plenary.nvim" },
-		opts = {
-			keywords = {
-				FIX = {
-					icon = " ", -- icon used for the sign, and in search results
-					color = "error", -- can be a hex color, or a named color (see below)
-					alt = { "FIXME", "BUG", "FIXIT", "ISSUE" }, -- a set of other keywords that all map to this FIX keywords
-				},
-				-- TODO: testing text
-				TODO = { icon = " " },
-				-- HACK: testing text
-				HACK = { icon = " ", color = "error" },
-				-- WARN: testing text
-				WARN = { icon = " ", alt = { "WARNING", "XXX" } },
-				-- PERF: testing text
-				PERF = { icon = " ", alt = { "OPTIM", "PERFORMANCE", "OPTIMIZE" } },
-				-- NOTE: testing text
-				NOTE = { icon = " ", color = "hint", alt = { "INFO" } },
-			},
-		},
 	},
 	{
 		"folke/noice.nvim",
