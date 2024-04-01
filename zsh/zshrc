@@ -93,7 +93,7 @@ function spackcert() {
 }
 alias lzd='lazydocker'
 
-export BAT_THEME="gruvbox-dark"
+export BAT_THEME="Catppuccin Mocha"
 
 # ssh agent
 # eval "$(ssh-agent -s)"
