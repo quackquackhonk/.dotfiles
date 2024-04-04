@@ -30,3 +30,6 @@ truncation_length = 20
 
 [hostname]
 ssh_symbol = "ssh "
+
+[spack]
+truncation_length = 2
