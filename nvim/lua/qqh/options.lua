@@ -6,7 +6,6 @@ local options = {
 	updatetime = 500,
 	-- editor
 	syntax = "on",
-	mouse = "a",
 	cursorline = true,
 	signcolumn = "yes",
 	number = true,
@@ -14,8 +13,9 @@ local options = {
 	conceallevel = 2,
 	concealcursor = "nc",
 	textwidth = 99,
-	-- foldexpr = "nvim_treesitter#foldexpr()",
-	-- foldmethod = "expr",
+	foldexpr = "nvim_treesitter#foldexpr()",
+	foldmethod = "expr",
+	foldlevel = 99,
 	sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal",
 	showtabline = 2,
 	tabstop = 4,
@@ -39,3 +39,5 @@ vim.cmd([[autocmd FileType * set formatoptions-=o]])
 vim.cmd("set t_ZH=[3m")
 vim.cmd("set t_ZH=[23m")
 vim.cmd("set fo-=l")
+
+vim.b.bufferfoldclosed = false
