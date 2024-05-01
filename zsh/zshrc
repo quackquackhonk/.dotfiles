@@ -74,6 +74,7 @@ alias cgb='cargo build'
 
 # work
 alias cirrus='ssh -i ~/.ssh/stankala_id.key stankala@cirrus.veriskweather.net -t "zsh"'
+alias myenv='spack env activate -d ~/myenv'
 function cirruscp() {
     scp -i ~/.ssh/stankala_id.key $1 stankala@cirrus.veriskweather.net:/storage/stankala
 }
