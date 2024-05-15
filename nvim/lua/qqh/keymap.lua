@@ -172,6 +172,22 @@ vim.keymap.set("", "T", function()
 	hop.hint_char1({ direction = directions.BEFORE_CURSOR, current_line_only = true, hint_offset = 1 })
 end, { remap = true })
 
+-- UFO keybindings
+vim.api.nvim_create_user_command("ToggleFolds", function()
+	local bufnr = vim.api.nvim_get_current_buf()
+	if vim.b[bufnr].bufferfoldclosed then
+		require("ufo").openAllFolds()
+		vim.b[bufnr].bufferfoldclosed = false
+	else
+		require("ufo").closeAllFolds()
+		vim.b[bufnr].bufferfoldclosed = true
+	end
+end, {})
+vim.keymap.set("n", "zR", require("ufo").openAllFolds)
+vim.keymap.set("n", "zM", require("ufo").closeAllFolds)
+vim.keymap.set("n", "<S-Tab>", cmd("ToggleFolds"))
+vim.keymap.set("n", "<Tab>", "za")
+
 -- DIAL keybindings
 vim.api.nvim_set_keymap("n", "<C-a>", require("dial.map").inc_normal(), { noremap = true })
 vim.api.nvim_set_keymap("v", "<C-a>", require("dial.map").inc_normal(), { noremap = true })

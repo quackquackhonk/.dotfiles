@@ -68,6 +68,11 @@ require("catppuccin").setup({
 			CmpItemKindOperator = { fg = colors.base, bg = colors.blue },
 			CmpItemKindTypeParameter = { fg = colors.base, bg = colors.blue },
 			CmpItemKindCopilot = { fg = colors.base, bg = colors.teal },
+
+			-- Folding UI
+			Folded = { bg = colors.mantle },
+			UfoFoldedEllipsis = { fg = colors.blue },
+			UfoCursorFoldedLine = { fg = colors.mantle },
 		}
 	end,
 	integrations = {
