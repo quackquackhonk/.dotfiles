@@ -31,6 +31,8 @@ source $ZSH/oh-my-zsh.sh
 export EDITOR="nvim"
 
 # User configuration
+alias python=python3
+alias pip=pip3
 
 # aliases
 alias zshconf="$EDITOR ~/.zshrc && source ~/.zshrc"

@@ -79,6 +79,11 @@ wk.register({
 			O = { require("neotest").output_panel.toggle, "Toggle output panel" },
 		},
 	},
+	p = {
+		name = "+copilot",
+		["<Leader>"] = { require("copilot").toggle_auto_trigger, "Toggle auto suggestions" },
+		o = { cmd("Copilot panel"), "Open Copilot panel" },
+	},
 	t = {
 		name = "tab",
 		n = { cmd("tabnew"), "New Tab" },
