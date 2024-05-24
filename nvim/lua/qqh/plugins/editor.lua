@@ -54,19 +54,6 @@ return {
 			vim.g.vim_markdown_folding_disabled = 1
 		end,
 	},
-	{
-		"AckslD/nvim-neoclip.lua",
-		dependencies = {
-			"nvim-telescope/telescope.nvim",
-			"kkharji/sqlite.lua",
-		},
-		config = function()
-			require("neoclip").setup({
-				enable_persistent_history = true,
-				default_register = { '"', "+" },
-			})
-		end,
-	},
 	-- keymap
 	{
 		"folke/which-key.nvim",

@@ -226,6 +226,7 @@ require("tabby").setup({
 -- Todo comments
 require("todo-comments").setup({
 	keywords = {
+		-- FIXME: testing text
 		FIX = {
 			icon = " ", -- icon used for the sign, and in search results
 			color = "error", -- can be a hex color, or a named color (see below)

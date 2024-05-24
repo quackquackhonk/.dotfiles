@@ -2,6 +2,7 @@ return {
 	-- Git Integration
 	{
 		"NeogitOrg/neogit",
+		tag = "v0.0.1",
 		dependencies = {
 			"nvim-lua/plenary.nvim", -- required
 			"sindrets/diffview.nvim", -- optional - Diff integration
@@ -39,6 +40,12 @@ return {
 		opts = {
 			layout = {
 				width = 0.2,
+			},
+			nav = {
+				keymaps = {
+					["<Left>"] = "actions.left",
+					["<Right>"] = "actions.right",
+				},
 			},
 			-- optionally use on_attach to set keymaps when aerial has attached to a buffer
 			on_attach = function(bufnr)
@@ -118,59 +125,13 @@ return {
 				lua = { "stylua" },
 				python = { "isort", "black" },
 				rust = { "rustfmt" },
+				c = { "clang_format" },
+				cpp = { "clang_format" },
 			},
 			format_on_save = {
 				-- I recommend these options. See :help conform.format for details.
 				lsp_fallback = true,
 				timeout_ms = 500,
-			},
-		},
-	},
-	{
-		"stevearc/conform.nvim",
-		event = { "BufWritePre" },
-		cmd = { "ConformInfo" },
-		keys = {
-			{
-				-- Customize or remove this keymap to your liking
-				"<leader>f",
-				function()
-					require("conform").format({ async = true, lsp_fallback = true })
-				end,
-				mode = "",
-				desc = "Format buffer",
-			},
-		},
-		-- Everything in opts will be passed to setup()
-		opts = {
-			-- Define your formatters
-			formatters_by_ft = {
-				lua = { "stylua" },
-				python = { "isort", "black" },
-				rust = { "rustfmt" },
-				["*"] = { "trim_whitespace" },
-			},
-			-- Customize formatters
-			formatters = {
-				shfmt = {
-					prepend_args = { "-i", "2" },
-				},
-			},
-		},
-		init = function()
-			-- If you want the formatexpr, here is the place to set it
-			vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
-		end,
-	},
-	{
-		"stevearc/conform.nvim",
-		opts = {
-			formatters_by_ft = {
-				lua = { "stylua" },
-				python = { "black" },
-				rust = { "rustfmt" },
-				c = { "clang_format" },
-				cpp = { "clang_format" },
 			},
 		},
 	},

@@ -64,9 +64,7 @@ return {
 	},
 	{
 		"declancm/maximize.nvim",
-		opts = {
-			default_keymaps = false,
-		},
+		opts = {},
 	},
 	{
 		"kevinhwang91/nvim-ufo",

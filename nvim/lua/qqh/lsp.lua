@@ -129,6 +129,10 @@ require("lspconfig").clangd.setup({
 	on_attach = custom_on_attach,
 	capabilities = capabilities,
 	filetypes = { "c", "cpp" },
+	cmd = {
+		"clangd",
+		"--offset-encoding=utf-16",
+	},
 })
 
 require("lspconfig").bufls.setup({})
