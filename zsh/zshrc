@@ -8,6 +8,7 @@ export PATH=$HOME/.sources/sml/bin:$PATH
 export PATH=$HOME/.sources/smlnj/bin:$PATH
 export PATH=$HOME/.sources/wabt/bin:$PATH
 export PATH=$HOME/.sources/v:$PATH
+export PATH=$HOME/.sources/nvim-macos/bin:$PATH
 export PATH=/opt/homebrew/bin:$PATH
 export PATH=/Library/PostgreSQL/16/bin:$PATH
 export PATH=$HOME/opt/grpc/bin:$PATH
@@ -118,7 +119,18 @@ complete -C '/usr/local/bin/aws_completer' aws
 
 eval "$(zoxide init zsh)"
 
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+eval "$(starship init zsh)"
+
+if [[ $HOST == "LVV3TW207K" ]]; then
+    . /Users/i34866/opt/git/spack/share/spack/setup-env.sh *
+else
+    . /storage/shared/spack/git/spack/share/spack/setup-env.sh *
+fi
+
+
+export PYENV_ROOT="$HOME/.pyenv"
+[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
@@ -134,13 +146,4 @@ else
 fi
 unset __conda_setup
 # <<< conda initialize <<<
-
-eval "$(starship init zsh)"
-
-if [[ $HOST == "LVV3TW207K" ]]; then
-    . /Users/i34866/opt/git/spack/share/spack/setup-env.sh *
-else
-    . /storage/shared/spack/git/spack/share/spack/setup-env.sh *
-fi
-
 

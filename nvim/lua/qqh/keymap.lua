@@ -42,10 +42,10 @@ wk.register({
 		name = "+find",
 		f = { cmd("Telescope find_files"), "Find Files" },
 		g = { cmd("Telescope git_files"), "Git Files" },
-		a = { cmd("Telescope aerial"), "Symbol in file" },
+		a = { cmd("AerialNavToggle"), "Symbol in file" },
 		r = { cmd("Telescope frecency"), "Recent Files" },
 		s = { cmd("Telescope live_grep"), "Live Grep" },
-		p = { cmd("tabnew | Telescope project"), "Find Project" },
+		p = { cmd("tabnew | Telescope project display_type=full"), "Find Project" },
 		u = { cmd("Telescope undo"), "Find undo" },
 	},
 	e = {
