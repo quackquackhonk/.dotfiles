@@ -96,6 +96,7 @@ function spackcert() {
     cat ~/cert/ZscalerRootCertificate-2048-SHA256.crt >> $CERT_PATH
 }
 alias lzd='lazydocker'
+alias mp='awsnonprod && mprocs'
 
 export BAT_THEME="Catppuccin Mocha"
 
