@@ -172,22 +172,6 @@ vim.keymap.set("", "T", function()
 	hop.hint_char1({ direction = directions.BEFORE_CURSOR, current_line_only = true, hint_offset = 1 })
 end, { remap = true })
 
--- UFO keybindings
-vim.api.nvim_create_user_command("ToggleFolds", function()
-	local bufnr = vim.api.nvim_get_current_buf()
-	if vim.b[bufnr].bufferfoldclosed then
-		require("ufo").openAllFolds()
-		vim.b[bufnr].bufferfoldclosed = false
-	else
-		require("ufo").closeAllFolds()
-		vim.b[bufnr].bufferfoldclosed = true
-	end
-end, {})
-vim.keymap.set("n", "zR", require("ufo").openAllFolds)
-vim.keymap.set("n", "zM", require("ufo").closeAllFolds)
-vim.keymap.set("n", "<S-Tab>", cmd("ToggleFolds"))
-vim.keymap.set("n", "<Tab>", "za")
-
 -- DIAL keybindings
 vim.api.nvim_set_keymap("n", "<C-a>", require("dial.map").inc_normal(), { noremap = true })
 vim.api.nvim_set_keymap("v", "<C-a>", require("dial.map").inc_normal(), { noremap = true })
@@ -196,6 +180,10 @@ vim.api.nvim_set_keymap("v", "<C-x>", require("dial.map").dec_normal(), { norema
 vim.api.nvim_set_keymap("v", "g<C-a>", require("dial.map").inc_gvisual(), { noremap = true })
 vim.api.nvim_set_keymap("v", "g<C-x>", require("dial.map").dec_gvisual(), { noremap = true })
 keymap({ "n", "v" }, "<Return>", cmd("HopChar2"))
+
+-- Fold keymaps
+vim.keymap.set("n", "<S-Tab>", require("fold-cycle").open, { silent = true, desc = "Fold-cycle: open folds" })
+vim.keymap.set("n", "<Tab>", "za", { silent = true, desc = "Fold-cycle: open folds" })
 
 -- Visual Mode
 -- Stay in visual mode when indenting
