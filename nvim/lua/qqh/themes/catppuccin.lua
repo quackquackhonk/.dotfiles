@@ -32,9 +32,9 @@ require("catppuccin").setup({
 			TabLineFill = { bg = colors.mantle },
 
 			-- Telescope
-			TelescopeNormal = { fg = colors.blue, bg = colors.mantle },
-			TelescopeBorder = { fg = colors.blue, bg = colors.mantle },
-			TelescopePromptBorder = { fg = colors.blue, bg = colors.mantle },
+			TelescopeNormal = { fg = colors.blue, bg = colors.crust },
+			TelescopeBorder = { fg = colors.blue, bg = colors.crust },
+			TelescopePromptBorder = { fg = colors.blue, bg = colors.crust },
 			TelescopeSelection = { bg = colors.base },
 			TelescopeMatching = { fg = colors.pink },
 
