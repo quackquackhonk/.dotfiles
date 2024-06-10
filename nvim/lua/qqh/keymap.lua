@@ -149,10 +149,10 @@ wk.register({
 wk.register({
 	["<F8>"] = { require("maximize").toggle, "Maximize window" },
 	["<C-q>"] = { cmd("close"), "Close window" },
-	["<A-Left>"] = { cmd("NavigatorLeft"), "Move focus left" },
-	["<A-Right>"] = { cmd("NavigatorRight"), "Move focus right" },
-	["<A-Up>"] = { cmd("NavigatorUp"), "Move focus up" },
-	["<A-Down>"] = { cmd("NavigatorDown"), "Move focus down" },
+	["<C-Left>"] = { "<C-w>h", "Move focus left" },
+	["<C-Right>"] = { "<C-w>l", "Move focus right" },
+	["<C-Up>"] = { "<C-w>k", "Move focus up" },
+	["<C-Down>"] = { "<C-w>j", "Move focus down" },
 }, { mode = { "n", "i" } })
 
 -- Keybindings for HOP
