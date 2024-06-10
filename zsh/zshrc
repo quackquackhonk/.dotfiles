@@ -97,10 +97,16 @@ function spackcert() {
 alias lzd='lazydocker'
 
 export BAT_THEME="Catppuccin Mocha"
+export FZF_DEFAULT_OPTS=" \
+--color=bg+:#313244,bg:#1e1e2e,spinner:#f5e0dc,hl:#f38ba8 \
+--color=fg:#cdd6f4,header:#f38ba8,info:#cba6f7,pointer:#f5e0dc \
+--color=marker:#f5e0dc,fg+:#cdd6f4,prompt:#cba6f7,hl+:#f38ba8"
+
 
 # ssh agent
 # eval "$(ssh-agent -s)"
 # eval "$(ssh-add ~/.ssh/id_ed25519)"
+source <(fzf --zsh)
 
 # opam configuration
 [[ ! -r /home/sahana/.opam/opam-init/init.zsh ]] || source /home/sahana/.opam/opam-init/init.zsh  > /dev/null 2> /dev/null

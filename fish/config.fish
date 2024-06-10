@@ -5,10 +5,6 @@ fish_add_path $HOME/.sources/sml/bin
 fish_add_path $HOME/.sources/smlnj/bin
 fish_add_path $HOME/.sources/wabt/bin
 fish_add_path $HOME/.sources/v
-fish_add_path $HOME/.sources/nvim-macos/bin
-fish_add_path /opt/homebrew/bin
-fish_add_path /Library/PostgreSQL/16/bin
-fish_add_path $HOME/opt/grpc/bin
 fish_add_path /home/sahana/.local/share/bob/nvim-bin
 
 if status is-interactive
