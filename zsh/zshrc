@@ -14,9 +14,6 @@ export PATH=/Library/PostgreSQL/16/bin:$PATH
 export PATH=$HOME/opt/grpc/bin:$PATH
 export PATH=/home/sahana/.local/share/bob/nvim-bin:$PATH
 
-
-# Path to your oh-my-zsh installation.
-export ZSH="$HOME/.oh-my-zsh"
 export LIBGL_ALWAYS_SOFTWARE=true
 
 export DOCKER_DEFAULT_PLATFORM=linux/amd64
@@ -32,20 +29,11 @@ export FZF_DEFAULT_OPTS=" \
 --color=fg:#cdd6f4,header:#f38ba8,info:#cba6f7,pointer:#f5e0dc \
 --color=marker:#f5e0dc,fg+:#cdd6f4,prompt:#cba6f7,hl+:#f38ba8"
 
-plugins=(git ssh-agent)
-
-source $ZSH/oh-my-zsh.sh
-
 export EDITOR="nvim"
-
-# User configuration
-alias python=python3
-alias pip=pip3
 
 # aliases
 alias zshconf="$EDITOR ~/.zshrc && source ~/.zshrc"
 alias zshsrc="source ~/.zshrc"
-alias ohmyzsh="$EDITOR ~/.oh-my-zsh"
 alias nvconf="$EDITOR ~/.config/nvim/init.lua"
 
 alias gs='git status'
@@ -65,7 +53,7 @@ alias l='eza -lah'
 alias b='bat'
 alias cd='z'
 
-alias t='tmux'
+alias t='zellij'
 
 alias d='docker'
 alias dc='docker compose'
@@ -107,19 +95,7 @@ alias mp='awsnonprod && mprocs'
 
 export BAT_THEME="Catppuccin Mocha"
 
-# ssh agent
-# eval "$(ssh-agent -s)"
-# eval "$(ssh-add ~/.ssh/id_ed25519)"
-
-source <(fzf --zsh)
-
 # completion
-autoload bashcompinit && bashcompinit
-autoload -Uz compinit && compinit
-autoload -U zmv
-
-complete -C '/usr/local/bin/aws_completer' aws
-
 eval "$(zoxide init zsh)"
 
 eval "$(starship init zsh)"
@@ -150,4 +126,4 @@ fi
 unset __conda_setup
 # <<< conda initialize <<<
 
-source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
