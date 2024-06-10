@@ -38,25 +38,6 @@ if status is-interactive
     alias cgb='cargo build'
 
     alias awsnonprod='saml2aws login -a nonprod && eval $(saml2aws script -a nonprod)'
-    # Custom functions
-
-    function spackon; 
-        spack env activate -d spack_env
-    end
-
-    function spackoff; 
-        unset SPACK_INSTALL_PREFIX
-        unset USER_INCLUDE
-        unset USER_LIBDIR
-        spack env deactivate
-    end
-
-    function spackcert
-        export CERT_PATH=$(python -c 'import site; print(site.getsitepackages()[0] + "/certifi/cacert.pem")')
-        cat ~/cert/ZscalerRootCertificate-2048-SHA256.crt >> $CERT_PATH
-    end
-
-
     export TERM=xterm-256color
 end
 
@@ -76,5 +57,3 @@ end
 # <<< conda initialize <<<
 
 zoxide init fish | source
-
-source /Users/i34866/opt/git/spack/share/spack/setup-env.fish *
