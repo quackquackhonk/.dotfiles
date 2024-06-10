@@ -7,6 +7,10 @@ keybinds clear-defaults=true {
         bind "Alt n" { NewPane; }
         bind "Alt ]" { GoToNextTab; }
         bind "Alt [" { GoToPreviousTab; }
+        bind "Ctrl Left" { MoveFocus "Left"; }
+        bind "Ctrl Right" { MoveFocus "Right"; }
+        bind "Ctrl Up" { MoveFocus "Up"; }
+        bind "Ctrl Down" { MoveFocus "Down"; }
     }
     tmux {
         bind "Esc" { SwitchToMode "Locked"; }
@@ -18,10 +22,6 @@ keybinds clear-defaults=true {
             };
             SwitchToMode "Locked"
         }
-        bind "Left" { MoveFocus "Left"; }
-        bind "Right" { MoveFocus "Right"; }
-        bind "Up" { MoveFocus "Up"; }
-        bind "Down" { MoveFocus "Down"; }
         bind "z" { ToggleFocusFullscreen; SwitchToMode "Locked"; }
         bind "c" { NewTab; SwitchToMode "Locked"; }
         bind "d" { Detach; }

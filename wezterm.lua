@@ -12,7 +12,7 @@ config.color_scheme = "Catppuccin Mocha"
 config.colors = {
 	background = "#181825",
 }
-config.font = wezterm.font("MapleMono NF")
+config.font = wezterm.font("Maple Mono NF")
 config.bold_brightens_ansi_colors = true
 config.font_size = 12
 config.freetype_load_target = "Light"
