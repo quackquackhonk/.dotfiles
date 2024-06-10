@@ -7,8 +7,15 @@ fish_add_path $HOME/.sources/wabt/bin
 fish_add_path $HOME/.sources/v
 fish_add_path /home/sahana/.local/share/bob/nvim-bin
 
+if status is-login
+    if test -z "$DISPLAY" -a "$XDG_VTNR" = 1
+        exec Hyprland
+    end
+end
+
 if status is-interactive
     # Commands to run in interactive sessions can go here
+    alias sudo="doas"
     
     alias gs='git status'
     alias ga='git add'
