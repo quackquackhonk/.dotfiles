@@ -8,7 +8,7 @@
   programs.git.userName = "Sahana Tankala";
   programs.git.userEmail = "sahanatankala@gmail.com";
 
-  programs.alacritty.enable;
+  programs.alacritty.enable = true;
 
   # The home.packages option allows you to install Nix packages into your
   # environment.
