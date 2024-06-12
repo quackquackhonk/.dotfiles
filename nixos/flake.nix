@@ -9,6 +9,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    impermanence = {
+      url = "github:nix-community/impermanence";
+    };
+
     hyprland.url = "github:hyprwm/Hyprland";
 
     ags.url = "github:Aylur/ags";
@@ -24,5 +28,8 @@
     homeConfigurations = {
       "sahana@monstera" = mkHome "x86_64-linux" ./hosts/monstera/home.nix;
     };
+    
+    homeManagerModules.default = ./hm-modules;
+    nixosModules.default = ./nixos-modules;
   };
 }

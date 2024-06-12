@@ -25,12 +25,16 @@
 
   programs.fish.enable = true;
   users.defaultUserShell = pkgs.fish;
-  users.users.sahana = {
-    isNormalUser = true;
-    extraGroups = [ "wheel" ];
-    packages = with pkgs; [
-      firefox alacritty tree
-    ];
+  myNixOs = {
+    # autologin.user = "sahana";
+    home-users = {
+      "sahana" = {
+        userConfig = ./home.nix;
+        userSettings = {
+          extraGroups = ["networkmanager" "wheel" "docker"];
+        };
+      };
+    };
   };
 
   programs.nix-ld.enable = true;
