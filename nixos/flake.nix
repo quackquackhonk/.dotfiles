@@ -12,9 +12,9 @@
 
   outputs = { self, nixpkgs, ... }@inputs: {
     nixosConfigurations.monstera = nixpkgs.lib.nixosSystem {
-      specialArgs = {inherit inputs;};
+      specialArgs = { inherit inputs; };
       modules = [
-        ./configuration.nix
+        ./hosts/monstera/configuration.nix
         inputs.home-manager.nixosModules.default
       ];
     };

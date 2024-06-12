@@ -1,7 +1,3 @@
-# Edit this configuration file to define what should be installed on
-# your system. Help is available in the configuration.nix(5) man page, on
-# https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
-
 { config, lib, pkgs, inputs, ... }:
 
 {
@@ -34,9 +30,6 @@
   users.users.sahana = {
     isNormalUser = true;
     extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
-    packages = with pkgs; [
-      firefox alacritty tree
-    ];
   };
 
   home-manager = {
@@ -54,6 +47,7 @@
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     gcc14 cmake
+    firefox alacritty
     starship
     fzf
     zoxide
