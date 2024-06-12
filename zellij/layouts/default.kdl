@@ -7,8 +7,6 @@ layout {
                 format_right  "#[fg=#cba6f7,bold]{session}"
                 format_space  ""
 
-                hide_frame_for_single_pane "true"
-
                 mode_normal  "#[fg=#cba6f7] NORMAL "
                 mode_tmux    "#[fg=#fab387] TMUX "
 
@@ -18,4 +16,7 @@ layout {
         }
         children
     }
+    tab focus=true name="editor"
+    tab name="terminal"
 }
+pane_frames false

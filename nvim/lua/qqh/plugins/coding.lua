@@ -75,6 +75,13 @@ return {
 		"nvim-treesitter/nvim-treesitter",
 		build = ":TSUpdate",
 	},
+	{
+		"nvim-treesitter/nvim-treesitter-textobjects",
+		dependencies = { "nvim-treesitter/nvim-treesitter" },
+		config = function()
+			require("nvim-treesitter.configs").setup({})
+		end,
+	},
 	"neovim/nvim-lspconfig",
 	{
 		"williamboman/mason.nvim",

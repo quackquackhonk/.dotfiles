@@ -5,14 +5,17 @@ fish_add_path $HOME/.sources/sml/bin
 fish_add_path $HOME/.sources/smlnj/bin
 fish_add_path $HOME/.sources/wabt/bin
 fish_add_path $HOME/.sources/v
-fish_add_path $HOME/.sources/nvim-macos/bin
-fish_add_path /opt/homebrew/bin
-fish_add_path /Library/PostgreSQL/16/bin
-fish_add_path $HOME/opt/grpc/bin
 fish_add_path /home/sahana/.local/share/bob/nvim-bin
+
+if status is-login
+    if test -z "$DISPLAY" -a "$XDG_VTNR" = 1
+        exec Hyprland
+    end
+end
 
 if status is-interactive
     # Commands to run in interactive sessions can go here
+    alias sudo="doas"
     
     alias gs='git status'
     alias ga='git add'
@@ -38,25 +41,6 @@ if status is-interactive
     alias cgb='cargo build'
 
     alias awsnonprod='saml2aws login -a nonprod && eval $(saml2aws script -a nonprod)'
-    # Custom functions
-
-    function spackon; 
-        spack env activate -d spack_env
-    end
-
-    function spackoff; 
-        unset SPACK_INSTALL_PREFIX
-        unset USER_INCLUDE
-        unset USER_LIBDIR
-        spack env deactivate
-    end
-
-    function spackcert
-        export CERT_PATH=$(python -c 'import site; print(site.getsitepackages()[0] + "/certifi/cacert.pem")')
-        cat ~/cert/ZscalerRootCertificate-2048-SHA256.crt >> $CERT_PATH
-    end
-
-
     export TERM=xterm-256color
 end
 
@@ -76,5 +60,3 @@ end
 # <<< conda initialize <<<
 
 zoxide init fish | source
-
-source /Users/i34866/opt/git/spack/share/spack/setup-env.fish *

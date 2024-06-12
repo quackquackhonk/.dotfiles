@@ -7,10 +7,10 @@ keybinds clear-defaults=true {
         bind "Alt n" { NewPane; }
         bind "Alt ]" { GoToNextTab; }
         bind "Alt [" { GoToPreviousTab; }
-        bind "Ctrl Left" { MoveFocus "Left"; }
-        bind "Ctrl Right" { MoveFocus "Right"; }
-        bind "Ctrl Up" { MoveFocus "Up"; }
-        bind "Ctrl Down" { MoveFocus "Down"; }
+        bind "Alt Left" { MoveFocus "Left"; }
+        bind "Alt Right" { MoveFocus "Right"; }
+        bind "Alt Up" { MoveFocus "Up"; }
+        bind "Alt Down" { MoveFocus "Down"; }
     }
     tmux {
         bind "Esc" { SwitchToMode "Locked"; }

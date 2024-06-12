@@ -141,8 +141,18 @@ require("lspconfig").bufls.setup({})
 
 -- Treesitter configuration
 require("nvim-treesitter.configs").setup({
+	textobjects = {
+		select = {
+			enable = true,
+			lookahead = true,
+			keymaps = {
+				["aF"] = "@function.outer",
+				["iF"] = "@function.inner",
+			},
+		},
+	},
 	-- A list of parser names, or "all"
-	ensure_installed = "all",
+	ensure_installed = { "rust", "lua", "python", "c", "cpp", "toml", "yaml", "json" },
 	-- Install parsers synchronously (only applied to `ensure_installed`)
 	sync_install = false,
 	-- Automatically install missing parsers when entering buffer
