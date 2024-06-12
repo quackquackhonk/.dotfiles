@@ -14,9 +14,10 @@ if status is-login
 end
 
 if status is-interactive
+    export TERM=xterm-256color
+    export EDITOR=nvim
+
     # Commands to run in interactive sessions can go here
-    alias sudo="doas"
-    
     alias gs='git status'
     alias ga='git add'
     alias gc='git commit'
@@ -24,9 +25,9 @@ if status is-interactive
     alias gP='git push'
 
     alias fishsrc='source $HOME/.config/fish/config.fish'
-    alias fishconf='nvim ~/.config/fish/config.fish && source $HOME/.config/fish/config.fish'
-
-    alias nvconf='nvim ~/.config/nvim/init.lua'
+    alias hyprconf='$EDITOR ~/.config/hypr/hyprland.conf'
+    alias fishconf='$EDITOR ~/.config/fish/config.fish && source $HOME/.config/fish/config.fish'
+    alias nvconf='$EDITOR ~/.config/nvim/init.lua'
 
     alias nv='nvim'
     alias vi='nvim'
@@ -41,7 +42,6 @@ if status is-interactive
     alias cgb='cargo build'
 
     alias awsnonprod='saml2aws login -a nonprod && eval $(saml2aws script -a nonprod)'
-    export TERM=xterm-256color
 end
 
 set -g fish_greeting
