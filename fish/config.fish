@@ -59,4 +59,9 @@ if test -f /opt/homebrew/Caskroom/miniconda/base/bin/conda
 end
 # <<< conda initialize <<<
 
+# Source spack if on work machine
+if [ "$hostname" = "LVV3TW207K" ]
+    source /Users/i34866/opt/git/spack/share/spack/setup-env.fish
+end
+
 zoxide init fish | source

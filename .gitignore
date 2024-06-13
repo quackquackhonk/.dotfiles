@@ -2,3 +2,4 @@
 nvim/autoload/*
 nvim/.netrwhist
 nvim/plugin/*
+work.lua
