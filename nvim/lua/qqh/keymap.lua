@@ -160,6 +160,13 @@ wk.register({
 	["<C-Down>"] = { "<C-w>j", "Move focus down" },
 }, { mode = { "n", "i" } })
 
+wk.register({
+	["<M-m>"] = { "<Left>", "Move left" },
+	["<M-i>"] = { "<Right>", "Move right" },
+	["<M-e>"] = { "<Up>", "Move up" },
+	["<M-n>"] = { "<Down>", "Move down" },
+}, { mode = { "n", "i", "v" } })
+
 -- Keybindings for HOP
 -- place this in one of your configuration file(s)
 local hop = require("hop")

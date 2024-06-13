@@ -4,7 +4,6 @@ default_mode "locked"
 keybinds clear-defaults=true {
     locked {
         bind "Ctrl Space" { SwitchToMode "Tmux"; }
-        bind "Alt n" { NewPane; }
         bind "Alt ]" { GoToNextTab; }
         bind "Alt [" { GoToPreviousTab; }
         bind "Alt Left" { MoveFocus "Left"; }
@@ -13,8 +12,10 @@ keybinds clear-defaults=true {
         bind "Alt Down" { MoveFocus "Down"; }
     }
     tmux {
-        bind "Esc" { SwitchToMode "Locked"; }
-        bind "Ctrl Space" { SwitchToMode "Locked"; }
+        bind "Esc" { SwitchToMode "Locked"; SwitchToMode "Locked"; }
+        bind "Ctrl Space" { SwitchToMode "Locked"; SwitchToMode "Locked"; }
+        bind "h" { NewPane "Down"; }
+        bind "v" { NewPane "Right"; }
         bind "s" {
             LaunchOrFocusPlugin "session-manager" {
                 floating true
