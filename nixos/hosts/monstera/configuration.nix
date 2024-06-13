@@ -30,21 +30,6 @@
   services.openssh.enable = true;
   # networking.firewall.allowedTCPPorts = [ 22 ];
 
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  programs.fish.enable = true;
-  users.defaultUserShell = pkgs.fish;
-  users.users.sahana = {
-    isNormalUser = true;
-    extraGroups = [ "wheel" "networkmanager" "docker" ]; # Enable ‘sudo’ for the user.
-  };
-
-  home-manager = {
-    extraSpecialArgs = { inherit inputs; };
-    users = {
-      "sahana" = import ./home.nix;
-    };
-  };
-
   # Enable dynamic libraries
   programs.nix-ld.enable = true;
   programs.nix-ld.libraries = with pkgs; [];
@@ -53,6 +38,7 @@
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     vim
+    git
     gcc
     gnumake
     gnupg
@@ -65,6 +51,21 @@
     clean.enable = true;
     clean.extraArgs = "--keep-since 4d --keep 3";
     flake = "/home/sahana/nixos";
+  };
+
+  # Define a user account. Don't forget to set a password with ‘passwd’.
+  programs.fish.enable = true;
+  users.defaultUserShell = pkgs.fish;
+  users.users.sahana = {
+    isNormalUser = true;
+    extraGroups = [ "wheel" "networkmanager" "docker" "video" ];
+  };
+
+  home-manager = {
+    extraSpecialArgs = { inherit inputs; };
+    users = {
+      "sahana" = import ./home.nix;
+    };
   };
 
   # Never ever change this

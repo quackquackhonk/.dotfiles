@@ -10,12 +10,19 @@
     };
   };
 
-  outputs = { self, nixpkgs, ... }@inputs: {
+  outputs = { home-manager, nixpkgs, ... }@inputs: {
     nixosConfigurations.monstera = nixpkgs.lib.nixosSystem {
       specialArgs = { inherit inputs; };
       modules = [
         ./hosts/monstera/configuration.nix
-        inputs.home-manager.nixosModules.default
+        home-manager.nixosModules.home-manager {
+          home-manager.useGlobalPkgs = true;
+          home-manager.useUserPackages = true;
+
+          home-manager.users.sahana = import ./hosts/monstera/home.nix;
+
+          home-manager.extraSpecialArgs = { inherit inputs; };
+        }
       ];
     };
   };

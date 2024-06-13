@@ -8,7 +8,6 @@
   home.stateVersion = "24.05"; # Please read the comment before changing.
 
   programs.git = {
-    package = pkgs.gitAndTools.gitFull;
     enable = true;
     userName = "Sahana Tankala";
     userEmail = "sahanatankala@gmail.com";
@@ -17,15 +16,67 @@
   # The home.packages option allows you to install Nix packages into your
   # environment.
   home.packages = with pkgs; [
-    firefox 
-    alacritty
+    # archives
+    zip
+    xz
+    unzip
+    p7zip
+
+    # utils
     starship
     fzf
     zoxide
-    rustup
     eza
     zellij
-    ripgrep
+    ripgrep 
+    jq 
+    yq-go 
+    eza 
+    fzf 
+
+    # networking tools
+    mtr 
+    iperf3
+    dnsutils  
+    ldns 
+    aria2 
+    socat 
+    nmap 
+    ipcalc  
+
+    # misc
+    cowsay
+    file
+    which
+    tree
+    gnused
+    gnutar
+    gawk
+    zstd
+    gnupg
+
+    btop  # replacement of htop/nmon
+    iotop # io monitoring
+    iftop # network monitoring
+
+    # system call monitoring
+    strace # system call monitoring
+    ltrace # library call monitoring
+    lsof # list open files
+
+    # system tools
+    sysstat
+    lm_sensors # for `sensors` command
+    ethtool
+    pciutils # lspci
+    usbutils # lsusb
+
+    # languages
+    rustup
+
+    # my shit
+    firefox 
+    alacritty
   ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
