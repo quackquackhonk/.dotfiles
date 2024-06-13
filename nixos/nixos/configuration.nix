@@ -44,7 +44,6 @@
     nixPath = lib.mapAttrsToList (n: _: "${n}=flake:${n}") flakeInputs;
   };
 
-
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -81,7 +80,7 @@
     wget
     curl
   ];
-  
+
   programs.nh = {
     enable = true;
     clean.enable = true;
@@ -94,10 +93,9 @@
   users.defaultUserShell = pkgs.fish;
   users.users.sahana = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "networkmanager" "docker" "video" ];
+    extraGroups = ["wheel" "networkmanager" "docker" "video"];
   };
 
   # Never ever change this
   system.stateVersion = "24.05"; # Did you read the comment?
-
 }

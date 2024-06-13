@@ -52,18 +52,18 @@
     eza
     bat
     zellij
-    ripgrep 
+    ripgrep
     fd
-    jq 
-    yq-go 
-    eza 
-    fzf 
+    jq
+    yq-go
+    eza
+    fzf
 
     # networking tools
-    mtr 
-    dnsutils  
-    nmap 
-    ipcalc  
+    mtr
+    dnsutils
+    nmap
+    ipcalc
 
     # misc
     file
@@ -75,7 +75,7 @@
     zstd
     gnupg
 
-    btop  # replacement of htop/nmon
+    btop # replacement of htop/nmon
     lsof # list open files
 
     # system tools
@@ -89,7 +89,9 @@
     rustup
 
     # my shit
-    firefox 
+    hyprpaper
+    hyprpicker
+    firefox
     alacritty
   ];
 

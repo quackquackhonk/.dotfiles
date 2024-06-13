@@ -134,6 +134,7 @@ return {
 				rust = { "rustfmt" },
 				c = { "clang_format" },
 				cpp = { "clang_format" },
+                nix = { "alejandra" }
 			},
 			format_on_save = {
 				-- I recommend these options. See :help conform.format for details.

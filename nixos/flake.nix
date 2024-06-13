@@ -8,12 +8,17 @@
     # Home manager
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
+
+    # Alejandra (nix formatter)
+    alejandra.url = "github:kamadorueda/alejandra/3.0.0";
+    alejandra.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = {
     self,
     nixpkgs,
     home-manager,
+    alejandra,
     ...
   } @ inputs: let
     inherit (self) outputs;
@@ -21,12 +26,15 @@
     # NixOS configuration entrypoint
     # Available through 'nixos-rebuild --flake .#your-hostname'
     nixosConfigurations = {
-      monstera = nixpkgs.lib.nixosSystem {
+      monstera = nixpkgs.lib.nixosSystem rec {
         specialArgs = {inherit inputs outputs;};
+        system = "x86_64-linux";
         # > Our main nixos configuration file <
         modules = [
+          {environment.systemPackages = [alejandra.defaultPackage.${system}];}
           ./nixos/configuration.nix
-          home-manager.nixosModules.home-manager {
+          home-manager.nixosModules.home-manager
+          {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
 
