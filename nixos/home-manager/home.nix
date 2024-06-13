@@ -53,6 +53,7 @@
     bat
     zellij
     ripgrep 
+    fd
     jq 
     yq-go 
     eza 
@@ -60,16 +61,11 @@
 
     # networking tools
     mtr 
-    iperf3
     dnsutils  
-    ldns 
-    aria2 
-    socat 
     nmap 
     ipcalc  
 
     # misc
-    cowsay
     file
     which
     tree
@@ -80,12 +76,6 @@
     gnupg
 
     btop  # replacement of htop/nmon
-    iotop # io monitoring
-    iftop # network monitoring
-
-    # system call monitoring
-    strace # system call monitoring
-    ltrace # library call monitoring
     lsof # list open files
 
     # system tools
