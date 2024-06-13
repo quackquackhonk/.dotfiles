@@ -22,5 +22,6 @@ config.default_cursor_style = "BlinkingBlock"
 -- window settings
 config.use_fancy_tab_bar = false
 config.enable_tab_bar = false
+config.window_decorations = "RESIZE"
 
 return config
