@@ -32,6 +32,11 @@
         # > Our main nixos configuration file <
         modules = [
           {environment.systemPackages = [alejandra.defaultPackage.${system}];}
+          {
+            # pin system nixpkgs to the same version as the flake input
+            # (don't see a way to declaratively set channels but this seems to work fine?)
+            nix.nixPath = ["nixpkgs=${nixpkgs}"];
+          }
           ./nixos/configuration.nix
           home-manager.nixosModules.home-manager
           {

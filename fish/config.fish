@@ -48,12 +48,16 @@ if status is-interactive
     alias cgb='cargo build'
 
     alias awsnonprod='saml2aws login -a nonprod && eval $(saml2aws script -a nonprod)'
+
+    function __fish_command_not_found_handler --on-event fish_command_not_found
+        if test -e "~/bin/command-not-found.sh"
+            ~/bin/command-not-found.sh $argv
+        end
+    end
 end
 
 set -g fish_greeting
 set -g CMAKE_EXPORT_COMPILE_COMMANDS
-set -g DOCKER_DEFAULT_PLATFORM linux/amd64
-export DOCKER_DEFAULT_PLATFORM=linux/amd64
 
 starship init fish | source
 fzf --fish | source

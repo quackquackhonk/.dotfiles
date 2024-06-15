@@ -90,6 +90,7 @@
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   programs.fish.enable = true;
+  programs.fish.useBabelfish = true;
   users.defaultUserShell = pkgs.fish;
   users.users.sahana = {
     isNormalUser = true;

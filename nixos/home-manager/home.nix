@@ -46,6 +46,7 @@
     p7zip
 
     # utils
+    nitch
     starship
     fzf
     zoxide
@@ -85,12 +86,18 @@
     pciutils # lspci
     usbutils # lsusb
 
+    # desktop
+    wl-clipboard
+    cinnamon.nemo
+    fuzzel
+    waybar
+    hyprpaper
+    hyprpicker
+
     # languages
     rustup
 
     # my shit
-    hyprpaper
-    hyprpicker
     firefox
     alacritty
   ];
@@ -98,16 +105,40 @@
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
   # plain files is through 'home.file'.
   home.file = {
-    # # Building this configuration will create a copy of 'dotfiles/screenrc' in
-    # # the Nix store. Activating the configuration will then make '~/.screenrc' a
-    # # symlink to the Nix store copy.
-    # ".screenrc".source = dotfiles/screenrc;
+    ".config/fuzzel" = {
+      source = ../../fuzzel;
+      recursive = true;
+    };
 
-    # # You can also set the file content immediately.
-    # ".gradle/gradle.properties".text = ''
-    #   org.gradle.console=verbose
-    #   org.gradle.daemon.idletimeout=3600000
-    # '';
+    ".config/nvim" = {
+      source = ../../nvim;
+      recursive = true;
+    };
+
+    ".config/alacritty" = {
+      source = ../../alacritty;
+      recursive = true;
+    };
+
+    ".config/zellij" = {
+      source = ../../zellij;
+      recursive = true;
+    };
+
+    ".config/fish" = {
+      source = ../../fish;
+      recursive = true;
+    };
+
+    ".config/hypr" = {
+      source = ../../hypr;
+      recursive = true;
+    };
+
+    ".config/waybar" = {
+      source = ../../waybar;
+      recursive = true;
+    };
   };
 
   home.sessionVariables = {
