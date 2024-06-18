@@ -4,6 +4,7 @@
   inputs = {
     # Nixpkgs
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
 
     # Home manager
     home-manager.url = "github:nix-community/home-manager";
@@ -21,6 +22,7 @@
   outputs = {
     self,
     nixpkgs,
+    nixos-wsl,
     home-manager,
     alejandra,
     ...
@@ -33,17 +35,38 @@
       monstera = nixpkgs.lib.nixosSystem rec {
         specialArgs = {inherit inputs outputs;};
         system = "x86_64-linux";
-        # > Our main nixos configuration file <
         modules = [
-          ./nixos/configuration.nix
+          ./hosts/monstera/configuration.nix
           {environment.systemPackages = [alejandra.defaultPackage.${system}];}
           inputs.flake-programs-sqlite.nixosModules.programs-sqlite
           home-manager.nixosModules.home-manager
           {
+            home-manager.backupFileExtension = "backup";
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
 
-            home-manager.users.sahana = import ./home-manager/home.nix;
+            home-manager.users.sahana = import ./home/home.nix;
+          }
+        ];
+      };
+      redwood = nixpkgs.lib.nixosSystem rec {
+        specialArgs = {inherit inputs outputs;};
+        system = "x86_64-linux";
+        modules = [
+          nixos-wsl.nixosModules.default
+          {
+            system.stateVersion = "23.11";
+            wsl.enable = true;
+          }
+          ./hosts/redwood/configuration.nix
+          {environment.systemPackages = [alejandra.defaultPackage.${system}];}
+          home-manager.nixosModules.home-manager
+          {
+            home-manager.backupFileExtension = "backup";
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+
+            home-manager.users.sahana = import ./home/home.nix;
           }
         ];
       };
