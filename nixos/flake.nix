@@ -12,6 +12,10 @@
     # Alejandra (nix formatter)
     alejandra.url = "github:kamadorueda/alejandra/3.0.0";
     alejandra.inputs.nixpkgs.follows = "nixpkgs";
+
+    # generate programs.sqlite for command-not-found
+    flake-programs-sqlite.url = "github:wamserma/flake-programs-sqlite";
+    flake-programs-sqlite.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = {
@@ -31,13 +35,9 @@
         system = "x86_64-linux";
         # > Our main nixos configuration file <
         modules = [
-          {environment.systemPackages = [alejandra.defaultPackage.${system}];}
-          {
-            # pin system nixpkgs to the same version as the flake input
-            # (don't see a way to declaratively set channels but this seems to work fine?)
-            nix.nixPath = ["nixpkgs=${nixpkgs}"];
-          }
           ./nixos/configuration.nix
+          {environment.systemPackages = [alejandra.defaultPackage.${system}];}
+          inputs.flake-programs-sqlite.nixosModules.programs-sqlite
           home-manager.nixosModules.home-manager
           {
             home-manager.useGlobalPkgs = true;

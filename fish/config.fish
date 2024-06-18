@@ -34,6 +34,7 @@ if status is-interactive
     alias hyprconf='$EDITOR ~/.config/hypr/hyprland.conf'
     alias fishconf='$EDITOR ~/.config/fish/config.fish && source $HOME/.config/fish/config.fish'
     alias nvconf='$EDITOR ~/.config/nvim/init.lua'
+    alias nixconf='$EDITOR ~/dotfiles/nixos/flake.nix'
 
     alias nv='nvim'
     alias vi='nvim'
@@ -48,12 +49,6 @@ if status is-interactive
     alias cgb='cargo build'
 
     alias awsnonprod='saml2aws login -a nonprod && eval $(saml2aws script -a nonprod)'
-
-    function __fish_command_not_found_handler --on-event fish_command_not_found
-        if test -e "~/bin/command-not-found.sh"
-            ~/bin/command-not-found.sh $argv
-        end
-    end
 end
 
 set -g fish_greeting
