@@ -10,8 +10,8 @@ $git_status\
 $conda\
 $spack\
 $aws\
-$line_break\
 $cmd_duration\
+$line_break\
 $character"""
 
 [aws]
