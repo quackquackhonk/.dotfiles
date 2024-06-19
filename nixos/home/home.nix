@@ -88,9 +88,9 @@
     # languages
     rustup
     luajit
-    luajitPackages.luarocks-nix
 
     # my shit
+    waybar
     hyprpaper
     hyprpicker
     firefox
@@ -100,17 +100,11 @@
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
   # plain files is through 'home.file'.
   home.file = {
-    ".config/fish" = {
-      source = ../../fish;
-      recursive = true;
-    };
+    ".config/fish".source = ../../fish;
 
     ".config/nvim".source = ../../nvim;
 
-    ".config/zellij" = {
-      source = ../../zellij;
-      recursive = true;
-    };
+    ".config/zellij".source = ../../zellij;
   };
 
   home.sessionVariables = {

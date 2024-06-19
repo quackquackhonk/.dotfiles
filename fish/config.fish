@@ -30,6 +30,10 @@ if status is-interactive
     alias gp='git pull'
     alias gP='git push'
 
+    function conf
+        cd ~/dotfiles
+    end
+
     alias fishsrc='source $HOME/.config/fish/config.fish'
     alias hyprconf='$EDITOR ~/.config/hypr/hyprland.conf'
     alias fishconf='$EDITOR ~/.config/fish/config.fish && source $HOME/.config/fish/config.fish'

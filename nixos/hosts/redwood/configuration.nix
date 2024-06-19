@@ -1,13 +1,19 @@
 # Edit this configuration file to define what should be installed on
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
-
 # NixOS-WSL specific options are documented on the NixOS-WSL repository:
 # https://github.com/nix-community/NixOS-WSL
-
-{ inputs, config, lib, pkgs, ... }:
-
 {
+  inputs,
+  config,
+  lib,
+  pkgs,
+  ...
+}: {
+  imports = [
+    ../common.nix
+    inputs.home-manager.nixosModules.default
+  ];
   nixpkgs = {
     # Configure your nixpkgs instance
     config = {
@@ -22,27 +28,6 @@
 
   nix.settings.experimental-features = "nix-command flakes";
 
-  # Enable dynamic libraries
-  programs.nix-ld.enable = true;
-  programs.nix-ld.libraries = with pkgs; [];
-
-  environment.systemPackages = with pkgs; [
-    vim
-    git
-    gcc
-    gnumake
-    gnupg
-    wget
-    curl
-  ];
-
-  programs.nh = {
-    enable = true;
-    clean.enable = true;
-    clean.extraArgs = "--keep-since 4d --keep 3";
-    flake = "/home/sahana/dotfiles/nixos";
-  };
-  
   # Define a user account. Don't forget to set a password with ‘passwd’.
   programs.fish.enable = true;
   users.defaultUserShell = pkgs.fish;
