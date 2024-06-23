@@ -1,85 +1,163 @@
-@import "colors/mocha.css";
-
-/* margin: top right bottom left */
-/* Spacing outside the element */
-
-/* padding: top right bottom left */
-/* Spacing inside the element */
-
 * {
-  font-family: Maple Mono NF
-  font-size: 16px;
-  font-weight: bold;
+    border: none;
+    border-radius: 0;
+    font-family: Maple Mono NF;
+    font-weight: bold;
+    font-size: 14px;
+    min-height: 0;
 }
 
 window#waybar {
-  background-color: @fg;
-  color: @bg0;
-  transition-property: background-color;
-  transition-duration: 0.5s;
-  border-radius: 0px 0px 15px 15px;
-  transition-duration: .5s;
-
-  border-bottom-width: 5px;
-  border-bottom-color: #7d6a40;
-  border-bottom-style: solid;
+    background: transparent;
+    color: #cdd6f4;
 }
 
-#custom-launcher,
+tooltip {
+    background: transparent;
+    border-radius: 10px;
+    border-width: 2px;
+    border-style: solid;
+    border-color: #43413B;
+}
+
+#custom-language,
+#custom-caffeine,
+#window,
 #clock,
-#clock-date,
-#workspaces,
-#pulseaudio,
-#network,
 #battery,
-#custom-powermenu {
-  background-color: @bg0;
-  color: @fg;
-
-  padding-left: 10px;
-  padding-right: 10px;
-  margin-top: 7px;
-  margin-bottom: 12px;
-	border-radius: 10px;
-
-  border-bottom-width: 5px;
-  border-bottom-color: #161a1d;
-  border-bottom-style: solid;
+#pulseaudio,
+#tray,
+#backlight,
+#cpu,
+#memory,
+#temperature,
+#custom-notification {
+    color: #d4be98;
+    background: #282b2c;
+    padding: 0px 10px;
+    margin-top: 0px;
+    margin-bottom: 8px;
+    margin-left: 2px;
+    margin-right: 2px;
+    border: 2px solid #43413B;
+    border-radius: 10px;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.8);
 }
 
+
+#network {
+    color: #d4be98;
+    background: #282b2c;
+    padding: 0px 15px 0px 10px;;
+    margin-top: 0px;
+    margin-bottom: 8px;
+    margin-left: 2px;
+    margin-right: 2px;
+    border: 2px solid #43413B;
+    border-radius: 10px;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.8);
+}
+
+#custom-bluetooth {
+    color: #d4be98;
+    background: #282b2c;
+    padding: 0px 15px 0px 10px;;
+    margin-top: 0px;
+    margin-bottom: 8px;
+    margin-left: 2px;
+    margin-right: 2px;
+    border: 2px solid #43413B;
+    border-radius: 10px;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.8);
+}
+
+#power-profiles-daemon {
+    color: #A9B665;
+    background: #282b2c;
+    padding: 0px 17px 0px 10px;;
+    margin-top: 0px;
+    margin-bottom: 8px;
+    margin-left: 2px;
+    margin-right: 2px;
+    border: 2px solid #43413B;
+    border-radius: 10px;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.8);
+}
+#custom-weather {
+    color: #d4be98;
+    background: #282b2c;
+    padding: 0px 12px 0px 10px;
+    margin-top: 0px;
+    margin-bottom: 8px;
+    margin-left: 2px;
+    margin-right: 2px;
+    border: 2px solid #43413B;
+    border-radius: 10px;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.8);
+}
+
+#custom-appmenu {
+    color: #A9B665;
+    background: #282b2c;
+    padding: 0px 14px 0px 10px;
+    margin-top: 0px;
+    margin-bottom: 8px;
+    margin-left: 8px;
+    margin-right: 2px;
+    border: 2px solid #43413B;
+    border-radius: 10px;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.8);
+}
+
+#custom-power {
+    color: #A9B665;
+    background: #282b2c;
+    padding: 0px 13px 0px 10px;
+    margin-top: 0px;
+    margin-bottom: 5px;
+    margin-left: 2px;
+    margin-right: 8px;
+    border: 2px solid #43413B;
+    border-radius: 10px;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.8);
+}
+
+/* Workspace Style - Start */
 #workspaces {
-  padding: 0px;
+    border-radius: 10px;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.8);
 }
-
+tooltip,
+#workspaces {
+    color: #d4be98;
+    padding: 0px 10px 0px 0px;
+    margin-top: 0px;
+    margin-bottom: 8px;
+    margin-left: 2px;
+    margin-right: 2px;
+    background-color: #282b2c;
+    border: 2px solid #43413B;
+    padding: 3px;
+}
+#workspaces button {
+    padding: 2px 8px 2px 8px;
+    color: #d4be98;
+}
 #workspaces button.active {
-  background-color: @blue;
-  color: @bg0;
-
-	border-radius: 10px;
-
-  margin-bottom: -5px;
-
-  border-bottom-width: 5px;
-  border-bottom-color: #366660;
-  border-bottom-style: solid;
+    color: #181825;
+    border-radius: 7px;
+    background-color: #a9b665;
 }
-
-#custom-launcher {
-  background-color: @green;
-  color: @bg0;
-  border-bottom-color: #556a35;
-
-  margin-left: 15px;
-  padding-left: 20px;
-  padding-right: 21px;
+#workspaces button.focused {
+    color: #A9B665;
+    border-radius: 7px;
 }
-
-#custom-powermenu {
-  background-color: @red;
-  color: @bg0;
-  border-bottom-color: #951c1f;
-
-  margin-right: 15px;
-  padding-left: 20px;
-  padding-right: 23px;
+#workspaces button.urgent {
+    color: #EA6962;
+    border-radius: 7px;
 }
+#workspaces button:hover {
+    color: #A9B665;
+    border-radius: 7px;
+}
+/* Workspace Style - End */

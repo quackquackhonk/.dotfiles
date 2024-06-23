@@ -46,6 +46,7 @@
     p7zip
 
     # utils
+    stow
     starship
     fzf
     zoxide
@@ -89,23 +90,20 @@
     rustup
     luajit
 
-    # my shit
+    # desktop utils
     waybar
+    wofi
+    dunst
     hyprpaper
-    hyprpicker
+    hyprlock
+    wlogout
+
+    # apps
     firefox
     alacritty
+    zathura
+    imv
   ];
-
-  # Home Manager is pretty good at managing dotfiles. The primary way to manage
-  # plain files is through 'home.file'.
-  home.file = {
-    ".config/fish".source = ../../fish;
-
-    ".config/nvim".source = ../../nvim;
-
-    ".config/zellij".source = ../../zellij;
-  };
 
   home.sessionVariables = {
     EDITOR = "nvim";
