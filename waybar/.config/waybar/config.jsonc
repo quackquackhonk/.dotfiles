@@ -9,24 +9,22 @@
   "modules-left": [
     "custom/appmenu",
     // "custom/weather",
-    "power-profiles-daemon",
-    "cpu",
-    "memory",
-    "temperature"
+    "hyprland/workspaces",
+    "hyprland/window"
   ],
-  "modules-center": ["hyprland/workspaces"],
+  "modules-center": [],
   "modules-right": [
-    "tray",
     "network",
     //"custom/bluetooth",
-    "custom/language",
+    "cpu",
+    "memory",
     "battery",
     "backlight",
     "pulseaudio",
     "pulseaudio#microphone",
+    //"custom/notification"
     "clock",
     "custom/power"
-    //"custom/notification"
   ],
 
   // █▀▄▀█ █▀█ █▀▄ █ █ █  █▀▀
@@ -35,14 +33,7 @@
     "format-wifi": "󰤨",
     "format-disconnected": "󰤭",
     "tooltip-format": "Connected to {essid}",
-    "on-click": "hyprctl dispatch exec '[float]' 'kitty -e nmtui'"
-  },
-  "custom/notification": {
-    "format": "{} ", // Unicode for a dot (or any other symbol you prefer)
-    "exec": "~/.config/dunst/scripts/notification_manager.sh show_notification_panel",
-    "on-click": "~/.config/dunst/scripts/notification_manager.shshow_notification_panel",
-    "on-right-click": "~/.config/dunst/scripts/notification_manager.sh toggle_dnd",
-    "on-middle-click": "~/.config/dunst/scripts/notification_manager.sh clear_notifications",
+    "on-click": "hyprctl dispatch exec '[float]' 'alacritty -e nmtui'"
   },
   "power-profiles-daemon": {
     "format": "{icon}",
@@ -74,9 +65,6 @@
     // "format-critical": "{temperatureC}°C {icon}",
     "format": "{icon} {temperatureC}°C",
     "format-icons": ["", "", ""]
-  },
-  "hyprland/window": {
-    "format": "Focused Window"
   },
   "hyprland/workspaces": {
     "disable-scroll": true,
