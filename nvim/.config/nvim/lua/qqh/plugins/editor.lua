@@ -61,12 +61,6 @@ return {
 			require("which-key").setup({})
 		end,
 	},
-	{
-		"sudormrfbin/cheatsheet.nvim",
-		config = function()
-			require("cheatsheet").setup({})
-		end,
-	},
 	"anuvyklack/hydra.nvim",
 	"kevinhwang91/nvim-bqf",
 
