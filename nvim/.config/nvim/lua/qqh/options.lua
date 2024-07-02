@@ -1,5 +1,6 @@
 local options = {
 	guicursor = "",
+	mouse = "nvi",
 	nu = true,
 	termguicolors = true,
 	timeoutlen = 500,
