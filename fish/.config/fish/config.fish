@@ -16,6 +16,7 @@ end
 if status is-interactive
     export TERM=xterm-256color
     export EDITOR=nvim
+    export HOMEBREW_NO_AUTO_UPDATE=1
 
     export FZF_DEFAULT_OPTS=" \
     --color=bg+:#313244,bg:#1e1e2e,spinner:#f5e0dc,hl:#f38ba8 \
@@ -23,6 +24,7 @@ if status is-interactive
     --color=marker:#f5e0dc,fg+:#cdd6f4,prompt:#cba6f7,hl+:#f38ba8"
 
     alias g='git'
+    alias gu='gitui'
     alias gd='git diff'
     alias gs='git status'
     alias ga='git add'
@@ -39,6 +41,8 @@ if status is-interactive
     alias fishconf='$EDITOR ~/.config/fish/config.fish && source $HOME/.config/fish/config.fish'
     alias nvconf='$EDITOR ~/.config/nvim/init.lua'
     alias nixconf='$EDITOR ~/dotfiles/nixos/flake.nix'
+
+    alias cirrus='ssh -i ~/.ssh/stankala_id.key stankala@cirrus.veriskweather.net -t "zsh"'
 
     alias nv='nvim'
     alias vi='nvim'

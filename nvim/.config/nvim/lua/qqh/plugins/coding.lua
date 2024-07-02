@@ -1,18 +1,6 @@
 return {
 	-- Git Integration
 	{
-		"NeogitOrg/neogit",
-		tag = "v0.0.1",
-		dependencies = {
-			"nvim-lua/plenary.nvim", -- required
-			"sindrets/diffview.nvim", -- optional - Diff integration
-			"nvim-telescope/telescope.nvim", -- optional
-		},
-		opts = {
-			kind = "tab",
-		},
-	},
-	{
 		"mfussenegger/nvim-dap",
 		dependencies = {
 			"nvim-telescope/telescope-dap.nvim",
