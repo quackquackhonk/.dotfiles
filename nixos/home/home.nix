@@ -92,13 +92,15 @@
 
     # desktop utils
     waybar
-    wofi
+    tofi
     dunst
     hyprpaper
     hyprlock
     wlogout
 
     # apps
+    gitui
+    gimp
     firefox
     alacritty
     zathura
