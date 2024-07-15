@@ -85,9 +85,6 @@ require("catppuccin").setup({
 			enabled = true,
 		},
 		hop = true,
-		neogit = true,
-		neotest = true,
-		noice = true,
 		native_lsp = {
 			enabled = true,
 			virtual_text = {
@@ -103,7 +100,7 @@ require("catppuccin").setup({
 				information = { "underline" },
 			},
 			inlay_hints = {
-				background = false,
+				background = true,
 			},
 		},
 		which_key = true,
@@ -148,13 +145,7 @@ require("lualine").setup({
 		},
 		lualine_b = { "filename", "branch" },
 		lualine_c = { "fileformat" },
-		lualine_x = {
-			{
-				require("noice").api.status.mode.get,
-				cond = require("noice").api.status.mode.has,
-				color = { fg = colors.gray },
-			},
-		},
+		lualine_x = {},
 		lualine_y = { "filetype", "progress" },
 		lualine_z = {
 			{ "location", separator = { right = "█" }, left_padding = 2 },

@@ -45,24 +45,6 @@ return {
 		},
 	},
 	{
-		"kosayoda/nvim-lightbulb",
-		config = function()
-			require("nvim-lightbulb").setup({
-				autocmd = { enabled = true },
-			})
-		end,
-	},
-	{
-		"nvim-treesitter/nvim-treesitter-context",
-		opts = {
-			max_lines = 3,
-			multiline_threshold = 10,
-			on_attach = function(_)
-				return true
-			end,
-		},
-	},
-	{
 		"declancm/maximize.nvim",
 		opts = {},
 	},
@@ -72,56 +54,12 @@ return {
 		opts = {},
 	},
 	{
-		"anuvyklack/pretty-fold.nvim",
-		opts = {},
-	},
-	{
 		"folke/todo-comments.nvim",
 		dependencies = { "nvim-lua/plenary.nvim" },
 	},
-	{
-		"folke/noice.nvim",
-		event = "VeryLazy",
-		opts = {
-			lsp = {
-				-- override markdown rendering so that **cmp** and other plugins use **Treesitter**
-				override = {
-					["vim.lsp.util.convert_input_to_markdown_lines"] = true,
-					["vim.lsp.util.stylize_markdown"] = true,
-					["cmp.entry.get_documentation"] = true,
-				},
-				hover = {
-					silent = true,
-				},
-			},
-			-- you can enable a preset for easier configuration
-			presets = {
-				bottom_search = true, -- use a classic bottom cmdline for search
-				command_palette = true, -- position the cmdline and popupmenu together
-				long_message_to_split = true, -- long messages will be sent to a split
-				inc_rename = false, -- enables an input dialog for inc-rename.nvim
-				lsp_doc_border = false, -- add a border to hover docs and signature help
-			},
-		},
-		dependencies = {
-			"MunifTanjim/nui.nvim",
-		},
-	},
 	"nvim-lua/popup.nvim",
 	"nvim-lua/plenary.nvim",
-	{
-		"stevearc/dressing.nvim",
-		config = function()
-			require("dressing").setup({
-				input = {
-					default_prompt = ">",
-				},
-				select = {
-					telescope = require("telescope.themes").get_cursor({}),
-				},
-			})
-		end,
-	},
+	"stevearc/dressing.nvim",
 	"ellisonleao/gruvbox.nvim",
 	{ "catppuccin/nvim", name = "catppuccin", priority = 1000 },
 	"folke/lsp-colors.nvim",

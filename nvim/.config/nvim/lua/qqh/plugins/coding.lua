@@ -1,14 +1,6 @@
 return {
 	-- Git Integration
-	{
-		"mfussenegger/nvim-dap",
-		dependencies = {
-			"nvim-telescope/telescope-dap.nvim",
-			"rcarriga/nvim-dap-ui",
-			"theHamsta/nvim-dap-virtual-text",
-			"jbyuki/one-small-step-for-vimkind",
-		},
-	},
+	"tpope/vim-fugitive",
 	{
 		"stevearc/overseer.nvim",
 		opts = {
@@ -85,34 +77,7 @@ return {
 		run = "make install_jsregexp",
 	},
 	"saadparwaiz1/cmp_luasnip",
-	"rafamadriz/friendly-snippets",
 	"onsails/lspkind.nvim",
-	{
-		"AckslD/swenv.nvim",
-		dependencies = "stevearc/dressing.nvim",
-		config = function()
-			require("swenv").setup({
-				post_set_venv = function()
-					vim.cmd.LspRestart()
-				end,
-			})
-		end,
-	},
-	{
-		"simrat39/symbols-outline.nvim",
-		config = function()
-			require("symbols-outline").setup({
-				position = "right",
-				keymaps = {
-					close = "q",
-					fold = "n",
-					fold_all = "N",
-					unfold = "e",
-					unfold_all = "E",
-				},
-			})
-		end,
-	},
 	{
 		"stevearc/conform.nvim",
 		opts = {
@@ -122,7 +87,7 @@ return {
 				rust = { "rustfmt" },
 				c = { "clang_format" },
 				cpp = { "clang_format" },
-                nix = { "alejandra" }
+				nix = { "alejandra" },
 			},
 			format_on_save = {
 				-- I recommend these options. See :help conform.format for details.
@@ -137,25 +102,6 @@ return {
 		event = { "BufReadPre", "BufNewFile" },
 		ft = { "\\cjustfile", "*.just", ".justfile" },
 	},
-	"mfussenegger/nvim-jdtls",
-	{
-		"nvim-neotest/neotest",
-		dependencies = {
-			"nvim-neotest/nvim-nio",
-			"nvim-lua/plenary.nvim",
-			"nvim-treesitter/nvim-treesitter",
-			"nvim-neotest/neotest-python",
-			"antoinemadec/FixCursorHold.nvim",
-		},
-		config = function()
-			require("neotest").setup({
-				adapters = {
-					require("neotest-python"),
-				},
-			})
-		end,
-	},
-	"folke/neodev.nvim",
 	{
 		"mrcjkb/rustaceanvim",
 		version = "^3", -- Recommended

@@ -7,20 +7,6 @@ return {
 		},
 	},
 	{
-		"mizlan/iswap.nvim",
-		event = "VeryLazy",
-		opts = {
-			keys = "arstgmneioqwfpbjluyxcdvzkh",
-		},
-	},
-	{
-		"mizlan/iswap.nvim",
-		event = "VeryLazy",
-		opts = {
-			keys = "arstgmneioqwfpbjluyxcdvzkh",
-		},
-	},
-	{
 		"monaqa/dial.nvim",
 		config = function()
 			local augend = require("dial.augend")
@@ -37,12 +23,6 @@ return {
 	},
 	"tpope/vim-sensible",
 	{
-		"numToStr/Comment.nvim",
-		config = function()
-			require("Comment").setup()
-		end,
-	},
-	{
 		"windwp/nvim-autopairs",
 		config = function()
 			require("nvim-autopairs").setup({})
@@ -55,12 +35,7 @@ return {
 		end,
 	},
 	-- keymap
-	{
-		"folke/which-key.nvim",
-		config = function()
-			require("which-key").setup({})
-		end,
-	},
+	"folke/which-key.nvim",
 	"anuvyklack/hydra.nvim",
 	"kevinhwang91/nvim-bqf",
 
@@ -82,19 +57,5 @@ return {
 		config = function()
 			require("window-picker").setup()
 		end,
-	},
-	{
-		"numToStr/Navigator.nvim",
-		config = function()
-			require("Navigator").setup()
-		end,
-	},
-	-- sessions
-	{
-		"folke/persistence.nvim",
-		event = "BufReadPre",
-		opts = {
-			options = { "buffers", "curdir", "tabpages", "winsize", "globals" },
-		},
 	},
 }

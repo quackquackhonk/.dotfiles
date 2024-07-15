@@ -4,11 +4,14 @@ local function keymap(mode, lhs, rhs)
 end
 
 local wk = require("which-key")
+wk.setup({ preset = "helix" })
+
 local hydra = require("hydra")
 local splits = require("smart-splits")
-local cmd = require("hydra.keymap-util").cmd
 local pcmd = require("hydra.keymap-util").pcmd
-local persistence = require("persistence")
+local cmd = function(str)
+	return "<cmd>" .. str .. "<CR>"
+end
 
 local telescope = require("telescope.builtin")
 local close_buf = function()
@@ -34,133 +37,89 @@ vim.api.nvim_create_user_command("OverseerRestartOrRun", function()
 end, {})
 
 -- Leader key mappings with Which-Key
-local dap = require("dap")
-wk.register({
-	q = { close_buf, "Close Buffer" },
-	Q = { cmd("bd"), "Close Buffer AND Window" },
-	f = {
-		name = "+find",
-		f = { cmd("Telescope find_files"), "Find Files" },
-		g = { cmd("Telescope git_files"), "Git Files" },
-		a = { cmd("AerialNavToggle"), "Symbol in file" },
-		r = { cmd("Telescope frecency"), "Recent Files" },
-		s = { cmd("Telescope live_grep"), "Live Grep" },
-		p = { cmd("tabnew | Telescope project display_type=full"), "Find Project" },
-		u = { cmd("Telescope undo"), "Find undo" },
-	},
-	e = {
-		name = "+editor",
-		f = { require("conform").format, "format file" },
-		h = { cmd("Telescope highlights"), "Show highlight groups" },
-		g = { cmd("tcd %:h | tcd `git rev-parse --show-toplevel`"), "CD to current git repo" },
-		t = {
-			name = "toggle",
-			r = { cmd("set rnu!"), "relative numbers" },
-		},
-		s = { cmd("ISwap"), "Swap arguments" },
-		u = { cmd("!dos2unix %"), "Dos2Unix current file" },
-		y = { '"+y', "Copy to system clipboard" },
-	},
-	c = {
-		name = "+code",
-		v = { require("swenv.api").pick_venv, "Pick Virtual Environment" },
-		m = { cmd("Neogen"), "Generate Comment" },
-		c = { cmd("OverseerRestartOrRun"), "Run a command" },
-		t = {
-			name = "+testing",
-			r = { require("neotest").run.run, "Run nearest test" },
-			f = {
-				function()
-					require("neotest").run.run(vim.fn.expand("%"))
-				end,
-				"Run tests in file",
-			},
-			o = { require("neotest").output.open, "Open test output" },
-			O = { require("neotest").output_panel.toggle, "Toggle output panel" },
-		},
-	},
-	t = {
-		name = "tab",
-		n = { cmd("tabnew"), "New Tab" },
-		r = {
-			function()
-				vim.ui.input({ prompt = "Rename tab to..." }, rename_tab)
-			end,
-			"Rename current tab",
-		},
-	},
-	g = { cmd("Neogit"), "Git Status" },
-	s = {
-		name = "+settings",
-		r = { cmd("set rnu!"), "Relative Numbers" },
-	},
-	d = {
-		name = "+debugging",
-		b = { dap.toggle_breakpoint, "Toggle Breakpoint" },
-		c = { dap.continue, "DAP Continue" },
-		r = { dap.repl.open, "Open DAP REPL" },
-		o = { dap.step_over, "Step Over" },
-		i = { dap.step_into, "Step Into" },
-	},
-	o = {
-		name = "+open",
-		f = { cmd("Oil"), "Filebrowser" },
-		d = { cmd("Trouble diagnostics toggle focus=true"), "Diagnostics" },
-		t = { cmd("TodoTelescope keywords=TODO,FIX,FIXME"), "Show project TODOs" },
-		o = { cmd("OverseerToggle"), "Open Overseer window" },
-	},
-	w = {
-		name = "window",
-		v = { cmd("vsplit"), "Create vertical split" },
-		s = { cmd("split"), "Create vertical split" },
-		q = { cmd("close"), "Close window" },
-	},
-	[";"] = {
-		name = "+neovim",
-		p = { cmd("Lazy"), "Packages" },
-		l = {
-			name = "Load",
-			l = { cmd("so %"), "Source current file" },
-			t = { cmd("so ~/.dotfiles/nvim/lua/qqh/theme.lua"), "Source theme file" },
-		},
-		c = { cmd("tabnew | e ~/.config/nvim/init.lua | tcd ~/.dotfiles/"), "Open Config" },
-		o = { cmd("tabnew | e ~/notes/index.norg | tcd ~/notes/"), "Open Notes" },
-		n = {
-			name = "notifications",
-			d = { cmd("NoiceDismiss"), "Dismiss notifications" },
-			["<Leader>"] = { cmd("Noice"), "Show message history" },
-			e = { cmd("NoiceErrors"), "Show errors" },
-		},
-	},
-	y = { cmd("Telescope neoclip"), "Open Neoclip" },
-	[","] = { "<c-6>", "Open Previous Buffer" },
-	["<Tab>"] = { "<C-w>W", "Focus previous split" },
-	["<Leader>"] = { cmd("Telescope buffers"), "Show Open Buffers" },
-}, { prefix = "<Leader>" })
+wk.add({
+	{ "<leader>f", group = "find" },
+	{ "<leader>ff", cmd("Telescope find_files"), desc = "Find Files" },
+	{ "<leader>fg", cmd("Telescope git_files"), desc = "Find Git Files" },
+	{ "<leader>fa", cmd("AerialNavToggle"), desc = "Find Symbol in File" },
+	{ "<leader>fs", cmd("Telescope live_grep"), desc = "Live Grep" },
+	{ "<leader>fp", cmd("tabnew | Telescope project display_type=full"), desc = "Find project" },
+	{ "<leader>fu", cmd("Telescope undo"), desc = "Find undo" },
 
--- Normal mode mappings
-wk.register({
-	["<Esc>"] = { cmd("noh"), "Hide Highlighting" },
-	["[t"] = { cmd("tabprev"), "Previous tab" },
-	["]t"] = { cmd("tabnext"), "Next tab" },
+	{ "<leader>c", group = "code" },
+	{ "<leader>cm", cmd("Neogen"), desc = "Generate comment" },
+	{ "<leader>cc", cmd("OverseerRestartOrRun"), desc = "Run a command" },
+
+	{ "<leader>o", group = "open" },
+	{ "<leader>oo", cmd("OverseerToggle"), desc = "Open Overseer Window" },
+	{ "<leader>of", cmd("Oil"), desc = "Open CWD in Oil" },
+	{ "<leader>od", cmd("Trouble diagnostics toggle focus=true"), desc = "Open diagnostics window" },
+	{ "<leader>ot", cmd("TodoTelescope keywords=TODO,Fix,FIXME"), desc = "Show project TODOs" },
+
+	{ "<leader>e", group = "editor" },
+	{ "<leader>eh", cmd("Telescope highlights"), desc = "Show highlight groups" },
+	{ "<leader>eg", cmd("tcd %:h | tcd `git rev-parse --show-toplevel`"), desc = "CD to closest git repo root" },
+	{ "<leader>etr", cmd("set rnu!"), desc = "Toggle relative numbers" },
+
+	{ "<leader>t", group = "tab" },
+	{ "<leader>tn", cmd("tabnew"), desc = "New Tab" },
+	{
+		"<leader>tr",
+		function()
+			vim.ui.input({ prompt = "Rename tab to..." }, rename_tab)
+		end,
+		desc = "Rename current tab",
+	},
+
+	{ "<leader>;", group = "neovim" },
+	{ "<leader>;c", cmd("tabnew | e ~/.config/nvim/init.lua | tcd ~/.dotfiles/"), desc = "Open neovim config" },
+	{ "<leader>;s", cmd("so %"), desc = "Source current file" },
+	{ "<leader>;n", cmd("tabnew | e ~/notes/index.norg | tcd ~/notes/"), desc = "Open Notes" },
+
+	{ "<leader>w", group = "window" },
+	{ "<leader>wv", cmd("vsplit"), desc = "Open vertical split" },
+	{ "<leader>ws", cmd("split"), desc = "Open vertical split" },
+
+	-- non-nested leader key
+	{ "<leader>q", close_buf, desc = "Close Buffer" },
+	{ "<leader>Q", cmd("bd"), desc = "Close Buffer AND Window" },
+	{ "<leader>,", "<C-6>", desc = "Previous buffer" },
+	{ "<leader>y", '"+y', desc = "Copy to system clipboard" },
+	{ "<leader><Tab>", "<C-w>W", desc = "Goto last split" },
+	{ "<leader><leader>", cmd("Telescope buffers"), desc = "Show open buffers" },
+
+    -- Normal mode mappings
+	{ "<Esc>", cmd("noh"), desc = "Hide Highlighting" },
+	{ "[t", cmd("tabprev"), desc = "Previous tab" },
+	{ "]t",  cmd("tabnext"), desc = "Next tab" },
+    { "<F8>", require("maximize").toggle, desc = "Maximize split"},
+
+    {
+        mode = { "n", "v"}
+    },
+
+    {
+        mode = { "n", "i"},
+        { "<C-Left>", "<C-w>h", desc = "Move focus left"},
+        { "<C-Right>", "<C-w>l", desc = "Move focus right"},
+        { "<C-Up>", "<C-w>k", desc = "Move focus up"},
+        { "<C-Down>", "<C-w>j", desc = "Move focus down"},
+        { "<C-q>", cmd("close"), desc = "Close window" },
+    },
+    {
+        mode = { "n", "i", "v"},
+        { "<M-m>", "<Left>", desc = "Move left" },
+        {"<M-i>", "<Right>", desc = "Move right" },
+        {"<M-e>", "<Up>", desc = "Move up" },
+        {"<M-n>", "<Down>", desc = "Move down" },
+    },
+
+    {
+        mode = {"v"},
+        { "<leader>y", '"+y', desc = "Copy to system clipboard" },
+        { "<leader>p", '"+p', desc = "Pase to system clipboard" },
+    }
 })
-
--- normal and insert mode mappings
-wk.register({
-	["<F8>"] = { require("maximize").toggle, "Maximize window" },
-	["<C-q>"] = { cmd("close"), "Close window" },
-	["<C-Left>"] = { "<C-w>h", "Move focus left" },
-	["<C-Right>"] = { "<C-w>l", "Move focus right" },
-	["<C-Up>"] = { "<C-w>k", "Move focus up" },
-	["<C-Down>"] = { "<C-w>j", "Move focus down" },
-}, { mode = { "n", "i" } })
-
-wk.register({
-	["<M-m>"] = { "<Left>", "Move left" },
-	["<M-i>"] = { "<Right>", "Move right" },
-	["<M-e>"] = { "<Up>", "Move up" },
-	["<M-n>"] = { "<Down>", "Move down" },
-}, { mode = { "n", "i", "v" } })
 
 -- Keybindings for HOP
 -- place this in one of your configuration file(s)
@@ -197,11 +156,6 @@ vim.keymap.set("n", "<Tab>", "za", { silent = true, desc = "Fold-cycle: open fol
 keymap("v", "<", "<gv")
 keymap("v", ">", ">gv")
 
--- visual mode leader key bindings
-wk.register({
-	y = { '"+y', "Copy to system clipboard" },
-	p = { '"+p', "Copy to system clipboard" },
-}, { prefix = "<Leader>", mode = "v" })
 
 -- HYDRA keymappings
 
