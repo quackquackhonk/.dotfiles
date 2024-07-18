@@ -12,12 +12,16 @@ It's my org config!
 
   (unless package-archive-contents
    (package-refresh-contents))
-  
+
   ;; Initialize use-package on non-Linux platforms
   (unless (package-installed-p 'use-package) (package-install 'use-package))
 
   (require 'use-package)
   (setq use-package-always-ensure t)
+
+  (use-package exec-path-from-shell
+    :config
+    (exec-path-from-shell-initialize))
 #+end_src
 
 * settings
@@ -28,22 +32,18 @@ some general settings. enabling the mouse, column numbers, things of that sort.
   (scroll-bar-mode -1)        ; Disable visible scrollbar
   (tool-bar-mode -1)          ; Disable the toolbar
   (tooltip-mode -1)           ; Disable tooltips
+  (menu-bar-mode -1)          ; Disable the menu bar
+  (setq default-frame-alist   ; Disable title bar
+    '((undecorated-round . t)))
+  (setq native-comp-async-report-warnings-errors nil)
   (set-fringe-mode 10)        ; Give some breathing room
   (xterm-mouse-mode)          ; enable mouse control in terminal
   (global-hl-line-mode)       ; cursor line
-  (menu-bar-mode -1)          ; Disable the menu b
   (electric-pair-mode)        ; auto pairs
   (electric-indent-mode)      ; auto pairs
-  (setq visible-bell t)       ; Set up the visible bell
   (setq vc-follow-symlinks t) ; auto follow VC links
   (setq indicate-empty-lines t)
-
-  ;; macos settings
-  (setq mac-control-modifier 'super)
-  (setq mac-command-modifier 'control)
-
-  ;; GUI font
-  (set-frame-font "JetBrainsMono Nerd Font 14" nil t)
+  (setq inhibit-startup-message t)
 
   ;; column numbers
   (setq display-line-numbers 'relative)
@@ -66,10 +66,6 @@ some general settings. enabling the mouse, column numbers, things of that sort.
   ;; expand tabs into spaces
   (setq-default indent-tabs-mode nil)
   (setq-default tab-width 2)
-
-  (use-package exec-path-from-shell
-    :config
-    (exec-path-from-shell-initialize))
 #+end_src
 * defs
 ** commands
@@ -86,20 +82,16 @@ some general settings. enabling the mouse, column numbers, things of that sort.
     (load-file user-init-file))
   (defun my/open-emacs-config ()
     (interactive)
-    (find-file "~/.dotfiles/emacs/config.org"))
+    (find-file "~/.emacs.d/config.org"))
 
   (defun my/kill-current-buffer ()
     (interactive)
     (kill-buffer (current-buffer)))
-
-  (defun my/ssh-to-khoury-linux ()
-    (interactive)
-    (find-file "/ssh:tankalav@login.ccs.neu.edu:/home/tankalav"))
 #+end_src
 
-* keybindings
-** general
-#+begin_src emacs-lisp 
+* packages
+** keybinding utilities
+#+begin_src elisp
   (use-package which-key
     :init (which-key-mode)
     :diminish
@@ -110,54 +102,7 @@ some general settings. enabling the mouse, column numbers, things of that sort.
   (use-package general
     :config
     (general-evil-setup))
-
-  ;; keybindings
-  (general-create-definer my/leader-definer
-    :keymaps '(normal visual emacs)
-    :prefix "SPC"
-    :global-prefix "C-SPC")
-
-  ;; defines leader key bindings
-  (my/leader-definer
-    ;; top level bindings
-    "SPC" 'helm-buffers-list
-    "TAB" 'other-window
-    "x" 'helm-M-x
-    "," 'switch-to-prev-buffer
-    "." 'switch-to-next-buffer
-    "q" 'my/kill-current-buffer
-    ;; misc (;)
-    ";r" 'my/emacs-reload
-    ";c" 'my/open-emacs-config
-    ;; toggles (t)
-    "tr" 'my/toggle-relative-line
-    ;; projectile (p)
-    "p" 'projectile-command-map
-    ;; LSP
-    "ld" 'lsp-find-definition
-    "lr" 'lsp-ui-peek-find-references
-    "lR" 'lsp-rename
-    "lI" 'lsp-ui-imenu
-    "le" 'helm-lsp-diagnostics
-    "l SPC" 'helm-lsp-code-actions
-    ;; code
-    "cc" 'compile
-    "cC" 'compile-interactive
-    "ce" 'eval-defun
-    "ch" 'man
-    ;; windows
-    "w" 'hydra-windows/body
-    ;; git bindings
-    "gg" 'magit
-    "gp" 'magit-pull
-    ;; files
-    "fk" 'my/ssh-to-khoury-linux
-    "ff" 'find-file
-    "fp" 'counsel-rg
-    "fs" 'swiper
-    "fq" 'kill-buffer)
 #+end_src
-
 ** evil mode
 #+begin_src emacs-lisp 
   (use-package evil
@@ -179,12 +124,18 @@ some general settings. enabling the mouse, column numbers, things of that sort.
     (evil-global-set-key 'motion "j" 'evil-next-visual-line)
     (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
 
+    ;; define movements to be accessed by Meta + key on colemak
     (general-def
       :states '(normal visual insert)
       "M-m" 'evil-backward-char
       "M-n" 'evil-next-visual-line
       "M-e" 'evil-previous-visual-line
-      "M-i" 'evil-forward-char)
+      "M-i" 'evil-forward-char
+      ;; Window movement
+      "<C-left>" 'evil-window-left
+      "<C-right>" 'evil-window-right
+      "<C-up>" 'evil-window-up
+      "<C-down>" 'evil-window-down)
 
     ;; Universal argument: C-u -> C-l
     (global-unset-key (kbd "C-l"))
@@ -205,8 +156,8 @@ some general settings. enabling the mouse, column numbers, things of that sort.
 
   (use-package evil-numbers
     :config
-    (define-key evil-normal-state-map (kbd "g +") 'evil-numbers/inc-at-pt)
-    (define-key evil-normal-state-map (kbd "g -") 'evil-numbers/dec-at-pt))
+    (define-key evil-normal-state-map (kbd "<C-a>") 'evil-numbers/inc-at-pt)
+    (define-key evil-normal-state-map (kbd "<C-x>") 'evil-numbers/dec-at-pt))
 
   (use-package evil-commentary
     :after evil
@@ -228,42 +179,17 @@ some general settings. enabling the mouse, column numbers, things of that sort.
     (global-evil-surround-mode 1))
 #+end_src
 
-** hydra
-#+begin_src emacs-lisp 
-  (use-package hydra)
-  (defhydra hydra-windows (:hint nil :rows 1)
-    "Window Navigation..."
-    ;; navigating windows
-    ("<left>" evil-window-left)
-    ("<up>" evil-window-up)
-    ("<down>" evil-window-down)
-    ("<right>" evil-window-right)
-    ("TAB" other-window )
-    ;; resizing windows
-    ("<C-left>" evil-window-decrease-width)
-    ("<C-up>" evil-window-increase-height)
-    ("<C-down>" evil-window-decrease-height)
-    ("<C-right>" evil-window-increase-width)
-    ;; make windows  
-    ("v" evil-window-vsplit)
-    ("s" evil-window-split)
-    ("q" evil-quit))
-#+end_src
-
-* packages
 ** completion
 
-Configuration for ~ivy~ / ~helm~, ~company~, ~counsel~, and ~swiper~
+Configuration for ~fzf~, ~helm~, ~company~, ~counsel~, and ~swiper~
 
 #+begin_src emacs-lisp 
-  ;; IVY COMPLETION
-  (use-package ivy
-    :demand t
+  (use-package fzf
     :config
-    (ivy-mode)
-    (define-key ivy-minibuffer-map (kbd "<C-return>") 'ivy-done)
-    ;; so we can switch away
-    (define-key ivy-minibuffer-map (kbd "C-w") 'evil-window-map))
+    (setq fzf/executable "fzf"
+          fzf/grep-command "rg --no-heading -nH"
+          fzf/position-bottom t
+          fzf/window-height 20))
   (use-package helm
     :ensure t
     :config
@@ -320,15 +246,12 @@ Configuration for ~ivy~ / ~helm~, ~company~, ~counsel~, and ~swiper~
 #+end_src
 ** projects
 
-comfig
-
 #+begin_src emacs-lisp 
   (use-package projectile
     :config (projectile-mode)
     :custom ((projectile-completion-system 'helm))
     :init
-    (when (file-directory-p "~/code")
-      (setq projectile-project-search-path '("~/code"))))
+      (setq projectile-project-search-path '("~/code/amps/" "~/code/respond/" "~/code/")))
 
   (use-package helm-projectile
     :config (helm-projectile-on))
@@ -348,24 +271,6 @@ comfig
   (setq org-directory "~/org")
 
   (setq org-todo-keywords '((sequence "TODO(t)" "STARTED(s)" "WAITING(w)" "|" "DONE(d)" "KILLED(k)")))
-
-  ;; org mode keybindings, "SPC o"
-  (my/leader-definer
-   "oa" 'org-agenda
-   "oc" 'org-roam-capture
-   "ol" 'org-roam-node-insert
-   "on" 'org-roam-node-find)
-
-  (general-define-key
-   :prefix "SPC"
-   :keymaps 'org-mode-map
-   :states '(normal visual)
-   "ois" 'org-insert-structure-template)
-    "oa" 'org-agenda
-    "oc" 'org-roam-capture
-    "ol" 'org-roam-node-insert
-    "on" 'org-roam-node-find)
-
   (use-package org-appear
     :hook (org-mode . org-appear-mode))
 
@@ -381,7 +286,6 @@ comfig
         org-startup-indented t)
 #+end_src
 
-
 ** terminal
 #+begin_src emacs-lisp
   ;; vterm as a terminal
@@ -393,24 +297,15 @@ comfig
     :ensure t
     :after vterm)
 
-  (my/leader-definer
-    "tt" 'multi-vterm-dedicated-toggle
-    "to" 'multi-vterm
-    "tn" 'multi-vterm-next
-    "te" 'multi-veterm-prev)
 #+end_src
 
 ** docker
 #+begin_src emacs-lisp
   (use-package docker
-    :ensure t
-    :bind ("C-c d" . docker))
+    :ensure t)
 
   (use-package docker-compose-mode)
   (use-package dockerfile-mode)
-
-  (my/leader-definer
-    "cd" 'docker)
 #+end_src
 ** misc packages
 #+begin_src emacs-lisp
@@ -419,6 +314,89 @@ comfig
 
   ;; formatting for most lanugages
   (use-package format-all)
+#+end_src
+** hydra
+#+begin_src emacs-lisp 
+  (use-package hydra)
+  (defhydra hydra-windows (:hint nil :rows 1)
+    "Window Navigation..."
+    ;; navigating windows
+    ("TAB" other-window )
+    ;; resizing windows
+    ("<left>" evil-window-decrease-width)
+    ("<up>" evil-window-increase-height)
+    ("<down>" evil-window-decrease-height)
+    ("<right>" evil-window-increase-width)
+    ;; make windows  
+    ("v" evil-window-vsplit)
+    ("s" evil-window-split)
+    ("q" evil-quit))
+#+end_src
+
+
+* keybindings
+#+begin_src emacs-lisp 
+  ;; keybindings
+  (general-create-definer my/leader-definer
+    :keymaps '(normal visual emacs)
+    :prefix "SPC"
+    :global-prefix "C-SPC")
+
+  ;; defines leader key bindings
+  (my/leader-definer
+    ;; top level bindings
+    "SPC" 'helm-buffers-list
+    "TAB" 'other-window
+    "x" 'helm-M-x
+    "," 'switch-to-prev-buffer
+    "." 'switch-to-next-buffer
+    "q" 'my/kill-current-buffer
+    ;; misc (;)
+    ";r" 'my/emacs-reload
+    ";c" 'my/open-emacs-config
+    ;; toggles (t)
+    "tr" 'my/toggle-relative-line
+    ;; projectile (p)
+    "p" 'projectile-command-map
+    ;; LSP
+    "ld" 'lsp-find-definition
+    "lr" 'lsp-ui-peek-find-references
+    "lR" 'lsp-rename
+    "lI" 'lsp-ui-imenu
+    "le" 'helm-lsp-diagnostics
+    "l SPC" 'helm-lsp-code-actions
+    ;; code
+    "cc" 'compile
+    "cC" 'compile-interactive
+    "ce" 'eval-defun
+    "ch" 'man
+    "cd" 'docker
+    ;; windows
+    "w" 'hydra-windows/body
+    ;; git bindings
+    "g" 'magit
+    ;; files
+    "ff" 'find-file
+    "fp" 'counsel-rg
+    "fs" 'swiper
+    "fq" 'kill-buffer
+    ;; Terminal
+    "tt" 'multi-vterm-dedicated-toggle
+    "to" 'multi-vterm
+    "tn" 'multi-vterm-next
+    "te" 'multi-veterm-prev
+    ;; org mode keybindings, "SPC o"
+    "oa" 'org-agenda
+    "oc" 'org-roam-capture
+    "ol" 'org-roam-node-insert
+    "on" 'org-roam-node-find)
+
+  (general-define-key
+   :prefix "SPC"
+   :keymaps 'org-mode-map
+   :states '(normal visual)
+   "ois" 'org-insert-structure-template)
+
 #+end_src
 
 * Language configuration
@@ -488,7 +466,7 @@ Mostly LSP, other sections will have other stuff idk
     :hook ((c-mode c++-mode objc-mode cuda-mode) . lsp)
     :custom
     (ccls-args nil)
-    (ccls-executable (executable-find "ccls"))
+    (ccls-executable (executable-find "ccls"))
     (projectile-project-root-files-top-down-recurring
      (append '("compile_commands.json" ".ccls")
              projectile-project-root-files-top-down-recurring))
@@ -575,17 +553,12 @@ Mostly LSP, other sections will have other stuff idk
     :hook (python-mode . pyvenv-mode))
 
   (use-package lsp-pyright
+    :ensure t
     :after lsp-mode
-    :custom
-    (lsp-pyright-auto-import-completions nil)
-    (lsp-pyright-typechecking-mode "off")
-    :config
-    (fk/async-process
-     "npm outdated -g | grep pyright | wc -l" nil
-     (lambda (process output)
-       (pcase output
-         ("0\n" (message "Pyright is up to date."))
-         ("1\n" (message "A pyright update is available."))))))
+    :hook (python-mode . (lambda ()
+                            (require 'lsp-pyright)
+                            (lsp-deferred))))  ; or lsp-deferred
+
 #+end_src
 ** SML
 #+begin_src emacs-lisp 
@@ -638,17 +611,9 @@ Mostly LSP, other sections will have other stuff idk
 
   (use-package nerd-icons)
 
-  (use-package doom-themes
-    :ensure t
-    :config
-    (setq doom-themes-enable-bold nil
-          doom-themes-enable-italic nil)
-    (setq doom-gruvbox-dark-variant nil)
-    (doom-themes-visual-bell-config))
-
-  (use-package melancholy-theme)
-
-  (load-theme 'doom-gruvbox t)
+  (use-package catppuccin-theme)
+  (setq catppuccin-flavor 'mocha)
+  (catppuccin-reload)
 
   (use-package rainbow-delimiters
     :hook (prog-mode . rainbow-delimiters-mode))
@@ -667,8 +632,4 @@ Mostly LSP, other sections will have other stuff idk
   (use-package solaire-mode
     :config
     (solaire-global-mode +1))
-
-  (use-package autothemer
-    :config
-    (setq autothemer--theme 'doom-gruvbox))
 #+end_src

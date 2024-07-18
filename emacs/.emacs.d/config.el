@@ -13,22 +13,33 @@
 (require 'use-package)
 (setq use-package-always-ensure t)
 
+(use-package exec-path-from-shell
+  :config
+  (exec-path-from-shell-initialize))
+
 (scroll-bar-mode -1)        ; Disable visible scrollbar
 (tool-bar-mode -1)          ; Disable the toolbar
 (tooltip-mode -1)           ; Disable tooltips
+(menu-bar-mode -1)          ; Disable the menu bar
+(setq default-frame-alist   ; Disable title bar
+  '((undecorated-round . t)))
+(setq native-comp-async-report-warnings-errors nil)
 (set-fringe-mode 10)        ; Give some breathing room
 (xterm-mouse-mode)          ; enable mouse control in terminal
 (global-hl-line-mode)       ; cursor line
-(menu-bar-mode -1)          ; Disable the menu b
 (electric-pair-mode)        ; auto pairs
 (electric-indent-mode)      ; auto pairs
-(setq visible-bell t)       ; Set up the visible bell
 (setq vc-follow-symlinks t) ; auto follow VC links
 (setq indicate-empty-lines t)
+(setq inhibit-startup-message t)
 
 ;; column numbers
-(column-number-mode)
-(global-display-line-numbers-mode t)
+(setq display-line-numbers 'relative)
+(global-display-line-numbers-mode 'relative)
+(dolist (mode '(term-mode-hook
+                vterm-mode-hook
+                shell-mode-hook))
+(add-hook mode (lambda() (display-line-numbers-mode -1))))
 
 ;; Make ESC quit prompts
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
@@ -56,7 +67,7 @@
   (load-file user-init-file))
 (defun my/open-emacs-config ()
   (interactive)
-  (find-file "~/.dotfiles/emacs/config.org"))
+  (find-file "~/.emacs.d/config.org"))
 
 (defun my/kill-current-buffer ()
   (interactive)
@@ -66,59 +77,21 @@
   :init (which-key-mode)
   :diminish
   :config
-  (setq which-key-idle-delay 1.5))
+  (setq which-key-idle-delay 1.0))
 
 ;; general is used for custom key bindings
 (use-package general
   :config
   (general-evil-setup))
 
-;; keybindings
-(general-create-definer my/leader-definer
-  :keymaps '(normal visual emacs)
-  :prefix "SPC"
-  :global-prefix "C-SPC")
-
-;; defines leader key bindings
-(my/leader-definer
-  ;; top level bindings
-  "SPC" 'helm-buffers-list
-  "x" 'helm-M-x
-  "," 'switch-to-prev-buffer
-  "." 'switch-to-next-buffer
-  "q" 'my/kill-current-buffer
-  ;; misc (;)
-  ";r" 'my/emacs-reload
-  ";c" 'my/open-emacs-config
-  ;; toggles (t)
-  "tr" 'my/toggle-relative-line
-  ;; projectile (p)
-  "p" 'projectile-command-map
-  ;; LSP
-  "ld" 'lsp-find-definition
-  "lr" 'lsp-ui-peek-find-references
-  "lR" 'lsp-rename
-  "lI" 'lsp-ui-imenu
-  "le" 'helm-lsp-diagnostics
-  "l SPC" 'helm-lsp-code-actions
-  ;; windows
-  "w" 'hydra-windows/body
-  ;; git bindings
-  "gg" 'magit
-  "gp" 'magit-pull
-  ;; files
-  "ff" 'find-file
-  "fp" 'counsel-rg
-  "fs" 'swiper
-  "fq" 'kill-buffer)
-
 (use-package evil
-  :demand t
+  :ensure t
   :init
-  (setq evil-want-integration t)
   (setq evil-want-keybinding nil)
+  (setq evil-want-integration t)
   (setq evil-want-C-u-scroll t)
   (setq evil-want-C-i-jump nil)
+  (setq evil-shift-width 2)
   :config
   (evil-mode 1)
   (evil-set-undo-system 'undo-redo)
@@ -129,6 +102,27 @@
   ;; Use visual line motions even outside of visual-line-mode buffers
   (evil-global-set-key 'motion "j" 'evil-next-visual-line)
   (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
+
+  ;; define movements to be accessed by Meta + key on colemak
+  (general-def
+    :states '(normal visual insert)
+    "M-m" 'evil-backward-char
+    "M-n" 'evil-next-visual-line
+    "M-e" 'evil-previous-visual-line
+    "M-i" 'evil-forward-char
+    ;; Window movement
+    "<C-left>" 'evil-window-left
+    "<C-right>" 'evil-window-right
+    "<C-up>" 'evil-window-up
+    "<C-down>" 'evil-window-down)
+
+  ;; Universal argument: C-u -> C-l
+  (global-unset-key (kbd "C-l"))
+  (general-define-key
+   "C-l" 'universal-argument)
+  (general-define-key
+   :keymaps 'universal-argument-map
+   "C-l" 'universal-argument-more)
 
   (evil-set-initial-state 'messages-buffer-mode 'normal)
   (evil-set-initial-state 'dashboard-mode 'normal))
@@ -141,13 +135,8 @@
 
 (use-package evil-numbers
   :config
-  (define-key evil-normal-state-map (kbd "g +") 'evil-numbers/inc-at-pt)
-  (define-key evil-normal-state-map (kbd "g -") 'evil-numbers/dec-at-pt))
-
-(use-package evil-surround
-  :ensure t
-  :config
-  (global-evil-surround-mode 1))
+  (define-key evil-normal-state-map (kbd "<C-a>") 'evil-numbers/inc-at-pt)
+  (define-key evil-normal-state-map (kbd "<C-x>") 'evil-numbers/dec-at-pt))
 
 (use-package evil-commentary
   :after evil
@@ -157,30 +146,23 @@
 (use-package evil-snipe
   :after evil
   :config
+  (evil-define-key '(normal) evil-snipe-local-mode-map
+    "s" 'evil-snipe-s
+    "S" 'evil-snipe-S)
   (evil-snipe-mode +1)
   (evil-snipe-override-mode +1))
 
-(use-package hydra)
-(defhydra hydra-windows (:hint nil :rows 1)
-  "Window Navigation..."
-  ;; navigating windows
-  ("<left>" evil-window-left)
-  ("<up>" evil-window-up)
-  ("<down>" evil-window-down)
-  ("<right>" evil-window-right)
-  ;; make windows  
-  ("v" evil-window-vsplit)
-  ("s" evil-window-split)
-  ("q" evil-quit))
-
-;; IVY COMPLETION
-(use-package ivy
-  :demand t
+(use-package evil-surround
+  :ensure t
   :config
-  (ivy-mode)
-  (define-key ivy-minibuffer-map (kbd "<C-return>") 'ivy-done)
-  ;; so we can switch away
-  (define-key ivy-minibuffer-map (kbd "C-w") 'evil-window-map))
+  (global-evil-surround-mode 1))
+
+(use-package fzf
+  :config
+  (setq fzf/executable "fzf"
+        fzf/grep-command "rg --no-heading -nH"
+        fzf/position-bottom t
+        fzf/window-height 20))
 (use-package helm
   :ensure t
   :config
@@ -239,32 +221,134 @@
   :config (projectile-mode)
   :custom ((projectile-completion-system 'helm))
   :init
-  (when (file-directory-p "~/code")
-    (setq projectile-project-search-path '("~/code"))))
+    (setq projectile-project-search-path '("~/code/amps/" "~/code/respond/" "~/code/")))
 
 (use-package helm-projectile
   :config (helm-projectile-on))
 
-(use-package persp-mode
-  :config
-    (with-eval-after-load "persp-mode"
-      (setq wg-morph-on nil)
-      (setq persp-autokill-buffer-on-remove 'kill-weak)
-      (add-hook 'window-setup-hook #'(lambda () (persp-mode 1))))
-    (require 'persp-mode))
-
 (use-package magit
   :ensure t)
+
+(require 'org)
+
+(use-package org-roam
+  :config
+  (setq org-roam-directory (file-truename "~/org/"))
+  (org-roam-db-autosync-mode))
+
+(setq org-directory "~/org")
+
+(setq org-todo-keywords '((sequence "TODO(t)" "STARTED(s)" "WAITING(w)" "|" "DONE(d)" "KILLED(k)")))
+(use-package org-appear
+  :hook (org-mode . org-appear-mode))
+
+;; Nice bullets
+(use-package org-superstar
+  :config
+  (setq org-superstar-special-todo-items t)
+  (add-hook 'org-mode-hook (lambda ()
+                             (org-superstar-mode 1))))
+
+(setq org-hide-emphasis-markers t
+      org-pretty-entities t
+      org-startup-indented t)
+
+;; vterm as a terminal
+(use-package vterm
+  :ensure t
+  :config
+  (setq vterm-timer-delay 0.01))
+(use-package multi-vterm
+  :ensure t
+  :after vterm)
+
+(use-package docker
+  :ensure t)
+
+(use-package docker-compose-mode)
+(use-package dockerfile-mode)
 
 ;; i forget what this does
 (use-package command-log-mode)
 
-;; vterm as a terminal
-(use-package vterm
-  :ensure t)
-
 ;; formatting for most lanugages
 (use-package format-all)
+
+(use-package hydra)
+(defhydra hydra-windows (:hint nil :rows 1)
+  "Window Navigation..."
+  ;; navigating windows
+  ("TAB" other-window )
+  ;; resizing windows
+  ("<left>" evil-window-decrease-width)
+  ("<up>" evil-window-increase-height)
+  ("<down>" evil-window-decrease-height)
+  ("<right>" evil-window-increase-width)
+  ;; make windows  
+  ("v" evil-window-vsplit)
+  ("s" evil-window-split)
+  ("q" evil-quit))
+
+;; keybindings
+(general-create-definer my/leader-definer
+  :keymaps '(normal visual emacs)
+  :prefix "SPC"
+  :global-prefix "C-SPC")
+
+;; defines leader key bindings
+(my/leader-definer
+  ;; top level bindings
+  "SPC" 'helm-buffers-list
+  "TAB" 'other-window
+  "x" 'helm-M-x
+  "," 'switch-to-prev-buffer
+  "." 'switch-to-next-buffer
+  "q" 'my/kill-current-buffer
+  ;; misc (;)
+  ";r" 'my/emacs-reload
+  ";c" 'my/open-emacs-config
+  ;; toggles (t)
+  "tr" 'my/toggle-relative-line
+  ;; projectile (p)
+  "p" 'projectile-command-map
+  ;; LSP
+  "ld" 'lsp-find-definition
+  "lr" 'lsp-ui-peek-find-references
+  "lR" 'lsp-rename
+  "lI" 'lsp-ui-imenu
+  "le" 'helm-lsp-diagnostics
+  "l SPC" 'helm-lsp-code-actions
+  ;; code
+  "cc" 'compile
+  "cC" 'compile-interactive
+  "ce" 'eval-defun
+  "ch" 'man
+  "cd" 'docker
+  ;; windows
+  "w" 'hydra-windows/body
+  ;; git bindings
+  "g" 'magit
+  ;; files
+  "ff" 'find-file
+  "fp" 'counsel-rg
+  "fs" 'swiper
+  "fq" 'kill-buffer
+  ;; Terminal
+  "tt" 'multi-vterm-dedicated-toggle
+  "to" 'multi-vterm
+  "tn" 'multi-vterm-next
+  "te" 'multi-veterm-prev
+  ;; org mode keybindings, "SPC o"
+  "oa" 'org-agenda
+  "oc" 'org-roam-capture
+  "ol" 'org-roam-node-insert
+  "on" 'org-roam-node-find)
+
+(general-define-key
+ :prefix "SPC"
+ :keymaps 'org-mode-map
+ :states '(normal visual)
+ "ois" 'org-insert-structure-template)
 
 (use-package tree-sitter-langs)
 (use-package tree-sitter
@@ -287,6 +371,7 @@
          (lsp-mode . lsp-enable-which-key-integration))
   :commands (lsp lsp-deferred)
   :config
+  (setq lsp-warn-no-matched-clients nil)
   (setq lsp-auto-execute-action nil))
 
 (use-package lsp-ui
@@ -310,10 +395,17 @@
 (use-package helm-lsp)
 (use-package helm-xref)
 
+(use-package dap-mode
+  :ensure t
+  :defer t
+  :after lsp-mode
+  :config
+  (dap-auto-configure-mode))
+
 ;; C/C++
 (use-package ccls
   :after projectile
-  :hook ((c-mode c++-mode objc-mode cuda-mode) . lsp-deferred)
+  :hook ((c-mode c++-mode objc-mode cuda-mode) . lsp)
   :custom
   (ccls-args nil)
   (ccls-executable (executable-find "ccls"))
@@ -322,8 +414,84 @@
            projectile-project-root-files-top-down-recurring))
   :config (add-to-list 'projectile-globally-ignored-directories ".ccls-cache"))
 
+(use-package haskell-mode)
+(use-package lsp-haskell)
+
+(add-hook 'haskell-mode-hook #'lsp)
+(add-hook 'haskell-literate-mode-hook #'lsp)
+
+(general-define-key
+ :prefix "SPC"
+ :keymaps 'haskell-mode-map
+ :states '(normal visual)
+ "/f" 'format-all-buffer
+ "/l" 'haskell-process-load-file)
+
 ;; GLSL
 (use-package glsl-mode)
+
+(use-package tuareg
+  :ensure t
+  :mode (("\\.ocamlinit\\'" . tuareg-mode)))
+
+(use-package dune
+  :ensure t)
+
+;; Merlin configuration
+(use-package merlin
+  :ensure t
+  :config
+  (add-hook 'tuareg-mode-hook #'merlin-mode)
+  (add-hook 'merlin-mode-hook #'company-mode)
+  ;; we're using flycheck instead
+  (setq merlin-error-after-save nil))
+
+(use-package merlin-eldoc
+  :ensure t
+  :hook ((tuareg-mode) . merlin-eldoc-setup))
+
+;; This uses Merlin internally
+(use-package flycheck-ocaml
+  :ensure t
+  :config
+  (flycheck-ocaml-setup))
+
+;; Built-in Python utilities
+(use-package python
+  :ensure t
+  :hook (python-mode . lsp-deferred)
+  :custom
+  (dap-python-debugger 'debugpy)
+  (dap-python-executable "python3")
+  (python-shell-interpreter "python3")
+  :config
+  (require 'dap-python)
+  ;; Remove guess indent python message
+  (setq python-indent-guess-indent-offset-verbose nil))
+
+;; Required to easily switch virtual envs 
+;; via the menu bar or with `pyvenv-workon` 
+;; Setting the `WORKON_HOME` environment variable points 
+;; at where the envs are located. I use miniconda. 
+(use-package pyvenv
+  :ensure t
+  :defer t
+  :config
+  ;; Setting work on to easily switch between environments
+  (setenv "WORKON_HOME" (expand-file-name "~/miniconda3/envs/"))
+  ;; Display virtual envs in the menu bar
+  (setq pyvenv-menu t)
+  ;; Restart the python process when switching environments
+  (add-hook 'pyvenv-post-activate-hooks (lambda ()
+            (pyvenv-restart-python)))
+  :hook (python-mode . pyvenv-mode))
+
+(use-package lsp-pyright
+  :ensure t
+  :after lsp-mode
+  :hook (python-mode . (lambda ()
+                          (require 'lsp-pyright)
+                          (lsp-deferred))))  ; or lsp-deferred
 
 ;; SML
 (use-package sml-mode
@@ -366,18 +534,11 @@
   :ensure t
   :init (doom-modeline-mode 1))
 
-(use-package doom-themes
-  :ensure t
-  :config
-  (setq doom-themes-enable-bold nil
-        doom-themes-enable-italic nil)
-  (setq doom-gruvbox-dark-variant nil)
-  (doom-themes-visual-bell-config))
+(use-package nerd-icons)
 
-(use-package melancholy-theme)
-(use-package gruvbox-theme)
-
-(load-theme 'doom-gruvbox t)
+(use-package catppuccin-theme)
+(setq catppuccin-flavor 'mocha)
+(catppuccin-reload)
 
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
@@ -385,10 +546,14 @@
 (use-package rainbow-mode
   :hook (prog-mode . rainbow-delimiters-mode))
 
+(use-package hl-todo
+  :config
+  (global-hl-todo-mode)       ; highlight TODO
+  (setq hl-todo-keyword-faces
+    '(("TODO"   . "#fabd2f")
+      ("FIXME"  . "#fb4934")
+      ("DEBUG"  . "#8ec07c"))))
+
 (use-package solaire-mode
   :config
   (solaire-global-mode +1))
-
-(use-package autothemer
-  :config
-  (setq autothemer--theme 'doom-gruvbox))
