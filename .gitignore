@@ -3,3 +3,5 @@ nvim/autoload/*
 nvim/.netrwhist
 nvim/plugin/*
 work.lua
+emacs/.emacs.d/elpa/*
+emacs/.emacs.d/eln-cache/*
