@@ -1,168 +1,166 @@
--- Configuration for LSP / Treesitter / Completion
--- Setup lspconfig.
-local capabilities = require("cmp_nvim_lsp").default_capabilities()
+-- Configuration for LSP / Treesitter
+vim.api.nvim_create_autocmd("LspAttach", {
+	group = vim.api.nvim_create_augroup("qqh-lsp-attach", { clear = true }),
+	callback = function(event)
+		-- NOTE: Remember that Lua is a real programming language, and as such it is possible
+		-- to define small helper and utility functions so you don't have to repeat yourself.
+		--
+		-- In this case, we create a function that lets us more easily define mappings specific
+		-- for LSP related items. It sets the mode, buffer and description for us each time.
+		local map = function(keys, func, desc)
+			vim.keymap.set("n", keys, func, { buffer = event.buf, desc = "LSP: " .. desc })
+		end
 
--- LSP Configuration
-local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
-local custom_on_attach = function(client, bufnr)
-	local bufopts = { noremap = true, silent = true, buffer = bufnr }
-	if client.supports_method("textDocument/formatting") then
-		vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
-		-- vim.api.nvim_create_autocmd("BufWritePre", {
-		--     group = augroup,
-		--     buffer = bufnr,
-		--     callback = function()
-		--         -- on 0.8, you should use vim.lsp.buf.format({ bufnr = bufnr }) instead
-		--         vim.lsp.buf.formatting_sync()
-		--     end,
-		-- })
-	end
+		-- Jump to the definition of the word under your cursor.
+		--  This is where a variable was first declared, or where a function is defined, etc.
+		--  To jump back, press <C-t>.
+		map("gd", require("telescope.builtin").lsp_definitions, "[G]oto [D]efinition")
 
-	--- diagnostic configs
-	vim.diagnostic.config({
-		virtual_text = true,
-		float = false,
-	})
+		-- Find references for the word under your cursor.
+		map("gr", require("telescope.builtin").lsp_references, "[G]oto [R]eferences")
 
-	local wk = require("which-key")
-	wk.register({
-		K = { vim.lsp.buf.hover, "Hover", buffer = bufnr },
-		["<C-k>"] = { vim.lsp.buf.signature_help, "Signature Help", buffer = bufnr },
-		g = {
-			D = { vim.lsp.buf.declaration, "Goto declaration", buffer = bufnr },
-			d = { vim.lsp.buf.definition, "Goto definition", buffer = bufnr },
-			i = { vim.lsp.buf.implementation, "Goto implementations", buffer = bufnr },
-			r = { vim.lsp.buf.rename, "Rename symbol", buffer = bufnr },
-			R = { "<cmd>Telescope lsp_references<cr>", buffer = bufnr },
-			["<Leader>"] = { vim.lsp.buf.code_action, "Code actions", buffer = bufnr },
-		},
-	})
-end
+		-- Jump to the implementation of the word under your cursor.
+		--  Useful when your language has ways of declaring types without an actual implementation.
+		map("gI", require("telescope.builtin").lsp_implementations, "[G]oto [I]mplementation")
 
-vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
-	virtual_text = true,
-	signs = true,
-	underline = true,
-	update_in_insert = false,
+		-- Jump to the type of the word under your cursor.
+		--  Useful when you're not sure what type a variable is and you want to see
+		--  the definition of its *type*, not where it was *defined*.
+		map("gD", require("telescope.builtin").lsp_type_definitions, "Type [D]efinition")
+
+		-- Rename the variable under your cursor.
+		--  Most Language Servers support renaming across files, etc.
+		map("gr", vim.lsp.buf.rename, "[R]e[n]ame")
+
+		-- Execute a code action, usually your cursor needs to be on top of an error
+		-- or a suggestion from your LSP for this to activate.
+		map("g<leader>", vim.lsp.buf.code_action, "[C]ode [A]ction")
+
+		-- Opens a popup that displays documentation about the word under your cursor
+		--  See `:help K` for why this keymap.
+		map("K", vim.lsp.buf.hover, "Hover Documentation")
+
+		-- WARN: This is not Goto Definition, this is Goto Declaration.
+		--  For example, in C this would take you to the header.
+		map("gD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
+
+		-- The following two autocommands are used to highlight references of the
+		-- word under your cursor when your cursor rests there for a little while.
+		--    See `:help CursorHold` for information about when this is executed
+		--
+		-- When you move your cursor, the highlights will be cleared (the second autocommand).
+		local client = vim.lsp.get_client_by_id(event.data.client_id)
+		if client and client.server_capabilities.documentHighlightProvider then
+			local highlight_augroup = vim.api.nvim_create_augroup("qqh-lsp-highlight", { clear = false })
+			vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
+				buffer = event.buf,
+				group = highlight_augroup,
+				callback = vim.lsp.buf.document_highlight,
+			})
+
+			vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
+				buffer = event.buf,
+				group = highlight_augroup,
+				callback = vim.lsp.buf.clear_references,
+			})
+
+			vim.api.nvim_create_autocmd("LspDetach", {
+				group = vim.api.nvim_create_augroup("qqh-lsp-detach", { clear = true }),
+				callback = function(event2)
+					vim.lsp.buf.clear_references()
+					vim.api.nvim_clear_autocmds({ group = "qqh-lsp-highlight", buffer = event2.buf })
+				end,
+			})
+		end
+
+		vim.lsp.inlay_hint.enable(false)
+		vim.diagnostic.config({ virtual_text = false })
+	end,
 })
+
+-- LSP servers and clients are able to communicate to each other what features they support.
+--  By default, Neovim doesn't support everything that is in the LSP specification.
+--  When you add nvim-cmp, luasnip, etc. Neovim now has *more* capabilities.
+--  So, we create new capabilities with nvim cmp, and then broadcast that to the servers.
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities = vim.tbl_deep_extend("force", capabilities, require("cmp_nvim_lsp").default_capabilities())
+
 -- Rust
 vim.g.rustaceanvim = {
-	-- Plugin configuration
-	tools = {
-		-- autoSetHints = true,
-		-- hover_with_actions = false,
-		inlay_hints = {
-			show_parameter_hints = true,
-			parameter_hints_prefix = " <- ",
-			other_hints_prefix = " => ",
-		},
-	},
 	-- LSP configuration
 	server = {
 		on_attach = function(client, bufnr)
-			custom_on_attach(client, bufnr)
-			require("which-key").register({
-				l = {
-					C = { "<cmd>RustLsp openCargo<CR>", "Open Cargo.toml" },
-				},
-			}, { prefix = "<leader>" })
+			require("which-key").add({
+				{ "<leader>lC", "<cmd>RustLsp openCargo<CR>", desc = "Open Cargo.toml" },
+			})
 		end,
-		settings = {
-			-- rust-analyzer language server configuration
-			["rust-analyzer"] = {},
-		},
 	},
-	-- DAP configuration
-	dap = {},
 }
 
--- Lua
-require("lspconfig").lua_ls.setup({
-	settings = {
-		Lua = {
-			runtime = {
-				-- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
-				version = "LuaJIT",
-			},
-			diagnostics = {
-				-- Get the language server to recognize the `vim` global
-				globals = { "vim" },
-			},
-			workspace = {
-				-- Make the server aware of Neovim runtime files
-				library = vim.api.nvim_get_runtime_file("", true),
-				checkThirdParty = false,
-			},
-			-- Do not send telemetry data containing a randomized but unique identifier
-			telemetry = {
-				enable = false,
-			},
+local servers = {
+	clangd = {
+		filetypes = { "c", "cpp" },
+		cmd = {
+			"clangd",
+			"--offset-encoding=utf-16",
 		},
 	},
-})
-
--- Python
-require("lspconfig").pyright.setup({
-	on_attach = custom_on_attach,
-	capabilities = capabilities,
-	settings = {
-		python = {
-			analysis = {
-				autoSearchPaths = true,
-				diagnosticMode = "openFilesOnly",
-				useLibraryCodeForTypes = true,
-				typeCheckingMode = "basic",
-			},
-		},
-	},
-})
-require("lspconfig").ruff_lsp.setup({
-	init_options = {
+	-- gopls = {},
+	pyright = {
 		settings = {
-			-- Any extra CLI arguments for `ruff` go here.
-			args = {},
-		},
-	},
-})
--- C/C++
-require("lspconfig").clangd.setup({
-	on_attach = custom_on_attach,
-	capabilities = capabilities,
-	filetypes = { "c", "cpp" },
-	cmd = {
-		"clangd",
-		"--offset-encoding=utf-16",
-	},
-})
-
--- Nix
-require("lspconfig").nil_ls.setup({})
-
--- protobuf
-require("lspconfig").bufls.setup({})
-
--- Java configuration is in ftplugin/java.lua
-
--- Treesitter configuration
-require("nvim-treesitter.configs").setup({
-	textobjects = {
-		select = {
-			enable = true,
-			lookahead = true,
-			keymaps = {
-				["aF"] = "@function.outer",
-				["iF"] = "@function.inner",
+			python = {
+				analysis = {
+					autoSearchPaths = true,
+					diagnosticMode = "openFilesOnly",
+					useLibraryCodeForTypes = true,
+					typeCheckingMode = "basic",
+				},
 			},
 		},
 	},
-	-- A list of parser names, or "all"
-	ensure_installed = { "c", "lua", "rust", "vim", "vimdoc", "query", "python", "json", "yaml", "toml" },
-	auto_install = true,
-	ignore_install = { "all" },
-	-- Install parsers synchronously (only applied to `ensure_installed`)
-	sync_install = false,
-	highlight = {
-		-- `false` will disable the whole extension
-		enable = true,
+	rust_analyzer = {},
+	nil_ls = {},
+
+	lua_ls = {
+		settings = {
+			Lua = {
+				completion = {
+					callSnippet = "Replace",
+				},
+				-- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
+				-- diagnostics = { disable = { 'missing-fields' } },
+			},
+		},
+	},
+}
+
+-- Ensure the servers and tools above are installed
+--  To check the current status of installed tools and/or manually install
+--  other tools, you can run
+--    :Mason
+--
+--  You can press `g?` for help in this menu.
+require("mason").setup()
+
+-- You can add other tools here that you want Mason to install
+-- for you, so that they are available from within Neovim.
+local ensure_installed = vim.tbl_keys(servers or {})
+vim.list_extend(ensure_installed, {
+	"stylua", -- Used to format Lua code
+	"black",
+	"isort",
+})
+require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
+
+require("mason-lspconfig").setup({
+	handlers = {
+		function(server_name)
+			local server = servers[server_name] or {}
+			-- This handles overriding only values explicitly passed
+			-- by the server configuration above. Useful when disabling
+			-- certain features of an LSP (for example, turning off formatting for tsserver)
+			server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
+			require("lspconfig")[server_name].setup(server)
+		end,
 	},
 })

@@ -4,11 +4,13 @@ return {
 		branch = "0.1.x",
 		dependencies = {
 			"nvim-lua/plenary.nvim",
-			"debugloop/telescope-undo.nvim",
 			"nvim-telescope/telescope-project.nvim",
 			{
 				"nvim-telescope/telescope-fzf-native.nvim",
 				build = "make",
+				cond = function()
+					return vim.fn.executable("make") == 1
+				end,
 			},
 		},
 		config = function()
@@ -48,18 +50,7 @@ return {
 						-- results = { "a", "b", "c", "d", "e", "f", "g", "h" },
 						preview = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
 					},
-					file_sorter = require("telescope.sorters").get_fuzzy_file,
 					file_ignore_patterns = { ".git/", "node_modules" },
-					generic_sorter = require("telescope.sorters").get_generic_fuzzy_sorter,
-					path_display = { "truncate" },
-					winblend = 0,
-					color_devicons = true,
-					set_env = { ["COLORTERM"] = "truecolor" }, -- default = nil,
-					file_previewer = require("telescope.previewers").vim_buffer_cat.new,
-					grep_previewer = require("telescope.previewers").vim_buffer_vimgrep.new,
-					qflist_previewer = require("telescope.previewers").vim_buffer_qflist.new,
-					-- Developer configurations: Not meant for general override
-					buffer_previewer_maker = require("telescope.previewers").buffer_previewer_maker,
 					mappings = {
 						i = {
 							["<esc>"] = require("telescope.actions").close,
@@ -81,13 +72,8 @@ return {
 					},
 				},
 			})
-			require("telescope").load_extension("project")
-			require("telescope").load_extension("fzf")
-			require("telescope").load_extension("undo")
+			pcall(require("telescope").load_extension("project"))
+			pcall(require("telescope").load_extension("fzf"))
 		end,
-	},
-	{
-		"nvim-telescope/telescope-frecency.nvim",
-		dependencies = { "kkharji/sqlite.lua" },
 	},
 }

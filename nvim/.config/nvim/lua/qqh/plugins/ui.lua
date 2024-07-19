@@ -1,4 +1,6 @@
 return {
+	"tpope/vim-fugitive",
+	"stevearc/dressing.nvim",
 	{
 		"stevearc/oil.nvim",
 		opts = {
@@ -28,21 +30,6 @@ return {
 				["g\\"] = "actions.toggle_trash",
 			},
 		},
-		-- Optional dependencies
-		dependencies = { "nvim-tree/nvim-web-devicons" },
-	},
-	{
-		"utilyre/barbecue.nvim",
-		name = "barbecue",
-		version = "*",
-		dependencies = {
-			"SmiteshP/nvim-navic",
-			"nvim-tree/nvim-web-devicons", -- optional dependency
-		},
-		opts = {
-			-- configurations go here
-			theme = "catppuccin-mocha",
-		},
 	},
 	{
 		"declancm/maximize.nvim",
@@ -50,20 +37,10 @@ return {
 	},
 	-- Theme / UI
 	{
-		"jghauser/fold-cycle.nvim",
-		opts = {},
-	},
-	{
 		"folke/todo-comments.nvim",
 		dependencies = { "nvim-lua/plenary.nvim" },
 	},
-	"nvim-lua/popup.nvim",
-	"nvim-lua/plenary.nvim",
-	"stevearc/dressing.nvim",
-	"ellisonleao/gruvbox.nvim",
 	{ "catppuccin/nvim", name = "catppuccin", priority = 1000 },
-	"folke/lsp-colors.nvim",
-	"nvim-lualine/lualine.nvim",
 	{
 		"folke/trouble.nvim",
 		config = function()
@@ -71,30 +48,6 @@ return {
 		end,
 	},
 	"norcalli/nvim-colorizer.lua",
-	{
-		"m4xshen/smartcolumn.nvim",
-		opts = {
-			colorcolumn = "120",
-			disabled_filetypes = {
-				"help",
-				"text",
-				"markdown",
-				"org",
-				"lazy",
-				"mason",
-				"dashboard",
-			},
-			custom_colorcolumn = {
-				python = "120",
-			},
-		},
-	},
 	"lukas-reineke/indent-blankline.nvim",
 	"HiPhish/rainbow-delimiters.nvim",
-	{
-
-		"nanozuki/tabby.nvim",
-		event = "VimEnter",
-		dependencies = "nvim-tree/nvim-web-devicons",
-	},
 }

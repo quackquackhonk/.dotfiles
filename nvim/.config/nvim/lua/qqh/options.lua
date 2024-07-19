@@ -3,36 +3,73 @@ local options = {
 	mouse = "nvi",
 	nu = true,
 	termguicolors = true,
-	timeoutlen = 500,
-	updatetime = 500,
+	timeoutlen = 250,
+	updatetime = 300,
 	-- editor
 	syntax = "on",
+
+	scrolloff = 10,
 	cursorline = true,
 	signcolumn = "yes",
+
 	number = true,
 	relativenumber = true,
-	conceallevel = 2,
+
+	-- dont hide anything from me
+	conceallevel = 0,
 	concealcursor = "nc",
-	textwidth = 99,
-	foldexpr = "nvim_treesitter#foldexpr()",
-	foldmethod = "expr",
-	foldlevel = 99,
-	sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal",
-	showtabline = 2,
+
+	-- tab sizes
 	tabstop = 4,
 	softtabstop = 4,
 	shiftwidth = 4,
 	shiftround = true,
+
+	-- fuck folding
+	foldmethod = "manual",
+	foldlevel = 99,
 	expandtab = true,
 	incsearch = true,
+
+	-- change ordering of splits
 	splitright = true,
 	splitbelow = true,
 	formatexpr = "v:lua.require'conform'.formatexpr()",
+	-- Don't show the mode, since it's already in the status line
+	showmode = false,
+
+	-- Enable break indent
+	breakindent = true,
+
+	-- Save undo history
+	undofile = true,
+
+	-- Case-insensitive searching UNLESS \C or one or more capital letters in the search term
+	ignorecase = true,
+	smartcase = true,
+	hlsearch = true,
+
+	-- Preview substitutions live, as you type!
+	inccommand = "split",
 }
 
 for k, v in pairs(options) do
 	vim.opt[k] = v
 end
+
+-- [[ Basic Autocommands ]]
+--  See `:help lua-guide-autocommands`
+
+-- Highlight when yanking (copying) text
+--  Try it with `yap` in normal mode
+--  See `:help vim.highlight.on_yank()`
+vim.api.nvim_create_autocmd("TextYankPost", {
+	desc = "Highlight when yanking (copying) text",
+	group = vim.api.nvim_create_augroup("kickstart-highlight-yank", { clear = true }),
+	callback = function()
+		vim.highlight.on_yank()
+	end,
+})
 
 vim.cmd("filetype plugin indent on")
 vim.cmd([[autocmd BufNewFile,BufRead *.keymap setfiletype dts]])
