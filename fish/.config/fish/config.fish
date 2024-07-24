@@ -5,7 +5,7 @@ fish_add_path $HOME/.sources/sml/bin
 fish_add_path $HOME/.sources/smlnj/bin
 fish_add_path $HOME/.sources/wabt/bin
 fish_add_path $HOME/.sources/v
-fish_add_path $HOME/.sources/nvim-macos/bin
+fish_add_path $HOME/.sources/nvim-macos-arm64/bin
 
 if status is-login
     if test -z "$DISPLAY" -a "$XDG_VTNR" = 1
@@ -22,6 +22,9 @@ if status is-interactive
     --color=bg+:#313244,bg:#1e1e2e,spinner:#f5e0dc,hl:#f38ba8 \
     --color=fg:#cdd6f4,header:#f38ba8,info:#cba6f7,pointer:#f5e0dc \
     --color=marker:#f5e0dc,fg+:#cdd6f4,prompt:#cba6f7,hl+:#f38ba8"
+    export BAT_THEME="Catppuccin Mocha"
+    export RIPGREP_CONFIG_PATH=$HOME/.ripgreprc
+
 
     alias g='git'
     alias gu='gitui'
@@ -64,6 +67,7 @@ set -g CMAKE_EXPORT_COMPILE_COMMANDS
 
 starship init fish | source
 fzf --fish | source
+pyenv init - | source
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
