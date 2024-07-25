@@ -105,7 +105,6 @@ local servers = {
 			"--offset-encoding=utf-16",
 		},
 	},
-	-- gopls = {},
 	pyright = {
 		settings = {
 			python = {
@@ -119,7 +118,6 @@ local servers = {
 		},
 	},
 	rust_analyzer = {},
-	nil_ls = {},
 
 	lua_ls = {
 		settings = {
