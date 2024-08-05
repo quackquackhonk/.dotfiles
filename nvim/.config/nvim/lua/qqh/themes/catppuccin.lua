@@ -27,9 +27,11 @@ require("catppuccin").setup({
 		return {
 			WinSeparator = { bg = colors.mantle, fg = colors.mantle },
 			VertSplit = { bg = colors.mantle, fg = colors.mantle },
+			MiniIndentscopeSymbol = { fg = colors.surface1 },
 			-- tabline
 			TabLine = { bg = colors.mantle },
 			TabLineFill = { bg = colors.mantle },
+			TabLineSel = { bg = colors.surface0, fg = colors.rosewater },
 
 			-- Telescope
 			TelescopeNormal = { fg = colors.blue, bg = colors.crust },
@@ -37,9 +39,6 @@ require("catppuccin").setup({
 			TelescopePromptBorder = { fg = colors.blue, bg = colors.crust },
 			TelescopeSelection = { bg = colors.base },
 			TelescopeMatching = { fg = colors.pink },
-
-			-- TSContext
-			TreesitterContext = { bg = colors.base },
 
 			-- completion menu
 			CmpItemKindSnippet = { fg = colors.base, bg = colors.mauve },
@@ -68,18 +67,11 @@ require("catppuccin").setup({
 			CmpItemKindOperator = { fg = colors.base, bg = colors.blue },
 			CmpItemKindTypeParameter = { fg = colors.base, bg = colors.blue },
 			CmpItemKindCopilot = { fg = colors.base, bg = colors.teal },
-
-			-- Folding UI
-			Folded = { bg = colors.mantle },
-			UfoFoldedEllipsis = { fg = colors.blue },
-			UfoCursorFoldedLine = { fg = colors.mantle },
 		}
 	end,
 	integrations = {
 		cmp = true,
-		barbecue = {
-			alt_background = false,
-		},
+		fidget = true,
 		mason = true,
 		mini = {
 			enabled = true,
@@ -109,30 +101,6 @@ require("catppuccin").setup({
 vim.opt.termguicolors = true
 vim.cmd("colorscheme catppuccin-mocha")
 
--- Rainbow Delimiters / indent blankline setup
-local highlight = {
-	"RainbowRed",
-	"RainbowYellow",
-	"RainbowBlue",
-	"RainbowGreen",
-	"RainbowViolet",
-	"RainbowCyan",
-}
-local hooks = require("ibl.hooks")
--- create the highlight groups in the highlight setup hook, so they are reset
--- every time the colorscheme changes
-hooks.register(hooks.type.HIGHLIGHT_SETUP, function()
-	vim.api.nvim_set_hl(0, "RainbowRed", { fg = colors.red })
-	vim.api.nvim_set_hl(0, "RainbowYellow", { fg = colors.yellow })
-	vim.api.nvim_set_hl(0, "RainbowBlue", { fg = colors.blue })
-	vim.api.nvim_set_hl(0, "RainbowGreen", { fg = colors.green })
-	vim.api.nvim_set_hl(0, "RainbowViolet", { fg = colors.purple })
-	vim.api.nvim_set_hl(0, "RainbowCyan", { fg = colors.aqua })
-end)
-
-vim.g.rainbow_delimiters = { highlight = highlight }
-require("ibl").setup({ scope = { show_start = false, show_end = false, highlight = highlight } })
-
 -- Todo comments
 require("todo-comments").setup({
 	keywords = {
@@ -152,5 +120,26 @@ require("todo-comments").setup({
 		PERF = { icon = " ", alt = { "OPTIM", "PERFORMANCE", "OPTIMIZE" } },
 		-- NOTE: testing text
 		NOTE = { icon = " ", color = "hint", alt = { "INFO" } },
+	},
+})
+
+require("tabby").setup({
+	preset = "tab_only",
+	option = {
+		nerdfont = false,
+		lualine_theme = nil,
+		tabname = {
+			name_fallback = function(tabid)
+				return tabid
+			end,
+		},
+	},
+})
+
+require("lualine").setup({
+	theme = "catppuccin",
+	options = {
+		component_separators = "|",
+		section_separators = { left = "", right = "" },
 	},
 })

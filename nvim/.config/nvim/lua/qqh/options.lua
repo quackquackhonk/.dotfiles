@@ -15,6 +15,9 @@ local options = {
 	number = true,
 	relativenumber = true,
 
+	-- show the tabbar always
+	showtabline = 2,
+
 	-- dont hide anything from me
 	conceallevel = 0,
 	concealcursor = "nc",
@@ -25,7 +28,7 @@ local options = {
 	shiftwidth = 4,
 	shiftround = true,
 
-	-- fuck folding
+	-- never ever ever fold anything
 	foldmethod = "manual",
 	foldlevel = 99,
 	expandtab = true,

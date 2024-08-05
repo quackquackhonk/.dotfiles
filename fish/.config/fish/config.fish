@@ -1,3 +1,4 @@
+fish_add_path /opt/homebrew/bin
 fish_add_path $HOME/bin:/usr/local/bin
 fish_add_path $HOME/.local/bin
 fish_add_path $HOME/.cargo/bin
@@ -35,10 +36,6 @@ if status is-interactive
     alias gp='git pull'
     alias gP='git push'
 
-    function conf
-        cd ~/dotfiles
-    end
-
     alias fishsrc='source $HOME/.config/fish/config.fish'
     alias hyprconf='$EDITOR ~/.config/hypr/hyprland.conf'
     alias fishconf='$EDITOR ~/.config/fish/config.fish && source $HOME/.config/fish/config.fish'
@@ -58,8 +55,6 @@ if status is-interactive
     alias cgt='cargo nextest run'
     alias cgr='cargo run'
     alias cgb='cargo build'
-
-    alias awsnonprod='saml2aws login -a nonprod && eval $(saml2aws script -a nonprod)'
 end
 
 set -g fish_greeting
@@ -67,7 +62,6 @@ set -g CMAKE_EXPORT_COMPILE_COMMANDS
 
 starship init fish | source
 fzf --fish | source
-pyenv init - | source
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
@@ -78,6 +72,7 @@ end
 
 # Spack
 if [ "$hostname" = "LVV3TW207K" ]
+
     source /Users/i34866/opt/git/spack/share/spack/setup-env.fish
 
     function spackon
@@ -95,6 +90,25 @@ if [ "$hostname" = "LVV3TW207K" ]
         export CERT_PATH=$(python -c 'import site; print(site.getsitepackages()[0] + "/certifi/cacert.pem")')
         cat ~/cert/ZscalerRootCertificate-2048-SHA256.crt >> $CERT_PATH
     end
+
+    # Okta AWS utils
+    ## Nonprod login / cli wrapper
+    # authenticate 
+    alias nonprod-login='okta-aws-cli web --profile nonprod --session-duration 28800 --expiry-aws-variables --cache-access-token --write-aws-credentials'
+    alias production-login='okta-aws-cli web --profile production --expiry-aws-variables --cache-access-token --write-aws-credentials'
+
+    alias awsnp='aws --profile nonprod'
+    alias awsprod='aws --profile production'
+
+    function nonprod
+        # set the profile variable
+        export AWS_PROFILE="nonprod"
+    end
+
+    function production
+        export AWS_PROFILE="production"
+    end
 end
 
 zoxide init fish | source
+/Users/i34866/.local/bin/mise activate fish | source

@@ -1,6 +1,7 @@
 return {
-	"tpope/vim-fugitive",
-	"stevearc/dressing.nvim",
+	{
+		"nvim-lualine/lualine.nvim",
+	},
 	{
 		"stevearc/oil.nvim",
 		opts = {
@@ -31,23 +32,44 @@ return {
 			},
 		},
 	},
-	{
+	{ -- Maximize windows
 		"declancm/maximize.nvim",
 		opts = {},
 	},
-	-- Theme / UI
-	{
+	{ -- Use telescope to search TODOs in the project
 		"folke/todo-comments.nvim",
 		dependencies = { "nvim-lua/plenary.nvim" },
 	},
 	{ "catppuccin/nvim", name = "catppuccin", priority = 1000 },
-	{
+	{ -- Nice diagnostic view
 		"folke/trouble.nvim",
 		config = function()
 			require("trouble").setup({})
 		end,
 	},
-	"norcalli/nvim-colorizer.lua",
-	"lukas-reineke/indent-blankline.nvim",
-	"HiPhish/rainbow-delimiters.nvim",
+	{
+		"nanozuki/tabby.nvim",
+		event = "VimEnter", -- lazy load this shit
+		dependencies = "nvim-tree/nvim-web-devicons",
+	},
+	"tpope/vim-fugitive", -- The only Git UI that just works
+	{
+		"kristijanhusak/vim-dadbod-ui",
+		dependencies = {
+			{ "tpope/vim-dadbod", lazy = true },
+			{ "kristijanhusak/vim-dadbod-completion", ft = { "sql", "mysql", "plsql" }, lazy = true }, -- Optional
+		},
+		cmd = {
+			"DBUI",
+			"DBUIToggle",
+			"DBUIAddConnection",
+			"DBUIFindBuffer",
+		},
+		init = function()
+			-- Your DBUI configuration
+			vim.g.db_ui_use_nerd_fonts = 0
+		end,
+	},
+	"stevearc/dressing.nvim", -- better vim.ui.select
+	"NvChad/nvim-colorizer.lua", -- highlight hex colors
 }

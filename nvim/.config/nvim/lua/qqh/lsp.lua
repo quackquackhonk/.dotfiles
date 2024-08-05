@@ -103,6 +103,7 @@ local servers = {
 		cmd = {
 			"clangd",
 			"--offset-encoding=utf-16",
+			"--query-driver=/Library/Developer/CommandLineTools/usr/bin/c++",
 		},
 	},
 	pyright = {

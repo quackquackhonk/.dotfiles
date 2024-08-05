@@ -1,6 +1,7 @@
 local wk = require("which-key")
 local harpoon_telescope = require("qqh.harpoon")
 local harpoon = require("harpoon")
+local builtin = require("telescope.builtin")
 
 wk.setup({
 	preset = "helix",
@@ -15,8 +16,10 @@ local close_buf = function()
 	require("mini.bufremove").delete()
 end
 
-local rename_tab = function(input_str)
-	vim.cmd("TabRename " .. input_str)
+local rename_tab = function()
+	vim.ui.input({ prompt = "Rename tab..." }, function(input)
+		vim.cmd("TabRename " .. input)
+	end)
 end
 
 local grep_open_files = function()
@@ -40,37 +43,37 @@ wk.add({
 	{ "<leader>od", cmd("Trouble diagnostics toggle focus=true"), desc = "Open diagnostics window" },
 	{ "<leader>ot", cmd("TodoTelescope keywords=TODO,Fix,FIXME"), desc = "Show project TODOs" },
 
-	{ "<leader>e", group = "harpoon" },
+	{ "<leader>h", group = "[H]arpoon" },
 	{
-		"<leader>ea",
+		"<leader>hh",
 		function()
 			harpoon:list():add()
 		end,
 		desc = "Add to Harpoon list",
 	},
 	{
-		"<leader>en",
+		"<leader>ha",
 		function()
 			harpoon:list():select(1)
 		end,
 		desc = "Goto Mark 1",
 	},
 	{
-		"<leader>ee",
+		"<leader>hr",
 		function()
 			harpoon:list():select(2)
 		end,
 		desc = "Goto Mark 2",
 	},
 	{
-		"<leader>ei",
+		"<leader>hs",
 		function()
 			harpoon:list():select(3)
 		end,
 		desc = "Goto Mark 3",
 	},
 	{
-		"<leader>eo",
+		"<leader>ht",
 		function()
 			harpoon:list():select(4)
 		end,
@@ -89,12 +92,14 @@ wk.add({
 	},
 
 	{ "<leader>;", group = "neovim" },
-	{ "<leader>;n", cmd("tabnew"), desc = "New Tab" },
 	{ "<leader>;c", cmd("tabnew | e ~/.config/nvim/init.lua | tcd ~/.dotfiles/"), desc = "Open neovim config" },
 	{ "<leader>;s", cmd("so %"), desc = "Source current file" },
 	{ "<leader>;n", cmd("tabnew | e ~/notes/index.norg | tcd ~/notes/"), desc = "Open Notes" },
 	{ "<leader>;h", cmd("Telescope highlights"), desc = "Show Highlight Groups" },
 	{ "<leader>;g", cmd("tcd %:h | tcd `git rev-parse --show-toplevel`"), desc = "CD to closest git repo root" },
+	{ "<leader>;t", group = "tabs" },
+	{ "<leader>;tn", cmd("tabnew"), desc = "New Tab" },
+	{ "<leader>;tr", rename_tab, desc = "New Tab" },
 
 	{ "<leader>w", group = "window" },
 	{ "<leader>wv", cmd("vsplit"), desc = "Open vertical split" },
@@ -118,11 +123,11 @@ wk.add({
 	{ "]t", cmd("tabnext"), desc = "Next tab" },
 	{ "<F8>", require("maximize").toggle, desc = "Maximize split" },
 	{
-		"<C-e>",
+		"<C-h>",
 		function()
 			harpoon_telescope({})
 		end,
-		desc = "Toggle harpoon window",
+		desc = "Toggle [H]arpoon window",
 	},
 
 	{

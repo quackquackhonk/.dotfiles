@@ -13,5 +13,5 @@ style = "Block"
 unfocused_hollow = true
 
 [font]
-normal = { family = "Maple Mono NF", style = "Regular" }
-size = 10.0
+normal = { family = "Maple Mono NF", style = "Medium" }
+size = 12.0

@@ -1,5 +1,8 @@
-// If you'd like to override the default keybindings completely, be sure to change "keybinds" to "keybinds clear-defaults=true"
+default_layout "quackquackhonk"
 default_mode "locked"
+
+theme "catppuccin-mocha"
+simplified_ui true
 
 keybinds clear-defaults=true {
     locked {
@@ -23,17 +26,6 @@ keybinds clear-defaults=true {
             };
             SwitchToMode "Locked"
         }
-        bind "g" {
-            Run "gitui" {
-                floating true
-                close_on_exit true
-                x "5%"
-                y "5%"
-                width "90%"
-                height "90%"
-            };
-            SwitchToMode "Locked";
-        }
         bind "z" { ToggleFocusFullscreen; SwitchToMode "Locked"; }
         bind "c" { NewTab; SwitchToMode "Locked"; }
         bind "d" { Detach; }
@@ -41,16 +33,77 @@ keybinds clear-defaults=true {
     }
 }
 
+pane_frames false
+
 plugins {
     tab-bar location="zellij:tab-bar"
     compact-bar location="zellij:compact-bar"
     session-manager location="zellij:session-manager"
+    zjstatus location="file:$HOME/.config/zellij/plugins/zjstatus.wasm" {
+        // Catppuccin theme for the `zjstatus` plugin (v0.17.0+)
+        // -- Catppuccin Mocha --
+        color_rosewater "#f5e0dc"
+        color_flamingo "#f2cdcd"
+        color_pink "#f5c2e7"
+        color_red "#f38ba8"
+        color_maroon "#eba0ac"
+        color_peach "#fab387"
+        color_yellow "#f9e2af"
+        color_green "#a6e3a1"
+        color_teal "#94e2d5"
+        color_sky "#89dceb"
+        color_sapphire "#74c7ec"
+        color_blue "#89b4fa"
+        color_lavender "#b4befe"
+        color_mauve "#cba6f7"
+        color_text "#cdd6f4"
+        color_subtext1 "#bac2de"
+        color_subtext0 "#a6adc8"
+        color_overlay2 "#9399b2"
+        color_overlay1 "#7f849c"
+        color_overlay0 "#6c7086"
+        color_surface2 "#585b70"
+        color_surface1 "#45475a"
+        color_surface0 "#313244"
+        color_base "#1e1e2e"
+        color_mantle "#181825"
+        color_background "#181825"
+        color_crust "#11111b"
+
+        format_left   "{mode} #[bg=$background]"
+        format_center "{tabs}"
+        format_right  "#[bg=$background,fg=$rosewater] {session} "
+        format_space  "#[bg=$background]"
+        format_hide_on_overlength "true"
+        format_precedence "lrc"
+
+        border_enabled  "false"
+        border_char     "─"
+        border_format   "#[bg=$background]{char}"
+        border_position "top"
+
+        hide_frame_for_single_pane "true"
+
+        mode_tmux          "#[bg=$background,fg=$mauve,bold] TMUX #[bg=$background,fg=$surface0]"
+        mode_locked        "#[bg=$background,fg=$rosewater,bold] LOCKED #[bg=$background,fg=$surface0]"
+
+        tab_normal              "#[bg=$background,fg=$overlay1,bold]{index}: {name}{floating_indicator}#[bg=$background,fg=$surface0]"
+        tab_normal_fullscreen   "#[bg=$background,fg=$overlay1,bold]{index}: {name}{fullscreen_indicator}#[bg=$background,fg=$surface0]"
+        tab_normal_sync         "#[bg=$background,fg=$overlay1,bold]{index}: {name}{sync_indicator}#[bg=$background,fg=$surface0]"
+        tab_active              "#[bg=$background,fg=$rosewater,bold]#[bg=$rosewater,fg=$crust,bold]{index}: {name}{floating_indicator}#[bg=$background,fg=$rosewater]"
+        tab_active_fullscreen   "#[bg=$background,fg=$rosewater,bold]#[bg=$rosewater,fg=$crust,bold]{index}: {name}{fullscreen_indicator}#[bg=$background,fg=$rosewater]"
+        tab_active_sync         "#[bg=$background,fg=$rosewater,bold]#[bg=$rosewater,fg=$crust,bold]{index}: {name}{sync_indicator}#[bg=$background,fg=$rosewater]"
+        tab_separator           "#[bg=$background] "
+
+        tab_sync_indicator       " "
+        tab_fullscreen_indicator " 󰊓"
+        tab_floating_indicator   " 󰹙"
+    }
 }
-pane_frames false
 
 
-// Choose the theme that is specified in the themes section.
-// Default: default
-//
-theme "catppuccin-mocha"
-simplified_ui true
+
+// Usage:
+//  1. Copy the content to the body of the zjstatus declaration in your config or layout file, see `config.kdl`
+//  2. Uncomment the color palette you want to use. Default is Mocha
+

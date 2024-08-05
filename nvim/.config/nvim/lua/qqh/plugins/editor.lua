@@ -1,4 +1,10 @@
 return {
+	{ -- auto pairs :)
+		"windwp/nvim-autopairs",
+		config = function()
+			require("nvim-autopairs").setup({})
+		end,
+	},
 	{ -- movements
 		"smoka7/hop.nvim",
 		version = "*",
@@ -17,14 +23,14 @@ return {
 					augend.integer.alias.hex, -- nonnegative hex number  (0x01, 0x1a1f, etc.)
 					augend.constant.alias.bool, -- boolean value (true <-> false)
 					augend.date.alias["%Y/%m/%d"], -- date (2022/02/19, etc.)
+					-- Make python True / False also cycle
+					augend.constant.new({
+						elements = { "True", "False" },
+						word = true, -- if false, "sand" is incremented into "sor", "doctor" into "doctand", etc.
+						cyclic = true, -- "or" is incremented into "and".
+					}),
 				},
 			})
-		end,
-	},
-	{
-		"windwp/nvim-autopairs",
-		config = function()
-			require("nvim-autopairs").setup({})
 		end,
 	},
 	-- keymap
@@ -47,6 +53,10 @@ return {
 	},
 	{ -- Highlight, edit, and navigate code
 		"nvim-treesitter/nvim-treesitter",
+		dependencies = {
+			-- nushell parser
+			{ "nushell/tree-sitter-nu" },
+		},
 		build = ":TSUpdate",
 		opts = {
 			textobjects = {
@@ -104,7 +114,14 @@ return {
 			{ "williamboman/mason.nvim", config = true },
 			"williamboman/mason-lspconfig.nvim",
 			"WhoIsSethDaniel/mason-tool-installer.nvim",
-			{ "j-hui/fidget.nvim", opts = {} },
+			{
+				"j-hui/fidget.nvim",
+				opts = {
+					notification = {
+						window = { winblend = 0 },
+					},
+				},
+			},
 		},
 	},
 	{ -- formatting
@@ -126,7 +143,7 @@ return {
 			},
 		},
 	},
-	{
+	{ -- Generate docstrings
 		"danymat/neogen",
 		dependencies = "nvim-treesitter/nvim-treesitter",
 		config = true,
