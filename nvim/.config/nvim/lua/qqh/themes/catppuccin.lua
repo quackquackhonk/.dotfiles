@@ -70,11 +70,22 @@ require("catppuccin").setup({
 		}
 	end,
 	integrations = {
+		barbecue = {
+			dim_dirname = true,
+			bold_basename = true,
+			dim_context = false,
+			alt_background = false,
+		},
 		cmp = true,
 		fidget = true,
 		mason = true,
 		mini = {
 			enabled = true,
+		},
+		indent_blankline = {
+			enabled = true,
+			scope_color = "lavender", -- catppuccin color (eg. `lavender`) Default: text
+			colored_indent_levels = true,
 		},
 		hop = true,
 		native_lsp = {

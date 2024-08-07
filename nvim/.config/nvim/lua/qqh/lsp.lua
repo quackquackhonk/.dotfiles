@@ -75,6 +75,11 @@ vim.api.nvim_create_autocmd("LspAttach", {
 
 		vim.lsp.inlay_hint.enable(false)
 		vim.diagnostic.config({ virtual_text = false })
+
+		-- Enable breadcrumbs if the LSP has the symbols
+		if client.server_capabilities.documentSymbolProvider then
+			require("nvim-navic").attach(client, event.buf)
+		end
 	end,
 })
 

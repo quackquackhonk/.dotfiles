@@ -80,7 +80,7 @@ plugins {
         border_enabled  "false"
         border_char     "─"
         border_format   "#[bg=$background]{char}"
-        border_position "top"
+        border_position "bottom"
 
         hide_frame_for_single_pane "true"
 
@@ -100,10 +100,3 @@ plugins {
         tab_floating_indicator   " 󰹙"
     }
 }
-
-
-
-// Usage:
-//  1. Copy the content to the body of the zjstatus declaration in your config or layout file, see `config.kdl`
-//  2. Uncomment the color palette you want to use. Default is Mocha
-

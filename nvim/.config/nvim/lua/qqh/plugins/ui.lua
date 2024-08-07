@@ -1,7 +1,41 @@
 return {
-	{
-		"nvim-lualine/lualine.nvim",
+	{ "catppuccin/nvim", name = "catppuccin", priority = 1000 },
+	"nvim-lualine/lualine.nvim",
+	{ -- Command line
+		"folke/noice.nvim",
+		event = "VeryLazy",
+		opts = {
+			lsp = {
+				-- override markdown rendering so that **cmp** and other plugins use **Treesitter**
+				override = {
+					["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+					["vim.lsp.util.stylize_markdown"] = true,
+					["cmp.entry.get_documentation"] = true, -- requires hrsh7th/nvim-cmp
+				},
+			},
+			messages = {
+				enabled = true,
+				view = "mini", -- default view for messages
+				view_error = "mini", -- view for errors
+				view_warn = "mini", -- view for warnings
+				view_history = "messages", -- view for :messages
+				view_search = false,
+			},
+			notify = {
+				enabled = false,
+				view = "mini",
+			},
+			presets = {
+				bottom_search = true,
+				long_message_to_split = true,
+				lsp_doc_border = true,
+			},
+		},
+		dependencies = {
+			"MunifTanjim/nui.nvim",
+		},
 	},
+
 	{
 		"stevearc/oil.nvim",
 		opts = {
@@ -40,7 +74,18 @@ return {
 		"folke/todo-comments.nvim",
 		dependencies = { "nvim-lua/plenary.nvim" },
 	},
-	{ "catppuccin/nvim", name = "catppuccin", priority = 1000 },
+	{ -- breadcrumbs
+		"utilyre/barbecue.nvim",
+		name = "barbecue",
+		version = "*",
+		dependencies = {
+			"SmiteshP/nvim-navic",
+			"nvim-tree/nvim-web-devicons", -- optional dependency
+		},
+		opts = {
+			theme = "catppuccin",
+		},
+	},
 	{ -- Nice diagnostic view
 		"folke/trouble.nvim",
 		config = function()
@@ -53,7 +98,7 @@ return {
 		dependencies = "nvim-tree/nvim-web-devicons",
 	},
 	"tpope/vim-fugitive", -- The only Git UI that just works
-	{
+	{ -- database connections
 		"kristijanhusak/vim-dadbod-ui",
 		dependencies = {
 			{ "tpope/vim-dadbod", lazy = true },
@@ -72,4 +117,15 @@ return {
 	},
 	"stevearc/dressing.nvim", -- better vim.ui.select
 	"NvChad/nvim-colorizer.lua", -- highlight hex colors
+	{
+		"lukas-reineke/indent-blankline.nvim",
+		main = "ibl",
+		opts = {
+			scope = {
+				enabled = true,
+				show_start = true,
+				show_end = false,
+			},
+		},
+	},
 }

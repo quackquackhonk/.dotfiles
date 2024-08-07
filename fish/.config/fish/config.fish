@@ -70,6 +70,9 @@ if test -f /opt/homebrew/Caskroom/miniconda/base/bin/conda
 end
 # <<< conda initialize <<<
 
+zoxide init fish | source
+/Users/i34866/.local/bin/mise activate fish | source
+
 # Spack
 if [ "$hostname" = "LVV3TW207K" ]
 
@@ -87,7 +90,7 @@ if [ "$hostname" = "LVV3TW207K" ]
     end
 
     function spackcert
-        export CERT_PATH=$(python -c 'import site; print(site.getsitepackages()[0] + "/certifi/cacert.pem")')
+        export CERT_PATH=$($SPACK_PYTHON -c 'import site; print(site.getsitepackages()[0] + "/certifi/cacert.pem")')
         cat ~/cert/ZscalerRootCertificate-2048-SHA256.crt >> $CERT_PATH
     end
 
@@ -102,13 +105,12 @@ if [ "$hostname" = "LVV3TW207K" ]
 
     function nonprod
         # set the profile variable
+        eval "$(aws configure export-credentials --profile nonprod --format env)"
         export AWS_PROFILE="nonprod"
     end
 
     function production
+        eval "$(aws configure export-credentials --profile production --format env)"
         export AWS_PROFILE="production"
     end
 end
-
-zoxide init fish | source
-/Users/i34866/.local/bin/mise activate fish | source
