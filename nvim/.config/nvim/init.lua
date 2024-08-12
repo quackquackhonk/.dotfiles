@@ -34,7 +34,13 @@ require("lazy").setup("qqh.plugins", {
 		notify = false,
 	},
 })
+
 require("qqh.options")
 require("qqh.keymap")
 require("qqh.lsp")
 require("qqh.theme")
+
+-- Only require the work plugin if on my work laptop
+if os.getenv("hostname") == "LVV3TW207K" then
+	require("qqh.work")
+end

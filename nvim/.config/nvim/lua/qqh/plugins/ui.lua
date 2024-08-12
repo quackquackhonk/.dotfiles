@@ -97,6 +97,10 @@ return {
 		event = "VimEnter", -- lazy load this shit
 		dependencies = "nvim-tree/nvim-web-devicons",
 	},
+	{
+		"lewis6991/gitsigns.nvim",
+		opts = {},
+	},
 	"tpope/vim-fugitive", -- The only Git UI that just works
 	{ -- database connections
 		"kristijanhusak/vim-dadbod-ui",
@@ -112,7 +116,11 @@ return {
 		},
 		init = function()
 			-- Your DBUI configuration
-			vim.g.db_ui_use_nerd_fonts = 0
+			vim.g.db_ui_execute_on_save = 0
+			vim.g.db_ui_use_nvim_notify = 1
+
+			vim.g.db_ui_win_position = "right"
+			vim.g.db_ui_use_nerd_fonts = 1
 		end,
 	},
 	"stevearc/dressing.nvim", -- better vim.ui.select

@@ -1,6 +1,4 @@
 local wk = require("which-key")
-local harpoon_telescope = require("qqh.harpoon")
-local harpoon = require("harpoon")
 local builtin = require("telescope.builtin")
 
 wk.setup({
@@ -36,49 +34,12 @@ wk.add({
 
 	{ "<leader>c", group = "code" },
 	{ "<leader>cm", cmd("Neogen"), desc = "Generate comment" },
-
 	{ "<leader>o", group = "open" },
 	{ "<leader>oo", cmd("OverseerToggle"), desc = "Open Overseer Window" },
+	{ "<leader>os", cmd("tabnew | DBUI"), desc = "Open Database UI" },
 	{ "<leader>of", cmd("Oil"), desc = "Open CWD in Oil" },
 	{ "<leader>od", cmd("Trouble diagnostics toggle focus=true"), desc = "Open diagnostics window" },
 	{ "<leader>ot", cmd("TodoTelescope keywords=TODO,Fix,FIXME"), desc = "Show project TODOs" },
-
-	{ "<leader>h", group = "[H]arpoon" },
-	{
-		"<leader>hh",
-		function()
-			harpoon:list():add()
-		end,
-		desc = "Add to Harpoon list",
-	},
-	{
-		"<leader>ha",
-		function()
-			harpoon:list():select(1)
-		end,
-		desc = "Goto Mark 1",
-	},
-	{
-		"<leader>hr",
-		function()
-			harpoon:list():select(2)
-		end,
-		desc = "Goto Mark 2",
-	},
-	{
-		"<leader>hs",
-		function()
-			harpoon:list():select(3)
-		end,
-		desc = "Goto Mark 3",
-	},
-	{
-		"<leader>ht",
-		function()
-			harpoon:list():select(4)
-		end,
-		desc = "Goto Mark 4",
-	},
 
 	{ "<leader>t", group = "toggle" },
 	{ "<leader>tr", cmd("set rnu!"), desc = "Toggle relative numbers" },
