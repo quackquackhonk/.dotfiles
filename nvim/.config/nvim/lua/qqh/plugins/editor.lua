@@ -120,7 +120,7 @@ return {
 		opts = {
 			formatters_by_ft = {
 				lua = { "stylua" },
-				python = { "isort", "black" },
+				python = { "black" },
 				rust = { "rustfmt" },
 				c = { "clang_format" },
 				cpp = { "clang_format" },

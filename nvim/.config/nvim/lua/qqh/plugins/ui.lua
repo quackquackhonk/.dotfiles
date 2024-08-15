@@ -101,7 +101,6 @@ return {
 		"lewis6991/gitsigns.nvim",
 		opts = {},
 	},
-	"tpope/vim-fugitive", -- The only Git UI that just works
 	{ -- database connections
 		"kristijanhusak/vim-dadbod-ui",
 		dependencies = {

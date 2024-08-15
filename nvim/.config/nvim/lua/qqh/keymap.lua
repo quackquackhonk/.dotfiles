@@ -20,8 +20,30 @@ local rename_tab = function()
 	end)
 end
 
-local grep_open_files = function()
-	builtin.live_grep({ grep_open_files = true })
+function open_gitui()
+	local wd = vim.uv.cwd()
+	if os.getenv("ZELLIJ") ~= nil then
+		vim.system({
+			"zellij",
+			"run",
+			"-f",
+			"-c",
+			"--cwd",
+			wd,
+			"--x",
+			"5%",
+			"--y",
+			"5%",
+			"--height",
+			"90%",
+			"--width",
+			"90%",
+			"--",
+			"gitui",
+		})
+	else
+		vim.cmd("tabnew | startinsert | term gitui")
+	end
 end
 
 wk.add({
@@ -67,7 +89,6 @@ wk.add({
 	{ "<leader>ws", cmd("split"), desc = "Open vertical split" },
 
 	-- non-nested leader key
-	{ "<leader>/", grep_open_files, desc = "Live grep in open files" },
 	{ "<leader>?", cmd("Telescope help_tags"), desc = "Show help tags" },
 	{ "<leader>q", close_buf, desc = "Close Buffer" },
 	{ "<leader>Q", cmd("bd"), desc = "Close Buffer AND Window" },
@@ -76,20 +97,13 @@ wk.add({
 	{ "<leader>y", '"+y', desc = "Copy to system clipboard" },
 	{ "<leader><Tab>", "<C-w>W", desc = "Goto last split" },
 	{ "<leader><leader>", cmd("Telescope buffers"), desc = "Show open buffers" },
-	{ "<leader>g", cmd("Git"), desc = "Open git status" },
+	{ "<leader>g", open_gitui, desc = "Open gitui" },
 
 	-- Normal mode mappings
 	{ "<Esc>", cmd("nohlsearch"), desc = "Hide Highlighting" },
 	{ "[t", cmd("tabprev"), desc = "Previous tab" },
 	{ "]t", cmd("tabnext"), desc = "Next tab" },
 	{ "<F8>", require("maximize").toggle, desc = "Maximize split" },
-	{
-		"<C-h>",
-		function()
-			harpoon_telescope({})
-		end,
-		desc = "Toggle [H]arpoon window",
-	},
 
 	{
 		mode = { "n", "v" },

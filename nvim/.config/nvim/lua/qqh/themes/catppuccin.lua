@@ -31,7 +31,8 @@ require("catppuccin").setup({
 			-- tabline
 			TabLine = { bg = colors.mantle },
 			TabLineFill = { bg = colors.mantle },
-			TabLineSel = { bg = colors.surface0, fg = colors.rosewater },
+			TabLineHead = { bg = colors.mantle, fg = colors.rosewater },
+			TabLineSel = { bg = colors.rosewater, fg = colors.mantle },
 
 			-- Telescope
 			TelescopeNormal = { fg = colors.blue, bg = colors.crust },
@@ -134,17 +135,43 @@ require("todo-comments").setup({
 	},
 })
 
+local theme = {
+	fill = "TabLineFill",
+	head = "TabLineHead",
+	current_tab = "TabLineSel",
+	tab = "TabLine",
+	win = "TabLine",
+	tail = "TabLine",
+}
 require("tabby").setup({
-	preset = "tab_only",
+	line = function(line)
+		return {
+			{
+				{ " ♥  ", hl = theme.head },
+			},
+			line.tabs().foreach(function(tab)
+				local left_sep = " "
+				local right_sep = " "
+				if tab.is_current() then
+					left_sep = ""
+					right_sep = ""
+				end
+				local hl = tab.is_current() and theme.current_tab or theme.tab
+				return {
+					line.sep(left_sep, hl, theme.fill),
+					tab.number(),
+					tab.name(),
+					line.sep(right_sep, hl, theme.fill),
+					hl = hl,
+					margin = " ",
+				}
+			end),
+			hl = theme.fill,
+		}
+	end,
 	option = {
-		nerdfont = false,
 		lualine_theme = nil,
-		tabname = {
-			name_fallback = function(tabid)
-				return tabid
-			end,
-		},
-	},
+	}, -- setup modules' option,
 })
 
 require("lualine").setup({

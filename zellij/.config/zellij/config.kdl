@@ -17,6 +17,7 @@ keybinds clear-defaults=true {
     tmux {
         bind "Esc" { SwitchToMode "Locked"; SwitchToMode "Locked"; }
         bind "Ctrl Space" { SwitchToMode "Locked"; SwitchToMode "Locked"; }
+        bind "n" { NewPane; }
         bind "h" { NewPane "Down"; }
         bind "v" { NewPane "Right"; }
         bind "s" {
@@ -30,10 +31,13 @@ keybinds clear-defaults=true {
         bind "c" { NewTab; SwitchToMode "Locked"; }
         bind "d" { Detach; }
         bind "x" { CloseFocus; SwitchToMode "Locked"; }
+        bind "R" { SwitchToMode "RenameTab"; TabNameInput 0; }
+    }
+    renametab {
+        bind "Enter" { SwitchToMode "Locked"; }
+        bind "Esc" { UndoRenameTab; SwitchToMode "Tab"; }
     }
 }
-
-pane_frames false
 
 plugins {
     tab-bar location="zellij:tab-bar"
