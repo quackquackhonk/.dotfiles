@@ -1,41 +1,6 @@
 return {
 	{ "catppuccin/nvim", name = "catppuccin", priority = 1000 },
 	"nvim-lualine/lualine.nvim",
-	{ -- Command line
-		"folke/noice.nvim",
-		event = "VeryLazy",
-		opts = {
-			lsp = {
-				-- override markdown rendering so that **cmp** and other plugins use **Treesitter**
-				override = {
-					["vim.lsp.util.convert_input_to_markdown_lines"] = true,
-					["vim.lsp.util.stylize_markdown"] = true,
-					["cmp.entry.get_documentation"] = true, -- requires hrsh7th/nvim-cmp
-				},
-			},
-			messages = {
-				enabled = true,
-				view = "mini", -- default view for messages
-				view_error = "mini", -- view for errors
-				view_warn = "mini", -- view for warnings
-				view_history = "messages", -- view for :messages
-				view_search = false,
-			},
-			notify = {
-				enabled = false,
-				view = "mini",
-			},
-			presets = {
-				bottom_search = true,
-				long_message_to_split = true,
-				lsp_doc_border = true,
-			},
-		},
-		dependencies = {
-			"MunifTanjim/nui.nvim",
-		},
-	},
-
 	{
 		"stevearc/oil.nvim",
 		opts = {
@@ -66,6 +31,21 @@ return {
 			},
 		},
 	},
+	{ -- sign column coverage
+		"andythigpen/nvim-coverage",
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+		},
+		opts = {
+			commands = true,
+			sign_group = "",
+			signs = {
+				covered = { hl = "CoverageCovered", text = "" },
+				uncovered = { hl = "CoverageUncovered", text = "!" },
+				partial = { hl = "CoveragePartial", text = "?" },
+			},
+		},
+	},
 	{ -- Maximize windows
 		"declancm/maximize.nvim",
 		opts = {},
@@ -80,7 +60,6 @@ return {
 		version = "*",
 		dependencies = {
 			"SmiteshP/nvim-navic",
-			"nvim-tree/nvim-web-devicons", -- optional dependency
 		},
 		opts = {
 			theme = "catppuccin",
@@ -92,7 +71,7 @@ return {
 			require("trouble").setup({})
 		end,
 	},
-	{
+	{ -- customize tab bar easily
 		"nanozuki/tabby.nvim",
 		event = "VimEnter", -- lazy load this shit
 		dependencies = "nvim-tree/nvim-web-devicons",
@@ -123,7 +102,6 @@ return {
 		end,
 	},
 	"stevearc/dressing.nvim", -- better vim.ui.select
-	"NvChad/nvim-colorizer.lua", -- highlight hex colors
 	{
 		"lukas-reineke/indent-blankline.nvim",
 		main = "ibl",

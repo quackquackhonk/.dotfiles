@@ -28,11 +28,16 @@ require("catppuccin").setup({
 			WinSeparator = { bg = colors.mantle, fg = colors.mantle },
 			VertSplit = { bg = colors.mantle, fg = colors.mantle },
 			MiniIndentscopeSymbol = { fg = colors.surface1 },
+
 			-- tabline
 			TabLine = { bg = colors.mantle },
 			TabLineFill = { bg = colors.mantle },
 			TabLineHead = { bg = colors.mantle, fg = colors.rosewater },
 			TabLineSel = { bg = colors.rosewater, fg = colors.mantle },
+
+			-- Coverage
+			CoverageUncovered = { fg = colors.red },
+			CoveragePartial = { fg = colors.mauve },
 
 			-- Telescope
 			TelescopeNormal = { fg = colors.blue, bg = colors.crust },
@@ -143,6 +148,7 @@ local theme = {
 	win = "TabLine",
 	tail = "TabLine",
 }
+
 require("tabby").setup({
 	line = function(line)
 		return {
@@ -181,3 +187,5 @@ require("lualine").setup({
 		section_separators = { left = "", right = "" },
 	},
 })
+
+-- TODO: nvim-cmp theme

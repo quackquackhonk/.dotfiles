@@ -50,7 +50,7 @@ return {
 						-- results = { "a", "b", "c", "d", "e", "f", "g", "h" },
 						preview = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
 					},
-					file_ignore_patterns = { ".git/", "node_modules" },
+					file_ignore_patterns = { ".git/", "node_modules", "spack_env/.spack_env" },
 					mappings = {
 						i = {
 							["<esc>"] = require("telescope.actions").close,

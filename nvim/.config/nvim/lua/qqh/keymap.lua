@@ -56,6 +56,7 @@ wk.add({
 
 	{ "<leader>c", group = "code" },
 	{ "<leader>cm", cmd("Neogen"), desc = "Generate comment" },
+
 	{ "<leader>o", group = "open" },
 	{ "<leader>oo", cmd("OverseerToggle"), desc = "Open Overseer Window" },
 	{ "<leader>os", cmd("tabnew | DBUI"), desc = "Open Database UI" },
@@ -66,13 +67,7 @@ wk.add({
 	{ "<leader>t", group = "toggle" },
 	{ "<leader>tr", cmd("set rnu!"), desc = "Toggle relative numbers" },
 	{ "<leader>ts", cmd("set spell!"), desc = "Toggle Spellcheck" },
-	{
-		"<leader>tr",
-		function()
-			vim.ui.input({ prompt = "Rename tab to..." }, rename_tab)
-		end,
-		desc = "Rename current tab",
-	},
+	{ "<leader>tc", cmd("CoverageToggle"), desc = "Toggle Code Coverage" },
 
 	{ "<leader>;", group = "neovim" },
 	{ "<leader>;c", cmd("tabnew | e ~/.config/nvim/init.lua | tcd ~/.dotfiles/"), desc = "Open neovim config" },
@@ -101,8 +96,25 @@ wk.add({
 
 	-- Normal mode mappings
 	{ "<Esc>", cmd("nohlsearch"), desc = "Hide Highlighting" },
-	{ "[t", cmd("tabprev"), desc = "Previous tab" },
+
+	-- bracketed movement
 	{ "]t", cmd("tabnext"), desc = "Next tab" },
+	{ "[t", cmd("tabprev"), desc = "Previous tab" },
+	{
+		"]u",
+		function()
+			require("coverage").jump_next("uncovered")
+		end,
+		desc = "Next uncovered line",
+	},
+	{
+		"[u",
+		function()
+			require("coverage").jump_prev("uncovered")
+		end,
+		desc = "Previous uncovered line",
+	},
+
 	{ "<F8>", require("maximize").toggle, desc = "Maximize split" },
 
 	{

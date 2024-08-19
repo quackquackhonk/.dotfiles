@@ -97,8 +97,8 @@ if [ "$hostname" = "LVV3TW207K" ]
     # Okta AWS utils
     ## Nonprod login / cli wrapper
     # authenticate 
-    alias nonprod-login='okta-aws-cli web --profile nonprod --session-duration 28800 --expiry-aws-variables --cache-access-token --write-aws-credentials'
-    alias production-login='okta-aws-cli web --profile production --expiry-aws-variables --cache-access-token --write-aws-credentials'
+    alias nonprod-login='okta-aws-cli web --profile nonprod  --expiry-aws-variables --cache-access-token'
+    alias production-login='okta-aws-cli web --profile production --expiry-aws-variables --cache-access-token'
 
     alias awsnp='aws --profile nonprod'
     alias awsprod='aws --profile production'
