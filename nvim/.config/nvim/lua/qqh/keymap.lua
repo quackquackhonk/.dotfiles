@@ -1,5 +1,6 @@
 local wk = require("which-key")
-local builtin = require("telescope.builtin")
+local hop = require("hop")
+local hop_directions = require("hop.hint").HintDirection
 
 wk.setup({
 	preset = "helix",
@@ -20,7 +21,7 @@ local rename_tab = function()
 	end)
 end
 
-function open_gitui()
+local function open_gitui()
 	local wd = vim.uv.cwd()
 	if os.getenv("ZELLIJ") ~= nil then
 		vim.system({
@@ -42,7 +43,7 @@ function open_gitui()
 			"gitui",
 		})
 	else
-		vim.cmd("tabnew | startinsert | term gitui")
+		vim.cmd("Git")
 	end
 end
 
@@ -58,7 +59,7 @@ wk.add({
 	{ "<leader>cm", cmd("Neogen"), desc = "Generate comment" },
 
 	{ "<leader>o", group = "open" },
-	{ "<leader>oo", cmd("OverseerToggle"), desc = "Open Overseer Window" },
+	{ "<leader>oo", cmd("Trouble symbols toggle focus=true win.position=bottom"), desc = "Open Symbol Outline" },
 	{ "<leader>os", cmd("tabnew | DBUI"), desc = "Open Database UI" },
 	{ "<leader>of", cmd("Oil"), desc = "Open CWD in Oil" },
 	{ "<leader>od", cmd("Trouble diagnostics toggle focus=true"), desc = "Open diagnostics window" },
@@ -94,10 +95,24 @@ wk.add({
 	{ "<leader><leader>", cmd("Telescope buffers"), desc = "Show open buffers" },
 	{ "<leader>g", open_gitui, desc = "Open gitui" },
 
+	-- Quick tabs
+	{ "<leader>1", "1gt", desc = "Focus Tab 1" },
+	{ "<leader>2", "2gt", desc = "Focus Tab 2" },
+	{ "<leader>3", "3gt", desc = "Focus Tab 3" },
+	{ "<leader>4", "4gt", desc = "Focus Tab 4" },
+	{ "<leader>5", "5gt", desc = "Focus Tab 5" },
+	{ "<leader>6", "6gt", desc = "Focus Tab 6" },
+	{ "<leader>7", "7gt", desc = "Focus Tab 7" },
+	{ "<leader>8", "8gt", desc = "Focus Tab 8" },
+	{ "<leader>9", "9gt", desc = "Focus Tab 9" },
+
 	-- Normal mode mappings
 	{ "<Esc>", cmd("nohlsearch"), desc = "Hide Highlighting" },
+	{ "<C-a>", require("dial.map").inc_normal(), desc = "Dial increment" },
+	{ "<C-x>", require("dial.map").dec_normal(), desc = "Dial increment" },
 
 	-- bracketed movement
+	-- Tabs
 	{ "]t", cmd("tabnext"), desc = "Next tab" },
 	{ "[t", cmd("tabprev"), desc = "Previous tab" },
 	{
@@ -107,6 +122,7 @@ wk.add({
 		end,
 		desc = "Next uncovered line",
 	},
+	-- Uncovered lines
 	{
 		"[u",
 		function()
@@ -119,9 +135,32 @@ wk.add({
 
 	{
 		mode = { "n", "v" },
+		-- HOP keybindings
+		{
+			"f",
+			function()
+				hop.hint_char1({ direction = hop_directions.AFTER_CURSOR, current_line_only = true })
+			end,
+		},
+		{
+			"t",
+			function()
+				hop.hint_char1({ direction = hop_directions.AFTER_CURSOR, current_line_only = true, hint_offset = -1 })
+			end,
+		},
+		{
+			"F",
+			function()
+				hop.hint_char1({ direction = hop_directions.BEFORE_CURSOR, current_line_only = true })
+			end,
+		},
+		{
+			"T",
+			function()
+				hop.hint_char1({ direction = hop_directions.BEFORE_CURSOR, current_line_only = true, hint_offset = -1 })
+			end,
+		},
 		{ "<Return>", cmd("HopChar2"), desc = "Hop to character pair" },
-		{ "<C-a>", require("dial.map").inc_normal(), desc = "Dial increment" },
-		{ "<C-x>", require("dial.map").dec_normal(), desc = "Dial increment" },
 	},
 
 	{
@@ -144,27 +183,11 @@ wk.add({
 		mode = { "v" },
 		{ "<leader>y", '"+y', desc = "Copy to system clipboard" },
 		{ "<leader>p", '"+p', desc = "Pase to system clipboard" },
+		-- stay in visual mode when indenting
 		{ ">", ">gv" },
 		{ "<", "<gv" },
+		-- visual dial
+		{ "g<C-a>", require("dial.map").inc_gvisual() },
+		{ "g<C-x>", require("dial.map").dec_gvisual() },
 	},
 })
-
--- Keybindings for HOP
--- place this in one of your configuration file(s)
-local hop = require("hop")
-local directions = require("hop.hint").HintDirection
-vim.keymap.set("", "f", function()
-	hop.hint_char1({ direction = directions.AFTER_CURSOR, current_line_only = true })
-end, { remap = true })
-vim.keymap.set("", "F", function()
-	hop.hint_char1({ direction = directions.BEFORE_CURSOR, current_line_only = true })
-end, { remap = true })
-vim.keymap.set("", "t", function()
-	hop.hint_char1({ direction = directions.AFTER_CURSOR, current_line_only = true, hint_offset = -1 })
-end, { remap = true })
-vim.keymap.set("", "T", function()
-	hop.hint_char1({ direction = directions.BEFORE_CURSOR, current_line_only = true, hint_offset = 1 })
-end, { remap = true })
-
-vim.api.nvim_set_keymap("v", "g<C-a>", require("dial.map").inc_gvisual(), { noremap = true })
-vim.api.nvim_set_keymap("v", "g<C-x>", require("dial.map").dec_gvisual(), { noremap = true })

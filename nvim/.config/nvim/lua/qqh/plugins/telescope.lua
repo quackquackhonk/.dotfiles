@@ -62,6 +62,7 @@ return {
 					project = {
 						base_dirs = {
 							"~/code",
+							"~/notes",
 						},
 					},
 					fzf = {

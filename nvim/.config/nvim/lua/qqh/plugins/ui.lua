@@ -76,6 +76,7 @@ return {
 		event = "VimEnter", -- lazy load this shit
 		dependencies = "nvim-tree/nvim-web-devicons",
 	},
+	"tpope/vim-fugitive",
 	{
 		"lewis6991/gitsigns.nvim",
 		opts = {},

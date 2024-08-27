@@ -16,12 +16,6 @@ return {
 			require("mini.bufremove").setup()
 
 			-- UI
-			require("mini.notify").setup()
-			vim.notify = require("mini.notify").make_notify({
-				ERROR = { duration = 5000 },
-				WARN = { duration = 4000 },
-				INFO = { duration = 3000 },
-			})
 			require("mini.icons").setup()
 		end,
 	},
