@@ -73,6 +73,9 @@ require("catppuccin").setup({
 			CmpItemKindOperator = { fg = colors.base, bg = colors.blue },
 			CmpItemKindTypeParameter = { fg = colors.base, bg = colors.blue },
 			CmpItemKindCopilot = { fg = colors.base, bg = colors.teal },
+
+			-- Markview
+			MarkviewInlineCode = { fg = colors.teal },
 		}
 	end,
 	integrations = {
@@ -185,6 +188,31 @@ require("lualine").setup({
 	options = {
 		component_separators = "|",
 		section_separators = { left = "", right = "" },
+	},
+})
+
+-- markview
+require("markview").setup({
+	modes = { "n", "i", "no", "c" },
+	hybrid_modes = { "i" },
+	headings = {
+		enable = false,
+	},
+	inline_codes = {
+		enable = true,
+		padding_left = nil,
+		padding_right = nil,
+	},
+	code_blocks = {
+		enable = true,
+		style = "language",
+		position = nil,
+		pad_amount = 0,
+	},
+	list_items = {
+		enable = true,
+		shift_width = 2,
+		indent_size = 2,
 	},
 })
 

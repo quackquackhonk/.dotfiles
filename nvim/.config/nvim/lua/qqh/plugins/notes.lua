@@ -7,13 +7,13 @@ return {
 			require("neorg").setup({
 				load = {
 					["core.defaults"] = {},
-                    ["core.highlights"] = {
-                        todo_items = {
-                            pending = {
-                                begin = "+@keyword.repeat"
-                            }
-                        }
-                    }
+					["core.highlights"] = {
+						todo_items = {
+							pending = {
+								begin = "+@keyword.repeat",
+							},
+						},
+					},
 					["core.dirman"] = {
 						config = {
 							workspaces = {

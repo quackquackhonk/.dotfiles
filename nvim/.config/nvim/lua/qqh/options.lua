@@ -54,6 +54,9 @@ local options = {
 
 	-- Preview substitutions live, as you type!
 	inccommand = "split",
+
+	-- sessions
+	sessionoptions = "blank,buffers,globals,curdir,folds,help,tabpages,winsize,terminal",
 }
 
 for k, v in pairs(options) do

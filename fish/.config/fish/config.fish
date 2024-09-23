@@ -71,7 +71,7 @@ end
 # <<< conda initialize <<<
 
 zoxide init fish | source
-/Users/i34866/.local/bin/mise activate fish | source
+#/Users/i34866/.local/bin/mise activate fish | source
 
 # Spack
 if [ "$hostname" = "LVV3TW207K" ]
@@ -97,8 +97,8 @@ if [ "$hostname" = "LVV3TW207K" ]
     # Okta AWS utils
     ## Nonprod login / cli wrapper
     # authenticate 
-    alias nonprod-login='okta-aws-cli web --profile nonprod  --expiry-aws-variables --cache-access-token'
-    alias production-login='okta-aws-cli web --profile production --expiry-aws-variables --cache-access-token'
+    alias nonprod-login='okta-aws-cli web --profile nonprod  --expiry-aws-variables --cache-access-token --write-aws-credentials'
+    alias production-login='okta-aws-cli web --profile production --expiry-aws-variables --cache-access-token --write-aws-credentials'
 
     alias awsnp='aws --profile nonprod'
     alias awsprod='aws --profile production'
@@ -106,6 +106,7 @@ if [ "$hostname" = "LVV3TW207K" ]
     function nonprod
         # set the profile variable
         eval "$(aws configure export-credentials --profile nonprod --format env)"
+        aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 589310964831.dkr.ecr.us-west-2.amazonaws.com
         export AWS_PROFILE="nonprod"
     end
 

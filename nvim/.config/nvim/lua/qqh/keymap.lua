@@ -72,7 +72,7 @@ wk.add({
 
 	{ "<leader>;", group = "neovim" },
 	{ "<leader>;c", cmd("tabnew | e ~/.config/nvim/init.lua | tcd ~/.dotfiles/"), desc = "Open neovim config" },
-	{ "<leader>;s", cmd("so %"), desc = "Source current file" },
+	{ "<leader>;<leader>", cmd("so %"), desc = "Source current file" },
 	{ "<leader>;n", cmd("tabnew | e ~/notes/index.norg | tcd ~/notes/"), desc = "Open Notes" },
 	{ "<leader>;h", cmd("Telescope highlights"), desc = "Show Highlight Groups" },
 	{ "<leader>;g", cmd("tcd %:h | tcd `git rev-parse --show-toplevel`"), desc = "CD to closest git repo root" },
@@ -191,3 +191,14 @@ wk.add({
 		{ "g<C-x>", require("dial.map").dec_gvisual() },
 	},
 })
+
+--
+-- FILETYPE MAPPINGS
+--
+
+vim.cmd("autocmd FileType sql lua WhichKeySQL()")
+function WhichKeySQL()
+	wk.add({
+		{ "<F5>", "<Plug>(DBUI_ExecuteQuery)", desc = "Execute Query" },
+	}, { buffer = vim.api.nvim_get_current_buf() })
+end

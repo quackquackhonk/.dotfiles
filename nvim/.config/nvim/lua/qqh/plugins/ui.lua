@@ -98,20 +98,34 @@ return {
 			vim.g.db_ui_execute_on_save = 0
 			vim.g.db_ui_use_nvim_notify = 1
 
+			-- disable sql window mappings
+			vim.g.db_ui_disable_mappings_sql = 0
+
 			vim.g.db_ui_win_position = "right"
 			vim.g.db_ui_use_nerd_fonts = 1
 		end,
 	},
 	"stevearc/dressing.nvim", -- better vim.ui.select
-	{
+	{ -- indent guides
 		"lukas-reineke/indent-blankline.nvim",
 		main = "ibl",
 		opts = {
 			scope = {
 				enabled = true,
-				show_start = true,
+				show_start = false,
 				show_end = false,
 			},
+		},
+	},
+	{
+		"OXY2DEV/markview.nvim",
+		lazy = false, -- Recommended
+		dependencies = {
+			-- You will not need this if you installed the
+			-- parsers manually
+			-- Or if the parsers are in your $RUNTIMEPATH
+			"nvim-treesitter/nvim-treesitter",
+			"nvim-tree/nvim-web-devicons",
 		},
 	},
 }
