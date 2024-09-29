@@ -29,7 +29,6 @@
   (general-evil-setup))
 
 (use-package evil
-  :ensure t
   :init
   (setq evil-want-keybinding nil
         evil-want-integration t
@@ -42,10 +41,6 @@
 
   (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
   (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
-
-  ;; Use visual line motions even outside of visual-line-mode buffers
-  (evil-global-set-key 'motion "j" 'evil-next-visual-line)
-  (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
 
   ;; Universal argument: C-u -> C-l
   (global-unset-key (kbd "C-l"))
@@ -60,12 +55,12 @@
 
 (use-package evil-collection
   :after evil
-  :ensure t
   :custom
   (evil-collection-want-unimpaired-p nil)
   :init (evil-collection-init))
 
 (use-package evil-numbers
+  :after evil
   :config
   (define-key evil-normal-state-map (kbd "C-a") 'evil-numbers/inc-at-pt)
   (define-key evil-normal-state-map (kbd "C-x") 'evil-numbers/dec-at-pt)
@@ -88,7 +83,6 @@
   (evil-snipe-override-mode +1))
 
 (use-package evil-surround
-  :ensure t
   :config
   (global-evil-surround-mode 1))
 
@@ -98,89 +92,6 @@
   (setq avy-keys '(?a ?r ?s ?t ?g ?m ?n ?e ?i ?o)
         avy-background nil))
 
-(use-package projectile
-  :ensure t
-  :init
-  (projectile-mode +1)
-  (setq projectile-project-search-path '(("~/code/" . 1))))
-
-(use-package perspective
-  :init
-  (persp-mode)
-  :custom
-  (persp-mode-prefix-key (kbd "C-p")))
-
-(use-package magit
-  :ensure t)
-
-(require 'org)
-
-(use-package org-roam
-  :config
-  (setq org-roam-directory (file-truename "~/org/"))
-  (org-roam-db-autosync-mode))
-
-(setq org-directory "~/org")
-
-(setq org-todo-keywords '((sequence "TODO(t)" "STARTED(s)" "WAITING(w)" "|" "DONE(d)" "KILLED(k)")))
-(use-package org-appear
-  :hook (org-mode . org-appear-mode))
-
-;; Nice bullets
-(use-package org-superstar
-  :config
-  (setq org-superstar-special-todo-items t)
-  (add-hook 'org-mode-hook (lambda ()
-                             (org-superstar-mode 1))))
-
-(setq org-hide-emphasis-markers t
-      org-pretty-entities t
-      org-startup-indented t)
-
-(general-define-key
- :prefix "SPC"
- :keymaps 'org-mode-map
- :states '(normal visual)
- "/is" 'org-insert-structure-template)
-
-;; vterm as a terminal
-(use-package vterm
-  :ensure t
-  :config
-  (setq vterm-timer-delay 0.01))
-(use-package multi-vterm
-  :ensure t
-  :after vterm)
-
-(use-package docker
-  :ensure t)
-
-(use-package docker-compose-mode)
-(use-package dockerfile-mode)
-
-(use-package hydra)
-(defhydra hydra-windows (:hint nil :rows 1)
-  "Window Navigation..."
-  ;; resizing windows
-  ("<left>" evil-window-decrease-width)
-  ("<up>" evil-window-increase-height)
-  ("<down>" evil-window-decrease-height)
-  ("<right>" evil-window-increase-width)
-
-  ;; movement on a laptop
-  ("h" evil-window-left)
-  ("j" evil-window-down)
-  ("k" evil-window-up)
-  ("l" evil-window-right)
-
-  ;; make windows  
-  ("v" evil-window-vsplit)
-  ("s" evil-window-split)
-  ("q" evil-window-delete))
-
-;; i forget what this does
-(use-package command-log-mode)
-
 (use-package vertico
   :custom
   (vertico-count 20)
@@ -188,10 +99,11 @@
   (vertico-mode))
 
 (use-package consult
+  ;; Load this after perspective so we have the proper source
+  :after '(perspective)
   ;; Enable automatic preview at point in the *Completions* buffer. This is
   ;; relevant when you use the default completion UI.
   :hook (completion-list-mode . consult-preview-at-point-mode)
-
   :init
   ;; Optionally configure the register formatting. This improves the register
   ;; preview for `consult-register', `consult-register-load',
@@ -255,7 +167,6 @@
 
 ;; Minibuffer actions
 (use-package embark
-  :ensure t
 
   :bind
   (("C-." . embark-act)         ;; pick some comfortable binding
@@ -284,35 +195,100 @@
 ;; Consult todos
 (use-package consult-todo)
 
-;; company for text auto completion
-(use-package company
-  :commands (company-complete-common company-dabbrev)
-  :config
-  (global-company-mode)
-
-  ;; Increase maximum number of items to show in auto-completion. Why?
-  ;; .. seeing more at once gives you a better overview of your options.
-  (setq company-tooltip-limit 40)
-
-  ;; Don't make abbreviations lowercase or ignore case. Why?
-  ;; .. many languages are case sensitive, so changing case isn't helpful.
-  (setq company-dabbrev-downcase nil)
-  (setq company-dabbrev-ignore-case nil)
-
-  ;; Key-map: hold Control for Vim motion. Why?
-  ;; .. we're already holding Control, allow navigation at the same time.
-  (define-key company-active-map (kbd "C-n") 'company-select-next-or-abort)
-  (define-key company-active-map (kbd "C-e") 'company-select-previous-or-abort)
-  (define-key company-active-map (kbd "ESC") 'company-abort)
-  (define-key company-active-map (kbd "TAB") 'company-complete-selection)
-
-  (define-key company-search-map (kbd "C-j") 'company-select-next)
-  (define-key company-search-map (kbd "C-k") 'company-select-previous))
-
+(use-package corfu
+  :custom
+  (corfu-auto t)                 ;; Enable auto completion
+  (corfu-quit-no-match t)      
+  :init
+  (global-corfu-mode))
 
 (use-package yasnippet
   :config
   (yas-global-mode 1))
+
+(use-package projectile
+  :init
+  (projectile-mode +1)
+  (setq projectile-project-search-path '(("~/code/" . 1))
+        projectile-switch-project-action 'consult-fd))
+
+(use-package perspective
+  :init
+  (persp-mode)
+  :custom
+  (persp-mode-prefix-key (kbd "C-p")))
+
+(use-package persp-projectile
+  :after '(projectile perspective))
+
+(use-package magit
+  :ensure t)
+
+(require 'org)
+
+(use-package org-roam
+  :config
+  (setq org-roam-directory (file-truename "~/org/"))
+  (org-roam-db-autosync-mode))
+
+(setq org-directory "~/org")
+
+(setq org-todo-keywords '((sequence "TODO(t)" "STARTED(s)" "WAITING(w)" "|" "DONE(d)" "KILLED(k)")))
+(use-package org-appear
+  :hook (org-mode . org-appear-mode))
+
+;; Nice bullets
+(use-package org-superstar
+  :config
+  (setq org-superstar-special-todo-items t)
+  (add-hook 'org-mode-hook (lambda ()
+                             (org-superstar-mode 1))))
+
+(setq org-hide-emphasis-markers t
+      org-pretty-entities t
+      org-startup-indented t)
+
+(general-define-key
+ :prefix "SPC"
+ :keymaps 'org-mode-map
+ :states '(normal visual)
+ "/is" 'org-insert-structure-template)
+
+;; vterm as a terminal
+(use-package vterm
+  :config
+  (setq vterm-timer-delay 0.01))
+(use-package multi-vterm
+  :after vterm)
+
+(use-package docker
+  :ensure t)
+
+(use-package docker-compose-mode)
+(use-package dockerfile-mode)
+
+(use-package hydra)
+(defhydra hydra-windows (:hint nil :rows 1)
+  "Window Navigation..."
+  ;; resizing windows
+  ("<left>" evil-window-decrease-width)
+  ("<up>" evil-window-increase-height)
+  ("<down>" evil-window-decrease-height)
+  ("<right>" evil-window-increase-width)
+
+  ;; movement on a laptop
+  ("h" evil-window-left)
+  ("j" evil-window-down)
+  ("k" evil-window-up)
+  ("l" evil-window-right)
+
+  ;; make windows  
+  ("v" evil-window-vsplit)
+  ("s" evil-window-split)
+  ("q" evil-window-delete))
+
+;; i forget what this does
+(use-package command-log-mode)
 
 (use-package tree-sitter-langs)
 (use-package tree-sitter
@@ -324,7 +300,6 @@
 
 ;; syntax highlighting
 (use-package flycheck
-  :ensure t
   :init (global-flycheck-mode))
 
 (use-package lsp-mode
@@ -365,7 +340,6 @@
 
 
 (use-package dap-mode
-  :ensure t
   :defer t
   :after lsp-mode
   :config
@@ -403,7 +377,6 @@
 (use-package glsl-mode)
 
 (use-package tuareg
-  :ensure t
   :mode (("\\.ocamlinit\\'" . tuareg-mode)))
 
 (use-package dune
@@ -411,7 +384,6 @@
 
 ;; Merlin configuration
 (use-package merlin
-  :ensure t
   :config
   (add-hook 'tuareg-mode-hook #'merlin-mode)
   (add-hook 'merlin-mode-hook #'company-mode)
@@ -419,18 +391,15 @@
   (setq merlin-error-after-save nil))
 
 (use-package merlin-eldoc
-  :ensure t
   :hook ((tuareg-mode) . merlin-eldoc-setup))
 
 ;; This uses Merlin internally
 (use-package flycheck-ocaml
-  :ensure t
   :config
   (flycheck-ocaml-setup))
 
 ;; Built-in Python utilities
 (use-package python
-  :ensure t
   :hook ((python-mode . format-all-mode))
   :custom
   (dap-python-debugger 'debugpy)
@@ -448,7 +417,6 @@
   (pyvenv-mode 1))
 
 (use-package lsp-pyright
-  :ensure t
   :hook (python-mode . (lambda ()
                          (require 'lsp-pyright)
                          (lsp-deferred))))  ; or lsp-deferred
@@ -494,7 +462,6 @@
   :after rust-mode)
 
 (use-package doom-modeline
-  :ensure t
   :init (doom-modeline-mode 1))
 
 (use-package nerd-icons)
@@ -530,11 +497,11 @@
 ;; A few more useful configurations...
 (use-package emacs
   :custom
-  ;; Support opening new minibuffers from inside existing minibuffers.
-  (enable-recursive-minibuffers t)
   ;; Hide commands in M-x which do not work in the current mode.
-
   (read-extended-command-predicate #'command-completion-default-include-p)
+
+  ;; Corfu settings
+  (tab-always-indent 'complete)
 
   :init
   ;; Add prompt indicator to `completing-read-multiple'.
@@ -707,8 +674,8 @@
 
 (general-def
   :states '(normal visual insert emacs)
-  "M-[" 'tab-previous
-  "M-]" 'tab-next)
+  "M-[" 'persp-prev
+  "M-]" 'persp-next)
 
 (general-def
   :states '(normal visual insert)
