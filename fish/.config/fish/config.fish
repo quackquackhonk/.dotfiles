@@ -26,6 +26,7 @@ if status is-interactive
     export BAT_THEME="Catppuccin Mocha"
     export RIPGREP_CONFIG_PATH=$HOME/.ripgreprc
 
+    alias ec='emacsclient'
 
     alias g='git'
     alias gu='gitui'

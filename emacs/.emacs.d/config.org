@@ -2,20 +2,23 @@
 #+STARTUP: contents
 It's my org config!
 
-* Changes to add [3/8]
-** TODO diagnostics overview
-** STARTED Brackets for navigation [1/3]
+* Changes to add [7/9]
+** TODO Customize how certain windows pop up [0/3]
+*** TODO Compilation ALWAYS opens in full right split
+*** TODO VTerm ALWAYS opens in full right split
+*** TODO Magit opens as full bottom split (like :bot .... in vim)
+** DONE diagnostics overview
+** DONE Brackets for navigation [3/3]
 *** DONE diagnostics nav
-*** TODO perspective switching
-*** TODO git conflicts?
-** STARTED perspective + projectile [1/3]
+*** KILLED perspective switching
+*** DONE git conflicts?
+** DONE perspective + projectile [2/2]
 *** DONE Automatic perspective for each project
-*** TODO save / load of perspectives
-*** TODO look into desktop.el
+*** DONE SPC SPC only shows current perspective buffers
 ** DONE no line numbers in terminal / compilation buffers
 ** DONE telescope style fuzzy finding
 ** KILLED window navigation without hydra
-** TODO LSP keybindings under ~g~
+** DONE LSP keybindings under ~g~
 ** TODO LSP keeps disabling line numbers
 * initialization
 #+begin_src emacs-lisp
@@ -53,176 +56,77 @@ It's my org config!
     :config
     (general-evil-setup))
 #+end_src
-** evil mode
-#+begin_src emacs-lisp 
-  (use-package evil
-    :init
-    (setq evil-want-keybinding nil
-          evil-want-integration t
-          evil-want-C-u-scroll t
-          evil-want-C-i-jump nil
-          evil-shift-width 4)
-    :config
-    (evil-mode 1)
-    (evil-set-undo-system 'undo-redo)
-
-    (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
-    (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
-
-    ;; Universal argument: C-u -> C-l
-    (global-unset-key (kbd "C-l"))
-    (general-define-key
-     "C-l" 'universal-argument)
-    (general-define-key
-     :keymaps 'universal-argument-map
-     "C-l" 'universal-argument-more)
-
-    (evil-set-initial-state 'messages-buffer-mode 'normal)
-    (evil-set-initial-state 'dashboard-mode 'normal))
-
-  (use-package evil-collection
-    :after evil
-    :custom
-    (evil-collection-want-unimpaired-p nil)
-    :init (evil-collection-init))
-
-  (use-package evil-numbers
-    :after evil
-    :config
-    (define-key evil-normal-state-map (kbd "C-a") 'evil-numbers/inc-at-pt)
-    (define-key evil-normal-state-map (kbd "C-x") 'evil-numbers/dec-at-pt)
-
-    (define-key evil-visual-state-map (kbd "g C-a") 'evil-numbers/inc-at-pt-incremental)
-    (define-key evil-visual-state-map (kbd "g C-x") 'evil-numbers/dec-at-pt-incremental))
-
-  (use-package evil-commentary
-    :after evil
-    :config
-    (evil-commentary-mode))
-
-  (use-package evil-snipe
-    :after evil
-    :config
-    (evil-define-key '(normal) evil-snipe-local-mode-map
-      "s" 'evil-snipe-s
-      "S" 'evil-snipe-S)
-    (evil-snipe-mode +1)
-    (evil-snipe-override-mode +1))
-
-  (use-package evil-surround
-    :config
-    (global-evil-surround-mode 1))
-
+** editing
+#+begin_src emacs-lisp
   ;; vim-easymotion movements
   (use-package avy
     :config
     (setq avy-keys '(?a ?r ?s ?t ?g ?m ?n ?e ?i ?o)
           avy-background nil))
+
+  (use-package undo-fu)
 #+end_src
-** minibuffer
+** evil mode
 #+begin_src emacs-lisp 
-  (use-package vertico
-    :custom
-    (vertico-count 20)
-    :init
-    (vertico-mode))
+    (use-package evil
+      :init
+      (setq evil-want-keybinding nil
+            evil-want-integration t
+            evil-want-C-u-scroll t
+            evil-want-C-i-jump nil
+            evil-shift-width 4)
+      :config
+      (evil-mode 1)
+      (evil-set-undo-system 'undo-fu)
 
-  (use-package consult
-    ;; Load this after perspective so we have the proper source
-    :after '(perspective)
-    ;; Enable automatic preview at point in the *Completions* buffer. This is
-    ;; relevant when you use the default completion UI.
-    :hook (completion-list-mode . consult-preview-at-point-mode)
-    :init
-    ;; Optionally configure the register formatting. This improves the register
-    ;; preview for `consult-register', `consult-register-load',
-    ;; `consult-register-store' and the Emacs built-ins.
-    (setq register-preview-delay 0.2
-          register-preview-function #'consult-register-format)
+      (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
+      (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
 
-    ;; Optionally tweak the register preview window.
-    ;; This adds thin lines, sorting and hides the mode line of the window.
-    (advice-add #'register-preview :override #'consult-register-window)
+      ;; Universal argument: C-u -> C-l
+      (global-unset-key (kbd "C-l"))
+      (general-define-key
+       "C-l" 'universal-argument)
+      (general-define-key
+       :keymaps 'universal-argument-map
+       "C-l" 'universal-argument-more)
 
-    ;; Use Consult to select xref locations with preview
-    (setq xref-show-xrefs-function #'consult-xref
-          xref-show-definitions-function #'consult-xref)
+      (evil-set-initial-state 'messages-buffer-mode 'normal)
+      (evil-set-initial-state 'dashboard-mode 'normal))
 
-    ;; set find args
-    (setq consult-fd-args '((if (executable-find "fdfind" 'remote)
-                                "fdfind" "fd")
-                            "--hidden --full-path --color=never"
-                            ;; ignores
-                            "--exclude .git"
-                            "--exclude .spack_env"
-                            "--exclude .cache"))
-    ;; Optionally configure preview. The default value
-    ;; is 'any, such that any key triggers the preview.
-    (setq consult-preview-key 'any)
-    ;; Optionally configure the narrowing key.
-    ;; Both < and C-+ work reasonably well.
-    (setq consult-narrow-key "<") ;; "C-+"
+    (use-package evil-collection
+      :after evil
+      :ensure t
+      :custom
+      (evil-collection-want-unimpaired-p nil)
+      :config (evil-collection-init))
 
-    ;; Configure other variables and modes in the :config section,
-    ;; after lazily loading the package.
-    :config
-    ;; Disable automatic preview for these commands
-    (consult-customize
-     consult-theme
-     consult-ripgrep consult-git-grep consult-grep
-     consult-bookmark consult-recent-file consult-xref
-     consult--source-bookmark consult--source-file-register
-     consult--source-recent-file consult--source-project-recent-file
-     :preview-key '(:debounce 0.4 any)
-     consult--source-buffer :hidden t :default nil)
+    (use-package evil-numbers
+      :after evil
+      :config
+      (define-key evil-normal-state-map (kbd "C-a") 'evil-numbers/inc-at-pt)
+      (define-key evil-normal-state-map (kbd "C-x") 'evil-numbers/dec-at-pt)
 
-    ;; Add perspective mode source to buffer switcher
-    (add-to-list 'consult-buffer-sources persp-consult-source))
+      (define-key evil-visual-state-map (kbd "g C-a") 'evil-numbers/inc-at-pt-incremental)
+      (define-key evil-visual-state-map (kbd "g C-x") 'evil-numbers/dec-at-pt-incremental))
 
-  ;; Use the `orderless' completion style.
-  (use-package orderless
-    :custom
-    ;; Configure a custom style dispatcher (see the Consult wiki)
-    (completion-styles '(orderless basic))
-    (completion-category-defaults nil)
-    (completion-category-overrides '((file (styles partial-completion)))))
+    (use-package evil-commentary
+      :after evil
+      :config
+      (evil-commentary-mode))
 
-  ;; Enable rich annotations using the Marginalia package
-  (use-package marginalia
-    :init (marginalia-mode))
+    (use-package evil-snipe
+      :after evil
+      :config
+      (evil-define-key '(normal) evil-snipe-local-mode-map
+        "s" 'evil-snipe-s
+        "S" 'evil-snipe-S)
+      (evil-snipe-mode +1)
+      (evil-snipe-override-mode +1))
 
-  ;; required for the searches
-  (use-package ripgrep)
+    (use-package evil-surround
+      :config
+      (global-evil-surround-mode 1))
 
-  ;; Minibuffer actions
-  (use-package embark
-
-    :bind
-    (("C-." . embark-act)         ;; pick some comfortable binding
-     ("C-;" . embark-dwim)        ;; good alternative: M-.
-     ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
-
-    :init
-
-    ;; Optionally replace the key help with a completing-read interface
-    (setq prefix-help-command #'embark-prefix-help-command)
-
-    :config
-
-    ;; Hide the mode line of the Embark live/completions buffers
-    (add-to-list 'display-buffer-alist
-                 '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
-                   nil
-                   (window-parameters (mode-line-format . none)))))
-
-  ;; Consult users will also want the embark-consult package.
-  (use-package embark-consult
-    :ensure t ; only need to install it, embark loads it after consult if found
-    :hook
-    (embark-collect-mode . consult-preview-at-point-mode))
-
-  ;; Consult todos
-  (use-package consult-todo)
 #+end_src
 ** auto completion
 #+begin_src emacs-lisp
@@ -242,12 +146,18 @@ It's my org config!
   (use-package projectile
     :init
     (projectile-mode +1)
-    (setq projectile-project-search-path '(("~/code/" . 1))
+    (setq projectile-project-search-path '(("~/code/" . 2))
           projectile-switch-project-action 'consult-fd))
 
   (use-package perspective
+    :after consult
     :init
     (persp-mode)
+
+    ;; Add perspective mode source to buffer switcher
+    (consult-customize consult--source-buffer :hidden t :default nil)
+    (add-to-list 'consult-buffer-sources persp-consult-source)
+
     :custom
     (persp-mode-prefix-key (kbd "C-p")))
 
@@ -299,14 +209,19 @@ It's my org config!
     :config
     (setq vterm-timer-delay 0.01))
   (use-package multi-vterm
-    :after vterm)
+    :after vterm
+    :config
+    (setq multi-vterm-dedicated-window-height nil
+          multi-vterm-dedicated-window-height-percent 50))
 
 #+end_src
 
 ** docker
 #+begin_src emacs-lisp
   (use-package docker
-    :ensure t)
+    :ensure t
+    :init
+    (setenv "DOCKER_DEFAULT_PLATFORM" "linux/amd64"))
 
   (use-package docker-compose-mode)
   (use-package dockerfile-mode)
@@ -334,15 +249,111 @@ It's my org config!
     ("q" evil-window-delete))
 #+end_src
 
+** minibuffer
+#+begin_src emacs-lisp 
+  (use-package vertico
+    :custom
+    (vertico-count 20)
+    :init
+    (vertico-mode))
+
+  (use-package consult
+    ;; Enable automatic preview at point in the *Completions* buffer. This is
+    ;; relevant when you use the default completion UI.
+    :hook (completion-list-mode . consult-preview-at-point-mode)
+    :init
+    ;; Optionally configure the register formatting. This improves the register
+    ;; preview for `consult-register', `consult-register-load',
+    ;; `consult-register-store' and the Emacs built-ins.
+    (setq register-preview-delay 0.2
+          register-preview-function #'consult-register-format)
+
+    ;; Optionally tweak the register preview window.
+    ;; This adds thin lines, sorting and hides the mode line of the window.
+    (advice-add #'register-preview :override #'consult-register-window)
+
+    ;; Use Consult to select xref locations with preview
+    (setq xref-show-xrefs-function #'consult-xref
+          xref-show-definitions-function #'consult-xref)
+
+    ;; Optionally configure preview. The default value
+    ;; is 'any, such that any key triggers the preview.
+    (setq consult-preview-key 'any)
+
+    ;; set find args
+    (setq consult-fd-args '((if (executable-find "fdfind" 'remote)
+                                "fdfind" "fd")
+                            "--hidden --full-path --color=never"
+                            ;; ignores
+                            "--exclude .git"
+                            "--exclude .spack_env"
+                            "--exclude .cache"))
+
+
+    ;; Disable automatic preview for these commands
+    (consult-customize
+     consult-theme
+     consult-ripgrep consult-git-grep consult-grep
+     consult-bookmark consult-recent-file consult-xref
+     consult--source-bookmark consult--source-file-register
+     consult--source-recent-file consult--source-project-recent-file
+     :preview-key '(:debounce 0.4 any)))
+
+  ;; LSP integration for consult
+  (use-package consult-lsp)
+
+  ;; Use the `orderless' completion style.
+  (use-package orderless
+    :custom
+    ;; Configure a custom style dispatcher (see the Consult wiki)
+    (completion-styles '(orderless basic))
+    (completion-category-defaults nil)
+    (completion-category-overrides '((file (styles partial-completion)))))
+
+  ;; Enable rich annotations using the Marginalia package
+  (use-package marginalia
+    :init (marginalia-mode))
+
+  ;; required for the searches
+  (use-package ripgrep)
+
+  ;; Minibuffer actions
+  (use-package embark
+
+    :bind
+    (("C-." . embark-act)         ;; pick some comfortable binding
+     ("C-;" . embark-dwim)        ;; good alternative: M-.
+     ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
+
+    :init
+
+    ;; Optionally replace the key help with a completing-read interface
+    (setq prefix-help-command #'embark-prefix-help-command)
+
+    :config
+
+    ;; Hide the mode line of the Embark live/completions buffers
+    (add-to-list 'display-buffer-alist
+                 '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
+                   nil
+                   (window-parameters (mode-line-format . none)))))
+
+  ;; Consult users will also want the embark-consult package.
+  (use-package embark-consult
+    :ensure t ; only need to install it, embark loads it after consult if found
+    :hook
+    (embark-collect-mode . consult-preview-at-point-mode))
+
+  ;; Consult todos
+  (use-package consult-todo)
+#+end_src
 ** misc packages
 #+begin_src emacs-lisp
   ;; i forget what this does
   (use-package command-log-mode)
 #+end_src
 * Language configuration
-
-Mostly LSP, other sections will have other stuff idk
-
+** LSP
 #+begin_src emacs-lisp 
   (use-package tree-sitter-langs)
   (use-package tree-sitter
@@ -357,18 +368,27 @@ Mostly LSP, other sections will have other stuff idk
     :init (global-flycheck-mode))
 
   (use-package lsp-mode
+    :after '(evil)
     :init
     (setq lsp-keymap-prefix "C-c l")
+
+    (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]spack_env\\'")
+    (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\].spack_env\\'")
+
     :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
            ;; if you want which-key integration
            (lsp-mode . lsp-enable-which-key-integration))
     :commands (lsp lsp-deferred)
     :config
-    (setq
-     lsp-warn-no-matched-clients nil
-     lsp-auto-execute-action nil)
+    (add-hook 'lsp-mode-hook
+              (lambda () (setq display-line-numbers 'relative)))
 
-    (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]spack_env\\'"))
+    (setq lsp-warn-no-matched-clients nil
+          lsp-auto-execute-action nil)
+
+
+    ;; "gd" will use lsp to find a definition first
+    (add-to-list 'evil-goto-definition-functions 'lsp-find-definition))
 
   (use-package lsp-ui
     :commands lsp-ui-mode
@@ -392,12 +412,6 @@ Mostly LSP, other sections will have other stuff idk
 
   (add-hook 'lsp-ui-doc-mode-hook (lambda () (display-line-numbers-mode 0)))
 
-
-  (use-package dap-mode
-    :defer t
-    :after lsp-mode
-    :config
-    (dap-auto-configure-mode))
 
   ;; formatting for most lanugages
   (use-package format-all)
@@ -468,12 +482,8 @@ Mostly LSP, other sections will have other stuff idk
   (use-package python
     :hook ((python-mode . format-all-mode))
     :custom
-    (dap-python-debugger 'debugpy)
-    (dap-python-executable "python3")
     (python-shell-interpreter "python3")
     :config
-    (require 'dap-python)
-
     ;; Remove guess indent python message
     (setq python-indent-guess-indent-offset-verbose nil))
 
@@ -535,43 +545,6 @@ Mostly LSP, other sections will have other stuff idk
   (use-package cargo
     :after rust-mode)
 #+end_src
-* themeing
-
-#+begin_src emacs-lisp
-  (use-package doom-modeline
-    :init (doom-modeline-mode 1))
-
-  (use-package nerd-icons)
-
-  (use-package catppuccin-theme)
-  (setq catppuccin-flavor 'mocha)
-  (catppuccin-reload)
-
-  (use-package rainbow-delimiters
-    :hook (prog-mode . rainbow-delimiters-mode))
-
-  (use-package rainbow-mode
-    :hook (prog-mode . rainbow-delimiters-mode))
-
-  (use-package hl-todo
-    :config
-    (global-hl-todo-mode))
-
-  (use-package solaire-mode
-    :config
-    (solaire-global-mode +1))
-
-  ;; nicer compilation window
-  (use-package fancy-compilation
-    :commands (fancy-compilation-mode))
-
-  (with-eval-after-load 'compile
-    (fancy-compilation-mode))
-
-  ;; icons
-  (use-package all-the-icons)
-#+end_src
-
 * Emacs Package
 We are installing this last so we can access all packages installed before
 #+begin_src emacs-lisp
@@ -622,11 +595,13 @@ some general settings. enabling the mouse, column numbers, things of that sort.
   (setq dired-kill-when-opening-new-dired-buffer t)
   (setq split-height-threshold nil
         split-width-threshold 0)
+  (setq compilation-scroll-output t)
 
   ;; column numbers
   (setq-default display-line-numbers 'relative
                 display-line-numbers-mode 'relative
                 global-display-line-numbers-mode 'relative)
+
   ;; disable line numbers in certain modes
   (dolist (mode '(org-mode-hook
                   term-mode-hook
@@ -668,7 +643,7 @@ some general settings. enabling the mouse, column numbers, things of that sort.
     (load-file user-init-file))
   (defun qqh/open-emacs-config ()
     (interactive)
-    (find-file "~/.emacs.d/config.org"))
+    (find-file "~/.dotfiles/emacs/.emacs.d/config.org"))
 
   (defun qqh/kill-current-buffer ()
     (interactive)
@@ -709,15 +684,12 @@ some general settings. enabling the mouse, column numbers, things of that sort.
     "of" 'dired
     "ot" 'multi-vterm-project
     "oT" 'multi-vterm
+    "od" 'consult-lsp-diagnostics
 
     ;; projects (p)
-    "p" 'projectile-command-map
-
-    ;; LSP
-    "ld" 'lsp-find-definition
-    "lr" 'lsp-ui-peek-find-references
-    "lR" 'lsp-rename
-    "l SPC" 'lsp-execute-code-action
+    "pp" 'projectile-persp-switch-project
+    "pa" 'projectile-find-other-file
+    "pc" 'projectile-commander
 
     ;; code
     "cc" 'compile
@@ -762,11 +734,23 @@ some general settings. enabling the mouse, column numbers, things of that sort.
     "C-q" 'evil-window-delete)
 
   (general-def
+    :states '(normal)
+    ;; evil LSP keybindings
+    ;; "gd" 'evil-goto-definition <-- built in
+    "gr" 'lsp-ui-peek-find-references
+    "gR" 'lsp-rename
+    "g SPC" 'lsp-execute-code-action)
+
+  (general-def
     :states '(normal visual)
     "K" 'lsp-ui-doc-glance
     "RET" 'avy-goto-char-2
+    ;; move through diagnostics
     "]d" 'flycheck-next-error
-    "[d" 'flycheck-previous-error)
+    "[d" 'flycheck-previous-error
+    ;; git conflicts
+    "]x" 'smerge-next
+    "[x" 'smerge-prev)
 
   (general-def
     :states '(normal visual insert emacs)
@@ -782,5 +766,42 @@ some general settings. enabling the mouse, column numbers, things of that sort.
     :states '(normal visual emacs insert)
     "C-p" ;; used for the persp-mode map
     )
+#+end_src
+
+* themeing
+
+#+begin_src emacs-lisp
+  (use-package doom-modeline
+    :init (doom-modeline-mode 1))
+
+  (use-package nerd-icons)
+
+  (use-package catppuccin-theme)
+  (setq catppuccin-flavor 'mocha)
+  (catppuccin-reload)
+
+  (use-package rainbow-delimiters
+    :hook (prog-mode . rainbow-delimiters-mode))
+
+  (use-package rainbow-mode
+    :hook (prog-mode . rainbow-delimiters-mode))
+
+  (use-package hl-todo
+    :config
+    (global-hl-todo-mode))
+
+  (use-package solaire-mode
+    :config
+    (solaire-global-mode +1))
+
+  ;; nicer compilation window
+  (use-package fancy-compilation
+    :commands (fancy-compilation-mode))
+
+  (with-eval-after-load 'compile
+    (fancy-compilation-mode))
+
+  ;; icons
+  (use-package all-the-icons)
 #+end_src
 

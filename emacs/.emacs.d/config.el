@@ -28,6 +28,14 @@
   :config
   (general-evil-setup))
 
+;; vim-easymotion movements
+(use-package avy
+  :config
+  (setq avy-keys '(?a ?r ?s ?t ?g ?m ?n ?e ?i ?o)
+        avy-background nil))
+
+(use-package undo-fu)
+
 (use-package evil
   :init
   (setq evil-want-keybinding nil
@@ -37,7 +45,7 @@
         evil-shift-width 4)
   :config
   (evil-mode 1)
-  (evil-set-undo-system 'undo-redo)
+  (evil-set-undo-system 'undo-fu)
 
   (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
   (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
@@ -55,9 +63,10 @@
 
 (use-package evil-collection
   :after evil
+  :ensure t
   :custom
   (evil-collection-want-unimpaired-p nil)
-  :init (evil-collection-init))
+  :config (evil-collection-init))
 
 (use-package evil-numbers
   :after evil
@@ -86,11 +95,108 @@
   :config
   (global-evil-surround-mode 1))
 
-;; vim-easymotion movements
-(use-package avy
+(use-package corfu
+  :custom
+  (corfu-auto t)                 ;; Enable auto completion
+  (corfu-quit-no-match t)      
+  :init
+  (global-corfu-mode))
+
+(use-package yasnippet
   :config
-  (setq avy-keys '(?a ?r ?s ?t ?g ?m ?n ?e ?i ?o)
-        avy-background nil))
+  (yas-global-mode 1))
+
+(use-package projectile
+  :init
+  (projectile-mode +1)
+  (setq projectile-project-search-path '(("~/code/" . 2))
+        projectile-switch-project-action 'consult-fd))
+
+(use-package perspective
+  :after consult
+  :init
+  (persp-mode)
+
+  ;; Add perspective mode source to buffer switcher
+  (consult-customize consult--source-buffer :hidden t :default nil)
+  (add-to-list 'consult-buffer-sources persp-consult-source)
+
+  :custom
+  (persp-mode-prefix-key (kbd "C-p")))
+
+(use-package persp-projectile
+  :after '(projectile perspective))
+
+(use-package magit
+  :ensure t)
+
+(require 'org)
+
+(use-package org-roam
+  :config
+  (setq org-roam-directory (file-truename "~/org/"))
+  (org-roam-db-autosync-mode))
+
+(setq org-directory "~/org")
+
+(setq org-todo-keywords '((sequence "TODO(t)" "STARTED(s)" "WAITING(w)" "|" "DONE(d)" "KILLED(k)")))
+(use-package org-appear
+  :hook (org-mode . org-appear-mode))
+
+;; Nice bullets
+(use-package org-superstar
+  :config
+  (setq org-superstar-special-todo-items t)
+  (add-hook 'org-mode-hook (lambda ()
+                             (org-superstar-mode 1))))
+
+(setq org-hide-emphasis-markers t
+      org-pretty-entities t
+      org-startup-indented t)
+
+(general-define-key
+ :prefix "SPC"
+ :keymaps 'org-mode-map
+ :states '(normal visual)
+ "/is" 'org-insert-structure-template)
+
+;; vterm as a terminal
+(use-package vterm
+  :config
+  (setq vterm-timer-delay 0.01))
+(use-package multi-vterm
+  :after vterm
+  :config
+  (setq multi-vterm-dedicated-window-height nil
+        multi-vterm-dedicated-window-height-percent 50))
+
+(use-package docker
+  :ensure t
+  :init
+  (setenv "DOCKER_DEFAULT_PLATFORM" "linux/amd64"))
+
+(use-package docker-compose-mode)
+(use-package dockerfile-mode)
+
+(use-package hydra)
+(defhydra hydra-windows (:hint nil :rows 1)
+  "Window Navigation..."
+  ;; resizing windows
+  ("<left>" evil-window-decrease-width)
+  ("<up>" evil-window-increase-height)
+  ("<down>" evil-window-decrease-height)
+  ("<right>" evil-window-increase-width)
+
+  ;; movement on a laptop
+  ("h" evil-window-left)
+  ("j" evil-window-down)
+  ("k" evil-window-up)
+  ("l" evil-window-right)
+
+  ;; make windows  
+  ("v" evil-window-vsplit)
+  ("s" evil-window-split)
+  ("q" evil-window-delete))
 
 (use-package vertico
   :custom
@@ -99,8 +205,6 @@
   (vertico-mode))
 
 (use-package consult
-  ;; Load this after perspective so we have the proper source
-  :after '(perspective)
   ;; Enable automatic preview at point in the *Completions* buffer. This is
   ;; relevant when you use the default completion UI.
   :hook (completion-list-mode . consult-preview-at-point-mode)
@@ -119,6 +223,10 @@
   (setq xref-show-xrefs-function #'consult-xref
         xref-show-definitions-function #'consult-xref)
 
+  ;; Optionally configure preview. The default value
+  ;; is 'any, such that any key triggers the preview.
+  (setq consult-preview-key 'any)
+
   ;; set find args
   (setq consult-fd-args '((if (executable-find "fdfind" 'remote)
                               "fdfind" "fd")
@@ -127,16 +235,8 @@
                           "--exclude .git"
                           "--exclude .spack_env"
                           "--exclude .cache"))
-  ;; Optionally configure preview. The default value
-  ;; is 'any, such that any key triggers the preview.
-  (setq consult-preview-key 'any)
-  ;; Optionally configure the narrowing key.
-  ;; Both < and C-+ work reasonably well.
-  (setq consult-narrow-key "<") ;; "C-+"
 
-  ;; Configure other variables and modes in the :config section,
-  ;; after lazily loading the package.
-  :config
+
   ;; Disable automatic preview for these commands
   (consult-customize
    consult-theme
@@ -144,11 +244,10 @@
    consult-bookmark consult-recent-file consult-xref
    consult--source-bookmark consult--source-file-register
    consult--source-recent-file consult--source-project-recent-file
-   :preview-key '(:debounce 0.4 any)
-   consult--source-buffer :hidden t :default nil)
+   :preview-key '(:debounce 0.4 any)))
 
-  ;; Add perspective mode source to buffer switcher
-  (add-to-list 'consult-buffer-sources persp-consult-source))
+;; LSP integration for consult
+(use-package consult-lsp)
 
 ;; Use the `orderless' completion style.
 (use-package orderless
@@ -195,98 +294,6 @@
 ;; Consult todos
 (use-package consult-todo)
 
-(use-package corfu
-  :custom
-  (corfu-auto t)                 ;; Enable auto completion
-  (corfu-quit-no-match t)      
-  :init
-  (global-corfu-mode))
-
-(use-package yasnippet
-  :config
-  (yas-global-mode 1))
-
-(use-package projectile
-  :init
-  (projectile-mode +1)
-  (setq projectile-project-search-path '(("~/code/" . 1))
-        projectile-switch-project-action 'consult-fd))
-
-(use-package perspective
-  :init
-  (persp-mode)
-  :custom
-  (persp-mode-prefix-key (kbd "C-p")))
-
-(use-package persp-projectile
-  :after '(projectile perspective))
-
-(use-package magit
-  :ensure t)
-
-(require 'org)
-
-(use-package org-roam
-  :config
-  (setq org-roam-directory (file-truename "~/org/"))
-  (org-roam-db-autosync-mode))
-
-(setq org-directory "~/org")
-
-(setq org-todo-keywords '((sequence "TODO(t)" "STARTED(s)" "WAITING(w)" "|" "DONE(d)" "KILLED(k)")))
-(use-package org-appear
-  :hook (org-mode . org-appear-mode))
-
-;; Nice bullets
-(use-package org-superstar
-  :config
-  (setq org-superstar-special-todo-items t)
-  (add-hook 'org-mode-hook (lambda ()
-                             (org-superstar-mode 1))))
-
-(setq org-hide-emphasis-markers t
-      org-pretty-entities t
-      org-startup-indented t)
-
-(general-define-key
- :prefix "SPC"
- :keymaps 'org-mode-map
- :states '(normal visual)
- "/is" 'org-insert-structure-template)
-
-;; vterm as a terminal
-(use-package vterm
-  :config
-  (setq vterm-timer-delay 0.01))
-(use-package multi-vterm
-  :after vterm)
-
-(use-package docker
-  :ensure t)
-
-(use-package docker-compose-mode)
-(use-package dockerfile-mode)
-
-(use-package hydra)
-(defhydra hydra-windows (:hint nil :rows 1)
-  "Window Navigation..."
-  ;; resizing windows
-  ("<left>" evil-window-decrease-width)
-  ("<up>" evil-window-increase-height)
-  ("<down>" evil-window-decrease-height)
-  ("<right>" evil-window-increase-width)
-
-  ;; movement on a laptop
-  ("h" evil-window-left)
-  ("j" evil-window-down)
-  ("k" evil-window-up)
-  ("l" evil-window-right)
-
-  ;; make windows  
-  ("v" evil-window-vsplit)
-  ("s" evil-window-split)
-  ("q" evil-window-delete))
-
 ;; i forget what this does
 (use-package command-log-mode)
 
@@ -303,18 +310,27 @@
   :init (global-flycheck-mode))
 
 (use-package lsp-mode
+  :after '(evil)
   :init
   (setq lsp-keymap-prefix "C-c l")
+
+  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]spack_env\\'")
+  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\].spack_env\\'")
+
   :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
          ;; if you want which-key integration
          (lsp-mode . lsp-enable-which-key-integration))
   :commands (lsp lsp-deferred)
   :config
-  (setq
-   lsp-warn-no-matched-clients nil
-   lsp-auto-execute-action nil)
+  (add-hook 'lsp-mode-hook
+            (lambda () (setq display-line-numbers 'relative)))
 
-  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]spack_env\\'"))
+  (setq lsp-warn-no-matched-clients nil
+        lsp-auto-execute-action nil)
+
+
+  ;; "gd" will use lsp to find a definition first
+  (add-to-list 'evil-goto-definition-functions 'lsp-find-definition))
 
 (use-package lsp-ui
   :commands lsp-ui-mode
@@ -338,12 +354,6 @@
 
 (add-hook 'lsp-ui-doc-mode-hook (lambda () (display-line-numbers-mode 0)))
 
-
-(use-package dap-mode
-  :defer t
-  :after lsp-mode
-  :config
-  (dap-auto-configure-mode))
 
 ;; formatting for most lanugages
 (use-package format-all)
@@ -402,12 +412,8 @@
 (use-package python
   :hook ((python-mode . format-all-mode))
   :custom
-  (dap-python-debugger 'debugpy)
-  (dap-python-executable "python3")
   (python-shell-interpreter "python3")
   :config
-  (require 'dap-python)
-
   ;; Remove guess indent python message
   (setq python-indent-guess-indent-offset-verbose nil))
 
@@ -461,39 +467,6 @@
 (use-package cargo
   :after rust-mode)
 
-(use-package doom-modeline
-  :init (doom-modeline-mode 1))
-
-(use-package nerd-icons)
-
-(use-package catppuccin-theme)
-(setq catppuccin-flavor 'mocha)
-(catppuccin-reload)
-
-(use-package rainbow-delimiters
-  :hook (prog-mode . rainbow-delimiters-mode))
-
-(use-package rainbow-mode
-  :hook (prog-mode . rainbow-delimiters-mode))
-
-(use-package hl-todo
-  :config
-  (global-hl-todo-mode))
-
-(use-package solaire-mode
-  :config
-  (solaire-global-mode +1))
-
-;; nicer compilation window
-(use-package fancy-compilation
-  :commands (fancy-compilation-mode))
-
-(with-eval-after-load 'compile
-  (fancy-compilation-mode))
-
-;; icons
-(use-package all-the-icons)
-
 ;; A few more useful configurations...
 (use-package emacs
   :custom
@@ -536,11 +509,13 @@
 (setq dired-kill-when-opening-new-dired-buffer t)
 (setq split-height-threshold nil
       split-width-threshold 0)
+(setq compilation-scroll-output t)
 
 ;; column numbers
 (setq-default display-line-numbers 'relative
               display-line-numbers-mode 'relative
               global-display-line-numbers-mode 'relative)
+
 ;; disable line numbers in certain modes
 (dolist (mode '(org-mode-hook
                 term-mode-hook
@@ -579,7 +554,7 @@
   (load-file user-init-file))
 (defun qqh/open-emacs-config ()
   (interactive)
-  (find-file "~/.emacs.d/config.org"))
+  (find-file "~/.dotfiles/emacs/.emacs.d/config.org"))
 
 (defun qqh/kill-current-buffer ()
   (interactive)
@@ -616,15 +591,12 @@
   "of" 'dired
   "ot" 'multi-vterm-project
   "oT" 'multi-vterm
+  "od" 'consult-lsp-diagnostics
 
   ;; projects (p)
-  "p" 'projectile-command-map
-
-  ;; LSP
-  "ld" 'lsp-find-definition
-  "lr" 'lsp-ui-peek-find-references
-  "lR" 'lsp-rename
-  "l SPC" 'lsp-execute-code-action
+  "pp" 'projectile-persp-switch-project
+  "pa" 'projectile-find-other-file
+  "pc" 'projectile-commander
 
   ;; code
   "cc" 'compile
@@ -666,11 +638,23 @@
   "C-q" 'evil-window-delete)
 
 (general-def
+  :states '(normal)
+  ;; evil LSP keybindings
+  ;; "gd" 'evil-goto-definition <-- built in
+  "gr" 'lsp-ui-peek-find-references
+  "gR" 'lsp-rename
+  "g SPC" 'lsp-execute-code-action)
+
+(general-def
   :states '(normal visual)
   "K" 'lsp-ui-doc-glance
   "RET" 'avy-goto-char-2
+  ;; move through diagnostics
   "]d" 'flycheck-next-error
-  "[d" 'flycheck-previous-error)
+  "[d" 'flycheck-previous-error
+  ;; git conflicts
+  "]x" 'smerge-next
+  "[x" 'smerge-prev)
 
 (general-def
   :states '(normal visual insert emacs)
@@ -686,3 +670,36 @@
   :states '(normal visual emacs insert)
   "C-p" ;; used for the persp-mode map
   )
+
+(use-package doom-modeline
+  :init (doom-modeline-mode 1))
+
+(use-package nerd-icons)
+
+(use-package catppuccin-theme)
+(setq catppuccin-flavor 'mocha)
+(catppuccin-reload)
+
+(use-package rainbow-delimiters
+  :hook (prog-mode . rainbow-delimiters-mode))
+
+(use-package rainbow-mode
+  :hook (prog-mode . rainbow-delimiters-mode))
+
+(use-package hl-todo
+  :config
+  (global-hl-todo-mode))
+
+(use-package solaire-mode
+  :config
+  (solaire-global-mode +1))
+
+;; nicer compilation window
+(use-package fancy-compilation
+  :commands (fancy-compilation-mode))
+
+(with-eval-after-load 'compile
+  (fancy-compilation-mode))
+
+;; icons
+(use-package all-the-icons)
