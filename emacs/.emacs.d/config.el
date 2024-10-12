@@ -2,6 +2,7 @@
 (require 'package)
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
                          ("org" . "https://orgmode.org/elpa/")
+                         ("nongnu" . "https://elpa.nongnu.org/nongnu/")
                          ("elpa" . "https://elpa.gnu.org/packages/")))
 
 (unless package-archive-contents
@@ -48,7 +49,6 @@
   (evil-set-undo-system 'undo-fu)
 
   (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
-  (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
 
   ;; Universal argument: C-u -> C-l
   (global-unset-key (kbd "C-l"))
@@ -66,7 +66,8 @@
   :ensure t
   :custom
   (evil-collection-want-unimpaired-p nil)
-  :config (evil-collection-init))
+  :config
+  (evil-collection-init))
 
 (use-package evil-numbers
   :after evil
@@ -128,7 +129,9 @@
   :after '(projectile perspective))
 
 (use-package magit
-  :ensure t)
+  :ensure t
+  :init
+  (setq magit-display-buffer-function #'magit-display-buffer-fullframe-status-v1))
 
 (require 'org)
 
@@ -294,6 +297,18 @@
 ;; Consult todos
 (use-package consult-todo)
 
+(use-package markdown-mode
+  :init
+  (setq markdown-list-indent-width 2))
+
+(use-package grip-mode
+  :hook (markdown-mode . grip-mode)
+  :config
+  (setq grip-use-mdopen t
+        grip-mdopen-path "/Users/i34866/.cargo/bin/mdopen"
+        grip-preview-use-webkit nil
+        grip-update-after-change nil))
+
 ;; i forget what this does
 (use-package command-log-mode)
 
@@ -301,62 +316,15 @@
 (use-package tree-sitter
   :config
   (require 'tree-sitter-langs)
+  (setq treesit-font-lock-level 4)
   (global-tree-sitter-mode)
   (add-hook 'tree-sitter-after-on-hook
             #'tree-sitter-hl-mode))
 
-;; syntax highlighting
-(use-package flycheck
-  :init (global-flycheck-mode))
-
-(use-package lsp-mode
-  :after '(evil)
-  :init
-  (setq lsp-keymap-prefix "C-c l")
-
-  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]spack_env\\'")
-  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\].spack_env\\'")
-
-  :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
-         ;; if you want which-key integration
-         (lsp-mode . lsp-enable-which-key-integration))
-  :commands (lsp lsp-deferred)
-  :config
-  (add-hook 'lsp-mode-hook
-            (lambda () (setq display-line-numbers 'relative)))
-
-  (setq lsp-warn-no-matched-clients nil
-        lsp-auto-execute-action nil)
-
-
-  ;; "gd" will use lsp to find a definition first
-  (add-to-list 'evil-goto-definition-functions 'lsp-find-definition))
-
-(use-package lsp-ui
-  :commands lsp-ui-mode
-  :config
-
-  (setq
-   ;; sideline congfig
-   lsp-ui-sideline-show-code-actions nil
-   lsp-ui-sideline-show-diagnostics t
-   lsp-ui-sideline-delay 0.2
-   ;; documentation settings
-   lsp-ui-doc-enable t
-   lsp-ui-doc-position 'at-point
-   lsp-ui-doc-show-with-cursor nil
-   lsp-ui-doc-show-with-mouse nil
-   ;; Themeing
-   lsp-lens-enable nil
-   lsp-headerline-breadcrumb-enable nil
-   lsp-modeline-diagnostics-enable t
-   lsp-modeline-code-actions-enable t))
-
-(add-hook 'lsp-ui-doc-mode-hook (lambda () (display-line-numbers-mode 0)))
-
-
+(use-package eglot)
 ;; formatting for most lanugages
-(use-package format-all)
+(use-package format-all
+  :hook (prog-mode . format-all-mode))
 
 ;; Cmake
 (use-package cmake-mode)
@@ -385,6 +353,10 @@
 
 ;; GLSL
 (use-package glsl-mode)
+
+(use-package go-mode)
+
+(use-package lua-mode)
 
 (use-package tuareg
   :mode (("\\.ocamlinit\\'" . tuareg-mode)))
@@ -507,8 +479,8 @@
 (setq indicate-empty-lines t)
 (setq inhibit-startup-message t)
 (setq dired-kill-when-opening-new-dired-buffer t)
-(setq split-height-threshold nil
-      split-width-threshold 0)
+(setq split-height-threshold 80
+      split-width-threshold 160)
 (setq compilation-scroll-output t)
 
 ;; column numbers
@@ -518,6 +490,7 @@
 
 ;; disable line numbers in certain modes
 (dolist (mode '(org-mode-hook
+                markdown-mode-hook
                 term-mode-hook
                 vterm-mode-hook
                 shell-mode-hook
@@ -566,6 +539,14 @@
   :prefix "SPC"
   :global-prefix "C-SPC")
 
+(defun qqh/unset-leader (key)
+  (general-unbind
+    :keymaps '(normal visual emacs)
+    :prefix "SPC"
+    :global-prefix "C-SPC"
+    key))
+
+
 ;; remove the help binding
 (global-unset-key (kbd "C-h"))
 
@@ -574,21 +555,25 @@
   ;; top level bindings
   "SPC" 'consult-buffer
   "TAB" 'other-window
+  "RET" 'avy-goto-char-2
   "q" 'qqh/kill-current-buffer
   "g" 'magit
-  "h" 'help
   "x" 'execute-extended-command
   "," 'evil-switch-to-windows-last-buffer
+  ":" 'eval-expression
+
+  ;; search (s)
+  "s RET" 'avy-goto-line
+  "ss" 'consult-line
+  "sS" 'consult-line-multi
 
   ;; files
   "ff" 'consult-fd
-  "fp" 'counsel-rg
-  "fs" 'consult-line
-  "fS" 'consult-line-multi
-  "fq" 'kill-buffer
+  "fo" 'find-file
 
   ;; Open (o)
   "of" 'dired
+  "oi" 'consult-imenu
   "ot" 'multi-vterm-project
   "oT" 'multi-vterm
   "od" 'consult-lsp-diagnostics
@@ -648,13 +633,11 @@
 (general-def
   :states '(normal visual)
   "K" 'lsp-ui-doc-glance
-  "RET" 'avy-goto-char-2
   ;; move through diagnostics
   "]d" 'flycheck-next-error
   "[d" 'flycheck-previous-error
   ;; git conflicts
-  "]x" 'smerge-next
-  "[x" 'smerge-prev)
+  "]x" 'smerge-vc-next-conflict)
 
 (general-def
   :states '(normal visual insert emacs)
@@ -684,7 +667,7 @@
   :hook (prog-mode . rainbow-delimiters-mode))
 
 (use-package rainbow-mode
-  :hook (prog-mode . rainbow-delimiters-mode))
+  :hook (prog-mode . rainbow-mode))
 
 (use-package hl-todo
   :config

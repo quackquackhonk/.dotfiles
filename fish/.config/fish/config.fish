@@ -16,7 +16,7 @@ end
 
 if status is-interactive
     export TERM=xterm-256color
-    export EDITOR=nvim
+    export EDITOR='emacs -nw'
     export HOMEBREW_NO_AUTO_UPDATE=1
 
     export FZF_DEFAULT_OPTS=" \
@@ -27,6 +27,8 @@ if status is-interactive
     export RIPGREP_CONFIG_PATH=$HOME/.ripgreprc
 
     alias ec='emacsclient'
+    alias emd='emacs --daemon'
+    alias killemacs='emacsclient -e "(kill-emacs)"'
 
     alias g='git'
     alias gu='gitui'
