@@ -6,14 +6,10 @@
 (require 'package)
 
 ;;;; Package setup and additional utility functions
-
-;; accessing a package repo over https on Windows is a no go, so we
-;; fallback to http there
-(if (eq system-type 'windows-nt)
-    (add-to-list 'package-archives
-                 '("melpa" . "http://melpa.org/packages/") t)
-    (add-to-list 'package-archives
-                 '("melpa" . "https://melpa.org/packages/") t))
+(setq package-archives '(("melpa" . "https://melpa.org/packages/")
+                         ("org" . "https://orgmode.org/elpa/")
+                         ("nongnu" . "https://elpa.nongnu.org/nongnu/")
+                         ("elpa" . "https://elpa.gnu.org/packages/")))
 
 ;; load the pinned packages
 (let ((qqh-pinned-packages-file (expand-file-name "qqh-pinned-packages.el" qqh-dir)))
@@ -63,8 +59,12 @@
     undo-tree
     volatile-highlights
     which-key
-    zenburn-theme
-    zop-to-char)
+    zop-to-char
+
+    ;; themes
+    catppuccin-theme
+    zenburn-theme)
+
   "A list of packages to ensure are installed at launch.")
 
 (defun qqh-packages-installed-p ()

@@ -5,10 +5,10 @@
 ;;; Uncomment the modules you'd like to use and restart qqh afterwards
 
 ;;; General productivity tools
+(require 'qqh-minibuffer)
+(require 'qqh-general)
 
-(require 'qqh-vertico) ;; A powerful, yet simple, alternative to ivy
-
-;;; Vim emulation
+;; Vim emulation
 ;;
 ;; Enable this module if you're fond of vim's keybindings.
 (require 'qqh-evil)

@@ -67,6 +67,7 @@
 (require 'qqh-ui)
 (require 'qqh-core)
 (require 'qqh-mode)
+(require 'qqh-defs)
 (require 'qqh-editor)
 (require 'qqh-global-keybindings)
 ;; 

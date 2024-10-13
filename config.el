@@ -515,24 +515,6 @@
 (setq find-program "fd"
       grep-program "rg")
 
-;; toggles relative column numbers
-(defun qqh/toggle-relative-line ()
-  (interactive)
-  (if (eq display-line-numbers 'relative)
-      (setq display-line-numbers t)
-    (setq display-line-numbers 'relative)))
-
-(defun qqh/emacs-reload ()
-  (interactive)
-  (load-file user-init-file))
-(defun qqh/open-emacs-config ()
-  (interactive)
-  (find-file "~/.dotfiles/emacs/.emacs.d/config.org"))
-
-(defun qqh/kill-current-buffer ()
-  (interactive)
-  (persp-kill-buffer* (current-buffer)))
-
 ;; keybindings
 (general-create-definer qqh/leader-definer
   :keymaps '(normal visual emacs)

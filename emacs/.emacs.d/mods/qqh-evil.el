@@ -4,12 +4,11 @@
 ;; Some basic configuration for evil-mode.
 
 ;;; Code:
-0
 ;;; goto-chg lets you use the g-; and g-, to go to recent changes
 ;;; evil-visualstar enables searching visual selection with *
 ;;; evil-numbers enables vim style numeric incrementing and decrementing
 
-(qqh-require-packages '(evil goto-chg evil-surround evil-visualstar evil-numbers))
+(qqh-require-packages '(evil goto-chg undo-fu evil-collection evil-surround evil-visualstar evil-numbers))
 
 (require 'evil-visualstar)
 
@@ -21,16 +20,27 @@
 (setq evil-insert-state-cursor '("gray" bar))
 (setq evil-motion-state-cursor '("gray" box))
 
-;; prevent esc-key from translating to meta-key in terminal mode
+(setq evil-want-keybinding nil)
+(setq evil-want-integration t)
+(setq evil-want-C-u-scroll t)
+(setq evil-want-C-i-jump nil)
+(setq evil-shift-width 4)
 (setq evil-esc-delay 0)
+
+(evil-mode 1)
+(evil-set-undo-system 'undo-fu)
+
+(define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
+;; prevent esc-key from translating to meta-key in terminal mode
 
 (evil-mode 1)
 (global-evil-surround-mode 1)
 
-(define-key evil-normal-state-map (kbd "C-A")
-  'evil-numbers/inc-at-pt)
-(define-key evil-normal-state-map (kbd "C-S-A")
-  'evil-numbers/dec-at-pt)
+(define-key evil-normal-state-map (kbd "C-a") 'evil-numbers/inc-at-pt)
+(define-key evil-normal-state-map (kbd "C-S-a") 'evil-numbers/dec-at-pt)
+
+(define-key evil-normal-state-map (kbd "g C-a") 'evil-numbers/inc-at-pt-incremental)
+(define-key evil-normal-state-map (kbd "g C-S-a") 'evil-numbers/dec-at-pt-incremental)
 
 ;;
 ;; Other useful Commands
@@ -94,9 +104,6 @@
   "h" 'magit-diff-toggle-refine-hunk)
 
 (setq evil-shift-width 2)
-
-;;; enable avy with evil-mode
-(define-key evil-normal-state-map (kbd "SPC") 'avy-goto-word-1)
 
 ;;; snagged from Eric S. Fraga
 ;;; http://lists.gnu.org/archive/html/emacs-orgmode/2012-05/msg00153.html
