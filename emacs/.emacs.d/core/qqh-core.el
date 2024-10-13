@@ -1,49 +1,25 @@
-;;; prelude-core.el --- Emacs Prelude: Core Prelude functions.
-;;
-;; Copyright © 2011-2023 Bozhidar Batsov
-;;
-;; Author: Bozhidar Batsov <bozhidar@batsov.com>
-;; URL: https://github.com/bbatsov/prelude
-
-;; This file is not part of GNU Emacs.
+;;; qqh-core.el --- Core emacs functions.
 
 ;;; Commentary:
 
 ;; Here are the definitions of most of the general-purpose functions and
-;; commands added by Prelude.  Some modules define additional module-specific
+;; commands added by qqh.  Some modules define additional module-specific
 ;; functions and commands.
 ;;
-;; Note that many of the original core Prelude commands were extracted to the
-;; crux package (Prelude installs it automatically).  Prelude's auto-save
+;; Note that many of the original core qqh commands were extracted to the
+;; crux package (qqh installs it automatically).  qqh's auto-save
 ;; functionality was extracted to the super-save package.
-
-;;; License:
-
-;; This program is free software; you can redistribute it and/or
-;; modify it under the terms of the GNU General Public License
-;; as published by the Free Software Foundation; either version 3
-;; of the License, or (at your option) any later version.
-;;
-;; This program is distributed in the hope that it will be useful,
-;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;; GNU General Public License for more details.
-;;
-;; You should have received a copy of the GNU General Public License
-;; along with GNU Emacs; see the file COPYING.  If not, write to the
-;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-;; Boston, MA 02110-1301, USA.
 
 ;;; Code:
 
 (require 'cl-lib)
 
-(defun prelude-buffer-mode (buffer-or-name)
+(defun qqh-buffer-mode (buffer-or-name)
   "Retrieve the `major-mode' of BUFFER-OR-NAME."
   (with-current-buffer buffer-or-name
     major-mode))
 
-(defun prelude-search (query-url prompt)
+(defun qqh-search (query-url prompt)
   "Open the search url constructed with the QUERY-URL.
 PROMPT sets the `read-string prompt."
   (browse-url
@@ -53,24 +29,24 @@ PROMPT sets the `read-string prompt."
                 (buffer-substring (region-beginning) (region-end))
               (read-string prompt))))))
 
-(defmacro prelude-install-search-engine (search-engine-name search-engine-url search-engine-prompt)
+(defmacro qqh-install-search-engine (search-engine-name search-engine-url search-engine-prompt)
   "Given some information regarding a search engine, install the interactive command to search through them"
-  `(defun ,(intern (format "prelude-%s" search-engine-name)) ()
+  `(defun ,(intern (format "qqh-%s" search-engine-name)) ()
        ,(format "Search %s with a query or region if any." search-engine-name)
        (interactive)
-       (prelude-search ,search-engine-url ,search-engine-prompt)))
+       (qqh-search ,search-engine-url ,search-engine-prompt)))
 
-(prelude-install-search-engine "google"     "http://www.google.com/search?q="              "Google: ")
-(prelude-install-search-engine "youtube"    "http://www.youtube.com/results?search_query=" "Search YouTube: ")
-(prelude-install-search-engine "github"     "https://github.com/search?q="                 "Search GitHub: ")
-(prelude-install-search-engine "duckduckgo" "https://duckduckgo.com/?t=lm&q="              "Search DuckDuckGo: ")
+(qqh-install-search-engine "google"     "http://www.google.com/search?q="              "Google: ")
+(qqh-install-search-engine "youtube"    "http://www.youtube.com/results?search_query=" "Search YouTube: ")
+(qqh-install-search-engine "github"     "https://github.com/search?q="                 "Search GitHub: ")
+(qqh-install-search-engine "duckduckgo" "https://duckduckgo.com/?t=lm&q="              "Search DuckDuckGo: ")
 
-(defun prelude-recompile-init ()
+(defun qqh-recompile-init ()
   "Byte-compile all your dotfiles again."
   (interactive)
-  (byte-recompile-directory prelude-dir 0))
+  (byte-recompile-directory qqh-dir 0))
 
-(defvar prelude-tips
+(defvar qqh-tips
   '("Press <C-c o> to open a file with external program."
     "Press <C-c p f> to navigate a project's files."
     "Press <s-r> to open a recently visited file."
@@ -95,19 +71,19 @@ PROMPT sets the `read-string prompt."
     "Press <s-j> or <C-^> to join lines."
     "Press <s-.> or <C-c v> to jump to the start of a word in any visible window."
     "Press <f12> to toggle the menu bar."
-    "Explore the Prelude menu to find out about some of Prelude extensions to Emacs."
+    "Explore the qqh menu to find out about some of qqh extensions to Emacs."
     "Access the official Emacs manual by pressing <C-h r>."))
 
-(defun prelude-tip-of-the-day ()
-  "Display a random entry from `prelude-tips'."
+(defun qqh-tip-of-the-day ()
+  "Display a random entry from `qqh-tips'."
   (interactive)
-  (when (and prelude-tips (not (window-minibuffer-p)))
+  (when (and qqh-tips (not (window-minibuffer-p)))
     ;; pick a new random seed
     (random t)
     (message
-     (concat "Prelude tip: " (nth (random (length prelude-tips)) prelude-tips)))))
+     (concat "qqh tip: " (nth (random (length qqh-tips)) qqh-tips)))))
 
-(defun prelude-eval-after-init (form)
+(defun qqh-eval-after-init (form)
   "Add `(lambda () FORM)' to `after-init-hook'.
 
     If Emacs has already finished initialization, also eval FORM immediately."
@@ -118,36 +94,36 @@ PROMPT sets the `read-string prompt."
 
 (require 'epl)
 
-(defun prelude-update ()
-  "Update Prelude to its latest version."
+(defun qqh-update ()
+  "Update qqh to its latest version."
   (interactive)
-  (when (y-or-n-p "Do you want to update Prelude? ")
+  (when (y-or-n-p "Do you want to update qqh? ")
     (message "Updating installed packages...")
     (epl-upgrade)
-    (message "Updating Prelude...")
-    (cd prelude-dir)
+    (message "Updating qqh...")
+    (cd qqh-dir)
     (shell-command "git pull")
-    (prelude-recompile-init)
+    (qqh-recompile-init)
     (message "Update finished. Restart Emacs to complete the process.")))
 
-(defun prelude-update-packages (&optional arg)
-  "Update Prelude's packages.
-This includes package installed via `prelude-require-package'.
+(defun qqh-update-packages (&optional arg)
+  "Update qqh's packages.
+This includes package installed via `qqh-require-package'.
 
 With a prefix ARG updates all installed packages."
   (interactive "P")
-  (when (y-or-n-p "Do you want to update Prelude's packages? ")
+  (when (y-or-n-p "Do you want to update qqh's packages? ")
     (if arg
         (epl-upgrade)
-      (epl-upgrade (cl-remove-if-not (lambda (p) (memq (epl-package-name p) prelude-packages))
+      (epl-upgrade (cl-remove-if-not (lambda (p) (memq (epl-package-name p) qqh-packages))
                                      (epl-installed-packages))))
     (message "Update finished. Restart Emacs to complete the process.")))
 
-(defun prelude-wrap-with (s)
+(defun qqh-wrap-with (s)
   "Create a wrapper function for smartparens using S."
   `(lambda (&optional arg)
      (interactive "P")
      (sp-wrap-with-pair ,s)))
 
-(provide 'prelude-core)
-;;; prelude-core.el ends here
+(provide 'qqh-core)
+;;; qqh-core.el ends here

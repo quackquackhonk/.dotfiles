@@ -63,7 +63,7 @@
 
 ;; load the core stuff
 (require 'qqh-packages)
-;; (require 'qqh-custom)  ;; Needs to be loaded before core, editor and ui
+(require 'qqh-custom)  ;; Needs to be loaded before core, editor and ui
 (require 'qqh-ui)
 (require 'qqh-core)
 (require 'qqh-mode)
@@ -90,7 +90,7 @@
   (message "[qqh] Missing personal modules file %s" qqh-modules-file))
 
 ;; config changes made through the customize UI will be stored here
-(setq custom-file (expand-file-name "custom.el" qqh-personal-dir))
+(setq custom-file (expand-file-name "custom.el" qqh-user-dir))
 
 ;; load the personal settings (this includes `custom-file')
 (when (file-exists-p qqh-dir)
