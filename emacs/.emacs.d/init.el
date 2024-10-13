@@ -87,17 +87,17 @@
 ;; Load my modules
 (if (file-exists-p qqh-modules-file)
     (load qqh-modules-file)
-  (message "[qqh] Missing personal modules file %s" qqh-modules-file))
+  (message "[qqh] Missing user modules file %s" qqh-modules-file))
 
 ;; config changes made through the customize UI will be stored here
 (setq custom-file (expand-file-name "custom.el" qqh-user-dir))
 
-;; load the personal settings (this includes `custom-file')
-(when (file-exists-p qqh-dir)
-  (message "[qqh] Loading personal configuration files in %s..." qqh-dir)
+;; load the user settings (this includes `custom-file')
+(when (file-exists-p qqh-user-dir)
+  (message "[qqh] Loading user configuration files in %s..." qqh-user-dir)
   (mapc 'load (delete
                qqh-modules-file
-               (directory-files qqh-dir 't "^[^#\.].*\\.el$"))))
+               (directory-files qqh-user-dir 't "^[^#\.].*\\.el$"))))
 
 (message "[qqh] Emacs is ready to go, %s!" qqh-user)
 ;;; init.el ends here
