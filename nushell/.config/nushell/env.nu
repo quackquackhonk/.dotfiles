@@ -1,7 +1,6 @@
 # Nushell Environment Config File
-#
-# version = "0.96.1"
-use std "path add"
+
+use std *
 
 # To add entries to PATH (on Windows you might use Path), you can use the following pattern:
 # $env.PATH = ($env.PATH | split row (char esep) | prepend '/some/path')
@@ -18,10 +17,11 @@ path add ($env.HOME | path join ".sources/wabt/bin")
 path add ($env.HOME | path join ".sources/nvim-macos-arm64/bin")
 $env.PATH = ($env.PATH | uniq)
 
-$env.EDITOR = "emacs nw"
-
 $env.TERM = "xterm-256color"
 $env.COLORTERM = "truecolor"
+
+$env.EDITOR = "emacs"
+$env.VISUAL = "emacs"
 
 # starship
 mkdir ~/.cache/starship

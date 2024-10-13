@@ -128,5 +128,6 @@
     "<" 'org-metaleft ; out-dent
     ">" 'org-metaright ; indent
     ))
+
 (qqh-evil-key-bindings-for-org)
 (provide 'qqh-evil)

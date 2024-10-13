@@ -39,10 +39,9 @@
 
   ;; files
   "ff" 'consult-fd
-  "fo" 'find-file
 
   ;; Open (o)
-  "of" 'dired
+  "of" 'find-file
   "oi" 'consult-imenu
   "ot" 'multi-vterm-project
   "oT" 'multi-vterm
@@ -56,11 +55,6 @@
   ;; code
   "cc" 'compile
   "cC" 'compile-interactive
-  "ch" 'man
-  "cd" 'docker
-
-  ;; toggles (t)
-  "tr" 'qqh/toggle-relative-line
 
   ;; windows
   "w" 'hydra-windows/body

@@ -1,7 +1,13 @@
 # version = "0.96.1"
 
+def em [file: string] {
+    emacsclient -a="" $file
+}
+
 # The default config record. This is where much of your global configuration is setup.
 $env.config = {
+    show_banner: false
+
     ls: {
         use_ls_colors: true # use the LS_COLORS environment variable to colorize output
         clickable_links: false # enable or disable clickable links. Your terminal has to support links.
@@ -20,6 +26,7 @@ $env.config = {
         emacs: block # block, underscore, line, blink_block, blink_underscore, blink_line, inherit to skip setting cursor shape (line is the default)
     }
     edit_mode: emacs
+    buffer_editor: edit
 
     keybindings: [
         {
@@ -36,6 +43,7 @@ $env.config = {
 }
 
 # ALIASES
+
 ## Git
 alias g = git
 alias gu = gitui
@@ -46,25 +54,15 @@ alias gc = git commit
 alias gp = git pull
 alias gP = git push
 
-alias hyprconf = nvim ~/.config/hypr/hyprland.conf
-alias nixconf = nvim ~/dotfiles/nixos/flake.nix 
-alias nvconf = nvim ~/.config/nvim/init.lua 
-alias nuconf = nvim ~/.config/nushell/config.nu 
-
-alias cirrus = ssh -i ~/.ssh/stankala_id.key stankala@cirrus.veriskweather.net -t "zsh"
-
-alias nv = nvim
-alias vi = nvim
-
-alias em = emacs -nw
-alias ec = emacsclient -nw
-
-alias t = zellij
-alias b = bat
-
 alias cgt = cargo nextest run
 alias cgr = cargo run
 alias cgb = cargo build
+
+# DEFS
+## configuration
+def "config emacs" [] {
+    em ~/.emacs.d/init.el
+}
 
 use ~/.cache/starship/init.nu
 source ~/.zoxide.nu

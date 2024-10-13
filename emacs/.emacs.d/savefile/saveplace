@@ -1,14 +1,26 @@
 ;;; -*- coding: utf-8; mode: lisp-data -*-
-(("/home/sahana/.dotfiles/nushell/.config/nushell/env.nu" . 921)
- ("/home/sahana/.dotfiles/nushell/.config/nushell/config.nu" . 1844)
+(("/home/sahana/.dotfiles/emacs/.emacs.d/init.el" . 3721)
+ ("/home/sahana/.dotfiles/nushell/.config/nushell/config.nu" . 1514)
+ ("/home/sahana/.dotfiles/nushell/.config/nushell/env.nu" . 863)
+ ("/home/sahana/.dotfiles/nvim/"
+  (dired-filename . "/home/sahana/.dotfiles/nvim/.config"))
+ ("/home/sahana/.dotfiles/nushell/"
+  (dired-filename . "/home/sahana/.dotfiles/nushell/.config"))
+ ("/home/sahana/.dotfiles/nushell/.config/"
+  (dired-filename . "/home/sahana/.dotfiles/nushell/.config/nushell"))
+ ("/home/sahana/.dotfiles/nushell/.config/nushell/"
+  (dired-filename . "/home/sahana/.dotfiles/nushell/.config/nushell/env.nu"))
+ ("/home/sahana/.dotfiles/"
+  (dired-filename . "/home/sahana/.dotfiles/nushell"))
+ ("/home/sahana/.dotfiles/emacs/.emacs.d/core/qqh-global-binds.el" . 2924)
+ ("/home/sahana/.dotfiles/emacs/.emacs.d/mods/qqh-evil.el" . 733)
+ ("/home/sahana/.dotfiles/emacs/.emacs.d/mods/qqh-general.el" . 1242)
  ("/home/sahana/.zoxide.nu" . 1969)
  ("/home/sahana/.dotfiles/emacs/.emacs.d/early-init.el" . 310)
- ("/home/sahana/.dotfiles/emacs/.emacs.d/init.el" . 594)
  ("/home/sahana/.dotfiles/emacs/.emacs.d/core/qqh-ui.el" . 1845)
  ("/home/sahana/.dotfiles/emacs/.emacs.d/core/qqh-packages.el" . 1466)
  ("/home/sahana/.dotfiles/emacs/.emacs.d/qqh/preload/qqh-preload.el" . 30)
  ("/home/sahana/.dotfiles/config.el" . 16410)
- ("/home/sahana/.dotfiles/emacs/.emacs.d/mods/qqh-evil.el" . 907)
  ("/home/sahana/.dotfiles/emacs/.emacs.d/mods/" . 328)
  ("/home/sahana/.dotfiles/emacs/.emacs.d/mods/qqh-modules.el" . 220)
  ("/home/sahana/.dotfiles/emacs/.emacs.d/core/qqh-custom.el" . 2351)

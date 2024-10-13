@@ -266,3 +266,272 @@ z dot
 ls
 clear
 gs
+ga .
+gc -m "fixes nushell"
+gP
+clear
+ls
+em
+ls
+clear
+nuconf
+em ~/.config/nushell/config.nu
+em
+source $nu.config-path
+nuconf
+em ~/.config/nushell/config.nu
+source $nu.config-path
+em ~/.config/nushell/config.nu
+$env.EDITOR
+source $nu.env-path
+$env.EDITOR
+exec $env.EDITOR
+($env.EDITOR)
+$($env.EDITOR)
+$"$env.EDITOR"
+$"($env.EDITOR)"
+em ~/.config/nushell/config.nu
+edit
+edit test
+emacs -nw test
+em ~/.config/nushell/config.nu
+edit
+em ~/.config/nushell/config.nu
+ls
+clear
+emconf
+em ~/.config/nushell/config.nu
+emconf
+em ~/.config/nushell/config.nu
+edit
+edit test
+em ~/.config/nushell/config.nu
+edit
+em ~/.config/nushell/config.nu
+help open
+em ~/.config/nushell/config.nu
+nuconf
+help open
+config_nu
+config nu
+ls
+em ~/.config/nushell/env.nu
+which emacs
+em ~/.config/nushell/env.nu
+$env.PATH
+which emacs
+$env.PATH | rg /usr/sbin
+config nu
+clear
+em ~/.config/nushell/env.nu
+config env
+em ~/.config/nushell/env.nu
+config nu
+em ~/.config/nushell/env.nu
+config nu
+emconf
+help config
+help config env
+$env.EDITOR
+$env.EDITOR | open
+$env.EDITOR | run
+run
+help
+help edit
+edit
+config nu
+help edit
+edit ~/.emacs.d/init.el
+open .config/nushell/env.nu
+open ~/.config/nushell/env.nu
+open ~/.config/nushell/env.nu | $env.EDITOR
+config
+config nu
+open ~/.config/nushell/env.nu | $env.EDITOR
+config nu --default
+config nu
+config nu --default | save ~/.config/nushell/default.nu
+config nu
+edit
+openeditor
+clear
+help do
+config nu
+help
+help commands
+help where
+help commands | where name =~ open
+help commands | where name =~ e
+help commands | where name =~ edit
+help commands | where name =~ exec
+config nu
+ls
+edit code/compilers.org
+config nu
+edit code/compilers.org
+config nu
+clear
+ls
+clear
+config eamcs
+config help
+help config
+clear
+config nu
+ls
+clear
+emacs ~/.emacs.d/init.el
+view source
+view source config
+view source "config env"
+view source edit
+help view source
+help view
+help view source 
+ls
+alias test = emacs -nw ~/.emacs.d/init.el
+test
+config nu
+help exec
+enter
+dexit
+enter ~/.emacs.d
+config nu
+nu --help
+clear
+nu -e $env.EDITOR
+ls
+clear
+config nu
+clear
+edit ~/.emacs.d/init.el
+nu --help
+nu -c $env.EDITOR ~/.emacs.d/init.el
+config nu
+edit ~/.emacs.d/init.el
+config nu
+edit ~/.emacs.d/init.el
+config nu
+edit ~/.emacs.d/init.el
+exec help
+commandline edit 
+commands
+help commands
+help commands | where name =~ config
+help commands | where category = env
+help commands | where category == env
+help commands | where name == exec
+help commands | where category == system
+help run-external
+run-external emacs
+help commands | where name =~ run
+config nu
+edit ~/.emacs.d/init.el
+view source edit
+edit
+help commands | where name =~ edit
+config nu
+edit
+view source edit
+run-external $env.EDITOR ~/.emacs.d/init.el
+config nu
+edit
+edit test
+ls
+config nu
+help split
+split words
+config nu
+emacsclient -nw -a
+emacsclient -nw -a emacs
+ec
+emacsclient
+emacsclient -nw -a=""
+ls
+clear
+config nu
+config env
+run-external $env.EDITOR
+print $env.EDITOR
+config env
+config nu
+config emacs
+source $nu.env-path; source $nu.config-path
+config emacs
+o
+o x
+config nu
+$env.EDITOR
+emacs ~/.config/nushell/config.nu
+$env.EDITOR | split word
+$env.EDITOR | split words
+$env.EDITOR | split words | run-external
+$env.EDITOR | split words | describe
+help run-external
+$env.EDITOR | split chars
+$env.EDITOR | split words
+$env.EDITOR | split words | run-external
+let x = $env.EDITOR | split words
+describe x
+describe
+x | describe
+$x
+$x | describe
+def x {}
+def x [] {}
+x
+def x [f] { $env.EDITOR | append f }
+x
+x "1"
+def x [f] { $env.EDITOR | split words | f }
+x "1"
+def x [f] { $env.EDITOR | split words | append $f }
+x l
+x ~/.emacs.d/init.el
+def x [f] { $env.EDITOR | split " " | append $f }
+split
+def x [f] { $env.EDITOR | split row " " | append $f }
+x ~/.emacs.d/init.el
+def x [f] { $env.EDITOR | split row " " | append $f }; ~/.emacs.d/init.el
+def x [f] { $env.EDITOR | split row " " | append $f }; x ~/.emacs.d/init.el
+def x [f] { $env.EDITOR | split row " " | append $f | run-external }; x ~/.emacs.d/init.el
+help commands | where category == core
+help commands | where category == system
+def x [f: string] { $"($env.EDITOR) ($f)" | run-external }; x ~/.emacs.d/init.el
+def x [f: string] { let command = $"($env.EDITOR) ($f)";  run-external $command }; x ~/.emacs.d/init.el
+def x [f: string] { let command = $env.EDITOR | split row " " | append $f;  run-external $command }; x ~/.emacs.d/init.el
+run-external | describe
+describe run-external
+run-external
+run-external -h
+exec -h
+help exec
+ec
+ec -e "(kill-emacs)"
+clear
+config nu
+emacsclient -nw -a=""
+emacsclient -nw -a="" -e "(kill-emacs)"
+emacsclient -nw -a="" ~/.dotfiles
+config nu
+emacsclient -nw -a="" ~/.dotfiles
+ec ~/.config/nushell/env.nu
+ec ~/.config/nushell/config.nu
+qqh config emacs
+ec ~/.config/nushell/env.nu
+qqh config emacs
+clear
+qqh config
+qqh config emacs
+ec -e "(kill-emacs)"
+qqh config emacs
+config nu
+ec ~/.config/nushell/env.nu
+ec ~/.config/nushell/config.nu
+config emacs
+ec -e "(kill-emacs)"
+config emacs
+clear
+gs
+z dot
+gs
