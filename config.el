@@ -465,10 +465,6 @@
         '(read-only t cursor-intangible t face minibuffer-prompt))
   (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode))
 
-(setq default-frame-alist '((undecorated-round . t)))
-(scroll-bar-mode -1)        ; Disable visible scrollbar
-(tool-bar-mode -1)          ; Disable the toolbar
-(tooltip-mode -1)           ; Disable tooltips
 (setq native-comp-async-report-warnings-errors nil)
 (set-fringe-mode 10)        ; Give some breathing room
 (xterm-mouse-mode)          ; enable mouse control in terminal
@@ -496,9 +492,6 @@
                 shell-mode-hook
                 eshell-mode-hook))
   (add-hook mode (lambda() (display-line-numbers-mode 0))))
-
-;; Make ESC quit prompts
-(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 
 ;; only "y or n" prompts
 (defalias 'yes-or-no-p 'y-or-n-p)

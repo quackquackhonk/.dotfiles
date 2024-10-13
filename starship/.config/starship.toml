@@ -32,8 +32,8 @@ truncation_length = 2
 
 [character]
 # Note the use of Catppuccin color 'maroon'
-success_symbol = "[[♥](green)](maroon)"
-error_symbol = "[❯](red)"
+success_symbol = "[[>](green)](maroon)"
+error_symbol = "[>](red)"
 
 [directory]
 fish_style_pwd_dir_length = 4

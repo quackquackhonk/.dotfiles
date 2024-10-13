@@ -27,8 +27,8 @@
 (setq evil-shift-width 4)
 (setq evil-esc-delay 0)
 
-(evil-mode 1)
 (evil-set-undo-system 'undo-fu)
+(evil-mode 1)
 
 (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
 ;; prevent esc-key from translating to meta-key in terminal mode

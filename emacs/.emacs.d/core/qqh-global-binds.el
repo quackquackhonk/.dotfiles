@@ -1,11 +1,16 @@
-;;; qqh-global-keybindings.el --- Emacs qqh: some useful keybindings.
+;;; qqh-global-binds.el --- Emacs qqh: some useful keybindings.
 ;;; Commentary:
 
 ;; Lots of useful keybindings.
 
 ;;; Code:
+
+;; C-u --> C-l
 (global-set-key (kbd "C-l") 'universal-argument)
 (define-key universal-argument-map (kbd "C-l") 'universal-argument-more)
+
+;; Make ESC quit prompts
+(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 
 ;; Align your code in a pretty way.
 (global-set-key (kbd "C-x \\") 'align-regexp)
@@ -87,6 +92,6 @@
 (global-set-key (kbd "s-w") 'ace-window)
 (global-set-key [remap other-window] 'ace-window)
 
-(provide 'qqh-global-keybindings)
+(provide 'qqh-global-binds)
 
 ;;; qqh-global-keybindings.el ends here

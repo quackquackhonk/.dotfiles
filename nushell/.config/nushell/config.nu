@@ -56,6 +56,9 @@ alias cirrus = ssh -i ~/.ssh/stankala_id.key stankala@cirrus.veriskweather.net -
 alias nv = nvim
 alias vi = nvim
 
+alias em = emacs -nw
+alias ec = emacsclient -nw
+
 alias t = zellij
 alias b = bat
 
@@ -64,4 +67,4 @@ alias cgr = cargo run
 alias cgb = cargo build
 
 use ~/.cache/starship/init.nu
-# use ~/.zoxide.nu
+source ~/.zoxide.nu

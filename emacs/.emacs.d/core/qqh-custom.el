@@ -8,14 +8,14 @@
   :prefix "qqh-"
   :group 'convenience)
 
-(defcustom qqh-minimalistic-ui nil
+(defcustom qqh-minimalistic-ui t
   "Controls whether to display the menu-bar and line numbers.
 Note that the toolbar is always hidden regardless of this setting."
   :type 'boolean
   :group 'qqh
   :package-version '(qqh . "1.1"))
 
-(defcustom qqh-super-keybindings t
+(defcustom qqh-super-keybindings nil
   "Controls whether to use the Super key in keybindings.
 They can be problematic in some operating systems (e.g. Windows)
 or desktop environments that make heavy use of them."
@@ -49,8 +49,8 @@ Will only occur if `qqh-whitespace' is also enabled."
   :type 'boolean
   :group 'qqh)
 
-(defcustom qqh-user-init-file (expand-file-name "qqh"
-                                                    user-emacs-directory)
+(defcustom qqh-user-init-file
+  (expand-file-name "qqh" user-emacs-directory)
   "Path to your user customization file.
 qqh recommends you only put user customizations in the
 user folder.  This variable allows you to specify a specific
@@ -84,7 +84,7 @@ Only modes that don't derive from `prog-mode' should be listed here."
   :type 'number
   :group 'qqh)
 
-(defcustom qqh-theme 'zenburn
+(defcustom qqh-theme 'catppuccin
   "The default color theme, change this in your /user/preload config."
   :type 'symbol
   :group 'qqh)

@@ -26,6 +26,7 @@
 
 (require 'use-package)
 (setq use-package-verbose t)
+(setq use-package-always-ensure t)
 
 (defvar qqh-packages
   '(ace-window

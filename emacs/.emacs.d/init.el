@@ -69,7 +69,7 @@
 (require 'qqh-mode)
 (require 'qqh-defs)
 (require 'qqh-editor)
-(require 'qqh-global-keybindings)
+(require 'qqh-global-binds)
 ;; 
 ;; macOS specific settings
 (when (eq system-type 'darwin)
@@ -79,9 +79,9 @@
 ;; (when (eq system-type 'gnu/linux)
 ;;   (require 'qqh-linux))
 ;; 
-;; ;; WSL specific setting
-;; (when (and (eq system-type 'gnu/linux) (getenv "WSLENV"))
-;;   (require 'qqh-wsl))
+;; WSL specific setting
+(when (and (eq system-type 'gnu/linux) (getenv "WSLENV"))
+  (require 'qqh-wsl))
 
 (message "[qqh] Loading qqh's additional modules...")
 
