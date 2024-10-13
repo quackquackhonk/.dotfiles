@@ -4,7 +4,7 @@ nvim/.netrwhist
 nvim/plugin/*
 work.lua
 
-nushell/.config/history.txt
+nushell/.config/nushell/history.txt
 
 emacs/.emacs.d/transient/*
 emacs/.emacs.d/savefile/*
