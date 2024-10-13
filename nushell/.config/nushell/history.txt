@@ -700,3 +700,19 @@ nvim
 ls
 gs
 gc .
+ga .
+gc
+gs
+gP
+ls
+e .gitignore
+gs
+ga .gitignore
+gs
+gc -m "update gitignore"
+gs
+ga .
+gs
+rm -rf emacs/.emacs.d/savefile emacs/.emacs.d/transient
+ls
+gs
