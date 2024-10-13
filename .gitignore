@@ -3,5 +3,11 @@ nvim/autoload/*
 nvim/.netrwhist
 nvim/plugin/*
 work.lua
+
+nushell/.config/history.txt
+
+emacs/.emacs.d/transient/*
+emacs/.emacs.d/savefile/*
+emacs/savefile
 emacs/.emacs.d/elpa/*
 emacs/.emacs.d/eln-cache/*
