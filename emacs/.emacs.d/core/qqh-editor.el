@@ -1,32 +1,8 @@
-;;; qqh-editor.el --- Emacs qqh: enhanced core editing experience.
-;;
-;; Copyright © 2011-2023 Bozhidar Batsov
-;;
-;; Author: Bozhidar Batsov <bozhidar@batsov.com>
-;; URL: https://github.com/bbatsov/qqh
-
-;; This file is not part of GNU Emacs.
+;;; qqh-editor.el --- qqh: enhanced core editing experience.
 
 ;;; Commentary:
 
 ;; Refinements of the core editing experience in Emacs.
-
-;;; License:
-
-;; This program is free software; you can redistribute it and/or
-;; modify it under the terms of the GNU General Public License
-;; as published by the Free Software Foundation; either version 3
-;; of the License, or (at your option) any later version.
-;;
-;; This program is distributed in the hope that it will be useful,
-;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;; GNU General Public License for more details.
-;;
-;; You should have received a copy of the GNU General Public License
-;; along with GNU Emacs; see the file COPYING.  If not, write to the
-;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-;; Boston, MA 02110-1301, USA.
 
 ;;; Code:
 
@@ -343,20 +319,14 @@ indent yanked text (with prefix arg don't indent)."
       (ansi-color-apply-on-region (point-min) (point-max)))))
 
 (require 'compile)
-(setq compilation-ask-about-save nil  ; Just save before compiling
-      compilation-always-kill t       ; Just kill old compile processes before
-                                        ; starting the new one
-      compilation-scroll-output 'first-error ; Automatically scroll to first
-                                        ; error
-      )
+(setq compilation-ask-about-save nil
+      compilation-always-kill t
+      compilation-scroll-output 'first-error)
 
 ;; Colorize output of Compilation Mode, see
 ;; http://stackoverflow.com/a/3072831/355252
 (require 'ansi-color)
 (add-hook 'compilation-filter-hook #'qqh-colorize-compilation-buffer)
-
-;; enable qqh's keybindings
-(qqh-mode t)
 
 ;; supercharge your undo/redo with undo-tree
 (require 'undo-tree)
@@ -421,5 +391,4 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 (diminish 'editorconfig-mode)
 
 (provide 'qqh-editor)
-
 ;;; qqh-editor.el ends here

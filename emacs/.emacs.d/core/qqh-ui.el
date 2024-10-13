@@ -6,12 +6,9 @@
 
 ;;; License:
 ;;; Code:
-(when (fboundp 'tool-bar-mode)
-  (tool-bar-mode -1))
 
-(when qqh-minimalistic-ui
-  (menu-bar-mode -1))
 (setq default-frame-alist '((undecorated-round . t)))
+(menu-bar-mode -1)          ; Disable menu bar
 (scroll-bar-mode -1)        ; Disable visible scrollbar
 (tool-bar-mode -1)          ; Disable the toolbar
 (tooltip-mode -1)           ; Disable tooltips
@@ -36,13 +33,9 @@
 (size-indication-mode t)
 
 ;; show line numbers at the beginning of each line
-(unless qqh-minimalistic-ui
-  ;; there's a built-in linum-mode, but we're using
-  ;; display-line-numbers-mode or nlinum-mode,
-  ;; as it's supposedly faster
-  (if (fboundp 'global-display-line-numbers-mode)
-      (global-display-line-numbers-mode)
-      (global-nlinum-mode t)))
+(if (fboundp 'global-display-line-numbers-mode)
+    (global-display-line-numbers-mode)
+    (global-nlinum-mode t))
 
 ;; enable y/n answers
 (fset 'yes-or-no-p 'y-or-n-p)

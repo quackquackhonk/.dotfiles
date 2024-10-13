@@ -14,7 +14,7 @@ path add ($env.HOME | path join "bin")
 path add ($env.HOME | path join ".sources/sml/bin")
 path add ($env.HOME | path join ".sources/smlnj/bin")
 path add ($env.HOME | path join ".sources/wabt/bin")
-path add ($env.HOME | path join ".sources/nvim-macos-arm64/bin")
+path add ($env.HOME | path join "/home/sahana/.local/share/bob/nvim-bin")
 $env.PATH = ($env.PATH | uniq)
 
 $env.TERM = "xterm-256color"

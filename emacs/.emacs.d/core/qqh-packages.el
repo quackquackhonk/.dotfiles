@@ -26,8 +26,8 @@
 
 (require 'use-package)
 (setq use-package-verbose t)
-(setq use-package-always-ensure t)
 
+;; Initialize package list
 (defvar qqh-packages
   '(ace-window
     ag
@@ -50,6 +50,7 @@
     hl-todo
     imenu-anywhere
     projectile
+    perspective
     magit
     move-text
     nlinum
@@ -60,11 +61,15 @@
     undo-tree
     volatile-highlights
     which-key
+    zenburn-theme
     zop-to-char
 
+    ;; modules
+    general
+    meow
+
     ;; themes
-    catppuccin-theme
-    zenburn-theme)
+    catppuccin-theme)
 
   "A list of packages to ensure are installed at launch.")
 
@@ -76,6 +81,7 @@
   "Install PACKAGE unless already installed."
   (unless (memq package qqh-packages)
     (add-to-list 'qqh-packages package))
+  
   (unless (package-installed-p package)
     (package-install package)))
 

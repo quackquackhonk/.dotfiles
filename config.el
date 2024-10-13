@@ -83,15 +83,6 @@
   :config
   (evil-commentary-mode))
 
-(use-package evil-snipe
-  :after evil
-  :config
-  (evil-define-key '(normal) evil-snipe-local-mode-map
-    "s" 'evil-snipe-s
-    "S" 'evil-snipe-S)
-  (evil-snipe-mode +1)
-  (evil-snipe-override-mode +1))
-
 (use-package evil-surround
   :config
   (global-evil-surround-mode 1))

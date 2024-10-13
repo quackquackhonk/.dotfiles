@@ -8,9 +8,11 @@
 ;;; evil-visualstar enables searching visual selection with *
 ;;; evil-numbers enables vim style numeric incrementing and decrementing
 
-(qqh-require-packages '(evil goto-chg undo-fu evil-collection evil-surround evil-visualstar evil-numbers))
+(qqh-require-packages '(evil goto-chg undo-tree evil-collection evil-surround evil-visualstar evil-numbers))
 
 (require 'evil-visualstar)
+(require 'evil-commentary)
+(require 'evil-surround)
 
 (setq evil-mode-line-format 'before)
 
@@ -27,8 +29,11 @@
 (setq evil-shift-width 4)
 (setq evil-esc-delay 0)
 
-(evil-set-undo-system 'undo-fu)
+(evil-set-undo-system 'undo-tree)
 (evil-mode 1)
+(evil-collection-init)
+(evil-commentary-mode)
+(global-evil-surround-mode 1)
 
 (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
 ;; prevent esc-key from translating to meta-key in terminal mode

@@ -64,12 +64,12 @@
 ;; load the core stuff
 (require 'qqh-packages)
 (require 'qqh-custom)  ;; Needs to be loaded before core, editor and ui
+
 (require 'qqh-ui)
 (require 'qqh-core)
-(require 'qqh-mode)
 (require 'qqh-defs)
 (require 'qqh-editor)
-(require 'qqh-global-binds)
+(require 'qqh-keymap)
 ;; 
 ;; macOS specific settings
 (when (eq system-type 'darwin)

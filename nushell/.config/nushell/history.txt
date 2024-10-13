@@ -535,3 +535,168 @@ clear
 gs
 z dot
 gs
+ga .
+gc -m "so many nushell changes"
+gP
+clear
+config nu
+em ~/.config/nushell/config.nu
+config nu
+clear
+em ~/.config/nushell/config.nu
+config nu
+em ~/.config/nushell/config.nu
+config nu
+em ~/.config/nushell/config.nu
+$env.EDITOR
+config nu
+clear
+em ~/.config/nushell/config.nu
+config nu
+help config
+config nu
+help config
+help config emacs
+clear
+config emacs
+config nu
+config emacs
+config nu
+emkill
+ec
+clear
+config emacs
+emkill
+emkill && config emacs
+emkill; config emacs
+emkill
+clear
+config emacs
+nv ~/.emacs.d/mods/qqh-projects.el
+em ~/.emacs.d/mods/qqh-projects.el
+e ~/.emacs.d/mods/qqh-projects.el
+emkill
+config emacs
+nvim ~/.emacs.d/init.el
+vi ~/.emacs.d/init.el
+bob use nvim
+bob use stable
+bob
+bob install stable
+bob use stable
+nv
+nvikm
+nvim
+config env
+emkill 
+config emacs
+emacs --fg-daemon
+emacs --debug-init --fg-daemon
+vim
+rm ~/.vimrc
+vim ~/.emacs.d/init.el
+emacs --debug-init --fg-daemon
+vim ~/.emacs.d/init.el
+emacs --debug-init --fg-daemon
+vim ~/.emacs.d/init.el
+emacs --debug-init --fg-daemon
+vim ~/.emacs.d/mods/qqh-projects.el
+emacs --debug-init --fg-daemon
+edit 
+edit x
+ls
+clear
+emacs --debug-init --fg-daemon
+vim ~/.emacs.d/mods/qqh-projects.el
+emacs --debug-init --fg-daemon
+vim ~/.emacs.d/mods/qqh-projects.el
+emacs --debug-init --fg-daemon
+emkill
+emacs --debug-init --fg-daemon
+emkill
+clear
+config emacs
+clear
+config emacs
+config nu
+emkill
+edit ~/.emacs.d/init.el
+exec exit -1; echo "arst"
+exec ^exit -1; echo "arst"
+exec return -1; echo "arst"
+exec -1; echo "arst"
+-1; echo "arst"
+exec exit
+exec
+exec arstarsg
+exec arstarsg and echo "hi"
+fail and echo "hi"
+print "x" and print "y"
+print x && print done
+print x and print done
+print x ahelp andnd print done
+help and
+print x; print y
+arstarst; print y
+config nu
+emkill
+edit ~/.emacs.d/init.el
+config nu
+edit ~/.config/nushell/config.nu
+vim ~/.config/nushell/config.nu
+emacs --debug-init --fg-daemon
+vim ~/.emacs.d/mods/qqh-evil.el
+config emacs
+emkill
+config emacs
+vim ~/.emacs.d/mods/qqh-evil.el
+emacs
+emkill
+config emacs
+emkil
+emkill
+config emacs
+emkill
+emacsclient
+clear
+emacs --debug-init --fg-daemon
+vim ~/.emacs.d/init.el
+vim ~/.emacs.d/core/qqh-packages.el
+config emacs
+vim ~/.emacs.d/mods/qqh-modules.el
+emkill 
+config emacs
+emkill
+config emacs
+emkill
+emacs --debug-init --fg-daemon
+config emacs
+emkill && config emacs
+emkill; config emacs
+emkill
+config emacs
+emkill
+config emacs
+emkill
+emacs ~/.emacs.d/init.el
+emacs -nw ~/.emacs.d/init.el
+emacs -nw --debug-init ~/.emacs.d/init.el
+emacs -nw ~/.emacs.d/core/qqh-editor.el
+emacs ~/.emacs.d/init.el
+ls
+z .dotfiles/
+ls
+clear
+gp
+gs
+gc -m "meow"
+ga .
+gs
+rm emacs/.emacs.d/#init.el#
+ls
+gs
+nv
+nvim
+ls
+gs
+gc .

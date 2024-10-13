@@ -6,12 +6,7 @@
 
 ;;; General productivity tools
 (require 'qqh-minibuffer)
-(require 'qqh-general)
-
-;; Vim emulation
-;;
-;; Enable this module if you're fond of vim's keybindings.
-(require 'qqh-evil)
+(require 'qqh-projects)
 
 ;;; Org-mode (a legendary productivity tool that deserves its own category)
 ;;

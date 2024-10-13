@@ -1,9 +1,4 @@
 # version = "0.96.1"
-
-def em [file: string] {
-    emacsclient -a="" $file
-}
-
 # The default config record. This is where much of your global configuration is setup.
 $env.config = {
     show_banner: false
@@ -26,7 +21,7 @@ $env.config = {
         emacs: block # block, underscore, line, blink_block, blink_underscore, blink_line, inherit to skip setting cursor shape (line is the default)
     }
     edit_mode: emacs
-    buffer_editor: edit
+    buffer_editor: emacsclient
 
     keybindings: [
         {
@@ -43,8 +38,6 @@ $env.config = {
 }
 
 # ALIASES
-
-## Git
 alias g = git
 alias gu = gitui
 alias gd = git diff
@@ -54,15 +47,19 @@ alias gc = git commit
 alias gp = git pull
 alias gP = git push
 
-alias cgt = cargo nextest run
-alias cgr = cargo run
-alias cgb = cargo build
+# Edit the given file using 'emacsclient'
+# If the emacs daemon is not running, starts one and attach to it.
+def edit [...args] {
+    emacsclient -a="" ...$args
+}
+alias e = edit
+alias emkill = emacsclient -e "(kill-emacs)"
 
-# DEFS
-## configuration
+# Open my init.el file
 def "config emacs" [] {
-    em ~/.emacs.d/init.el
+    edit ~/.emacs.d/init.el
 }
 
+# CLI tool integrations
 use ~/.cache/starship/init.nu
 source ~/.zoxide.nu

@@ -5,19 +5,20 @@
 ;; completion/filtering/selection (think of ivy/ido).
 
 ;;; Code:
-
-(qqh-require-packages '(vertico consult orderless marginalia embark embark-consult consult-lsp))
+;; -*- lexical-binding: t -*-
 
 (require 'use-package)
 
 ;; Vertico configuration
 (use-package vertico
+  :ensure t
   :custom
   (vertico-count 20)
   :init
   (vertico-mode))
 
 (use-package consult
+  :ensure t
   ;; Enable automatic preview at point in the *Completions* buffer. This is
   ;; relevant when you use the default completion UI.
   :hook (completion-list-mode . consult-preview-at-point-mode)
@@ -48,11 +49,50 @@
                           "--exclude .git"
                           "--exclude .spack_env"
                           "--exclude .cache")))
+
+(use-package consult
+  :ensure t
+  :bind (;; C-x bindings (ctl-x-map)
+         ("C-x M-:" . consult-complex-command)     ;; orig. repeat-complex-command
+         ("C-x b" . consult-buffer)                ;; orig. switch-to-buffer
+         ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
+         ("C-x 5 b" . consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
+         ;; Custom M-# bindings for fast register access
+         ("M-#" . consult-register-load)
+         ("M-'" . consult-register-store)          ;; orig. abbrev-prefix-mark (unrelated)
+         ("C-M-#" . consult-register)
+         ;; Other custom bindings
+         ("M-y" . consult-yank-pop)                ;; orig. yank-pop
+         ;; M-g bindings (goto-map)
+         ("M-g e" . consult-compile-error)
+         ("M-g f" . consult-flycheck)
+         ("M-g g" . consult-goto-line)             ;; orig. goto-line
+         ("M-g M-g" . consult-goto-line)           ;; orig. goto-line
+         ("M-g o" . consult-outline)               ;; Alternative: consult-org-heading
+         ("M-g m" . consult-mark)
+         ("M-g k" . consult-global-mark)
+         ("M-g i" . consult-imenu)
+         ("M-g I" . consult-imenu-multi)
+         ;; M-s bindings (search-map)
+         ("M-s f" . consult-find)
+         ("M-s F" . consult-locate)
+         ("M-s g" . consult-grep)
+         ("M-s G" . consult-git-grep)
+         ("M-s r" . consult-ripgrep)
+         ("M-s l" . consult-line)
+         ("M-s L" . consult-line-multi)
+         ("M-s m" . consult-multi-occur)
+         ("M-s k" . consult-keep-lines)
+         ("M-s u" . consult-focus-lines)))
+
+
 ;; LSP integration for consult
-;; (use-package consult-lsp)
+(use-package consult-lsp
+  :ensure t)
 
 ;; Use the `orderless' completion style.
 (use-package orderless
+  :ensure t
   :custom
   ;; Configure a custom style dispatcher (see the Consult wiki)
   (completion-styles '(orderless basic))
@@ -61,25 +101,26 @@
 
 ;; Enable rich annotations using the Marginalia package
 (use-package marginalia
+  :ensure t
   :init (marginalia-mode))
 
 ;; required for the searches
-(use-package ripgrep)
+(use-package ripgrep
+  :ensure t)
 
 ;; Minibuffer actions
 (use-package embark
+  :ensure t
   :bind
   (("C-." . embark-act)         ;; pick some comfortable binding
    ("C-;" . embark-dwim)        ;; good alternative: M-.
    ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
 
   :init
-
   ;; Optionally replace the key help with a completing-read interface
   (setq prefix-help-command #'embark-prefix-help-command)
 
   :config
-
   ;; Hide the mode line of the Embark live/completions buffers
   (add-to-list 'display-buffer-alist
                '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
@@ -88,9 +129,8 @@
 
 ;; Consult users will also want the embark-consult package.
 (use-package embark-consult
-  :ensure t ; only need to install it, embark loads it after consult if found
-  :hook
-  (embark-collect-mode . consult-preview-at-point-mode))
+  :ensure t
+  :hook (embark-collect-mode . consult-preview-at-point-mode))
 
 ;; A few more useful configurations for Vertico
 (use-package emacs
