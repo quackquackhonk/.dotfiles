@@ -1,1 +1,0 @@
-(setq qqh-theme 'catppuccin)

@@ -6,8 +6,9 @@ work.lua
 
 nushell/.config/nushell/history.txt
 
+emacs/savefile
+emacs/.emacs.d/backup/*
 emacs/.emacs.d/transient/*
 emacs/.emacs.d/savefile/*
-emacs/savefile
 emacs/.emacs.d/elpa/*
 emacs/.emacs.d/eln-cache/*

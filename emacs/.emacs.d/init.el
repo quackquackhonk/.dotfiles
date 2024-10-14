@@ -1,104 +1,245 @@
-;;; init.el --- Prelude's configuration entry point.
-;;; Commentary:
+;;; init.el
+
+;;; Contents:
+;;;
+;;;  - Basic settings
+;;;  - Discovery aids
+;;;  - Minibuffer/completion settings
+;;;  - Interface enhancements/defaults
+;;;  - Tab-bar configuration
+;;;  - Theme
+;;;  - Optional extras
+;;;  - Built-in customization framework
+
 ;;; Code:
 
-(defvar qqh-user
-  (getenv
-   (if (equal system-type 'windows-nt) "USERNAME" "USER")))
+;;; Guardrail
 
-(message "[qqh] Emacs is powering up... Be patient, %s!" qqh-user)
+(when (< emacs-major-version 29)
+  (error "[qqh] config assumes emacs version 29+, currently running %s!" emacs-major-version))
 
-(when (version< emacs-version "27.1")
-  (error "[qqh]" emacs-version))
+;;; Package initialization
+(require 'package)
+(setq package-archives '(("melpa" . "https://melpa.org/packages/")
+                         ("org" . "https://orgmode.org/elpa/")
+                         ("nongnu" . "https://elpa.nongnu.org/nongnu/")
+                         ("elpa" . "https://elpa.gnu.org/packages/")))
 
-;; Always load newest byte code
-(setq load-prefer-newer t)
+;; Initialize use-package on non-Linux platforms
+(unless (package-installed-p 'use-package) (package-install 'use-package))
 
-;; Define directory structure
-(defvar qqh-dir (file-name-directory load-file-name)
-  "The root dir of my emacs distribution.")
-(defvar qqh-core-dir (expand-file-name "core" qqh-dir)
-  "The home of qqh's core functionality.")
-(defvar qqh-modules-dir (expand-file-name  "mods" qqh-dir)
-  "This directory houses all qqh's modules files.")
-(defvar qqh-user-dir (expand-file-name "qqh" qqh-dir)
-  "This directory is for your user configuration.")
-(defvar qqh-user-preload-dir (expand-file-name "preload" qqh-user-dir)
-  "This directory is for your user configuration, loaded before the rest of emacs")
-(defvar qqh-savefile-dir (expand-file-name "savefile" user-emacs-directory)
-  "This folder stores all the automatically generated save/history-files.")
-(defvar qqh-modules-file (expand-file-name "qqh-modules.el" qqh-modules-dir)
-  "This file contains a list of modules that will be loaded by qqh.")
+(require 'use-package)
+(setq use-package-always-ensure t)
 
-(unless (file-exists-p qqh-savefile-dir)
-  (make-directory qqh-savefile-dir))
 
-(defun qqh-add-subfolders-to-load-path (parent-dir)
-  "Add all level PARENT-DIR subdirs to the `load-path'."
-  (dolist (f (directory-files parent-dir))
-    (let ((name (expand-file-name f parent-dir)))
-      (when (and (file-directory-p name)
-                 (not (string-prefix-p "." f)))
-        (add-to-list 'load-path name)
-        (prelude-add-subfolders-to-load-path name)))))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;;   Basic settings
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(setopt inhibit-splash-screen t)
+(setopt initial-major-mode 'fundamental-mode)  ; default mode for the *scratch* buffer
+(setopt display-time-default-load-average nil) ; this information is useless for most
 
-;; add qqh's directories to Emacs's `load-path'
-(add-to-list 'load-path qqh-core-dir)
-(add-to-list 'load-path qqh-modules-dir)
-;; (qqh-add-subfolders-to-load-path qqh-vendor-dir)
+;; Automatically reread from disk if the underlying file changes
+(setopt auto-revert-avoid-polling t)
+;; Some systems don't do file notifications well; see
+;; https://todo.sr.ht/~ashton314/emacs-bedrock/11
+(setopt auto-revert-interval 5)
+(setopt auto-revert-check-vc-info t)
+(global-auto-revert-mode)
 
-;; reduce the frequency of garbage collection by making it happen on
-;; each 50MB of allocated data (the default is on every 0.76MB)
-(setq gc-cons-threshold 50000000)
+;; Save history of minibuffer
+(savehist-mode)
 
-;; warn when opening files bigger than 100MB
-(setq large-file-warning-threshold 100000000)
+;; Move through windows with Ctrl-<arrow keys>
+(windmove-default-keybindings 'control) ; You can use other modifiers here
 
-;; preload the user settings from `qqh-user-preload-dir'
-(when (file-exists-p qqh-user-preload-dir)
-  (message "[qqh] Loading user configuration files in %s..." qqh-user-preload-dir)
-  (mapc 'load (directory-files qqh-user-preload-dir 't "^[^#\.].*el$")))
+;; Fix archaic defaults
+(setopt sentence-end-double-space nil)
 
-(message "[qqh] Loading qqh's core modules...")
+;; only "y or n" prompts
+(defalias 'yes-or-no-p 'y-or-n-p)
 
-;; load the core stuff
-(require 'qqh-packages)
-(require 'qqh-custom)  ;; Needs to be loaded before core, editor and ui
+;; Make ESC quit prompts
+(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 
-(require 'qqh-ui)
-(require 'qqh-core)
-(require 'qqh-defs)
-(require 'qqh-editor)
-(require 'qqh-keymap)
-;; 
-;; macOS specific settings
-(when (eq system-type 'darwin)
-  (require 'qqh-macos))
-;; 
-;; ;; Linux specific settings
-;; (when (eq system-type 'gnu/linux)
-;;   (require 'qqh-linux))
-;; 
-;; WSL specific setting
-(when (and (eq system-type 'gnu/linux) (getenv "WSLENV"))
-  (require 'qqh-wsl))
+;; use the faster programs
+(setq find-program "fd"
+      grep-program "rg")
 
-(message "[qqh] Loading qqh's additional modules...")
 
-;; Load my modules
-(if (file-exists-p qqh-modules-file)
-    (load qqh-modules-file)
-  (message "[qqh] Missing user modules file %s" qqh-modules-file))
+;; Make right-click do something sensible
+(when (display-graphic-p)
+  (context-menu-mode))
 
-;; config changes made through the customize UI will be stored here
-(setq custom-file (expand-file-name "custom.el" qqh-user-dir))
+;; Don't litter file system with *~ backup files; put them all inside
+;; ~/.emacs.d/backup or wherever
+(defun qqh/backup-file-name (fpath)
+  "Return a new file path of a given file path.
+If the new path's directories does not exist, create them."
+  (let* ((backupRootDir (concat user-emacs-directory "backups/"))
+         (filePath (replace-regexp-in-string "[A-Za-z]:" "" fpath )) ; remove Windows driver letter in path
+         (backupFilePath (replace-regexp-in-string "//" "/" (concat backupRootDir filePath "~") )))
+    (make-directory (file-name-directory backupFilePath) (file-name-directory backupFilePath))
+    backupFilePath))
+(setopt make-backup-file-name-function 'qqh/backup-file-name)
 
-;; load the user settings (this includes `custom-file')
-(when (file-exists-p qqh-user-dir)
-  (message "[qqh] Loading user configuration files in %s..." qqh-user-dir)
-  (mapc 'load (delete
-               qqh-modules-file
-               (directory-files qqh-user-dir 't "^[^#\.].*\\.el$"))))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;;   Discovery aids
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; which-key: shows a popup of available keybindings when typing a long key
+;; sequence (e.g. C-x ...)
+(use-package which-key
+  :ensure t
+  :config
+  (which-key-mode))
 
-(message "[qqh] Emacs is ready to go, %s!" qqh-user)
-;;; init.el ends here
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;;   Minibuffer/completion settings
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; For help, see: https://www.masteringemacs.org/article/understanding-minibuffer-completion
+;; TODO: This should be in its own file
+
+(setopt enable-recursive-minibuffers t)                ; Use the minibuffer whilst in the minibuffer
+(setopt completion-cycle-threshold 1)                  ; TAB cycles candidates
+(setopt completions-detailed t)                        ; Show annotations
+(setopt tab-always-indent 'complete)                   ; When I hit TAB, try to complete, otherwise, indent
+(setopt completion-styles '(basic initials substring)) ; Different styles to match input to candidates
+
+(setopt completion-auto-help 'always)                  ; Open completion always; `lazy' another option
+(setopt completions-max-height 20)                     ; This is arbitrary
+(setopt completions-detailed t)
+(setopt completions-format 'one-column)
+(setopt completions-group t)
+(setopt completion-auto-select 'second-tab)            ; Much more eager
+;(setopt completion-auto-select t)                     ; See `C-h v completion-auto-select' for more possible values
+
+(keymap-set minibuffer-mode-map "TAB" 'minibuffer-complete) ; TAB acts more like how it does in the shell
+
+;; For a fancier built-in completion option, try ido-mode,
+;; icomplete-vertical, or fido-mode. See also the file extras/base.el
+
+;(icomplete-vertical-mode)
+;(fido-vertical-mode)
+;(setopt icomplete-delay-completions-threshold 4000)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;;   Interface enhancements/defaults
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Mode line information
+(setopt line-number-mode t)                        ; Show current line in modeline
+(setopt column-number-mode t)                      ; Show column as well
+
+(setopt x-underline-at-descent-line nil)           ; Prettier underlines
+(setopt switch-to-buffer-obey-display-actions t)   ; Make switching buffers more consistent
+
+(setopt show-trailing-whitespace nil)      ; By default, don't underline trailing spaces
+(setopt indicate-buffer-boundaries 'left)  ; Show buffer top and bottom in the margin
+
+;; Enable horizontal scrolling
+(setopt mouse-wheel-tilt-scroll t)
+(setopt mouse-wheel-flip-direction t)
+
+;; We won't set these, but they're good to know about
+;;
+;; (setopt indent-tabs-mode nil)
+;; (setopt tab-width 4)
+
+;; Misc. UI tweaks
+(blink-cursor-mode -1)                                ; Steady cursor
+(pixel-scroll-precision-mode)                         ; Smooth scrolling
+
+;; Use common keystrokes by default
+(cua-mode)
+
+;; Display line numbers in programming mode
+(add-hook 'prog-mode-hook 'display-line-numbers-mode)
+(setopt display-line-numbers-width 3)           ; Set a minimum width
+
+;; Nice line wrapping when working with text
+(add-hook 'text-mode-hook 'visual-line-mode)
+
+;; Modes to highlight the current line with
+(let ((hl-line-hooks '(text-mode-hook prog-mode-hook)))
+  (mapc (lambda (hook) (add-hook hook 'hl-line-mode)) hl-line-hooks))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;;   Tab-bar configuration
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Show the tab-bar as soon as tab-bar functions are invoked
+(setopt tab-bar-show 1)
+
+;; Add the time to the tab-bar, if visible
+(add-to-list 'tab-bar-format 'tab-bar-format-align-right 'append)
+(add-to-list 'tab-bar-format 'tab-bar-format-global 'append)
+(setopt display-time-format "%a %F %T")
+(setopt display-time-interval 1)
+(display-time-mode)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;;     Load the rest of my configuration
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; UI/UX enhancements mostly focused on minibuffer and autocompletion interfaces
+;; These ones are *strongly* recommended!
+(load-file (expand-file-name "extras/base.el" user-emacs-directory))
+
+;; Packages for software development
+;(load-file (expand-file-name "extras/dev.el" user-emacs-directory))
+
+;; Vim-bindings in Emacs (evil-mode configuration)
+(load-file (expand-file-name "extras/vim-like.el" user-emacs-directory))
+
+;; Org-mode configuration
+;; WARNING: need to customize things inside the elisp file before use! See
+;; the file extras/org-intro.txt for help.
+;(load-file (expand-file-name "extras/org.el" user-emacs-directory))
+
+;; Email configuration in Emacs
+;; WARNING: needs the `mu' program installed; see the elisp file for more
+;; details.
+;(load-file (expand-file-name "extras/email.el" user-emacs-directory))
+
+;; Tools for academic researchers
+;(load-file (expand-file-name "extras/researcher.el" user-emacs-directory))
+
+(use-package catppuccin-theme)
+(setq catppuccin-flavor 'mocha)
+(catppuccin-reload)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;;   Built-in customization framework
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   '("6e13ff2c27cf87f095db987bf30beca8697814b90cd837ef4edca18bdd381901" default))
+ '(package-selected-packages '(which-key)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+
+(setq gc-cons-threshold (or qqh/initial-gc-threshold 800000))
