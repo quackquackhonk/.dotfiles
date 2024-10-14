@@ -64,14 +64,12 @@
 ;; Make ESC quit prompts
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 
+;; dired
+(setq dired-kill-when-opening-new-dired-buffer t)
+
 ;; use the faster programs
 (setq find-program "fd"
       grep-program "rg")
-
-
-;; Make right-click do something sensible
-(when (display-graphic-p)
-  (context-menu-mode))
 
 ;; Don't litter file system with *~ backup files; put them all inside
 ;; ~/.emacs.d/backup or wherever
@@ -134,7 +132,6 @@ If the new path's directories does not exist, create them."
 ;;;   Interface enhancements/defaults
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 ;; Mode line information
 (setopt line-number-mode t)                        ; Show current line in modeline
 (setopt column-number-mode t)                      ; Show column as well
@@ -164,6 +161,7 @@ If the new path's directories does not exist, create them."
 ;; Display line numbers in programming mode
 (add-hook 'prog-mode-hook 'display-line-numbers-mode)
 (setopt display-line-numbers-width 3)           ; Set a minimum width
+(setopt display-line-numbers-type 'relative)
 
 ;; Nice line wrapping when working with text
 (add-hook 'text-mode-hook 'visual-line-mode)
@@ -171,6 +169,13 @@ If the new path's directories does not exist, create them."
 ;; Modes to highlight the current line with
 (let ((hl-line-hooks '(text-mode-hook prog-mode-hook)))
   (mapc (lambda (hook) (add-hook hook 'hl-line-mode)) hl-line-hooks))
+
+(setq frame-resize-pixelwise t)
+
+(setq vc-follow-symlinks t)                             ; auto follow VC links
+(setq indicate-empty-lines t)
+(setq inhibit-startup-message t)
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -217,9 +222,12 @@ If the new path's directories does not exist, create them."
 ;; Tools for academic researchers
 ;(load-file (expand-file-name "extras/researcher.el" user-emacs-directory))
 
-(use-package catppuccin-theme)
-(setq catppuccin-flavor 'mocha)
-(catppuccin-reload)
+(use-package catppuccin-theme
+  :ensure t
+  :demand t
+  :config
+  (setq catppuccin-flavor 'mocha)
+  (catppuccin-reload))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -234,7 +242,7 @@ If the new path's directories does not exist, create them."
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
    '("6e13ff2c27cf87f095db987bf30beca8697814b90cd837ef4edca18bdd381901" default))
- '(package-selected-packages '(which-key)))
+ '(package-selected-packages '(magit which-key)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

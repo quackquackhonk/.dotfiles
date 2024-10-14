@@ -202,43 +202,6 @@
   ;; Enable automatic preview at point in the *Completions* buffer. This is
   ;; relevant when you use the default completion UI.
   :hook (completion-list-mode . consult-preview-at-point-mode)
-  :init
-  ;; Optionally configure the register formatting. This improves the register
-  ;; preview for `consult-register', `consult-register-load',
-  ;; `consult-register-store' and the Emacs built-ins.
-  (setq register-preview-delay 0.2
-        register-preview-function #'consult-register-format)
-
-  ;; Optionally tweak the register preview window.
-  ;; This adds thin lines, sorting and hides the mode line of the window.
-  (advice-add #'register-preview :override #'consult-register-window)
-
-  ;; Use Consult to select xref locations with preview
-  (setq xref-show-xrefs-function #'consult-xref
-        xref-show-definitions-function #'consult-xref)
-
-  ;; Optionally configure preview. The default value
-  ;; is 'any, such that any key triggers the preview.
-  (setq consult-preview-key 'any)
-
-  ;; set find args
-  (setq consult-fd-args '((if (executable-find "fdfind" 'remote)
-                              "fdfind" "fd")
-                          "--hidden --full-path --color=never"
-                          ;; ignores
-                          "--exclude .git"
-                          "--exclude .spack_env"
-                          "--exclude .cache"))
-
-
-  ;; Disable automatic preview for these commands
-  (consult-customize
-   consult-theme
-   consult-ripgrep consult-git-grep consult-grep
-   consult-bookmark consult-recent-file consult-xref
-   consult--source-bookmark consult--source-file-register
-   consult--source-recent-file consult--source-project-recent-file
-   :preview-key '(:debounce 0.4 any)))
 
 ;; LSP integration for consult
 (use-package consult-lsp)
@@ -511,10 +474,6 @@
     :prefix "SPC"
     :global-prefix "C-SPC"
     key))
-
-
-;; remove the help binding
-(global-unset-key (kbd "C-h"))
 
 ;; defines leader key bindings
 (qqh/leader-definer

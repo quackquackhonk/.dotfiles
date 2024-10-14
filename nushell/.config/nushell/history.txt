@@ -1,718 +1,150 @@
+rm nushell/.config/nushell/history.txt
 ls
-z dot
-gp
-cd dotfiles
-cd .dotfiles/
-ls
-gp
-git pull
-nv nushell/.config/nushell/config.nu
-nvim nushell/.config/nushell/config.nu
-fish
-cargo install starship
-which starship
-cargo uninstall starship
-sudo pacman -Syu
-starship -V
-cargo install starship
-nv .config/nushell/config.nu
-which zoxide
-zoxide -V
-cargo install zoxide
-ls
-nv .config/nushell/env.nu
-nvim .config/nushell/env.nu
-open
-open .config/nushell/env.nu
-open .config/nushell/env.nu | nvim
-nvim .config/nushell/env.nu
-zoxide init nushell
-nushell --version
-nu -V
-nu --version
-rm ~/.zoxide.nu
-nu
-zoxide init nushell
-zoxide init nushell | save -f ~/.zoxide.nu
-source ~/.zoxide.nu
-nvim .config/nushell/config.nu
-ls
-clear
-t ls
-t da
-cd Desktop/
-ls
-nv atm9tts.norg
-nu
-nv /mnt/c/Users/sahan/.wezterm.lua
-nv `Desktop/ATM9TTS layout.aseprite`
 gs
-nv Desktop/atm9tts.norg
-ufetch
-pfetch
-ls
-which emacs
-sudo pacman -R emacs
-sudo pacman -Q emacs
-sudo pacman -R emacs-nativecomp
-ls
-clear
-Als
-ls
-yaru
-sudo pacman -S emacs-nativecomp
-ls
-z dot
-gp
-git stash
-gp
-ls
-clear
-em -nw
-emacs -nw
-Als
-rm -rf ~/.emacs.d
-stow emacs
-ls ~/.emacs.d/
-clear
-emacs -nw
-ls ~/.emacs
-z ~/.emacs.d
-ls
-l
-pwd
-ls
 clear
 ls
-rm -rf elpa eln-cache transient projectile-bookmarks.eld
-ls
-nuconf 
+config emacs
 ls
 clear
-z dot
-ls
-nv starship/.config/starship.toml
-ls
-clear
-which emacsclient
-ls
-ls ~/.emacs.d
-em --debug-init --fg-daemon
-em
-emacs --help
-em -nw
-ls ~/.emacs.d
-ls ~/.emacs.d/core
-z dot
-ls
-z dotfiles
-cd dotfiles
-cd .dotfiles/
-ls
-nuconf
-z
-nu
-ls
-clear
-nuconf
-bob
-bob use nvim
-alias
-which em
-b ~/.config/nushell/config.nu
-b ~/.config/nushell/env.nu
-b ~/.config/nushell/config.nu
-em ~/.config/nushell/config.nu
-sudo pacman -Syu
-pacman-key --refresh-keys
-sudo pacman-key --refresh-keys
-sudo pacman -Syu
-ls
-clear
-cd ~/.sources/
-ls
-paru
-clear
-rm -rf paru
-sudo pacman -Syu
-ls
-clear
-em -nw
-z
-ls
-nuconf
-ls
-em ~/.config/nushell/env.nu
-emacs -nw ~/.config/nushell/env.nu
-ls ~/.emacs.d
-ls ~/.emacs.d/core
-mv ~/.emacs.d/core/qqh-global-keybindings.el ~/.emacs.d/core/qqh-global-binds.el
-clear
-emacs -nw ~/.config/nushell/env.nu
-em
-ls
-l
-ls -last
-ls -a
-rm .zoxide.nu
-nu --version
-ls
-clear
-em 
-emacs -nw ~/.config/nushell/env.nu
-ls
-clear
-em
-cd ~/.emacs.d
-ls
-em core/qqh-ui.el
-emacs -nw core/qqh-ui.el
-emacs -nw init.el
-echo $TERM
-echo $env.TERM
-ls
-emacs -nw early-init.el
-TERM=xterm-256color emacs -nw init.el
-COLORTERM=truecolor TERM=xterm-256color emacs -nw init.el
-emacs -nw early-init.el
-nuconf
-em ~/.config/nushell/env.nu
-emacs -nw ~/.config/nushell/env.nu
-emcs
-emacs
-ls
-clear
-cd .emacs.d
-ls
-clear
-em
-clear
-em -nw ~/.config/nushell/env.nu
-paru
-sudo pacman -R zoxide
-cargo uninstall zoxide
-sudo pacman -S zoxide
-sudo pacman -R zoxide 
-curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
-nu
-ls
-clear
-nu
-rm ~/.zoxide.nu
-nu
-zoxide --version
-which nu
-cargo uninstall nushell
-nu --version
-sudo pacman -R nu
-sudo pacman -R nushell
-cargo install nushell
-cargo install nu
-rustup update
-cargo install nu
-nu
-which zoxide
-cargo
-cargo update zoxide
-cargo install zoxide
-rm ~/.zoxide.nu
-ls
-clear
-ls
-nu
-nu
-emacs -nw ~/.config/nushell/env.nu
-ls
-chsh
-bash
-ls
-clear
-em -nw .zoxide.nu
-emacs -nw .zoxide.nu
-source ~/.zoxide.nu
-ls
-z
-clear
-emacs -nw ~/.config/nushell/config.nu
-nu
-ls
-clear
-ls
-z
-clear
-z .dotfiles/
 z code
 ls
-git clone https://github.com/bbatsov/prelude.git
+git clone https://codeberg.org/ashton314/emacs-bedrock.git
+cd emacs-bedrock/
 ls
-mv prelude emacs-prelude
+b early-init.el
+bat early-init.el
+bat init.el
 ls
-clear
+..
+ls
+..
+ls
 z dot
-ls
-starship
-ls
-emacs -nw ~/.config/nushell/config.nu
-stow starship/
-ls
-clear
-nv ~/.config/starship.toml
-em ~/.config/starship.toml
-ls
-clear
-ls
-clear
-z dot
-ls
-clear
+stow -D emacs
 gs
-ga .
-gc -m "fixes nushell"
-gP
-clear
-ls
-em
-ls
-clear
-nuconf
-em ~/.config/nushell/config.nu
-em
-source $nu.config-path
-nuconf
-em ~/.config/nushell/config.nu
-source $nu.config-path
-em ~/.config/nushell/config.nu
-$env.EDITOR
-source $nu.env-path
-$env.EDITOR
-exec $env.EDITOR
-($env.EDITOR)
-$($env.EDITOR)
-$"$env.EDITOR"
-$"($env.EDITOR)"
-em ~/.config/nushell/config.nu
-edit
-edit test
-emacs -nw test
-em ~/.config/nushell/config.nu
-edit
-em ~/.config/nushell/config.nu
-ls
-clear
-emconf
-em ~/.config/nushell/config.nu
-emconf
-em ~/.config/nushell/config.nu
-edit
-edit test
-em ~/.config/nushell/config.nu
-edit
-em ~/.config/nushell/config.nu
-help open
-em ~/.config/nushell/config.nu
-nuconf
-help open
-config_nu
-config nu
-ls
-em ~/.config/nushell/env.nu
-which emacs
-em ~/.config/nushell/env.nu
-$env.PATH
-which emacs
-$env.PATH | rg /usr/sbin
-config nu
-clear
-em ~/.config/nushell/env.nu
-config env
-em ~/.config/nushell/env.nu
-config nu
-em ~/.config/nushell/env.nu
-config nu
-emconf
-help config
-help config env
-$env.EDITOR
-$env.EDITOR | open
-$env.EDITOR | run
-run
-help
-help edit
-edit
-config nu
-help edit
-edit ~/.emacs.d/init.el
-open .config/nushell/env.nu
-open ~/.config/nushell/env.nu
-open ~/.config/nushell/env.nu | $env.EDITOR
-config
-config nu
-open ~/.config/nushell/env.nu | $env.EDITOR
-config nu --default
-config nu
-config nu --default | save ~/.config/nushell/default.nu
-config nu
-edit
-openeditor
-clear
-help do
-config nu
-help
-help commands
-help where
-help commands | where name =~ open
-help commands | where name =~ e
-help commands | where name =~ edit
-help commands | where name =~ exec
-config nu
-ls
-edit code/compilers.org
-config nu
-edit code/compilers.org
-config nu
-clear
-ls
-clear
-config eamcs
-config help
-help config
-clear
-config nu
-ls
-clear
-emacs ~/.emacs.d/init.el
-view source
-view source config
-view source "config env"
-view source edit
-help view source
-help view
-help view source 
-ls
-alias test = emacs -nw ~/.emacs.d/init.el
-test
-config nu
-help exec
-enter
-dexit
-enter ~/.emacs.d
-config nu
-nu --help
-clear
-nu -e $env.EDITOR
-ls
-clear
-config nu
-clear
-edit ~/.emacs.d/init.el
-nu --help
-nu -c $env.EDITOR ~/.emacs.d/init.el
-config nu
-edit ~/.emacs.d/init.el
-config nu
-edit ~/.emacs.d/init.el
-config nu
-edit ~/.emacs.d/init.el
-exec help
-commandline edit 
-commands
-help commands
-help commands | where name =~ config
-help commands | where category = env
-help commands | where category == env
-help commands | where name == exec
-help commands | where category == system
-help run-external
-run-external emacs
-help commands | where name =~ run
-config nu
-edit ~/.emacs.d/init.el
-view source edit
-edit
-help commands | where name =~ edit
-config nu
-edit
-view source edit
-run-external $env.EDITOR ~/.emacs.d/init.el
-config nu
-edit
-edit test
-ls
-config nu
-help split
-split words
-config nu
-emacsclient -nw -a
-emacsclient -nw -a emacs
-ec
-emacsclient
-emacsclient -nw -a=""
-ls
-clear
-config nu
-config env
-run-external $env.EDITOR
-print $env.EDITOR
-config env
-config nu
-config emacs
-source $nu.env-path; source $nu.config-path
-config emacs
-o
-o x
-config nu
-$env.EDITOR
-emacs ~/.config/nushell/config.nu
-$env.EDITOR | split word
-$env.EDITOR | split words
-$env.EDITOR | split words | run-external
-$env.EDITOR | split words | describe
-help run-external
-$env.EDITOR | split chars
-$env.EDITOR | split words
-$env.EDITOR | split words | run-external
-let x = $env.EDITOR | split words
-describe x
-describe
-x | describe
-$x
-$x | describe
-def x {}
-def x [] {}
-x
-def x [f] { $env.EDITOR | append f }
-x
-x "1"
-def x [f] { $env.EDITOR | split words | f }
-x "1"
-def x [f] { $env.EDITOR | split words | append $f }
-x l
-x ~/.emacs.d/init.el
-def x [f] { $env.EDITOR | split " " | append $f }
-split
-def x [f] { $env.EDITOR | split row " " | append $f }
-x ~/.emacs.d/init.el
-def x [f] { $env.EDITOR | split row " " | append $f }; ~/.emacs.d/init.el
-def x [f] { $env.EDITOR | split row " " | append $f }; x ~/.emacs.d/init.el
-def x [f] { $env.EDITOR | split row " " | append $f | run-external }; x ~/.emacs.d/init.el
-help commands | where category == core
-help commands | where category == system
-def x [f: string] { $"($env.EDITOR) ($f)" | run-external }; x ~/.emacs.d/init.el
-def x [f: string] { let command = $"($env.EDITOR) ($f)";  run-external $command }; x ~/.emacs.d/init.el
-def x [f: string] { let command = $env.EDITOR | split row " " | append $f;  run-external $command }; x ~/.emacs.d/init.el
-run-external | describe
-describe run-external
-run-external
-run-external -h
-exec -h
-help exec
-ec
-ec -e "(kill-emacs)"
-clear
-config nu
-emacsclient -nw -a=""
-emacsclient -nw -a="" -e "(kill-emacs)"
-emacsclient -nw -a="" ~/.dotfiles
-config nu
-emacsclient -nw -a="" ~/.dotfiles
-ec ~/.config/nushell/env.nu
-ec ~/.config/nushell/config.nu
-qqh config emacs
-ec ~/.config/nushell/env.nu
-qqh config emacs
-clear
-qqh config
-qqh config emacs
-ec -e "(kill-emacs)"
-qqh config emacs
-config nu
-ec ~/.config/nushell/env.nu
-ec ~/.config/nushell/config.nu
-config emacs
-ec -e "(kill-emacs)"
-config emacs
-clear
-gs
-z dot
-gs
-ga .
-gc -m "so many nushell changes"
-gP
-clear
-config nu
-em ~/.config/nushell/config.nu
-config nu
-clear
-em ~/.config/nushell/config.nu
-config nu
-em ~/.config/nushell/config.nu
-config nu
-em ~/.config/nushell/config.nu
-$env.EDITOR
-config nu
-clear
-em ~/.config/nushell/config.nu
-config nu
-help config
-config nu
-help config
-help config emacs
-clear
-config emacs
-config nu
-config emacs
-config nu
-emkill
-ec
-clear
-config emacs
-emkill
-emkill && config emacs
-emkill; config emacs
-emkill
-clear
-config emacs
-nv ~/.emacs.d/mods/qqh-projects.el
-em ~/.emacs.d/mods/qqh-projects.el
-e ~/.emacs.d/mods/qqh-projects.el
-emkill
-config emacs
-nvim ~/.emacs.d/init.el
-vi ~/.emacs.d/init.el
-bob use nvim
-bob use stable
-bob
-bob install stable
-bob use stable
-nv
-nvikm
-nvim
-config env
-emkill 
-config emacs
-emacs --fg-daemon
-emacs --debug-init --fg-daemon
-vim
-rm ~/.vimrc
-vim ~/.emacs.d/init.el
-emacs --debug-init --fg-daemon
-vim ~/.emacs.d/init.el
-emacs --debug-init --fg-daemon
-vim ~/.emacs.d/init.el
-emacs --debug-init --fg-daemon
-vim ~/.emacs.d/mods/qqh-projects.el
-emacs --debug-init --fg-daemon
-edit 
-edit x
-ls
-clear
-emacs --debug-init --fg-daemon
-vim ~/.emacs.d/mods/qqh-projects.el
-emacs --debug-init --fg-daemon
-vim ~/.emacs.d/mods/qqh-projects.el
-emacs --debug-init --fg-daemon
-emkill
-emacs --debug-init --fg-daemon
-emkill
-clear
-config emacs
-clear
-config emacs
-config nu
-emkill
-edit ~/.emacs.d/init.el
-exec exit -1; echo "arst"
-exec ^exit -1; echo "arst"
-exec return -1; echo "arst"
-exec -1; echo "arst"
--1; echo "arst"
-exec exit
-exec
-exec arstarsg
-exec arstarsg and echo "hi"
-fail and echo "hi"
-print "x" and print "y"
-print x && print done
-print x and print done
-print x ahelp andnd print done
-help and
-print x; print y
-arstarst; print y
-config nu
-emkill
-edit ~/.emacs.d/init.el
-config nu
-edit ~/.config/nushell/config.nu
-vim ~/.config/nushell/config.nu
-emacs --debug-init --fg-daemon
-vim ~/.emacs.d/mods/qqh-evil.el
-config emacs
-emkill
-config emacs
-vim ~/.emacs.d/mods/qqh-evil.el
+cp -r ~/code/emacs-bedrock ~/.emacs.d
 emacs
-emkill
-config emacs
-emkil
-emkill
-config emacs
-emkill
-emacsclient
-clear
-emacs --debug-init --fg-daemon
-vim ~/.emacs.d/init.el
-vim ~/.emacs.d/core/qqh-packages.el
-config emacs
-vim ~/.emacs.d/mods/qqh-modules.el
-emkill 
-config emacs
-emkill
-config emacs
-emkill
-emacs --debug-init --fg-daemon
-config emacs
-emkill && config emacs
-emkill; config emacs
-emkill
-config emacs
-emkill
-config emacs
-emkill
+gs
 emacs ~/.emacs.d/init.el
-emacs -nw ~/.emacs.d/init.el
-emacs -nw --debug-init ~/.emacs.d/init.el
-emacs -nw ~/.emacs.d/core/qqh-editor.el
-emacs ~/.emacs.d/init.el
-ls
-z .dotfiles/
-ls
-clear
-gp
-gs
-gc -m "meow"
-ga .
-gs
-rm emacs/.emacs.d/#init.el#
-ls
-gs
-nv
-nvim
-ls
-gs
-gc .
-ga .
-gc
-gs
-gP
-ls
-e .gitignore
-gs
+nvim ~/.emacs.d/init.el
 ga .gitignore
-gs
-gc -m "update gitignore"
+nvim ~/.emacs.d/init.el
+t
+clear
+emacs --debug-init --fg-daemon
+emacs --version
+sudo pacman -Q emacs-nativecommp
+sudo pacman -Q emacs-nativecomp
+clear
+emacs --debug-init --fg-daemon
+alias
+ec | describe
+describe ecc
+ec
+emkill
+emacs --debug-init --fg-daemon
+nvim ~/.emacs.d/init.el
+zellij
+ls
+clear
+z dot
+ls
+clear
+ls
+clear
+nv
+ls
+clear
+ls
+nv emacs/.emacs.d/init.el
+nvim emacs/.emacs.d/init.el
+t a
+zellij a
+ls
+clear
+z .emacs.d
+z ~/.emacs.d
+ls
+clear
+ls
+nv init.el
+emacs -nw
+clear
+emacs -nw
+clear
+nvim init.el
+clear
+emacs -nw
+ls
+clear
+nvim init.el
+emacs -nw
+ls
+clear
+ls
+z emacs
+ls
+..
+ls
+clear
+../.emacs.d/
+ls
+rm #init.el#
+rm \#init.el\#
+l
+ls
+l
+ls -a
+rm LICENSE
+rm README.md
+ls
+rm -rf eln-cache/ elpa auto-save-list/
+ls
+z .dotfiles
+ls
+cd emacs/.emacs.d/
+ls
+..
+rm -rf .emacs.d/
+mkdir .emacs.d/
+ls
+cd .emacs.d/
+ls
+cp ~/.emacs.d/init.el .
+cp -r ~/.emacs.d/extras .
+ls
+cp ~/.emacs.d/early-init.el .
+ls
 gs
 ga .
 gs
-rm -rf emacs/.emacs.d/savefile emacs/.emacs.d/transient
+..
 ls
+clear
 gs
+gc -m "bedrock port"
+gP
+clear
+ls
+..
+ls
+rm -rf .emacs.d/
+cd .dotfiles/
+ls
+stow -D emacs
+stow emacs
+ls emacs/.emacs.d/
+emacs -nw
+emacs --debug-init --fg-daemon
+emkill
+ls
+clear
+emacs
+nvim init.el
+clear
+emacs -nw
+emacs -nw init.el
+zellij
+emacs -nw init.el
+ls
+z .emacs.d

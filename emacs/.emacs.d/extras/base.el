@@ -30,7 +30,11 @@
   :ensure t
   :demand t
   :bind (("C-c j" . avy-goto-line)
-         ("s-j"   . avy-goto-char-timer)))
+         ("s-j"   . avy-goto-char-timer))
+
+  :config
+  (setq avy-keys '(?a ?r ?s ?t ?g ?m ?n ?e ?i ?o)
+        avy-background nil))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -40,7 +44,44 @@
 
 ;; Consult: Misc. enhanced commands
 (use-package consult
-  :ensure t
+  ;; Enable automatic preview at point in the *Completions* buffer. This is
+  ;; relevant when you use the default completion UI.
+  :hook (completion-list-mode . consult-preview-at-point-mode)
+
+  :init
+  ;; Optionally configure the register formatting. This improves the register
+  ;; preview for `consult-register', `consult-register-load',
+  ;; `consult-register-store' and the Emacs built-ins.
+  (setq register-preview-delay 0.2
+        register-preview-function #'consult-register-format)
+
+  ;; Optionally tweak the register preview window.
+  ;; This adds thin lines, sorting and hides the mode line of the window.
+  (advice-add #'register-preview :override #'consult-register-window)
+
+  ;; Use Consult to select xref locations with preview
+  (setq xref-show-xrefs-function #'consult-xref
+        xref-show-definitions-function #'consult-xref)
+
+  ;; Optionally configure preview. The default value
+  ;; is 'any, such that any key triggers the preview.
+  (setq consult-preview-key 'any)
+
+  ;; set find args
+  (setq consult-fd-args '((if (executable-find "fdfind" 'remote)
+                              "fdfind" "fd")
+                          "--hidden --full-path --color=never"
+                          ;; ignores
+                          "--exclude .git"
+                          "--exclude .spack_env"
+                          "--exclude .cache"
+
+                          ;; emacs specific
+                          "--exclude elpa"
+                          "--exclude eln-cache"
+                          "--exclude build"))
+
+
   :bind (
          ;; Drop-in replacements
          ("C-x b" . consult-buffer)     ; orig. switch-to-buffer
@@ -58,16 +99,19 @@
          ("M-s l" . consult-line)            ; needed by consult-line to detect isearch
          ("M-s L" . consult-line-multi)      ; needed by consult-line to detect isearch
          )
+
   :config
   ;; Narrowing lets you restrict results to certain groups of candidates
   (setq consult-narrow-key "<"))
 
 (use-package embark
-  :ensure t
   :demand t
   :after avy
   :bind (("C-c a" . embark-act))        ; bind this to an easy key to hit
   :init
+  ;; Optionally replace the key help with a completing-read interface
+  (setq prefix-help-command #'embark-prefix-help-command)
+
   ;; Add the option to run embark when using avy
   (defun qqh/avy-action-embark (pt)
     (unwind-protect
