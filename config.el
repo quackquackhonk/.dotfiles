@@ -285,7 +285,7 @@
 ;; editing justfiles
 (use-package just-mode)
 
-;; C/C++
+;;; C/C++
 (use-package ccls
   :hook ((c-mode c++-mode objc-mode cuda-mode) . lsp)
   :custom

@@ -18,18 +18,45 @@
 (when (< emacs-major-version 29)
   (error "[qqh] config assumes emacs version 29+, currently running %s!" emacs-major-version))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;;   Straight.el setup
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ;;; Package initialization
-(require 'package)
-(setq package-archives '(("melpa" . "https://melpa.org/packages/")
-                         ("org" . "https://orgmode.org/elpa/")
-                         ("nongnu" . "https://elpa.nongnu.org/nongnu/")
-                         ("elpa" . "https://elpa.gnu.org/packages/")))
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name
+        "straight/repos/straight.el/bootstrap.el"
+        (or (bound-and-true-p straight-base-dir)
+            user-emacs-directory)))
+      (bootstrap-version 7))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
 
-;; Initialize use-package on non-Linux platforms
-(unless (package-installed-p 'use-package) (package-install 'use-package))
+;; install use-package
+(setopt straight-use-package-by-default t)
+(straight-use-package 'use-package)
 
-(require 'use-package)
-(setq use-package-always-ensure t)
+;; always load the newest bytecode
+(setq load-prefer-newer t)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;;   Some Variable definitions
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defvar qqh/modules-dir (expand-file-name "qqh" user-emacs-directory)
+  "The directory containing my module files")
+
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -52,8 +79,8 @@
 ;; Save history of minibuffer
 (savehist-mode)
 
-;; Move through windows with Ctrl-<arrow keys>
-(windmove-default-keybindings 'control) ; You can use other modifiers here
+;; Move through windows with Shift-<arrow keys>
+(windmove-default-keybindings 'shift)
 
 ;; Fix archaic defaults
 (setopt sentence-end-double-space nil)
@@ -91,7 +118,7 @@ If the new path's directories does not exist, create them."
 ;; which-key: shows a popup of available keybindings when typing a long key
 ;; sequence (e.g. C-x ...)
 (use-package which-key
-  :ensure t
+  :straight t
   :config
   (which-key-mode))
 
@@ -199,35 +226,28 @@ If the new path's directories does not exist, create them."
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; UI/UX enhancements mostly focused on minibuffer and autocompletion interfaces
-;; These ones are *strongly* recommended!
-(load-file (expand-file-name "extras/base.el" user-emacs-directory))
+
+;; Minibuffer / Completion packages
+(load-file (expand-file-name "base.el" qqh/modules-dir))
+
+;; Extra UI / Themeing
+;; (load-file (expand-file-name "ui.el" qqh/modules-dir))
 
 ;; Packages for software development
-;(load-file (expand-file-name "extras/dev.el" user-emacs-directory))
+(load-file (expand-file-name "dev.el" qqh/modules-dir))
 
 ;; Vim-bindings in Emacs (evil-mode configuration)
-(load-file (expand-file-name "extras/vim-like.el" user-emacs-directory))
+(load-file (expand-file-name "bindings.el" qqh/modules-dir))
 
 ;; Org-mode configuration
 ;; WARNING: need to customize things inside the elisp file before use! See
 ;; the file extras/org-intro.txt for help.
 ;(load-file (expand-file-name "extras/org.el" user-emacs-directory))
 
-;; Email configuration in Emacs
-;; WARNING: needs the `mu' program installed; see the elisp file for more
-;; details.
-;(load-file (expand-file-name "extras/email.el" user-emacs-directory))
-
-;; Tools for academic researchers
-;(load-file (expand-file-name "extras/researcher.el" user-emacs-directory))
-
 (use-package catppuccin-theme
-  :ensure t
-  :demand t
+  :straight t
   :config
-  (setq catppuccin-flavor 'mocha)
-  (catppuccin-reload))
+  (load-theme 'catppuccin :no-confirm))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -241,8 +261,12 @@ If the new path's directories does not exist, create them."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
-   '("6e13ff2c27cf87f095db987bf30beca8697814b90cd837ef4edca18bdd381901" default))
- '(package-selected-packages '(magit which-key)))
+   '("6e13ff2c27cf87f095db987bf30beca8697814b90cd837ef4edca18bdd381901"
+     default))
+ '(package-selected-packages nil)
+ '(package-vc-selected-packages
+   '((eglot-booster :vc-backend Git :url
+		    "https://github.com/jdtsmith/eglot-booster"))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

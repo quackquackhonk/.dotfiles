@@ -27,7 +27,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package avy
-  :ensure t
+  :straight t
   :demand t
   :bind (("C-c j" . avy-goto-line)
          ("s-j"   . avy-goto-char-timer))
@@ -84,11 +84,10 @@
 
   :bind (
          ;; Drop-in replacements
-         ("C-x b" . consult-buffer)     ; orig. switch-to-buffer
          ("M-y"   . consult-yank-pop)   ; orig. yank-pop
          ;; Searching
          ("M-s r" . consult-ripgrep)
-         ("M-s l" . consult-line)       ; Alternative: rebind C-s to use
+         ("C-s" . consult-line)         ; Alternative: rebind C-s to use
          ("M-s s" . consult-line)       ; consult-line instead of isearch, bind
          ("M-s L" . consult-line-multi) ; isearch to M-s s
          ("M-s o" . consult-outline)
@@ -127,7 +126,7 @@
   (setf (alist-get ?. avy-dispatch-alist) 'qqh/avy-action-embark))
 
 (use-package embark-consult
-  :ensure t)
+  :straight t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -142,7 +141,7 @@
   (vertico-mode))
 
 (use-package vertico-directory
-  :ensure nil
+  :straight nil
   :after vertico
   :bind (:map vertico-map
               ("M-DEL" . vertico-directory-delete-word)))
@@ -153,48 +152,48 @@
   (marginalia-mode))
 
 ;; Popup completion-at-point
-(use-package corfu
-  :init
-  (global-corfu-mode)
-  :bind
-  (:map corfu-map
-        ("SPC" . corfu-insert-separator)
-        ("C-n" . corfu-next)
-        ("C-p" . corfu-previous)))
+;; (use-package corfu
+;;   :init
+;;   (global-corfu-mode)
+;;   :bind
+;;   (:map corfu-map
+;;         ("SPC" . corfu-insert-separator)
+;;         ("C-n" . corfu-next)
+;;         ("C-p" . corfu-previous)))
 
-;; Part of corfu
-(use-package corfu-popupinfo
-  :after corfu
-  :ensure nil
-  :hook (corfu-mode . corfu-popupinfo-mode)
-  :custom
-  (corfu-popupinfo-delay '(0.25 . 0.1))
-  (corfu-popupinfo-hide nil)
-  :config
-  (corfu-popupinfo-mode))
+;; ;; Part of corfu
+;; (use-package corfu-popupinfo
+;;   :after corfu
+;;   :straight nil
+;;   :hook (corfu-mode . corfu-popupinfo-mode)
+;;   :custom
+;;   (corfu-popupinfo-delay '(0.25 . 0.1))
+;;   (corfu-popupinfo-hide nil)
+;;   :config
+;;   (corfu-popupinfo-mode))
 
-;; Make corfu popup come up in terminal overlay
-(use-package corfu-terminal
-  :if (not (display-graphic-p))
-  :ensure t
-  :config
-  (corfu-terminal-mode))
+;; ;; Make corfu popup come up in terminal overlay
+;; (use-package corfu-terminal
+;;   :if (not (display-graphic-p))
+;;   :straight t
+;;   :config
+;;   (corfu-terminal-mode))
 
-;; Fancy completion-at-point functions; there's too much in the cape package to
-;; configure here; dive in when you're comfortable!
-(use-package cape
-  :ensure t
-  :init
-  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
-  (add-to-list 'completion-at-point-functions #'cape-file))
+;; ;; Fancy completion-at-point functions; there's too much in the cape package to
+;; ;; configure here; dive in when you're comfortable!
+;; (use-package cape
+;;   :straight t
+;;   :init
+;;   (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+;;   (add-to-list 'completion-at-point-functions #'cape-file))
 
-;; Pretty icons for corfu
-(use-package kind-icon
-  :if (display-graphic-p)
-  :ensure t
-  :after corfu
-  :config
-  (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
+;; ;; Pretty icons for corfu
+;; (use-package kind-icon
+;;   :if (display-graphic-p)
+;;   :straight t
+;;   :after corfu
+;;   :config
+;;   (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
 
 (use-package eshell
   :init
@@ -206,7 +205,7 @@
 
 ;; Eat: Emulate A Terminal
 (use-package eat
-  :ensure t
+  :straight t
   :custom
   (eat-term-name "xterm")
   :config
@@ -215,7 +214,7 @@
 
 ;; Orderless: powerful completion style
 (use-package orderless
-  :ensure t
+  :straight t
   :config
   (setq completion-styles '(orderless)))
 
@@ -227,6 +226,6 @@
 
 ;; Modify search results en masse
 (use-package wgrep
-  :ensure t
+  :straight t
   :config
   (setq wgrep-auto-save-buffer t))
