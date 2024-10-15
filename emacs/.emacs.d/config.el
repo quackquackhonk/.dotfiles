@@ -118,7 +118,6 @@
   (persp-mode)
 
   ;; Add perspective mode source to buffer switcher
-  (consult-customize consult--source-buffer :hidden t :default nil)
   (add-to-list 'consult-buffer-sources persp-consult-source)
 
   :custom
@@ -234,17 +233,7 @@
                           ;; ignores
                           "--exclude .git"
                           "--exclude .spack_env"
-                          "--exclude .cache"))
-
-
-  ;; Disable automatic preview for these commands
-  (consult-customize
-   consult-theme
-   consult-ripgrep consult-git-grep consult-grep
-   consult-bookmark consult-recent-file consult-xref
-   consult--source-bookmark consult--source-file-register
-   consult--source-recent-file consult--source-project-recent-file
-   :preview-key '(:debounce 0.4 any)))
+                          "--exclude .cache")))
 
 ;; LSP integration for consult
 (use-package consult-lsp)
