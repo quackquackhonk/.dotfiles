@@ -8,7 +8,15 @@
 (setq catppuccin-flavor 'mocha)
 (catppuccin-reload)
 
-(use-package diminish)
+(use-package diminish
+  :config
+  (require 'which-key)
+  (diminish 'which-key-mode)
+  (require 'undo-tree)
+  (diminish 'undo-tree-mode)
+
+  ;; diminish built-in minor modes
+  (diminish 'eldoc-mode))
 
 (use-package nerd-icons)
 

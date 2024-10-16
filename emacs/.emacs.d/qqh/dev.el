@@ -27,21 +27,13 @@
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(use-package tree-sitter-langs)
-(use-package tree-sitter
-  :config
-  (require 'tree-sitter-langs)
-  (setq treesit-font-lock-level 4)
-  (global-tree-sitter-mode)
-  (add-hook 'tree-sitter-after-on-hook
-            #'tree-sitter-hl-mode))
-
 (use-package emacs
   :config
   ;; Treesitter config
 
   ;; Tell Emacs to prefer the treesitter mode
   ;; You'll want to run the command `M-x treesit-install-language-grammar' before editing.
+  (setq treesit-font-lock-level 4)
   (setq major-mode-remap-alist
         '((yaml-mode . yaml-ts-mode)
           (bash-mode . bash-ts-mode)
@@ -116,27 +108,82 @@
 ;;
 ;;  - https://www.masteringemacs.org/article/seamlessly-merge-multiple-documentation-sources-eldoc
 
-(use-package eglot
-  :straight t
-  :custom
-  (eglot-send-changes-idle-time 0.1)
-  (eglot-extend-to-xref t)              ; activate Eglot in referenced non-project files
+;; (use-package eglot
+;;   :straight t
+;;   :custom
+;;   (eglot-send-changes-idle-time 0.1)
+;;   (eglot-extend-to-xref t)              ; activate Eglot in referenced non-project files
+;; 
+;;   :config
+;;   ;; dont log every event
+;;   (fset #'jsonrpc--log-event #'ignore)
+;; 
+;;   (add-to-list 'eglot-server-programs
+;; 	       '(rust-mode . ("rust-analyzer"
+;; 			      :initializationOptions
+;; 			      (:procMacro (:enable t)
+;; 					  :cargo (:buildScripts (:enable t)
+;; 								:features "all"))))))
+;; 
+;; (use-package eglot-booster
+;;   :after eglot
+;;   :straight (eglot-booster :type git :host github :repo "jdtsmith/eglot-booster")
+;;   :config (eglot-booster-mode))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;;   LSP-mode configuration
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;; Taken from emacs-lsp-booster
+(defun lsp-booster--advice-json-parse (old-fn &rest args)
+  "Try to parse bytecode instead of json."
+  (or
+   (when (equal (following-char) ?#)
+     (let ((bytecode (read (current-buffer))))
+       (when (byte-code-function-p bytecode)
+	 (funcall bytecode))))
+   (apply old-fn args)))
+(advice-add (if (progn (require 'json)
+		       (fboundp 'json-parse-buffer))
+		'json-parse-buffer
+	      'json-read)
+	    :around
+	    #'lsp-booster--advice-json-parse)
+
+(defun lsp-booster--advice-final-command (old-fn cmd &optional test?)
+  "Prepend emacs-lsp-booster command to lsp CMD."
+  (let ((orig-result (funcall old-fn cmd test?)))
+    (if (and (not test?)                             ;; for check lsp-server-present?
+             (not (file-remote-p default-directory)) ;; see lsp-resolve-final-command, it would add extra shell wrapper
+             lsp-use-plists
+             (not (functionp 'json-rpc-connection))  ;; native json-rpc
+             (executable-find "emacs-lsp-booster"))
+        (progn
+          (when-let ((command-from-exec-path (executable-find (car orig-result))))  ;; resolve command from exec-path (in case not found in $PATH)
+            (setcar orig-result command-from-exec-path))
+          (message "Using emacs-lsp-booster for %s!" orig-result)
+          (cons "emacs-lsp-booster" orig-result))
+      orig-result)))
+(advice-add 'lsp-resolve-final-command :around #'lsp-booster--advice-final-command)
+
+(use-package lsp-mode
+  :hook ((lsp-mode . lsp-enable-which-key-integration))
+  :commands (lsp lsp-deferred)
+
+  :init
 
   :config
-  ;; dont log every event
-  (fset #'jsonrpc--log-event #'ignore)
+  (add-hook 'lsp-mode-hook
+            (lambda () (setq display-line-numbers 'relative)))
 
-  (add-to-list 'eglot-server-programs
-	       '(rust-mode . ("rust-analyzer"
-			      :initializationOptions
-			      (:procMacro (:enable t)
-					  :cargo (:buildScripts (:enable t)
-								:features "all"))))))
+  (setq lsp-warn-no-matched-clients nil
+        lsp-auto-execute-action nil)
 
-(use-package eglot-booster
-  :after eglot
-  :straight (eglot-booster :type git :host github :repo "jdtsmith/eglot-booster")
-  :config (eglot-booster-mode))
+  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\.spack_env\\'"))
+
+(use-package yasnippet)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -145,10 +192,13 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;; TODO: C/C++
+(use-package ccls
+  :hook ((c-mode c++-mode objc-mode cuda-mode) . lsp-deferred)
+  :custom
+  (ccls-args nil)
+  (ccls-executable (executable-find "ccls")))
 
 ;;; PYTHON
-(add-hook 'python-mode-hook #'eglot-ensure)
-
 ;; Built-in Python utilities
 (use-package python
   :custom
@@ -162,15 +212,27 @@
   (setenv "WORKON_HOME" "/opt/homebrew/Caskroom/miniconda/base/envs/")
   (pyvenv-mode 1))
 
+;; Taken from pyvenv.el - work on the environment, then start an lsp
+(defun qqh/python-lsp-mode (name)
+  "Activate a virtual environment from $WORKON_HOME.
+
+  If the virtual environment NAME is already active, this function
+  does not try to reactivate the environment."
+  (interactive
+   (list
+    (completing-read "Work on: " (pyvenv-virtualenv-list)
+		     nil t nil 'pyvenv-workon-history nil nil)))
+
+  (unless (member name (list "" nil pyvenv-virtual-env-name))
+    (pyvenv-activate (format "%s/%s"
+			     (pyvenv-workon-home)
+			     name)))
+  (lsp-mode))
+
 ;; Buffer formatting with Black
 (use-package blacken
-  :ensure t
   :defer t
-  ;:custom
-  ;(blacken-allow-py36 t)
-  ;(blacken-skip-string-normalization t)
   :hook (python-mode-hook . blacken-mode))
-
 
 
 ;;; RUST

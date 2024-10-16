@@ -173,6 +173,7 @@ If the new path's directories does not exist, create them."
 ;; Misc. UI tweaks
 (blink-cursor-mode -1)                                ; Steady cursor
 (pixel-scroll-precision-mode)                         ; Smooth scrolling
+(setopt ring-bell-function 'ignore)                   ; disable the bell
 
 ;; Use common keystrokes by default
 (cua-mode)
@@ -195,23 +196,6 @@ If the new path's directories does not exist, create them."
 (setq indicate-empty-lines t)
 (setq inhibit-startup-message t)
 
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;;   Tab-bar configuration
-;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;; Show the tab-bar as soon as tab-bar functions are invoked
-(setopt tab-bar-show 1)
-
-;; Add the time to the tab-bar, if visible
-(add-to-list 'tab-bar-format 'tab-bar-format-align-right 'append)
-(add-to-list 'tab-bar-format 'tab-bar-format-global 'append)
-(setopt display-time-format "%a %F %T")
-(setopt display-time-interval 1)
-(display-time-mode)
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;;     Load the rest of my configuration
@@ -222,9 +206,6 @@ If the new path's directories does not exist, create them."
  ;; Minibuffer / Completion packages
 (load-file (expand-file-name "base.el" qqh/modules-dir))
 
-;; Extra UI / Themeing
-(load-file (expand-file-name "ui.el" qqh/modules-dir))
-
 ;; Packages for software development
 (load-file (expand-file-name "dev.el" qqh/modules-dir))
 
@@ -234,7 +215,11 @@ If the new path's directories does not exist, create them."
 ;; Org-mode configuration
 ;; WARNING: need to customize things inside the elisp file before use! See
 ;; the file extras/org-intro.txt for help.
-;(load-file (expand-file-name "extras/org.el" user-emacs-directory))
+;; (load-file (expand-file-name "org.el" qqh/modules-dir))
+
+;; Extra UI / Themeing
+(load-file (expand-file-name "ui.el" qqh/modules-dir))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;

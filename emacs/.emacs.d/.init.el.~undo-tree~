@@ -1,0 +1,47 @@
+(undo-tree-save-format-version . 1)
+"fc838632460dc4fd0a7e2335e63898840d6f6ca3"
+[nil nil nil nil (26383 65324 2379 0) 0 nil]
+([nil nil ((#("
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;;   Tab-bar configuration
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Show the tab-bar as soon as tab-bar functions are invoked
+(setopt tab-bar-show 1)
+
+;; Add the time to the tab-bar, if visible
+(add-to-list 'tab-bar-format 'tab-bar-format-align-right 'append)
+(add-to-list 'tab-bar-format 'tab-bar-format-global 'append)
+(setopt display-time-format \"%a %F %T\")
+(setopt display-time-interval 1)
+(display-time-mode)
+" 0 2 (fontified t) 2 82 (face font-lock-comment-delimiter-face fontified t) 82 83 (face font-lock-comment-face fontified t) 83 86 (face font-lock-comment-delimiter-face fontified t) 86 87 (face font-lock-comment-face fontified t) 87 93 (face font-lock-comment-delimiter-face fontified t) 93 115 (face font-lock-comment-face fontified t) 115 118 (face font-lock-comment-delimiter-face fontified t) 118 119 (face font-lock-comment-face fontified t) 119 199 (face font-lock-comment-delimiter-face fontified t) 199 200 (face font-lock-comment-face fontified t) 200 201 (fontified t) 201 204 (face font-lock-comment-delimiter-face fontified t) 204 262 (face font-lock-comment-face fontified t) 262 263 (face (rainbow-delimiters-depth-1-face) fontified t) 263 269 (face font-lock-keyword-face fontified t) 269 284 (fontified t) 284 285 (face (rainbow-delimiters-depth-1-face) fontified t) 285 287 (fontified t) 287 290 (face font-lock-comment-delimiter-face fontified t) 290 330 (face font-lock-comment-face fontified t) 330 331 (face (rainbow-delimiters-depth-1-face) fontified t) 331 394 (fontified t) 394 395 (face (rainbow-delimiters-depth-1-face) fontified t) 395 396 (fontified t) 396 397 (face (rainbow-delimiters-depth-1-face) fontified t) 397 455 (fontified t) 455 456 (face (rainbow-delimiters-depth-1-face) fontified t) 456 457 (fontified t) 457 458 (face (rainbow-delimiters-depth-1-face) fontified t) 458 464 (face font-lock-keyword-face fontified t) 464 485 (fontified t) 485 495 (face font-lock-string-face fontified t) 495 496 (face (rainbow-delimiters-depth-1-face) fontified t) 496 497 (fontified t) 497 498 (face (rainbow-delimiters-depth-1-face) fontified t) 498 504 (face font-lock-keyword-face fontified t) 504 528 (fontified t) 528 529 (face (rainbow-delimiters-depth-1-face) fontified t) 529 530 (fontified t) 530 531 (face (rainbow-delimiters-depth-1-face) fontified t) 531 548 (fontified t) 548 549 (face (rainbow-delimiters-depth-1-face) fontified t) 549 550 (fontified t)) . 7093) (undo-tree-id0 . -530) (undo-tree-id1 . -530) (undo-tree-id2 . -530) (undo-tree-id3 . -530) (undo-tree-id4 . -530) (undo-tree-id5 . -530) (undo-tree-id6 . -530) (undo-tree-id7 . -530) (undo-tree-id8 . -530) (undo-tree-id9 . -530) (undo-tree-id10 . -497) (undo-tree-id11 . -497) (undo-tree-id12 . -83) (undo-tree-id13 . -83) (undo-tree-id14 . -550) (undo-tree-id15 . -549) (t 26383 58395 708151 336000)) nil (26384 96 768477 0) 0 nil])
+([nil nil ((#("
+;; Extra UI / Themeing
+(load-file (expand-file-name \"ui.el\" qqh/modules-dir))
+" 0 1 (fontified t) 1 4 (face font-lock-comment-delimiter-face fontified t) 4 24 (face font-lock-comment-face fontified t) 24 25 (face (rainbow-delimiters-depth-1-face) fontified t) 25 35 (fontified t) 35 36 (face (rainbow-delimiters-depth-2-face) fontified t) 36 53 (fontified t) 53 60 (face font-lock-string-face fontified t) 60 76 (fontified t) 76 77 (face (rainbow-delimiters-depth-2-face) fontified t) 77 78 (face (rainbow-delimiters-depth-1-face) fontified t) 78 79 (fontified t)) . 7402) (undo-tree-id0 . -24) (undo-tree-id1 . -24) (undo-tree-id2 . -24) (undo-tree-id3 . -24) (undo-tree-id4 . -79) (undo-tree-id5 . -78) (t 26384 96 771608 840000)) nil (26384 6761 726950 0) 0 nil])
+([nil nil ((nil rear-nonsticky nil 7608 . 7609) (#("
+" 0 1 (fontified nil)) . -7687) (7608 . 7688) 7548) nil (26384 6761 726930 0) 0 nil])
+([nil nil ((7609 . 7610)) nil (26384 6761 726927 0) 0 nil])
+([nil nil ((#("
+" 0 1 (fontified t)) . 7609) (undo-tree-id6 . 1) (undo-tree-id7 . -1) (t 26384 6761 730227 598000)) nil (26384 6763 3330 0) 0 nil])
+([nil nil ((#(";; Org-mode configuration
+;; WARNING: need to customize things inside the elisp file before use! See
+;; the file extras/org-intro.txt for help.
+;(load-file (expand-file-name \"extras/org.el\" user-emacs-directory))
+" 0 3 (face font-lock-comment-delimiter-face fontified t) 3 26 (face font-lock-comment-face fontified t) 26 29 (face font-lock-comment-delimiter-face fontified t) 29 101 (face font-lock-comment-face fontified t) 101 104 (face font-lock-comment-delimiter-face fontified t) 104 144 (face font-lock-comment-face fontified t) 144 145 (face font-lock-comment-delimiter-face fontified t) 145 213 (face font-lock-comment-face fontified t)) . 7689) (undo-tree-id8 . -144) (undo-tree-id9 . -144) (undo-tree-id10 . -212) (undo-tree-id11 . -144) (undo-tree-id12 . -144) (undo-tree-id13 . -144) (undo-tree-id14 . -213) 7833 (t 26384 6763 7102 217000)) nil (26384 6766 93328 0) 0 nil])
+([nil nil ((nil rear-nonsticky nil 7608 . 7609) (#("
+" 0 1 (fontified nil face font-lock-comment-face)) . -7821) (7608 . 7822) 7548) nil (26384 6766 93320 0) 0 nil])
+([nil nil ((7609 . 7610)) nil (26384 6766 93318 0) 0 nil])
+([nil nil ((6393 . 6395) (6392 . 6393) (t 26384 6766 101276 729000) 6350) nil (26384 6918 825953 0) 0 nil])
+([nil nil ((6424 . 6427) (#("o" 0 1 (fontified t)) . -6424) (undo-tree-id15 . -1) (undo-tree-id16 . -1) (undo-tree-id17 . -1) (undo-tree-id18 . -1) (undo-tree-id19 . -1) (undo-tree-id20 . -1) 6425 (6419 . 6419) (6419 . 6425) (6410 . 6419) (6405 . 6410) (#("'" 0 1 (fontified t)) . -6405) (undo-tree-id21 . -1) (undo-tree-id22 . -1) 6406 (6405 . 6406) (6401 . 6401) (6401 . 6405) (#("(" 0 1 (face (rainbow-delimiters-depth-2-face) fontified nil)) . -6401) (undo-tree-id23 . -1) (#(")" 0 1 (face (rainbow-delimiters-depth-2-face) fontified t)) . 6402) (6397 . 6403) (#("q" 0 1 (face font-lock-keyword-face fontified t)) . -6397) (undo-tree-id24 . -1) (undo-tree-id25 . -1) (#("o" 0 1 (fontified t)) . -6398) (undo-tree-id26 . -1) (undo-tree-id27 . -1) 6399 (6398 . 6398) (6398 . 6399) (#(" " 0 1 (fontified t)) . -6398) (undo-tree-id28 . -1) 6399 (6394 . 6399)) nil (26384 6918 825950 0) 0 nil])
+([nil nil ((6450 . 6465) (6449 . 6450) (6428 . 6449) (t 26384 6918 829873 812000)) nil (26384 6928 723477 0) 0 nil])
+([nil nil ((apply 1 7827 7895 undo--wrap-and-run-primitive-undo 7827 7895 ((#(";" 0 1 (face font-lock-comment-delimiter-face fontified t)) . -7827) 7864 (t 26384 6928 727369 204000)))) nil (26384 6950 303931 0) 0 nil])
+([nil nil ((#("extras" 0 6 (face font-lock-string-face fontified t)) . 7857) (undo-tree-id30 . -5)) nil (26384 6950 303931 0) 0 nil])
+([nil nil ((#("/" 0 1 (face font-lock-string-face fontified t)) . 7857)) nil (26384 6950 303930 0) 0 nil])
+([nil nil ((7873 . 7880) (7869 . 7873) (7865 . 7865) (7865 . 7869) (#("user-emacs-directory" 0 20 (fontified t)) . 7865) (undo-tree-id29 . -19)) nil (26384 6950 303928 0) 0 nil])
+([nil current ((apply -3 7827 7887 undo--wrap-and-run-primitive-undo 7827 7887 ((7827 . 7830) 7879 (t 26384 6950 307384 121000)))) nil (26384 6952 418536 0) 0 nil])
+nil

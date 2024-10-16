@@ -39,4 +39,7 @@
 (add-to-list 'exec-path (format "%s/.cargo/bin" (getenv "HOME")))
 (add-to-list 'exec-path "/opt/homebrew/bin")
 
+;; LSP performance improvements
+(setenv "LSP_USE_PLISTS" "true")
+
 (setenv "TERM" "xterm-256color")

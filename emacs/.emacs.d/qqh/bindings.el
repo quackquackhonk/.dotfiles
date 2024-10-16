@@ -14,7 +14,8 @@
 
 ;;; TODO: Move to meow
 
-(use-package undo-fu :straight t)
+(use-package undo-tree
+  :config (global-undo-tree-mode))
 
 (use-package evil
   :straight t
@@ -28,26 +29,29 @@
         evil-shift-width 2)
   :config
   ;;  enable
-  (evil-set-undo-system 'undo-fu)
+  (evil-set-undo-system 'undo-tree)
   (evil-mode 1)
-
-  ;; If you use Magit, start editing in insert state
-  (add-hook 'git-commit-setup-hook 'evil-insert-state)
-
-  ;; Configuring initial major mode for some modes
-  (evil-set-initial-state 'eat-mode 'emacs)
-
-  (evil-set-initial-state 'messages-buffer-mode 'normal)
-  (evil-set-initial-state 'dashboard-mode 'normal)
-
-
-  (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
 
   ;; Universal argument: C-u -> C-l
   (global-unset-key (kbd "C-l"))
   (global-set-key (kbd "C-l") 'universal-argument)
   (define-key universal-argument-map
-	      "C-l" 'universal-argument-more))
+	      "C-l" 'universal-argument-more)
+
+  ;; Configuring initial major mode for some modes
+  (evil-set-initial-state 'eat-mode 'emacs)
+  (add-hook 'git-commit-setup-hook 'evil-insert-state)
+  (evil-set-initial-state 'messages-buffer-mode 'normal)
+  (evil-set-initial-state 'dashboard-mode 'normal)
+
+
+  ;; C-g quits normal mode
+  (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
+
+
+  ;; "gd" will use lsp to find a definition first
+  (require 'lsp-mode)
+  (add-to-list 'evil-goto-definition-functions 'lsp-find-definition))
 
 (use-package evil-collection
   :straight t
@@ -123,8 +127,7 @@
     ;; Open (o)
     "of" 'find-file
     "oi" 'consult-imenu
-    "ot" 'multi-vterm-project
-    "oT" 'multi-vterm
+    "ot" 'eat
     "od" 'consult-lsp-diagnostics
 
     ;; projects (p)
