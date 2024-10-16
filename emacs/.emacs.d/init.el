@@ -129,7 +129,6 @@ If the new path's directories does not exist, create them."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; For help, see: https://www.masteringemacs.org/article/understanding-minibuffer-completion
-;; TODO: This should be in its own file
 
 (setopt enable-recursive-minibuffers t)                ; Use the minibuffer whilst in the minibuffer
 (setopt completion-cycle-threshold 1)                  ; TAB cycles candidates
@@ -146,13 +145,6 @@ If the new path's directories does not exist, create them."
 ;(setopt completion-auto-select t)                     ; See `C-h v completion-auto-select' for more possible values
 
 (keymap-set minibuffer-mode-map "TAB" 'minibuffer-complete) ; TAB acts more like how it does in the shell
-
-;; For a fancier built-in completion option, try ido-mode,
-;; icomplete-vertical, or fido-mode. See also the file extras/base.el
-
-;(icomplete-vertical-mode)
-;(fido-vertical-mode)
-;(setopt icomplete-delay-completions-threshold 4000)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -227,7 +219,7 @@ If the new path's directories does not exist, create them."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
-;; Minibuffer / Completion packages
+ ;; Minibuffer / Completion packages
 (load-file (expand-file-name "base.el" qqh/modules-dir))
 
 ;; Extra UI / Themeing
@@ -243,6 +235,7 @@ If the new path's directories does not exist, create them."
 ;; WARNING: need to customize things inside the elisp file before use! See
 ;; the file extras/org-intro.txt for help.
 ;(load-file (expand-file-name "extras/org.el" user-emacs-directory))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;;   Built-in customization framework

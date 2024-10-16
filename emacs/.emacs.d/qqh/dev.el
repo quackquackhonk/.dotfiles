@@ -27,6 +27,15 @@
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(use-package tree-sitter-langs)
+(use-package tree-sitter
+  :config
+  (require 'tree-sitter-langs)
+  (setq treesit-font-lock-level 4)
+  (global-tree-sitter-mode)
+  (add-hook 'tree-sitter-after-on-hook
+            #'tree-sitter-hl-mode))
+
 (use-package emacs
   :config
   ;; Treesitter config
@@ -36,8 +45,8 @@
   (setq major-mode-remap-alist
         '((yaml-mode . yaml-ts-mode)
           (bash-mode . bash-ts-mode)
-	  (c-mode . c-ts-mode)
-	  (c++-mode . c++-ts-mode)
+          (c-mode . c-ts-mode)
+          (c++-mode . c++-ts-mode)
           (python-mode . python-ts-mode)))
   :hook
   ;; Auto parenthesis matching
@@ -118,7 +127,7 @@
   (fset #'jsonrpc--log-event #'ignore)
 
   (add-to-list 'eglot-server-programs
-	       `(rust-mode . ("rust-analyzer"
+	       '(rust-mode . ("rust-analyzer"
 			      :initializationOptions
 			      (:procMacro (:enable t)
 					  :cargo (:buildScripts (:enable t)
@@ -136,9 +145,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;; TODO: C/C++
-
-(add-hook 'c-mode-hook #'eglot-ensure)
-(add-hook 'c++-mode-hook #'eglot-ensure)
 
 ;;; PYTHON
 (add-hook 'python-mode-hook #'eglot-ensure)
