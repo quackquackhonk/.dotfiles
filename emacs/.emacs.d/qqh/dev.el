@@ -109,13 +109,20 @@
 
 (use-package eglot
   :straight t
-:custom
+  :custom
   (eglot-send-changes-idle-time 0.1)
   (eglot-extend-to-xref t)              ; activate Eglot in referenced non-project files
 
   :config
   ;; dont log every event
-  (fset #'jsonrpc--log-event #'ignore))
+  (fset #'jsonrpc--log-event #'ignore)
+
+  (add-to-list 'eglot-server-programs
+	       `(rust-mode . ("rust-analyzer"
+			      :initializationOptions
+			      (:procMacro (:enable t)
+					  :cargo (:buildScripts (:enable t)
+								:features "all"))))))
 
 (use-package eglot-booster
   :after eglot
@@ -162,11 +169,12 @@
 
 ;;; RUST
 (use-package rust-mode
-  :hook ((rust-mode . eglot))
   :config
   ;; rustfmt
   (setq rust-format-show-buffer nil)
-  (setq rust-format-on-save t))
+  (setq rust-format-on-save t)
+
+  (add-hook 'rust-mode-hook 'eglot-ensure))
 
 (use-package cargo
   :after rust-mode)

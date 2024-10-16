@@ -25,7 +25,7 @@
         evil-want-integration t
         evil-want-C-u-scroll t
         evil-want-C-i-jump nil
-        evil-shift-width 4)
+        evil-shift-width 2)
   :config
   ;;  enable
   (evil-set-undo-system 'undo-fu)

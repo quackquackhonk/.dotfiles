@@ -5,7 +5,7 @@
 ;;;
 ;;; The consult package in particular has a vast number of functions that you
 ;;; can use as replacements to what Emacs provides by default. Please see the
-;;; consult documentation for more information and help:
+    ;;; consult documentation for more information and help:
 ;;;
 ;;;     https://github.com/minad/consult
 ;;;
@@ -29,9 +29,7 @@
 (use-package avy
   :straight t
   :demand t
-  :bind (("C-c j" . avy-goto-line)
-         ("s-j"   . avy-goto-char-timer))
-
+  :bind (("C-c j" . avy-goto-line))
   :config
   (setq avy-keys '(?a ?r ?s ?t ?g ?m ?n ?e ?i ?o)
         avy-background nil))
@@ -136,6 +134,9 @@
 
 ;; Vertico: better vertical completion for minibuffer commands
 (use-package vertico
+  :custom
+  (vertico-count 20)
+  (vertico-resize t)
   :init
   ;; You'll want to make sure that e.g. fido-mode isn't enabled
   (vertico-mode))
@@ -152,48 +153,48 @@
   (marginalia-mode))
 
 ;; Popup completion-at-point
-;; (use-package corfu
-;;   :init
-;;   (global-corfu-mode)
-;;   :bind
-;;   (:map corfu-map
-;;         ("SPC" . corfu-insert-separator)
-;;         ("C-n" . corfu-next)
-;;         ("C-p" . corfu-previous)))
+(use-package corfu
+  :init
+  (global-corfu-mode)
+  :bind
+  (:map corfu-map
+        ("SPC" . corfu-insert-separator)
+        ("C-n" . corfu-next)
+        ("C-p" . corfu-previous)))
 
-;; ;; Part of corfu
-;; (use-package corfu-popupinfo
-;;   :after corfu
-;;   :straight nil
-;;   :hook (corfu-mode . corfu-popupinfo-mode)
-;;   :custom
-;;   (corfu-popupinfo-delay '(0.25 . 0.1))
-;;   (corfu-popupinfo-hide nil)
-;;   :config
-;;   (corfu-popupinfo-mode))
+;; Part of corfu
+(use-package corfu-popupinfo
+  :after corfu
+  :straight nil
+  :hook (corfu-mode . corfu-popupinfo-mode)
+  :custom
+  (corfu-popupinfo-delay '(0.25 . 0.1))
+  (corfu-popupinfo-hide nil)
+  :config
+  (corfu-popupinfo-mode))
 
-;; ;; Make corfu popup come up in terminal overlay
-;; (use-package corfu-terminal
-;;   :if (not (display-graphic-p))
-;;   :straight t
-;;   :config
-;;   (corfu-terminal-mode))
+;; Make corfu popup come up in terminal overlay
+(use-package corfu-terminal
+  :if (not (display-graphic-p))
+  :straight t
+  :config
+  (corfu-terminal-mode))
 
-;; ;; Fancy completion-at-point functions; there's too much in the cape package to
-;; ;; configure here; dive in when you're comfortable!
-;; (use-package cape
-;;   :straight t
-;;   :init
-;;   (add-to-list 'completion-at-point-functions #'cape-dabbrev)
-;;   (add-to-list 'completion-at-point-functions #'cape-file))
+;; Fancy completion-at-point functions; there's too much in the cape package to
+;; configure here; dive in when you're comfortable!
+(use-package cape
+  :straight t
+  :init
+  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+  (add-to-list 'completion-at-point-functions #'cape-file))
 
-;; ;; Pretty icons for corfu
-;; (use-package kind-icon
-;;   :if (display-graphic-p)
-;;   :straight t
-;;   :after corfu
-;;   :config
-;;   (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
+;; Pretty icons for corfu
+(use-package kind-icon
+  :if (display-graphic-p)
+  :straight t
+  :after corfu
+  :config
+  (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
 
 (use-package eshell
   :init
@@ -214,7 +215,6 @@
 
 ;; Orderless: powerful completion style
 (use-package orderless
-  :straight t
   :config
   (setq completion-styles '(orderless)))
 
@@ -224,8 +224,9 @@
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(use-package ripgrep)
+
 ;; Modify search results en masse
 (use-package wgrep
-  :straight t
   :config
   (setq wgrep-auto-save-buffer t))

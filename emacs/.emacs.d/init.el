@@ -80,7 +80,7 @@
 (savehist-mode)
 
 ;; Move through windows with Shift-<arrow keys>
-(windmove-default-keybindings 'shift)
+(windmove-default-keybindings 'control)
 
 ;; Fix archaic defaults
 (setopt sentence-end-double-space nil)
@@ -231,7 +231,7 @@ If the new path's directories does not exist, create them."
 (load-file (expand-file-name "base.el" qqh/modules-dir))
 
 ;; Extra UI / Themeing
-;; (load-file (expand-file-name "ui.el" qqh/modules-dir))
+(load-file (expand-file-name "ui.el" qqh/modules-dir))
 
 ;; Packages for software development
 (load-file (expand-file-name "dev.el" qqh/modules-dir))
@@ -243,12 +243,6 @@ If the new path's directories does not exist, create them."
 ;; WARNING: need to customize things inside the elisp file before use! See
 ;; the file extras/org-intro.txt for help.
 ;(load-file (expand-file-name "extras/org.el" user-emacs-directory))
-
-(use-package catppuccin-theme
-  :straight t
-  :config
-  (load-theme 'catppuccin :no-confirm))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;;   Built-in customization framework

@@ -579,35 +579,5 @@
   "C-p" ;; used for the persp-mode map
   )
 
-(use-package doom-modeline
-  :init (doom-modeline-mode 1))
-
-(use-package nerd-icons)
-
-(use-package catppuccin-theme)
-(setq catppuccin-flavor 'mocha)
-(catppuccin-reload)
-
-(use-package rainbow-delimiters
-  :hook (prog-mode . rainbow-delimiters-mode))
-
-(use-package rainbow-mode
-  :hook (prog-mode . rainbow-mode))
-
-(use-package hl-todo
-  :config
-  (global-hl-todo-mode))
-
-(use-package solaire-mode
-  :config
-  (solaire-global-mode +1))
-
-;; nicer compilation window
-(use-package fancy-compilation
-  :commands (fancy-compilation-mode))
-
-(with-eval-after-load 'compile
-  (fancy-compilation-mode))
-
 ;; icons
 (use-package all-the-icons)
