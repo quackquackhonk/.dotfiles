@@ -1,6 +1,6 @@
-;;; init.el
+;;; init.el --- Entry point for my emacs config -*- lexical-binding: t; -*-
 
-;;; Contents:
+;;; Commentary:
 ;;;
 ;;;  - Basic settings
 ;;;  - Discovery aids
@@ -16,34 +16,26 @@
 ;;; Guardrail
 
 (when (< emacs-major-version 29)
-  (error "[qqh] config assumes emacs version 29+, currently running %s!" emacs-major-version))
+  (error "[qqh] config assumes Emacs version 29+, currently running %s!" emacs-major-version))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;;   Straight.el setup
+;;;   Package initialization
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;; Package initialization
-(defvar bootstrap-version)
-(let ((bootstrap-file
-       (expand-file-name
-        "straight/repos/straight.el/bootstrap.el"
-        (or (bound-and-true-p straight-base-dir)
-            user-emacs-directory)))
-      (bootstrap-version 7))
-  (unless (file-exists-p bootstrap-file)
-    (with-current-buffer
-        (url-retrieve-synchronously
-         "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
-         'silent 'inhibit-cookies)
-      (goto-char (point-max))
-      (eval-print-last-sexp)))
-  (load bootstrap-file nil 'nomessage))
+(require 'package)
+(setq package-archives '(("melpa" . "https://melpa.org/packages/")
+                         ("org" . "https://orgmode.org/elpa/")
+                         ("nongnu" . "https://elpa.nongnu.org/nongnu/")
+                         ("elpa" . "https://elpa.gnu.org/packages/")))
 
-;; install use-package
-(setopt straight-use-package-by-default t)
-(straight-use-package 'use-package)
+;; Initialize use-package on non-Linux platforms
+(unless (package-installed-p 'use-package)
+  (package-install 'use-package))
+
+(require 'use-package)
+(setq use-package-always-ensure t)
 
 ;; always load the newest bytecode
 (setq load-prefer-newer t)
@@ -55,7 +47,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defvar qqh/modules-dir (expand-file-name "qqh" user-emacs-directory)
-  "The directory containing my module files")
+  "The directory containing my module files.")
 
 
 
@@ -80,7 +72,7 @@
 (savehist-mode)
 
 ;; Move through windows with Shift-<arrow keys>
-(windmove-default-keybindings 'control)
+(windmove-default-keybindings 'shift)
 
 ;; Fix archaic defaults
 (setopt sentence-end-double-space nil)
@@ -92,16 +84,19 @@
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 
 ;; dired
-(setq dired-kill-when-opening-new-dired-buffer t)
+(use-package dired
+  :ensure nil
+  :config
+  (setq dired-kill-when-opening-new-dired-buffer t))
 
 ;; use the faster programs
 (setq find-program "fd"
       grep-program "rg")
 
 ;; Don't litter file system with *~ backup files; put them all inside
-;; ~/.emacs.d/backup or wherever
+;; ~/.emacs.d/backup
 (defun qqh/backup-file-name (fpath)
-  "Return a new file path of a given file path.
+  "Return a new file path of a given file path (FPATH).
 If the new path's directories does not exist, create them."
   (let* ((backupRootDir (concat user-emacs-directory "backups/"))
          (filePath (replace-regexp-in-string "[A-Za-z]:" "" fpath )) ; remove Windows driver letter in path
@@ -118,7 +113,6 @@ If the new path's directories does not exist, create them."
 ;; which-key: shows a popup of available keybindings when typing a long key
 ;; sequence (e.g. C-x ...)
 (use-package which-key
-  :straight t
   :config
   (which-key-mode))
 
@@ -171,6 +165,7 @@ If the new path's directories does not exist, create them."
 ;; (setopt tab-width 4)
 
 ;; Misc. UI tweaks
+(scroll-bar-mode -1)
 (blink-cursor-mode -1)                                ; Steady cursor
 (pixel-scroll-precision-mode)                         ; Smooth scrolling
 (setopt ring-bell-function 'ignore)                   ; disable the bell
@@ -215,7 +210,7 @@ If the new path's directories does not exist, create them."
 ;; Org-mode configuration
 ;; WARNING: need to customize things inside the elisp file before use! See
 ;; the file extras/org-intro.txt for help.
-;; (load-file (expand-file-name "org.el" qqh/modules-dir))
+(load-file (expand-file-name "org.el" qqh/modules-dir))
 
 ;; Extra UI / Themeing
 (load-file (expand-file-name "ui.el" qqh/modules-dir))
@@ -232,10 +227,16 @@ If the new path's directories does not exist, create them."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(custom-safe-themes
-   '("6e13ff2c27cf87f095db987bf30beca8697814b90cd837ef4edca18bdd381901"
-     default))
- '(package-selected-packages nil)
+ '(eat-shell "/bin/zsh")
+ '(package-selected-packages
+   '(avy blacken cargo catppuccin-theme ccls cmake-mode corfu devdocs
+	 diminish dired doom-modeline doom-themes eat embark-consult
+	 evil-collection evil-commentary evil-surround forge general
+	 gruvbox-theme hl-todo json-mode just-mode kind-icon magit
+	 marginalia orderless perspective projectile protobuf-mode
+	 pyvenv queue rainbow-delimiters rainbow-mode ripgrep
+	 rust-mode solaire-mode tree-sitter undo-fu vertico wgrep
+	 yaml-mode yasnippet zenburn-theme))
  '(package-vc-selected-packages
    '((eglot-booster :vc-backend Git :url
 		    "https://github.com/jdtsmith/eglot-booster"))))
@@ -247,3 +248,6 @@ If the new path's directories does not exist, create them."
  )
 
 (setq gc-cons-threshold (or qqh/initial-gc-threshold 800000))
+(put 'narrow-to-region 'disabled nil)
+
+;;; init.el ends here

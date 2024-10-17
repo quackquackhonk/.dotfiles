@@ -27,7 +27,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package avy
-  :straight t
   :demand t
   :bind (("C-c j" . avy-goto-line))
   :config
@@ -123,8 +122,7 @@
   ;; candidate you select
   (setf (alist-get ?. avy-dispatch-alist) 'qqh/avy-action-embark))
 
-(use-package embark-consult
-  :straight t)
+(use-package embark-consult)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -142,7 +140,7 @@
   (vertico-mode))
 
 (use-package vertico-directory
-  :straight nil
+  :ensure nil
   :after vertico
   :bind (:map vertico-map
               ("M-DEL" . vertico-directory-delete-word)))
@@ -163,7 +161,7 @@
 ;; Part of corfu
 (use-package corfu-popupinfo
  :after corfu
- :straight nil
+ :ensure nil
  :hook (corfu-mode . corfu-popupinfo-mode)
  :custom
  (corfu-popupinfo-delay '(0.25 . 0.1))
@@ -174,7 +172,6 @@
 ;; Pretty icons for corfu
 (use-package kind-icon
   :if (display-graphic-p)
-  :straight t
   :after corfu
   :config
   (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
@@ -189,7 +186,6 @@
 
 ;; Eat: Emulate A Terminal
 (use-package eat
-  :straight t
   :custom
   (eat-term-name "xterm")
   :config

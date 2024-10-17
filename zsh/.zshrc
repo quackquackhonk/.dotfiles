@@ -4,19 +4,10 @@ umask 002
 export PATH=$HOME/bin:/usr/local/bin:$PATH
 export PATH=$HOME/.local/bin:$PATH
 export PATH=$HOME/.cargo/bin:$PATH
-export PATH=$HOME/.sources/sml/bin:$PATH
-export PATH=$HOME/.sources/smlnj/bin:$PATH
-export PATH=$HOME/.sources/wabt/bin:$PATH
-export PATH=$HOME/.sources/v:$PATH
 export PATH=/opt/homebrew/bin:$PATH
 export PATH=/Library/PostgreSQL/16/bin:$PATH
 export PATH=$HOME/opt/grpc/bin:$PATH
 export PATH=/home/sahana/.local/share/bob/nvim-bin:$PATH
-
-
-# Path to your oh-my-zsh installation.
-export ZSH="$HOME/.oh-my-zsh"
-export LIBGL_ALWAYS_SOFTWARE=true
 
 export DOCKER_DEFAULT_PLATFORM=linux/amd64
 export HOMEBREW_NO_AUTO_UPDATE=1
@@ -28,17 +19,13 @@ unsetopt PROMPT_SP
 
 plugins=(git ssh-agent)
 
-source $ZSH/oh-my-zsh.sh
-
-export EDITOR="nvim"
+export EDITOR="emacsclient -nw -a=''"
 
 # User configuration
 
 # aliases
 alias zshconf="$EDITOR ~/.zshrc && source ~/.zshrc"
 alias zshsrc="source ~/.zshrc"
-alias ohmyzsh="$EDITOR ~/.oh-my-zsh"
-alias nvconf="$EDITOR ~/.config/nvim/init.lua"
 
 alias gs='git status'
 alias gc='git commit'
@@ -46,14 +33,12 @@ alias ga='git add'
 alias gp='git pull'
 alias gP='git push'
 
-alias vwsnotes='cd ~/Dropbox/VWS && nv .'
 
-alias fish_reload='source $HOME/.config/fish/config.fish'
 alias nv='nvim'
 alias vi='nvim'
 
-alias ls='exa'
-alias l='exa -lah'
+alias ls='eza'
+alias l='eza -lah'
 alias b='bat'
 alias cd='z'
 
@@ -63,17 +48,8 @@ alias d='docker'
 alias dc='docker compose'
 
 alias em='emacsclient -nw'
-alias emd='emacs --daemon'
-alias emde='emacs --daemon && emacsclient -nw'
-alias emdkill='emacsclient -e "(kill-emacs)"'
-alias emdr='emacsclient -e "(kill-emacs)" && emacs --daemon'
-alias emconf='emacsclient -nw ~/.emacs.d/config.org'
-alias emreload='emacsclient -e "(load-file user-init-file)"'
-
-alias cgt='cargo nextest run'
-alias cgr='cargo run'
-alias cgb='cargo build'
-
+alias emd='emacs --debug-init --fg-daemon'
+alias emkill='emacsclient -e "(kill-emacs)"'
 # work
 alias cirrus='ssh -i ~/.ssh/stankala_id.key stankala@cirrus.veriskweather.net -t "zsh"'
 alias myenv='spack env activate -d ~/myenv'
@@ -94,7 +70,6 @@ function spackcert() {
     export CERT_PATH=$(python -c 'import site; print(site.getsitepackages()[0] + "/certifi/cacert.pem")')
     cat ~/cert/ZscalerRootCertificate-2048-SHA256.crt >> $CERT_PATH
 }
-alias lzd='lazydocker'
 
 export BAT_THEME="Catppuccin Mocha"
 export FZF_DEFAULT_OPTS=" \
@@ -108,13 +83,6 @@ export FZF_DEFAULT_OPTS=" \
 # eval "$(ssh-add ~/.ssh/id_ed25519)"
 source <(fzf --zsh)
 
-# opam configuration
-[[ ! -r /home/sahana/.opam/opam-init/init.zsh ]] || source /home/sahana/.opam/opam-init/init.zsh  > /dev/null 2> /dev/null
-
-#[ -f "/home/sahana/.ghcup/env" ] && source "/home/sahana/.ghcup/env" # ghcup-env
-[ -f "/home/sahana/.ghcup/env" ] && source "/home/sahana/.ghcup/env" # ghcup-env
-
-
 # completion
 autoload bashcompinit && bashcompinit
 autoload -Uz compinit && compinit
@@ -125,6 +93,8 @@ complete -C '/usr/local/bin/aws_completer' aws
 eval "$(zoxide init zsh)"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+eval "$(starship init zsh)"
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
@@ -141,4 +111,3 @@ fi
 unset __conda_setup
 # <<< conda initialize <<<
 
-eval "$(starship init zsh)"

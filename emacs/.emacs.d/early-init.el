@@ -16,9 +16,6 @@
 ;; Silence stupid startup message
 (setq inhibit-startup-echo-area-message (user-login-name))
 
-;; For disable enabling package.el from loading
-(setq package-enable-at-startup nil)
-
 ;; Default frame configuration: full screen, good-looking title bar on macOS
 (menu-bar-mode -1)
 (tool-bar-mode -1)
@@ -38,6 +35,7 @@
 (add-to-list 'exec-path (format "%s/.local/bin" (getenv "HOME")))
 (add-to-list 'exec-path (format "%s/.cargo/bin" (getenv "HOME")))
 (add-to-list 'exec-path "/opt/homebrew/bin")
+(add-to-list 'exec-path "/opt/homebrew/Caskroom/miniconda/base/bin")
 
 ;; LSP performance improvements
 (setenv "LSP_USE_PLISTS" "true")

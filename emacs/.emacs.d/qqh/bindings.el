@@ -1,10 +1,12 @@
-;; bindings.el
+;;; bindings.el --- Global bindings -*- lexical-binding: t -*-
 
-;;; Contents:
+;;; Commentary:
 ;;;
 ;;;  - Evil
 ;;;  - General
 ;;;  - Global Keybindings
+
+;;; Code:
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -14,11 +16,10 @@
 
 ;;; TODO: Move to meow
 
-(use-package undo-tree
-  :config (global-undo-tree-mode))
+(use-package undo-fu)
 
 (use-package evil
-  :straight t
+  :ensure t
   :init
   (setq evil-respect-visual-line-mode t)
   ;; collection settings
@@ -29,7 +30,7 @@
         evil-shift-width 2)
   :config
   ;;  enable
-  (evil-set-undo-system 'undo-tree)
+  (evil-set-undo-system 'undo-fu)
   (evil-mode 1)
 
   ;; Universal argument: C-u -> C-l
@@ -54,7 +55,7 @@
   (add-to-list 'evil-goto-definition-functions 'lsp-find-definition))
 
 (use-package evil-collection
-  :straight t
+  :ensure t
   :after evil
   :custom
   (evil-collection-want-unimpaired-p nil)
@@ -62,13 +63,13 @@
   (evil-collection-init))
 
 (use-package evil-commentary
-  :straight t
+  :ensure t
   :after evil
   :config
   (evil-commentary-mode))
 
 (use-package evil-surround
-  :straight t
+  :ensure t
   :config
   (global-evil-surround-mode 1))
 
@@ -82,7 +83,6 @@
 ;; keybindings
 ;; general is used for custom key bindings
 (use-package general
-  :straight t
   :config
   (general-evil-setup)
 
@@ -100,8 +100,7 @@
 
   (defun qqh/kill-buffer ()
     (interactive)
-    
-    (kill-buffer (current-buffer)))
+    (persp-kill-buffer* (current-buffer)))
 
 
   ;; defines leader key bindings
@@ -131,9 +130,7 @@
     "od" 'consult-lsp-diagnostics
 
     ;; projects (p)
-    "pp" 'projectile-persp-switch-project
-    "pa" 'projectile-find-other-file
-    "pc" 'projectile-commander
+    "p" 'projectile-command-map
 
     ;; code
     "cc" 'compile
@@ -148,10 +145,6 @@
 	   (interactive)
 	   (find-file user-init-file))
 
-    ;; lisp eval
-    ";l SPC" 'eval-last-sexp
-    ";ll" 'eval-region
-
     ;; global org bindings (;o)
     ";oa" 'org-agenda
     ";oc" 'org-roam-capture
@@ -161,6 +154,9 @@
   ;; define movements to be accessed by Meta + key on colemak
   (general-def
     :states '(normal)
+    ;; quit window
+    "C-q" 'evil-window-delete
+    
     ;; evil LSP keybindings
     ;; "gd" 'evil-goto-definition <-- built in
     "gr" 'lsp-ui-peek-find-references

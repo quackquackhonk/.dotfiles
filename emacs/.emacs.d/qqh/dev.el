@@ -1,32 +1,21 @@
-;;; Emacs Bedrock
-;;;
-;;; Extra config: Development tools
+;;; dev.el --- Configure tools for development -*- lexical-binding: nil; -*-
 
-;;; Usage: Append or require this file from init.el for some software
-;;; development-focused packages.
-;;;
-;;; It is **STRONGLY** recommended that you use the base.el config if you want to
-;;; use Eglot. Lots of completion things will work better.
-;;;
-;;; This will try to use tree-sitter modes for many languages. Please run
-;;;
-;;;   M-x treesit-install-language-grammar
-;;;
-;;; Before trying to use a treesit mode.
-
-;;; Contents:
-;;;
+;;; Commentary:
 ;;;  - Built-in config for developers
 ;;;  - Version Control
+;;;  - Project Management
 ;;;  - Common file types
-;;;  - Eglot, the built-in LSP client for Emacs
+;;;  - LSP-mode
+;;;  - PL Specific Configuration
+;;;    - C/C++
+;;;    - Python
+;;;    - Rust
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;;   Built-in config for developers
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 (use-package emacs
   :config
   ;; Treesitter config
@@ -51,8 +40,18 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Magit: best Git client to ever exist
-(use-package magit
-  :straight t)
+(use-package magit)
+
+(use-package forge
+  :config
+  (push '("gitlab.veriskweather.net"               ; GITHOST
+	  "gitlab.veriskweather.net/api/v4"        ; APIHOST
+	  "gitlab.veriskweather.net"               ; WEBHOST and INSTANCE-ID
+	  forge-gitlab-repository)                 ; CLASS
+	forge-alist)
+
+  ;; COnfigure auth source
+  (setq auth-sources '("~/.authinfo")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -60,11 +59,12 @@
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(use-package project)
 (use-package projectile
   :init
   (projectile-mode +1)
-  (setq projectile-project-search-path '(("~/code/" . 2))
+  (setq projectile-project-search-path '(("~/code/" . 2)
+					 "~/.sources/")
+	projectile-mode-line-prefix " In "
         projectile-switch-project-action 'consult-fd))
 
 (use-package perspective
@@ -79,7 +79,6 @@
   (consult-customize consult--source-buffer :hidden t :default nil)
   (add-to-list 'consult-buffer-sources persp-consult-source))
 
-(use-package persp-projectile)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;;   Common file types
@@ -109,26 +108,14 @@
 ;;  - https://www.masteringemacs.org/article/seamlessly-merge-multiple-documentation-sources-eldoc
 
 ;; (use-package eglot
-;;   :straight t
+;;   :ensure t
 ;;   :custom
 ;;   (eglot-send-changes-idle-time 0.1)
 ;;   (eglot-extend-to-xref t)              ; activate Eglot in referenced non-project files
 ;; 
 ;;   :config
 ;;   ;; dont log every event
-;;   (fset #'jsonrpc--log-event #'ignore)
-;; 
-;;   (add-to-list 'eglot-server-programs
-;; 	       '(rust-mode . ("rust-analyzer"
-;; 			      :initializationOptions
-;; 			      (:procMacro (:enable t)
-;; 					  :cargo (:buildScripts (:enable t)
-;; 								:features "all"))))))
-;; 
-;; (use-package eglot-booster
-;;   :after eglot
-;;   :straight (eglot-booster :type git :host github :repo "jdtsmith/eglot-booster")
-;;   :config (eglot-booster-mode))
+;;   (fset #'jsonrpc--log-event #'ignore))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -183,7 +170,19 @@
 
   (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\.spack_env\\'"))
 
+;; Diagnostics
+(use-package flymake
+  :after lsp-mode
+  :hook (('emacs-lisp-mode-hook . flymake-mode)))
+
+;; Snippets
 (use-package yasnippet)
+
+;; Devdocs
+(use-package devdocs
+  :hook (('python-ts-mode-hook . (lambda () (setq-local devdocs-current-docs '("python~3.11"))))
+	 ('c-mode-hook . (lamdba () (setq-local devdocs-current-docs '("c"))))
+	 ('c++-mode-hook . (lamdba () (setq-local devdocs-current-docs '("cpp"))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -201,9 +200,11 @@
 ;;; PYTHON
 ;; Built-in Python utilities
 (use-package python
+  :bind (:map python-ts-mode-map
+	      ("C-c C-SPC" . qqh/python-lsp-mode))
   :custom
   (python-shell-interpreter "python3")
-  :config
+
   ;; Remove guess indent python message
   (setq python-indent-guess-indent-offset-verbose nil))
 
@@ -216,8 +217,8 @@
 (defun qqh/python-lsp-mode (name)
   "Activate a virtual environment from $WORKON_HOME.
 
-  If the virtual environment NAME is already active, this function
-  does not try to reactivate the environment."
+    If the virtual environment NAME is already active, this function
+    does not try to reactivate the environment."
   (interactive
    (list
     (completing-read "Work on: " (pyvenv-virtualenv-list)
@@ -229,10 +230,12 @@
 			     name)))
   (lsp-mode))
 
+(add-hook 'python-ts-mode-hook 'qqh/python-lsp-mode)
+
 ;; Buffer formatting with Black
 (use-package blacken
   :defer t
-  :hook (python-mode-hook . blacken-mode))
+  :hook (python-ts-mode-hook . blacken-mode))
 
 
 ;;; RUST
@@ -246,3 +249,5 @@
 
 (use-package cargo
   :after rust-mode)
+
+;;; dev.el ends here

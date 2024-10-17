@@ -4,31 +4,33 @@
 
 ;;; Code:
 
-(use-package catppuccin-theme)
-(setq catppuccin-flavor 'mocha)
-(catppuccin-reload)
+(add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
+
+(use-package catppuccin-theme
+  :config
+  (setq catppuccin-flavor 'mocha))
 
 (use-package diminish
   :config
   (require 'which-key)
   (diminish 'which-key-mode)
-  (require 'undo-tree)
-  (diminish 'undo-tree-mode)
 
   ;; diminish built-in minor modes
   (diminish 'eldoc-mode))
 
 (use-package nerd-icons)
 
-(use-package rainbow-delimiters
-  :after diminish
-  :hook (prog-mode . rainbow-delimiters-mode))
-
 (use-package rainbow-mode
   :hook (prog-mode . rainbow-mode)
   :config
   (require 'diminish)
   (diminish 'rainbow-mode))
+
+(use-package rainbow-delimiters
+  :hook (prog-mode . rainbow-delimiters-mode)
+  :config
+  (require 'diminish)
+  (diminish 'rainbow-delimiters-mode))
 
 (use-package hl-todo
   :config
@@ -37,3 +39,6 @@
 (use-package solaire-mode
   :config
   (solaire-global-mode +1))
+
+(load-theme 'catppuccin :no-confirm t)
+(add-hook 'server-after-make-frame-hook #'catppuccin-reload)
