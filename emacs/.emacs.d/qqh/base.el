@@ -67,7 +67,7 @@
   ;; set find args
   (setq consult-fd-args '((if (executable-find "fdfind" 'remote)
                               "fdfind" "fd")
-                          "--hidden --full-path --color=never"
+                          "--no-ignore --hidden --full-path --color=never"
                           ;; ignores
                           "--exclude .git"
                           "--exclude .spack_env"
@@ -154,20 +154,9 @@
 (use-package corfu
   :custom
   (corfu-auto t)                 ;; Enable auto completion
-  (corfu-quit-no-match 'separator)
+  (corfu-quit-no-match t)
   :init
   (global-corfu-mode))
-
-;; Part of corfu
-(use-package corfu-popupinfo
- :after corfu
- :ensure nil
- :hook (corfu-mode . corfu-popupinfo-mode)
- :custom
- (corfu-popupinfo-delay '(0.25 . 0.1))
- (corfu-popupinfo-hide nil)
- :config
- (corfu-popupinfo-mode))
 
 ;; Pretty icons for corfu
 (use-package kind-icon

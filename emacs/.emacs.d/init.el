@@ -159,16 +159,16 @@ If the new path's directories does not exist, create them."
 (setopt mouse-wheel-tilt-scroll t)
 (setopt mouse-wheel-flip-direction t)
 
-;; We won't set these, but they're good to know about
-;;
-;; (setopt indent-tabs-mode nil)
-;; (setopt tab-width 4)
+;; Tabs BTFO
+(setopt indent-tabs-mode nil)
+(setopt tab-width 4)
 
 ;; Misc. UI tweaks
 (scroll-bar-mode -1)
 (blink-cursor-mode -1)                                ; Steady cursor
 (pixel-scroll-precision-mode)                         ; Smooth scrolling
 (setopt ring-bell-function 'ignore)                   ; disable the bell
+(setopt compilation-scroll-output t)
 
 ;; Use common keystrokes by default
 (cua-mode)
@@ -231,12 +231,13 @@ If the new path's directories does not exist, create them."
  '(package-selected-packages
    '(avy blacken cargo catppuccin-theme ccls cmake-mode corfu devdocs
 	 diminish dired doom-modeline doom-themes eat embark-consult
-	 evil-collection evil-commentary evil-surround forge general
-	 gruvbox-theme hl-todo json-mode just-mode kind-icon magit
-	 marginalia orderless perspective projectile protobuf-mode
-	 pyvenv queue rainbow-delimiters rainbow-mode ripgrep
-	 rust-mode solaire-mode tree-sitter undo-fu vertico wgrep
-	 yaml-mode yasnippet zenburn-theme))
+	 envrc evil-collection evil-commentary evil-surround
+	 fancy-compilation forge general gruvbox-theme hl-todo
+	 json-mode just-mode kind-icon magit marginalia orderless
+	 perspective projectile protobuf-mode pyvenv queue
+	 rainbow-delimiters rainbow-mode ripgrep rust-mode
+	 solaire-mode tree-sitter tree-sitter-langs undo-fu vertico
+	 wgrep yaml-mode yasnippet zenburn-theme))
  '(package-vc-selected-packages
    '((eglot-booster :vc-backend Git :url
 		    "https://github.com/jdtsmith/eglot-booster"))))

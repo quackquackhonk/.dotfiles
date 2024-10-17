@@ -2,6 +2,7 @@
 
 ;;; Commentary:
 ;;;  - Built-in config for developers
+;;;  - Tree-Sitter configuration
 ;;;  - Version Control
 ;;;  - Project Management
 ;;;  - Common file types
@@ -18,20 +19,18 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package emacs
   :config
-  ;; Treesitter config
-
-  ;; Tell Emacs to prefer the treesitter mode
-  ;; You'll want to run the command `M-x treesit-install-language-grammar' before editing.
-  (setq treesit-font-lock-level 4)
-  (setq major-mode-remap-alist
-        '((yaml-mode . yaml-ts-mode)
-          (bash-mode . bash-ts-mode)
-          (c-mode . c-ts-mode)
-          (c++-mode . c++-ts-mode)
-          (python-mode . python-ts-mode)))
   :hook
   ;; Auto parenthesis matching
   ((prog-mode . electric-pair-mode)))
+
+(use-package tree-sitter-langs)
+(use-package tree-sitter
+  :after tree-sitter-langs
+  :config
+  (setq treesit-font-lock-level 4)
+  (global-tree-sitter-mode)
+  (add-hook 'tree-sitter-after-on-hook
+            #'tree-sitter-hl-mode))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -44,13 +43,8 @@
 
 (use-package forge
   :config
-  (push '("gitlab.veriskweather.net"               ; GITHOST
-	  "gitlab.veriskweather.net/api/v4"        ; APIHOST
-	  "gitlab.veriskweather.net"               ; WEBHOST and INSTANCE-ID
-	  forge-gitlab-repository)                 ; CLASS
-	forge-alist)
 
-  ;; COnfigure auth source
+  ;; Configure auth source
   (setq auth-sources '("~/.authinfo")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -156,7 +150,9 @@
 (advice-add 'lsp-resolve-final-command :around #'lsp-booster--advice-final-command)
 
 (use-package lsp-mode
-  :hook ((lsp-mode . lsp-enable-which-key-integration))
+  :hook ((lsp-mode . lsp-enable-which-key-integration)
+	 ((c-mode c++-mode objc-mode cuda-mode) . lsp-deferred)
+	 ((python-mode) . lsp-deferred))
   :commands (lsp lsp-deferred)
 
   :init
@@ -180,7 +176,7 @@
 
 ;; Devdocs
 (use-package devdocs
-  :hook (('python-ts-mode-hook . (lambda () (setq-local devdocs-current-docs '("python~3.11"))))
+  :hook (('python-mode-hook . (lambda () (setq-local devdocs-current-docs '("python~3.11"))))
 	 ('c-mode-hook . (lamdba () (setq-local devdocs-current-docs '("c"))))
 	 ('c++-mode-hook . (lamdba () (setq-local devdocs-current-docs '("cpp"))))))
 
@@ -192,7 +188,6 @@
 
 ;;; TODO: C/C++
 (use-package ccls
-  :hook ((c-mode c++-mode objc-mode cuda-mode) . lsp-deferred)
   :custom
   (ccls-args nil)
   (ccls-executable (executable-find "ccls")))
@@ -200,7 +195,7 @@
 ;;; PYTHON
 ;; Built-in Python utilities
 (use-package python
-  :bind (:map python-ts-mode-map
+  :bind (:map python-mode-map
 	      ("C-c C-SPC" . qqh/python-lsp-mode))
   :custom
   (python-shell-interpreter "python3")
@@ -213,29 +208,10 @@
   (setenv "WORKON_HOME" "/opt/homebrew/Caskroom/miniconda/base/envs/")
   (pyvenv-mode 1))
 
-;; Taken from pyvenv.el - work on the environment, then start an lsp
-(defun qqh/python-lsp-mode (name)
-  "Activate a virtual environment from $WORKON_HOME.
-
-    If the virtual environment NAME is already active, this function
-    does not try to reactivate the environment."
-  (interactive
-   (list
-    (completing-read "Work on: " (pyvenv-virtualenv-list)
-		     nil t nil 'pyvenv-workon-history nil nil)))
-
-  (unless (member name (list "" nil pyvenv-virtual-env-name))
-    (pyvenv-activate (format "%s/%s"
-			     (pyvenv-workon-home)
-			     name)))
-  (lsp-mode))
-
-(add-hook 'python-ts-mode-hook 'qqh/python-lsp-mode)
-
 ;; Buffer formatting with Black
 (use-package blacken
   :defer t
-  :hook (python-ts-mode-hook . blacken-mode))
+  :hook (python-mode . blacken-mode))
 
 
 ;;; RUST

@@ -126,8 +126,8 @@
     ;; Open (o)
     "of" 'find-file
     "oi" 'consult-imenu
-    "ot" 'eat
-    "od" 'consult-lsp-diagnostics
+    "ot" 'eat-project
+    "od" 'flymake-diagnostics
 
     ;; projects (p)
     "p" 'projectile-command-map
