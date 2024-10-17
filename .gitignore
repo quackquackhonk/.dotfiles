@@ -12,6 +12,7 @@ nushell/.config/nushell/history.txt
 
 emacs/.emacs.d/auto-save-list/**
 emacs/.emacs.d/backups/**
+emacs/.emacs.d/devdocs/**
 emacs/.emacs.d/eln-cache/**
 emacs/.emacs.d/elpa/**
 emacs/.emacs.d/straight/**
