@@ -229,18 +229,19 @@ If the new path's directories does not exist, create them."
  ;; If there is more than one, they won't work right.
  '(eat-shell "/bin/zsh")
  '(package-selected-packages
-   '(avy blacken cargo catppuccin-theme ccls cmake-mode corfu devdocs
-	 diminish dired doom-modeline doom-themes eat embark-consult
-	 envrc evil-collection evil-commentary evil-surround
-	 fancy-compilation forge general gruvbox-theme hl-todo
-	 json-mode just-mode kind-icon magit marginalia orderless
-	 perspective projectile protobuf-mode pyvenv queue
-	 rainbow-delimiters rainbow-mode ripgrep rust-mode
-	 solaire-mode tree-sitter tree-sitter-langs undo-fu vertico
-	 wgrep yaml-mode yasnippet zenburn-theme))
+   '(avy blacken cape cargo catppuccin-theme ccls cmake-mode
+         corfu-popupinfo corfu-terminal devdocs diminish doom-modeline
+         doom-themes eat eglot-booster embark-consult envrc
+         evil-collection evil-commentary evil-surround
+         fancy-compilation forge general grip-mode gruvbox-theme
+         hl-todo json-mode just-mode kind-icon marginalia orderless
+         perspective projectile protobuf-mode pyvenv queue
+         rainbow-delimiters rainbow-mode ripgrep rust-mode
+         solaire-mode tree-sitter-langs undo-fu vertico wgrep
+         yaml-mode yasnippet zenburn-theme))
  '(package-vc-selected-packages
    '((eglot-booster :vc-backend Git :url
-		    "https://github.com/jdtsmith/eglot-booster"))))
+                    "https://github.com/jdtsmith/eglot-booster"))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

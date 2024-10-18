@@ -152,11 +152,40 @@
 
 ;; Popup completion-at-point
 (use-package corfu
+  :init
+  (global-corfu-mode)
   :custom
   (corfu-auto t)                 ;; Enable auto completion
   (corfu-quit-no-match t)
+  :bind
+  (:map corfu-map
+        ("SPC" . corfu-insert-separator)
+        ("C-n" . corfu-next)
+        ("C-p" . corfu-previous)))
+
+;; Part of corfu
+(use-package corfu-popupinfo
+  :ensure nil
+  :after corfu
+  :hook (corfu-mode . corfu-popupinfo-mode)
+  :custom
+  (corfu-popupinfo-delay '(0.25 . 0.1))
+  (corfu-popupinfo-hide nil)
+  :config
+  (corfu-popupinfo-mode))
+
+;; Make corfu popup come up in terminal overlay
+(use-package corfu-terminal
+  :if (not (display-graphic-p))
+  :config
+  (corfu-terminal-mode))
+
+;; Fancy completion-at-point functions; there's too much in the cape package to
+;; configure here; dive in when you're comfortable!
+(use-package cape
   :init
-  (global-corfu-mode))
+  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+  (add-to-list 'completion-at-point-functions #'cape-file))
 
 ;; Pretty icons for corfu
 (use-package kind-icon
