@@ -43,7 +43,6 @@
 
 (use-package forge
   :config
-
   ;; Configure auth source
   (setq auth-sources '("~/.authinfo")))
 
@@ -53,13 +52,24 @@
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defun qqh/open-project-org-file ()
+  (interactive)
+  (require 'projectile)
+  (let ((file     (projectile-expand-root "project.org"))
+        (template (expand-file-name "templates/project-template.org"
+                                    qqh/modules-dir)))
+    (unless (file-exists-p file)
+      (copy-file template file))
+    (find-file file)))
+
 (use-package projectile
   :init
   (projectile-mode +1)
+
   (setq projectile-project-search-path '(("~/code/" . 2)
 					 "~/.sources/")
 	projectile-mode-line-prefix " In "
-        projectile-switch-project-action 'consult-fd))
+    projectile-switch-project-action 'qqh/open-project-org-file))
 
 (use-package perspective
   :after consult

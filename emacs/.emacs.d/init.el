@@ -42,14 +42,12 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;;   Some Variable definitions
+;;;   Variable definitions
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defvar qqh/modules-dir (expand-file-name "qqh" user-emacs-directory)
   "The directory containing my module files.")
-
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -68,11 +66,8 @@
 (setopt auto-revert-check-vc-info t)
 (global-auto-revert-mode)
 
-;; Save history of minibuffer
-(savehist-mode)
-
-;; Move through windows with Shift-<arrow keys>
-(windmove-default-keybindings 'shift)
+;; Move through windows with Control-<arrow keys>
+(windmove-default-keybindings 'control)
 
 ;; Fix archaic defaults
 (setopt sentence-end-double-space nil)
@@ -83,46 +78,15 @@
 ;; Make ESC quit prompts
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 
-;; dired
-(use-package dired
-  :ensure nil
-  :config
-  (setq dired-kill-when-opening-new-dired-buffer t))
-
 ;; use the faster programs
 (setq find-program "fd"
       grep-program "rg")
 
-;; Don't litter file system with *~ backup files; put them all inside
-;; ~/.emacs.d/backup
-(defun qqh/backup-file-name (fpath)
-  "Return a new file path of a given file path (FPATH).
-If the new path's directories does not exist, create them."
-  (let* ((backupRootDir (concat user-emacs-directory "backups/"))
-         (filePath (replace-regexp-in-string "[A-Za-z]:" "" fpath )) ; remove Windows driver letter in path
-         (backupFilePath (replace-regexp-in-string "//" "/" (concat backupRootDir filePath "~") )))
-    (make-directory (file-name-directory backupFilePath) (file-name-directory backupFilePath))
-    backupFilePath))
-(setopt make-backup-file-name-function 'qqh/backup-file-name)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;;   Discovery aids
-;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; which-key: shows a popup of available keybindings when typing a long key
-;; sequence (e.g. C-x ...)
-(use-package which-key
-  :config
-  (which-key-mode))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;;   Minibuffer/completion settings
-;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
+;;; Minibuffer/completion settings
 ;; For help, see: https://www.masteringemacs.org/article/understanding-minibuffer-completion
+
+;; Save history of minibuffer
+(savehist-mode)
 
 (setopt enable-recursive-minibuffers t)                ; Use the minibuffer whilst in the minibuffer
 (setopt completion-cycle-threshold 1)                  ; TAB cycles candidates
@@ -136,15 +100,28 @@ If the new path's directories does not exist, create them."
 (setopt completions-format 'one-column)
 (setopt completions-group t)
 (setopt completion-auto-select 'second-tab)            ; Much more eager
-;(setopt completion-auto-select t)                     ; See `C-h v completion-auto-select' for more possible values
 
 (keymap-set minibuffer-mode-map "TAB" 'minibuffer-complete) ; TAB acts more like how it does in the shell
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;;   Interface enhancements/defaults
-;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Dired
+(use-package dired
+  :ensure nil
+  :config
+  (setq dired-kill-when-opening-new-dired-buffer t))
+
+;; Don't litter file system with *~ backup files; put them all inside
+;; ~/.emacs.d/backup
+(defun qqh/backup-file-name (fpath)
+  "Return a new file path of a given file path (FPATH).
+If the new path's directories does not exist, create them."
+  (let* ((backupRootDir (concat user-emacs-directory "backups/"))
+         (filePath (replace-regexp-in-string "[A-Za-z]:" "" fpath )) ; remove Windows driver letter in path
+         (backupFilePath (replace-regexp-in-string "//" "/" (concat backupRootDir filePath "~") )))
+    (make-directory (file-name-directory backupFilePath) (file-name-directory backupFilePath))
+    backupFilePath))
+(setopt make-backup-file-name-function 'qqh/backup-file-name)
+
+;;; Interface enhancements/defaults
 ;; Mode line information
 (setopt line-number-mode t)                        ; Show current line in modeline
 (setopt column-number-mode t)                      ; Show column as well
@@ -193,6 +170,18 @@ If the new path's directories does not exist, create them."
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
+;;;   Discovery aids
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; which-key: shows a popup of available keybindings when typing a long key
+;; sequence (e.g. C-x ...)
+(use-package which-key
+  :config
+  (which-key-mode))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
 ;;;     Load the rest of my configuration
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -216,6 +205,11 @@ If the new path's directories does not exist, create them."
 (load-file (expand-file-name "ui.el" qqh/modules-dir))
 
 
+;; Supposed to do this late
+(use-package envrc
+  :config
+  (envrc-global-mode))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;;   Built-in customization framework
@@ -229,19 +223,9 @@ If the new path's directories does not exist, create them."
  ;; If there is more than one, they won't work right.
  '(eat-shell "/bin/zsh")
  '(package-selected-packages
-   '(avy blacken cape cargo catppuccin-theme ccls cmake-mode
-         corfu-popupinfo corfu-terminal devdocs diminish doom-modeline
-         doom-themes eat eglot-booster embark-consult envrc
-         evil-collection evil-commentary evil-surround
-         fancy-compilation forge general grip-mode gruvbox-theme
-         hl-todo json-mode just-mode kind-icon marginalia orderless
-         perspective projectile protobuf-mode pyvenv queue
-         rainbow-delimiters rainbow-mode ripgrep rust-mode
-         solaire-mode tree-sitter-langs undo-fu vertico wgrep
-         yaml-mode yasnippet zenburn-theme))
+   '(avy blacken cape cargo catppuccin-theme ccls cmake-mode corfu-popupinfo corfu-terminal devdocs diminish doom-modeline doom-themes eat eglot-booster embark-consult envrc evil-collection evil-commentary evil-surround fancy-compilation forge general grip-mode gruvbox-theme hl-todo json-mode just-mode kind-icon marginalia orderless perspective projectile protobuf-mode pyvenv queue rainbow-delimiters rainbow-mode ripgrep rust-mode solaire-mode tree-sitter-langs undo-fu vertico wgrep yaml-mode yasnippet zenburn-theme))
  '(package-vc-selected-packages
-   '((eglot-booster :vc-backend Git :url
-                    "https://github.com/jdtsmith/eglot-booster"))))
+   '((eglot-booster :vc-backend Git :url "https://github.com/jdtsmith/eglot-booster"))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

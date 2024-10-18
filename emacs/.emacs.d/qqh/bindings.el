@@ -47,12 +47,7 @@
 
 
   ;; C-g quits normal mode
-  (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
-
-
-  ;; "gd" will use lsp to find a definition first
-  (require 'lsp-mode)
-  (add-to-list 'evil-goto-definition-functions 'lsp-find-definition))
+  (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state))
 
 (use-package evil-collection
   :ensure t
