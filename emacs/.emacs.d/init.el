@@ -67,6 +67,7 @@
 (global-auto-revert-mode)
 
 ;; Move through windows with Control-<arrow keys>
+(require 'windmove)
 (windmove-default-keybindings 'control)
 
 ;; Fix archaic defaults
@@ -223,7 +224,7 @@ If the new path's directories does not exist, create them."
  ;; If there is more than one, they won't work right.
  '(eat-shell "/bin/zsh")
  '(package-selected-packages
-   '(avy blacken cape cargo catppuccin-theme ccls cmake-mode corfu-popupinfo corfu-terminal devdocs diminish doom-modeline doom-themes eat eglot-booster embark-consult envrc evil-collection evil-commentary evil-surround fancy-compilation forge general grip-mode gruvbox-theme hl-todo json-mode just-mode kind-icon marginalia orderless perspective projectile protobuf-mode pyvenv queue rainbow-delimiters rainbow-mode ripgrep rust-mode solaire-mode tree-sitter-langs undo-fu vertico wgrep yaml-mode yasnippet zenburn-theme))
+   '(devicetree-ts-mode dts-mode avy blacken cape cargo catppuccin-theme ccls cmake-mode corfu-popupinfo corfu-terminal devdocs diminish doom-modeline doom-themes eat eglot-booster embark-consult envrc evil-collection evil-commentary evil-surround fancy-compilation forge general grip-mode gruvbox-theme hl-todo json-mode just-mode kind-icon marginalia orderless perspective projectile protobuf-mode pyvenv queue rainbow-delimiters rainbow-mode ripgrep rust-mode solaire-mode tree-sitter-langs undo-fu vertico wgrep yaml-mode yasnippet zenburn-theme))
  '(package-vc-selected-packages
    '((eglot-booster :vc-backend Git :url "https://github.com/jdtsmith/eglot-booster"))))
 (custom-set-faces

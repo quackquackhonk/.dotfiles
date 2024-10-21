@@ -1,0 +1,22 @@
+#+TITLE: Project Organization File for PROJECT
+
+* Configuration files
+
+** Justfile
+#+begin_src just :tangle justfile
+  # This is an example justfile
+  build:
+      echo "BUILD NOT CONFIGURED"
+
+  test:
+      echo "TEST NOT CONFIGURED"
+#+end_src
+
+** Project Environment Variables
+#+begin_src envrc :tangle .envrc
+  export QQH_EXAMPLE="QQH"
+#+end_src
+
+* Links
+* Tasks
+* Questions

@@ -63,3 +63,5 @@ def "config emacs" [] {
 # CLI tool integrations
 use ~/.cache/starship/init.nu
 source ~/.zoxide.nu
+
+use ($nu.default-config-dir | path join mise.nu)

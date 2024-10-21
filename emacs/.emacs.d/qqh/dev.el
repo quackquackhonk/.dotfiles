@@ -107,6 +107,11 @@
 (use-package json-mode)
 (use-package protobuf-mode)
 
+(use-package devicetree-ts-mode
+  :init
+  (add-to-list 'treesit-language-source-alist
+               '("devicetree" . '("https://github.com/joelspadin/tree-sitter-devicetree" nil nil nil nil))))
+
 (use-package just-mode)
 (use-package cmake-mode)
 

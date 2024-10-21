@@ -34,8 +34,13 @@
 ;; Setup PATH
 (add-to-list 'exec-path (format "%s/.local/bin" (getenv "HOME")))
 (add-to-list 'exec-path (format "%s/.cargo/bin" (getenv "HOME")))
-(add-to-list 'exec-path "/opt/homebrew/bin")
-(add-to-list 'exec-path "/opt/homebrew/Caskroom/miniconda/base/bin")
+
+(when (and (eq system-type 'darwin))
+  (add-to-list 'exec-path "/opt/homebrew/bin")
+  (add-to-list 'exec-path "/opt/homebrew/Caskroom/miniconda/base/bin"))
+
+(when (and (eq system-type 'gnu/linux) (getenv "WSLENV"))
+ (add-to-list 'exec-path "/home/sahana/.local/share/mise/installs/python/3.12/bin/"))
 
 ;; LSP performance improvements
 (setenv "LSP_USE_PLISTS" "true")
