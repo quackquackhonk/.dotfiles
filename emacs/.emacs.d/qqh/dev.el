@@ -107,10 +107,7 @@
 (use-package json-mode)
 (use-package protobuf-mode)
 
-(use-package devicetree-ts-mode
-  :init
-  (add-to-list 'treesit-language-source-alist
-               '("devicetree" . '("https://github.com/joelspadin/tree-sitter-devicetree" nil nil nil nil))))
+(use-package dts-mode)
 
 (use-package just-mode)
 (use-package cmake-mode)
@@ -142,11 +139,19 @@
   (eglot-extend-to-xref t)              ; activate Eglot in referenced non-project files
 
   :config
-
   ;; Disable inlay hints globally
   (setq eglot-ignored-server-capabilities '(:inlayHintProvider))
 
+  ;; clangd for c/c++
   (add-to-list 'eglot-server-programs '((c++-mode c-mode) "clangd"))
+
+  ;; configure pylsp
+  (setq-default eglot-workspace-configuration
+                '(:pylsp (:plugins (:pycodestyle (:enabled t
+                                                  :maxLineLength 120))
+                                   (:pylsp_mypy (:enabled t
+                                                 :strict t
+                                                 :live_mode t)))))
   
   ;; PERF: dont log every event
   (fset #'jsonrpc--log-event #'ignore))
@@ -166,73 +171,9 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;;   LSP-mode configuration
-;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;;; Taken from emacs-lsp-booster
-;; (defun lsp-booster--advice-json-parse (old-fn &rest args)
-;;   "Try to parse bytecode instead of json."
-;;   (or
-;;    (when (equal (following-char) ?#)
-;;      (let ((bytecode (read (current-buffer))))
-;;        (when (byte-code-function-p bytecode)
-;; 	 (funcall bytecode))))
-;;    (apply old-fn args)))
-;; (advice-add (if (progn (require 'json)
-;; 		       (fboundp 'json-parse-buffer))
-;; 		'json-parse-buffer
-;; 	      'json-read)
-;; 	    :around
-;; 	    #'lsp-booster--advice-json-parse)
-
-;; (defun lsp-booster--advice-final-command (old-fn cmd &optional test?)
-;;   "Prepend emacs-lsp-booster command to lsp CMD."
-;;   (let ((orig-result (funcall old-fn cmd test?)))
-;;     (if (and (not test?)                             ;; for check lsp-server-present?
-;;              (not (file-remote-p default-directory)) ;; see lsp-resolve-final-command, it would add extra shell wrapper
-;;              lsp-use-plists
-;;              (not (functionp 'json-rpc-connection))  ;; native json-rpc
-;;              (executable-find "emacs-lsp-booster"))
-;;         (progn
-;;           (when-let ((command-from-exec-path (executable-find (car orig-result))))  ;; resolve command from exec-path (in case not found in $PATH)
-;;             (setcar orig-result command-from-exec-path))
-;;           (message "Using emacs-lsp-booster for %s!" orig-result)
-;;           (cons "emacs-lsp-booster" orig-result))
-;;       orig-result)))
-;; (advice-add 'lsp-resolve-final-command :around #'lsp-booster--advice-final-command)
-
-;; (use-package lsp-mode
-;;   :hook ((lsp-mode . lsp-enable-which-key-integration)
-;; 	 ((c-mode c++-mode objc-mode cuda-mode) . lsp-deferred)
-;; 	 ((python-mode) . lsp-deferred))
-;;   :commands (lsp lsp-deferred)
-
-;;   :init
-
-;;   :config
-;;   (add-hook 'lsp-mode-hook
-;;             (lambda () (setq display-line-numbers 'relative)))
-
-;;   (setq lsp-warn-no-matched-clients nil
-;;         lsp-auto-execute-action nil)
-
-;;   (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\.spack_env\\'"))
-
-;; ;; Snippets
-;; (use-package yasnippet)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
 ;;;   Language specific configuration
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;;; TODO: C/C++
-;; (use-package ccls
-;;   :custom
-;;   (ccls-args nil)
-;;   (ccls-executable (executable-find "ccls")))
 
 ;;; PYTHON
 ;; Built-in Python utilities

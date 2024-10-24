@@ -67,15 +67,12 @@
   ;; set find args
   (setq consult-fd-args '((if (executable-find "fdfind" 'remote)
                               "fdfind" "fd")
-                          "--no-ignore --hidden --full-path --color=never"
+                          "--hidden --full-path --color=never"
                           ;; ignores
                           "--exclude .git"
                           "--exclude .spack_env"
                           "--exclude .cache"
-
-                          ;; emacs specific
-                          "--exclude elpa"
-                          "--exclude eln-cache"
+                          "--exclude .mypy_cache"
                           "--exclude build"))
 
 

@@ -118,5 +118,3 @@ if [ "$hostname" = "LVV3TW207K" ]
         export AWS_PROFILE="production"
     end
 end
-
-direnv hook fish | source

@@ -27,15 +27,14 @@
                             (ns-transparent-titlebar . t)))
 
 
-;; TODO: This needs to be in macos specific setting dir
-(setenv "LIBRARY_PATH" 
-        "/opt/homebrew/opt/gcc/lib/gcc/14:/opt/homebrew/opt/libgccjit/lib/gcc/14:/opt/homebrew/opt/gcc/lib/gcc/14/gcc/aarch64-apple-darwin23/14")
 
 ;; Setup PATH
 (add-to-list 'exec-path (format "%s/.local/bin" (getenv "HOME")))
 (add-to-list 'exec-path (format "%s/.cargo/bin" (getenv "HOME")))
 
 (when (and (eq system-type 'darwin))
+  (setenv "LIBRARY_PATH" 
+          "/opt/homebrew/opt/gcc/lib/gcc/14:/opt/homebrew/opt/libgccjit/lib/gcc/14:/opt/homebrew/opt/gcc/lib/gcc/14/gcc/aarch64-apple-darwin23/14")
   (add-to-list 'exec-path "/opt/homebrew/bin")
   (add-to-list 'exec-path "/opt/homebrew/Caskroom/miniconda/base/bin"))
 
