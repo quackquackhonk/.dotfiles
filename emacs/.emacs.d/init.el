@@ -220,9 +220,9 @@ If the new path's directories does not exist, create them."
          devdocs diminish dts-mode eat eglot-booster embark-consult
          evil-collection evil-commentary evil-surround
          fancy-compilation forge general grip-mode hl-todo json-mode
-         just-mode kind-icon ligature marginalia nerd-icons orderless
-         perspective projectile protobuf-mode pyvenv
-         rainbow-delimiters rainbow-mode ripgrep rust-mode
+         just-mode keycast kind-icon ligature magit-todos marginalia
+         nerd-icons orderless perspective projectile protobuf-mode
+         pyvenv rainbow-delimiters rainbow-mode ripgrep rust-mode
          solaire-mode tree-sitter-langs undo-fu vertico wgrep
          yaml-mode))
  '(package-vc-selected-packages
@@ -232,14 +232,6 @@ If the new path's directories does not exist, create them."
    '((eval progn
            (defun qqh/venv-on nil
              (interactive)
-             (pyvenv-activate
-              "/Users/i34866/code/amps/amps-surface-roughness/spack_env/.spack-env/view")))
-     (eval progn
-           (defun my-project-specific-function nil
-             (pyvenv-activate
-              "/Users/i34866/code/amps/amps-surface-roughness/spack_env/.spack-env/view")))
-     (eval progn (message "chang")
-           (defun qqh/venv-on nil
              (pyvenv-activate
               "/Users/i34866/code/amps/amps-surface-roughness/spack_env/.spack-env/view"))))))
 (custom-set-faces

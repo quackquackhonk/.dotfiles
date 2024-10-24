@@ -22,7 +22,8 @@
 (scroll-bar-mode -1)
 (tooltip-mode -1)
 (setq default-frame-alist '((fullscreen . maximized)
-			    (background-color . "#000000")
+                            (background-color . "#000000")
+                            (foreground-color . "#FFFFFF")
                             (ns-appearance . dark)
                             (ns-transparent-titlebar . t)))
 
@@ -33,7 +34,7 @@
 (add-to-list 'exec-path (format "%s/.cargo/bin" (getenv "HOME")))
 
 (when (and (eq system-type 'darwin))
-  (setenv "LIBRARY_PATH" 
+  (setenv "LIBRARY_PATH"
           "/opt/homebrew/opt/gcc/lib/gcc/14:/opt/homebrew/opt/libgccjit/lib/gcc/14:/opt/homebrew/opt/gcc/lib/gcc/14/gcc/aarch64-apple-darwin23/14")
   (add-to-list 'exec-path "/opt/homebrew/bin")
   (add-to-list 'exec-path "/opt/homebrew/Caskroom/miniconda/base/bin"))
@@ -45,3 +46,5 @@
 (setenv "LSP_USE_PLISTS" "true")
 
 (setenv "TERM" "xterm-256color")
+
+;;; early-init.el ends here

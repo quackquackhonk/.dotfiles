@@ -41,6 +41,10 @@
 ;; Magit: best Git client to ever exist
 (use-package magit)
 
+(use-package magit-todos
+  :after magit
+  :config (magit-todos-mode 1))
+
 (use-package forge
   :config
   ;; Configure auth source
