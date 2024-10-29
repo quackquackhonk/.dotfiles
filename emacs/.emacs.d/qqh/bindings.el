@@ -68,7 +68,6 @@
   :config
   (global-evil-surround-mode 1))
 
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; Global Keybindings
@@ -104,7 +103,6 @@
     "SPC" 'consult-buffer
     "TAB" 'other-window
     "RET" 'avy-goto-char-2
-    "q" 'qqh/kill-buffer
     "g" 'magit
     "," 'evil-switch-to-windows-last-buffer
     ":" 'eval-expression
@@ -145,17 +143,16 @@
     ";ol" 'org-roam-node-insert
     ";on" 'org-roam-node-find)
 
-  ;; define movements to be accessed by Meta + key on colemak
   (general-def
-    :states '(normal)
+    :states '(normal emacs)
     ;; quit window
     "C-q" 'evil-window-delete
+    "M-q" 'qqh/kill-buffer)
     
-    ;; evil LSP keybindings
-    ;; "gd" 'evil-goto-definition <-- built in
-    "gr" 'lsp-ui-peek-find-references
-    "gR" 'lsp-rename
-    "g SPC" 'lsp-execute-code-action)
+  ;; evil LSP keybindings
+  (general-def
+    :states '(normal)
+    "gR" 'eglot-rename)
 
   (general-def
     :states '(normal visual)
@@ -171,3 +168,4 @@
     ;; disable for persp-mode
     "C-p"))
 
+;;; bindings.el ends here

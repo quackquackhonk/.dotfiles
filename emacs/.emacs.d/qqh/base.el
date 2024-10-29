@@ -28,7 +28,7 @@
 
 (use-package avy
   :demand t
-  :bind (("C-c j" . avy-goto-line))
+  :bind (("C-c n" . avy-goto-line))
   :config
   (setq avy-keys '(?a ?r ?s ?t ?g ?m ?n ?e ?i ?o)
         avy-background nil))
@@ -130,7 +130,7 @@
 ;; Vertico: better vertical completion for minibuffer commands
 (use-package vertico
   :custom
-  (vertico-count 20)
+  (vertico-count 30)
   (vertico-resize t)
   :init
   ;; You'll want to make sure that e.g. fido-mode isn't enabled

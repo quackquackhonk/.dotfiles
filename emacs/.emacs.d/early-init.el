@@ -34,7 +34,7 @@
 (add-to-list 'exec-path (format "%s/.cargo/bin" (getenv "HOME")))
 
 (when (and (eq system-type 'darwin))
-  (setenv "LIBRARY_PATH" 
+  (setenv "LIBRARY_PATH"
           "/opt/homebrew/opt/gcc/lib/gcc/14:/opt/homebrew/opt/libgccjit/lib/gcc/14:/opt/homebrew/opt/gcc/lib/gcc/14/gcc/aarch64-apple-darwin23/14")
   (add-to-list 'exec-path "/opt/homebrew/bin")
   (add-to-list 'exec-path "/opt/homebrew/Caskroom/miniconda/base/bin"))
@@ -43,3 +43,5 @@
  (add-to-list 'exec-path "/home/sahana/.local/share/mise/installs/python/3.12/bin/"))
 
 (setenv "TERM" "xterm-256color")
+
+;;; early-init.el ends here
