@@ -12,6 +12,8 @@
 ;;;    - Python
 ;;;    - Rust
 
+;;; Code:
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;;   Built-in config for developers
@@ -19,18 +21,13 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package emacs
   :config
+  (setq major-mode-remap-alist
+        '((yaml-mode . yaml-ts-mode)
+          (json-mode . json-ts-mode)
+          (python-mode . python-ts-mode)))
   :hook
   ;; Auto parenthesis matching
   ((prog-mode . electric-pair-mode)))
-
-(use-package tree-sitter-langs)
-(use-package tree-sitter
-  :after tree-sitter-langs
-  :config
-  (setq treesit-font-lock-level 4)
-  (global-tree-sitter-mode)
-  (add-hook 'tree-sitter-after-on-hook
-            #'tree-sitter-hl-mode))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -87,6 +84,10 @@
   (consult-customize consult--source-buffer :hidden t :default nil)
   (add-to-list 'consult-buffer-sources persp-consult-source))
 
+(use-package persp-projectile
+  :config
+  (define-key projectile-command-map (kbd "P") 'projectile-persp-switch-project))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;;   Common file types
@@ -100,7 +101,6 @@
 
 (use-package grip-mode
   :after markdown-mode
-  :hook (markdown-mode . grip-mode)
   :config
   (setq grip-use-mdopen t
         grip-mdopen-path "/Users/i34866/.cargo/bin/mdopen"
@@ -119,8 +119,9 @@
 ;; Devdocs
 (use-package devdocs
   :hook (('python-mode-hook . (lambda () (setq-local devdocs-current-docs '("python~3.11"))))
-	 ('c-mode-hook . (lamdba () (setq-local devdocs-current-docs '("c"))))
-	 ('c++-mode-hook . (lamdba () (setq-local devdocs-current-docs '("cpp"))))))
+         ('python-ts-mode-hook . (lambda () (setq-local devdocs-current-docs '("python~3.11"))))
+         ('c-mode-hook . (lamdba () (setq-local devdocs-current-docs '("c"))))
+         ('c++-mode-hook . (lamdba () (setq-local devdocs-current-docs '("cpp"))))))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -135,13 +136,15 @@
 
 (use-package eglot
   :ensure t
-  :defer
-  :hook ((python-mode . eglot-ensure)
-	 ((c-mode c++-mode) . eglot-ensure))
+  :defer t
+  :hook (;; Python
+         (python-ts-mode . eglot-ensure)
+         ;; C / C++
+         ((c-mode c++-mode) . eglot-ensure)
+         )
   :custom
   (eglot-send-changes-idle-time 0.1)
   (eglot-extend-to-xref t)              ; activate Eglot in referenced non-project files
-
   :config
   ;; Disable inlay hints globally
   (setq eglot-ignored-server-capabilities '(:inlayHintProvider))
@@ -149,16 +152,29 @@
   ;; clangd for c/c++
   (add-to-list 'eglot-server-programs '((c++-mode c-mode) "clangd"))
 
-  ;; configure pylsp
-  (setq-default eglot-workspace-configuration
-                '(:pylsp (:plugins (:pycodestyle (:enabled t
-                                                  :maxLineLength 120))
-                                   (:pylsp_mypy (:enabled t
-                                                 :strict t
-                                                 :live_mode t)))))
-  
+  ;; format on save
+  (add-hook 'after-save-hook
+            (lambda () (if (eglot-managed-p)
+                           (eglot-format-buffer))))
+
   ;; PERF: dont log every event
-  (fset #'jsonrpc--log-event #'ignore))
+  (fset #'jsonrpc--log-event #'ignore)
+
+  ;; server configurations
+  (setq-default eglot-workspace-configuration
+                '((:pylsp . (:plugins (:pycodestyle (:enabled :json-false)
+                                       :mccabe (:enabled :json-false)
+                                       :pyflakes (:enabled :json-false)
+                                       :flake8 (:enabled :json-false
+                                                :maxLineLength 100)
+                                       :pylsp_mypy (:enabled t)
+                                       :ruff (:enabled t
+                                              :lineLength 100)
+                                       :pydocstyle (:enabled :json-false)
+                                       :yapf (:enabled :json-false)
+                                       :autopep8 (:enabled :json-false)
+                                       :black (:enabled t
+                                               :cache_config t)))))))
 
 (use-package eglot-booster
   ;; Needs to be installed from VC,
@@ -192,12 +208,6 @@
   :config
   (setenv "WORKON_HOME" "/opt/homebrew/Caskroom/miniconda/base/envs/")
   (pyvenv-mode 1))
-
-;; Buffer formatting with Black
-(use-package blacken
-  :defer t
-  :hook (python-mode . blacken-mode))
-
 
 ;;; RUST
 (use-package rust-mode

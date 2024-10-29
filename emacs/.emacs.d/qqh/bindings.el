@@ -96,6 +96,11 @@
     (interactive)
     (persp-kill-buffer* (current-buffer)))
 
+  (defun qqh/kill-buffer-and-window ()
+    (interactive)
+    (persp-kill-buffer* (current-buffer))
+    (evil-window-delete))
+
 
   ;; defines leader key bindings
   (qqh/leader-definer

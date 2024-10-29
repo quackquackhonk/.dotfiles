@@ -38,6 +38,9 @@
 ;; always load the newest bytecode
 (setq load-prefer-newer t)
 
+(use-package exec-path-from-shell
+  :config (exec-path-from-shell-initialize))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;;   Variable definitions

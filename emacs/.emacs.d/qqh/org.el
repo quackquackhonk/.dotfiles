@@ -91,8 +91,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package org
-  :hook ((org-mode . visual-line-mode)  ; wrap lines at word breaks
-         (org-mode . flyspell-mode))    ; spell checking!
+  :hook ((org-mode . visual-line-mode))  ; wrap lines at word breaks
 
   :bind (:map global-map
               ("C-c l s" . org-store-link)          ; Mnemonic: link → store
@@ -104,8 +103,10 @@
   ;; Make org-open-at-point follow file links in the same window
   (setf (cdr (assoc 'file org-link-frame-setup)) 'find-file)
 
-  ;; Make exporting quotes better
-  (setq org-export-with-smart-quotes t))
+  
+  (setq org-export-with-smart-quotes t               ; Make exporting quotes better
+        org-return-follows-link t                    ; RET follows links
+        ))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;

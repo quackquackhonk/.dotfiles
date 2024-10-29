@@ -15,12 +15,10 @@
 ** Project Setup
 
 #+begin_src emacs-lisp :tangle .dir-locals.el
- ((nil . ((compile-command . "just build")
+  ((nil . ((compile-command . "just build")
            ;; Put more config values here
-           ;; (eval . (progn
-           ;;           (defun qqh/venv-on ()
-           ;;             (interactive)
-           ;;             (pyvenv-activate "/Users/i34866/code/amps/amps-surface-roughness/spack_env/.spack-env/view"))))
+           (eval . (progn
+                     (pyvenv-activate (projectile-expand-root "spack_env/.spack-env/view"))))
            )))
 #+end_src
 

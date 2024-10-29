@@ -1,12 +1,4 @@
-fish_add_path /opt/homebrew/bin
-fish_add_path $HOME/bin:/usr/local/bin
-fish_add_path $HOME/.local/bin
-fish_add_path $HOME/.cargo/bin
-fish_add_path $HOME/.sources/sml/bin
-fish_add_path $HOME/.sources/smlnj/bin
-fish_add_path $HOME/.sources/wabt/bin
-fish_add_path $HOME/.sources/v
-fish_add_path $HOME/.sources/nvim-macos-arm64/bin
+fish_add_path /opt/homebrew/bin:$HOME/bin:/usr/local/bin:$HOME/.local/bin:$HOME/.cargo/bin:$HOME/.sources/sml/bin:$HOME/.sources/smlnj/bin:$HOME/.sources/wabt/bin:$HOME/.sources/v:$HOME/.sources/nvim-macos-arm64/bin
 
 if status is-login
     if test -z "$DISPLAY" -a "$XDG_VTNR" = 1
