@@ -1,22 +1,32 @@
-#+TITLE: Project Organization File for PROJECT
+#+TITLE: Dotfiles Organization
 
 * Configuration files
 
 ** Justfile
 #+begin_src just :tangle justfile
   # This is an example justfile
-  build:
-      echo "BUILD NOT CONFIGURED"
+  up:
+      echo "TODO: Make this stow necessary conf files"
 
-  test:
-      echo "TEST NOT CONFIGURED"
+  down:
+      echo "TODO: Make this unstow necessary conf files"
 #+end_src
 
-** Project Environment Variables
-#+begin_src envrc :tangle .envrc
-  export QQH_EXAMPLE="QQH"
+** Project dir-locals 
+
+#+begin_src emacs-lisp :tangle .dir-locals.el
+ ((nil . ((compile-command . "just build")
+           ;; Put more config values here
+           ;; (eval . (progn
+           ;;           (defun qqh/venv-on ()
+           ;;             (interactive)
+           ;;             (pyvenv-activate "/Users/i34866/code/amps/amps-surface-roughness/spack_env/.spack-env/view"))))
+           )))
 #+end_src
 
 * Links
 * Tasks
+** Emacs [/]
+*** TODO Modeline configuration
+*** TODO Meow!!
 * Questions

@@ -56,6 +56,11 @@
 (setopt initial-major-mode 'fundamental-mode)  ; default mode for the *scratch* buffer
 (setopt display-time-default-load-average nil) ; this information is useless for most
 
+
+(when (and (eq system-type 'gnu/linux)
+           (getenv "WSLENV"))
+ (xterm-mouse-mode t))
+
 ;; Automatically reread from disk if the underlying file changes
 (setopt auto-revert-avoid-polling t)
 ;; Some systems don't do file notifications well; see
@@ -66,7 +71,7 @@
 
 ;; Move through windows with Control-<arrow keys>
 (require 'windmove)
-(windmove-default-keybindings 'shift)
+(windmove-default-keybindings 'control)
 
 ;; Fix archaic defaults
 (setopt sentence-end-double-space nil)
@@ -197,59 +202,12 @@ If the new path's directories does not exist, create them."
 ;; Extra UI / Themeing
 (load-file (expand-file-name "ui.el" qqh/modules-dir))
 
+;; Load the custom.el file
+(setq custom-file (concat user-emacs-directory "custom.el"))
+(load custom-file 'noerror)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;;   Built-in customization framework
-;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(eat-shell "/bin/zsh")
- '(ignored-local-variable-values
-   '((eval progn
-           (defun qqh/venv-on nil
-             (pyvenv-activate
-              "/Users/i34866/code/amps/amps-surface-roughness/spack_env/.spack-env/view")))))
- '(package-selected-packages
-   '(avy blacken cape cargo catppuccin-theme cmake-mode corfu-terminal
-         devdocs diminish dts-mode eat eglot-booster embark-consult
-         evil-collection evil-commentary evil-surround
-         fancy-compilation forge general grip-mode hl-todo json-mode
-         just-mode kind-icon ligature marginalia nerd-icons orderless
-         perspective projectile protobuf-mode pyvenv
-         rainbow-delimiters rainbow-mode ripgrep rust-mode
-         solaire-mode tree-sitter-langs undo-fu vertico wgrep
-         yaml-mode))
- '(package-vc-selected-packages
-   '((eglot-booster :vc-backend Git :url
-                    "https://github.com/jdtsmith/eglot-booster")))
- '(safe-local-variable-values
-   '((eval progn
-           (defun qqh/venv-on nil
-             (interactive)
-             (pyvenv-activate
-              "/Users/i34866/code/amps/amps-surface-roughness/spack_env/.spack-env/view")))
-     (eval progn
-           (defun my-project-specific-function nil
-             (pyvenv-activate
-              "/Users/i34866/code/amps/amps-surface-roughness/spack_env/.spack-env/view")))
-     (eval progn (message "chang")
-           (defun qqh/venv-on nil
-             (pyvenv-activate
-              "/Users/i34866/code/amps/amps-surface-roughness/spack_env/.spack-env/view"))))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
-
+;; Cleanup
 (setq gc-cons-threshold (or qqh/initial-gc-threshold 800000))
-(put 'narrow-to-region 'disabled nil)
+
 
 ;;; init.el ends here

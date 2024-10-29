@@ -22,7 +22,8 @@
 (scroll-bar-mode -1)
 (tooltip-mode -1)
 (setq default-frame-alist '((fullscreen . maximized)
-			    (background-color . "#000000")
+                            (background-color . "#000000")
+                            (foreground-color . "#FFFFFF")
                             (ns-appearance . dark)
                             (ns-transparent-titlebar . t)))
 
@@ -40,8 +41,5 @@
 
 (when (and (eq system-type 'gnu/linux) (getenv "WSLENV"))
  (add-to-list 'exec-path "/home/sahana/.local/share/mise/installs/python/3.12/bin/"))
-
-;; LSP performance improvements
-(setenv "LSP_USE_PLISTS" "true")
 
 (setenv "TERM" "xterm-256color")

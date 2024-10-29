@@ -106,7 +106,6 @@
     "RET" 'avy-goto-char-2
     "q" 'qqh/kill-buffer
     "g" 'magit
-    "x" 'execute-extended-command
     "," 'evil-switch-to-windows-last-buffer
     ":" 'eval-expression
 
@@ -165,11 +164,6 @@
     "[d" 'flymake-goto-prev-error
     ;; git conflicts
     "]x" 'smerge-vc-next-conflict)
-
-  (general-def
-    :states '(normal visual insert emacs)
-    "M-[" 'persp-prev
-    "M-]" 'persp-next)
 
   ;; unbind keys
   (general-unbind
