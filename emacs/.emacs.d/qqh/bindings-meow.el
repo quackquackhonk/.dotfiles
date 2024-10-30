@@ -14,12 +14,11 @@
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;; TODO: Move to meow
 ;; Install meow
 (use-package meow :ensure t)
 
 (defun meow-setup ()
-  
+
   ;; colemak-dh cheatsheet
   (setq meow-cheatsheet-layout meow-cheatsheet-layout-colemak-dh)
 
@@ -41,7 +40,7 @@
           (118 . visual-line)
           (102 . defun)
           (46 . sentence)))
-  
+
   (meow-motion-overwrite-define-key
    ;; Use e to move up, n to move down.
    ;; Since special modes usually use n to move down, we only overwrite e here.
@@ -49,14 +48,15 @@
    '("<escape>" . ignore))
 
   ;; default meow leader bindings
-  (meow-leader-define-key   
+  (meow-leader-define-key
    '("?" . meow-cheatsheet)
    '("SPC" . consult-buffer)
    '("TAB" . other-window)
+   '("," . meow-last-buffer)
    '("g" . magit)
    '("f" . consult-fd)
    '("p" . projectile-command-map)
-   ;; '("RET" . avy-goto-line)
+   '("RET" . avy-goto-line)
 
    '(";r" . (lambda ()
               (interactive)
@@ -64,7 +64,7 @@
    '(";c" . (lambda ()
               (interactive)
               (find-file user-init-file)))
-   
+
    ;; To execute the originally e in MOTION state, use SPC e.
    '("e" . "H-e")
    '("1" . meow-digit-argument)
@@ -101,10 +101,10 @@
    '("b" . meow-back-word)
    '("B" . meow-back-symbol)
    '("c" . meow-change)
-   '("e" . meow-prev)
-   '("E" . meow-prev-expand)
    '("d" . meow-delete)
    '("D" . meow-backward-delete)
+   '("e" . meow-prev)
+   '("E" . meow-prev-expand)
    '("f" . meow-find)
    '("g" . meow-cancel-selection)
    '("G" . meow-grab)
@@ -195,7 +195,5 @@
 ;;   (general-def
 ;;     :states '(normal)
 ;;     "gR" 'eglot-rename)
-
-(global-unset-key (kbd "C-p"))
 
 ;;; bindings.el ends here

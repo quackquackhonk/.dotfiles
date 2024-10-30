@@ -70,9 +70,10 @@
 
 (use-package perspective
   :after consult
+  :custom
+  (persp-mode-prefix-key (kbd "M-p"))
   :init
   (require 'consult)
-  (setq persp-suppress-no-prefix-key-warning t)
   (persp-mode)
 
   ;; Add perspective mode source to buffer switcher

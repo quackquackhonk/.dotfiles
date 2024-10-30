@@ -19,6 +19,7 @@ emacs/.emacs.d/straight/**
 emacs/.emacs.d/transient/**
 emacs/.emacs.d/tree-sitter/**
 emacs/.emacs.d/history
+emacs/.emacs.d/bookmarks
 emacs/.emacs.d/projects
 emacs/.emacs.d/projectile-bookmarks.eld
 emacs/.emacs.d/tramp

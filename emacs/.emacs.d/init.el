@@ -45,7 +45,6 @@
   ;; diminish built-in minor modes
   (diminish 'eldoc-mode))
 
- 
 (use-package exec-path-from-shell
   :config (exec-path-from-shell-initialize))
 
@@ -68,6 +67,7 @@
 (setopt display-time-default-load-average nil) ; this information is useless for most
 
 
+;; Enable terminal mouse mode in WSL
 (when (and (eq system-type 'gnu/linux)
            (getenv "WSLENV"))
  (xterm-mouse-mode t))
@@ -109,7 +109,7 @@
 (setopt tab-always-indent 'complete)                   ; When I hit TAB, try to complete, otherwise, indent
 (setopt completion-styles '(basic initials substring)) ; Different styles to match input to candidates
 
-(setopt completion-auto-help 'always)                  ; Open completion always; `lazy' another option
+(setopt completion-auto-help 'lazy)                  ; Open completion always; `lazy' another option
 (setopt completions-max-height 20)                     ; This is arbitrary
 (setopt completions-detailed t)
 (setopt completions-format 'one-column)
@@ -138,14 +138,14 @@ If the new path's directories does not exist, create them."
 
 ;;; Interface enhancements/defaults
 ;; Mode line information
-(setopt line-number-mode t)                        ; Show current line in modeline
-(setopt column-number-mode t)                      ; Show column as well
-
 (setopt x-underline-at-descent-line nil)           ; Prettier underlines
 (setopt switch-to-buffer-obey-display-actions t)   ; Make switching buffers more consistent
 
-(setopt show-trailing-whitespace nil)      ; By default, don't underline trailing spaces
-(setopt indicate-buffer-boundaries 'left)  ; Show buffer top and bottom in the margin
+;; Don't show trailing whitespace, and delete it on save
+(setopt show-trailing-whitespace nil)
+(add-hook 'after-save-hook
+          (lambda ()
+            (delete-trailing-whitespace)))
 
 ;; Tabs BTFO
 (setopt indent-tabs-mode nil)
@@ -156,15 +156,11 @@ If the new path's directories does not exist, create them."
 (blink-cursor-mode -1)                                ; Steady cursor
 (pixel-scroll-precision-mode)                         ; Smooth scrolling
 (setopt ring-bell-function 'ignore)                   ; disable the bell
-(setopt compilation-scroll-output t)
-
-;; Use common keystrokes by default
-(cua-mode)
+(setopt compilation-scroll-output t)                  ; follow compilation output by default
 
 ;; Display line numbers in programming mode
 (add-hook 'prog-mode-hook 'display-line-numbers-mode)
 (setopt display-line-numbers-width 3)           ; Set a minimum width
-(setopt display-line-numbers-type 'relative)
 
 ;; Nice line wrapping when working with text
 (add-hook 'text-mode-hook 'visual-line-mode)

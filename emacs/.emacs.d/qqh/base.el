@@ -38,6 +38,7 @@
 ;;;   Power-ups: Embark and Consult
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(use-package embark-consult)
 
 ;; Consult: Misc. enhanced commands
 (use-package consult
@@ -82,8 +83,8 @@
          ;; Searching
          ("M-s r" . consult-ripgrep)
          ("C-s" . consult-line)         ; Alternative: rebind C-s to use
-         ("M-s s" . consult-line)       ; consult-line instead of isearch, bind
-         ("M-s L" . consult-line-multi) ; isearch to M-s s
+         ("M-s s" . isearch)            ; consult-line instead of isearch, bind
+         ("M-s L" . consult-line-multi)
          ("M-s o" . consult-outline)
          ;; Isearch integration
          :map isearch-mode-map
@@ -119,7 +120,6 @@
   ;; candidate you select
   (setf (alist-get ?. avy-dispatch-alist) 'qqh/avy-action-embark))
 
-(use-package embark-consult)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
