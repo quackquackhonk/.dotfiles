@@ -38,10 +38,6 @@
 ;; Magit: best Git client to ever exist
 (use-package magit)
 
-(use-package magit-todos
-  :after magit
-  :config (magit-todos-mode 1))
-
 (use-package forge
   :config
   ;; Configure auth source
@@ -74,16 +70,16 @@
 
 (use-package perspective
   :after consult
-  :custom
-  (persp-mode-prefix-key (kbd "C-p"))
   :init
   (require 'consult)
+  (setq persp-suppress-no-prefix-key-warning t)
   (persp-mode)
 
   ;; Add perspective mode source to buffer switcher
   (consult-customize consult--source-buffer :hidden t :default nil)
   (add-to-list 'consult-buffer-sources persp-consult-source))
 
+;; make them play nice
 (use-package persp-projectile
   :config
   (define-key projectile-command-map (kbd "P") 'projectile-persp-switch-project))

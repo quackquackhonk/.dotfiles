@@ -14,31 +14,15 @@
 	catppuccin-italic-comments t
 	catppuccin-highlight-matches t))
 
-(use-package diminish
-  :after (which-key tree-sitter)
-  :config
-  (require 'which-key)
-  (diminish 'which-key-mode)
-
-  (require 'tree-sitter)
-  (diminish 'tree-sitter-mode)
-
-  ;; diminish built-in minor modes
-  (diminish 'eldoc-mode))
-
 (use-package nerd-icons)
 
 (use-package rainbow-mode
   :hook (prog-mode . rainbow-mode)
-  :config
-  (require 'diminish)
-  (diminish 'rainbow-mode))
+  :diminish rainbow-mode)
 
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode)
-  :config
-  (require 'diminish)
-  (diminish 'rainbow-delimiters-mode))
+  :diminish rainbow-delimiters-mode)
 
 (use-package hl-todo
   :config
@@ -71,24 +55,24 @@
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(setq-default mode-line-format
-              '("%e" mode-line-front-space
-                (:propertize
-                 ("" mode-line-mule-info mode-line-client mode-line-modified mode-line-remote)
-                 display
-                 (min-width
-                  (5.0)))
-                mode-line-frame-identification mode-line-buffer-identification "   " mode-line-position evil-mode-line-tag
-                (vc-mode vc-mode)
-                "  " mode-line-modes mode-line-misc-info mode-line-end-spaces))
+;; (setq-default mode-line-format
+;;               '("%e" mode-line-front-space
+;;                 (:propertize
+;;                  ("" mode-line-mule-info mode-line-client mode-line-modified mode-line-remote)
+;;                  display
+;;                  (min-width
+;;                   (5.0)))
+;;                 mode-line-frame-identification mode-line-buffer-identification "   " mode-line-position evil-mode-line-tag
+;;                 (vc-mode vc-mode)
+;;                 "  " mode-line-modes mode-line-misc-info mode-line-end-spaces))
 
-(setq-default mode-line-format
-              '("%e" mode-line-buffer-identification mode-line-modified mode-line-remote
-                " @ " mode-line-position evil-mode-line-tag
-                (vc-mode vc-mode)
-                "  " mode-line-modes mode-line-misc-info))
+;; (setq-default mode-line-format
+;;               '("%e" mode-line-buffer-identification mode-line-modified mode-line-remote
+;;                 " @ " mode-line-position evil-mode-line-tag
+;;                 (vc-mode vc-mode)
+;;                 "  " mode-line-modes mode-line-misc-info))
 
-(force-mode-line-update)
+;; (force-mode-line-update)
 
 ;;; Cleanup settings
 (add-hook 'server-after-make-frame-hook #'catppuccin-reload)

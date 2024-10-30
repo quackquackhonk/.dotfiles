@@ -38,6 +38,14 @@
 ;; always load the newest bytecode
 (setq load-prefer-newer t)
 
+;; Load diminish for :diminish constructs
+(use-package diminish
+  :ensure t
+  :config
+  ;; diminish built-in minor modes
+  (diminish 'eldoc-mode))
+
+ 
 (use-package exec-path-from-shell
   :config (exec-path-from-shell-initialize))
 
@@ -179,6 +187,7 @@ If the new path's directories does not exist, create them."
 ;; which-key: shows a popup of available keybindings when typing a long key
 ;; sequence (e.g. C-x ...)
 (use-package which-key
+  :diminish which-key-mode
   :config
   (which-key-mode))
 
@@ -197,7 +206,8 @@ If the new path's directories does not exist, create them."
 (load-file (expand-file-name "dev.el" qqh/modules-dir))
 
 ;; Vim-bindings in Emacs (evil-mode configuration)
-(load-file (expand-file-name "bindings.el" qqh/modules-dir))
+;; (load-file (expand-file-name "bindings-evil.el" qqh/modules-dir))
+(load-file (expand-file-name "bindings-meow.el" qqh/modules-dir))
 
 ;; Org-mode configuration
 (load-file (expand-file-name "org.el" qqh/modules-dir))

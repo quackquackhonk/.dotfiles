@@ -60,6 +60,7 @@
 (use-package evil-commentary
   :ensure t
   :after evil
+  :diminish evil-commentary-mode
   :config
   (evil-commentary-mode))
 
@@ -141,6 +142,8 @@
     ";c" (lambda ()
 	   (interactive)
 	   (find-file user-init-file))
+    ";p" 'qqh/open-project-org-file
+
 
     ;; global org bindings (;o)
     ";oa" 'org-agenda

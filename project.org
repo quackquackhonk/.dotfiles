@@ -15,18 +15,13 @@
 ** Project dir-locals 
 
 #+begin_src emacs-lisp :tangle .dir-locals.el
- ((nil . ((compile-command . "just build")
-           ;; Put more config values here
-           ;; (eval . (progn
-           ;;           (defun qqh/venv-on ()
-           ;;             (interactive)
-           ;;             (pyvenv-activate "/Users/i34866/code/amps/amps-surface-roughness/spack_env/.spack-env/view"))))
-           )))
+ ((nil . ((compile-command . "just build"))))
 #+end_src
 
 * Links
 * Tasks
-** Emacs [/]
+** Emacs [0/2]
 *** TODO Modeline configuration
-*** TODO Meow!!
+*** STARTED Meow!!
+- State "STARTED"    from "TODO"       [2024-10-29 Tue 20:25]
 * Questions
