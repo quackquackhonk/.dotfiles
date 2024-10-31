@@ -46,7 +46,12 @@
   (diminish 'eldoc-mode))
 
 (use-package exec-path-from-shell
-  :config (exec-path-from-shell-initialize))
+  :init (setq-default explicit-shell-file-name "/bin/zsh")
+  :config
+  (when (memq window-system '(mac ns x))
+   (exec-path-from-shell-initialize))
+  (when (daemonp)
+   (exec-path-from-shell-initialize)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -74,9 +79,7 @@
 
 ;; Automatically reread from disk if the underlying file changes
 (setopt auto-revert-avoid-polling t)
-;; Some systems don't do file notifications well; see
-;; https://todo.sr.ht/~ashton314/emacs-bedrock/11
-(setopt auto-revert-interval 5)
+(setopt auto-revert-interval 2)
 (setopt auto-revert-check-vc-info t)
 (global-auto-revert-mode)
 

@@ -192,6 +192,9 @@
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;;; C / C++
+(setq-default c-basic-offset 4)
+
 ;;; PYTHON
 ;; Built-in Python utilities
 (use-package python

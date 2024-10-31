@@ -8,9 +8,17 @@
 
 ;;; Code:
 
+
+;;; Some declarations for Keybindings
+
+(defun qqh/kill-buffer ()
+  (interactive)
+  (persp-kill-buffer* (current-buffer)))
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;; Evil Mode
+;;; Meow for modal editing
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -25,21 +33,26 @@
   ;; sets the thing table characters to use ([{ for grouping
   ;; punctuations
   (setq meow-char-thing-table
-        '((40 . round)
-          (41 . round)
-          (91 . square)
-          (93 . square)
-          (123 . curly)
-          (125 . curly)
-          (34 . string)
-          (115 . symbol)
-          (119 . window)
-          (98 . buffer)
-          (112 . paragraph)
-          (108 . line)
-          (118 . visual-line)
-          (102 . defun)
-          (46 . sentence)))
+        '((?\( . round)
+          (?\) . round)
+          (?\[ . square)
+          (?\] . square)
+          (?\{ . curly)
+          (?\} . curly)
+          (?\" . string)
+          (?s . symbol)
+          (?w . window)
+          (?b . buffer)
+          (?b . paragraph)
+          (?l . line)
+          (?v . visual-line)
+          (?f . defun)
+          (?\. . sentence)))
+
+  ;; Change the keys used by keypad mode
+  (setq meow-keypad-ctrl-meta-prefix ?\r          ;; Use RET for C-M-
+        meow-keypad-meta-prefix ?z                ;; Use z for M-
+        meow-keypad-literal-prefix ?\')           ;; Use ' for literal keys
 
   (meow-motion-overwrite-define-key
    ;; Use e to move up, n to move down.
@@ -53,6 +66,7 @@
    '("SPC" . consult-buffer)
    '("TAB" . other-window)
    '("," . meow-last-buffer)
+   '(":" . eval-expression)
    '("g" . magit)
    '("f" . consult-fd)
    '("p" . projectile-command-map)
@@ -101,8 +115,8 @@
    '("b" . meow-back-word)
    '("B" . meow-back-symbol)
    '("c" . meow-change)
-   '("d" . meow-delete)
-   '("D" . meow-backward-delete)
+   '("d" . meow-kill)
+   ;; '("D" . meow-backward-delete)
    '("e" . meow-prev)
    '("E" . meow-prev-expand)
    '("f" . meow-find)
@@ -113,7 +127,7 @@
    '("i" . meow-right)
    '("I" . meow-right-expand)
    '("j" . meow-join)
-   '("k" . meow-kill)
+   ;; '("k" . meow-kill)
    '("l" . meow-line)
    '("L" . meow-goto-line)
    '("h" . meow-mark-word)
@@ -133,41 +147,24 @@
    '("v" . meow-search)
    '("w" . meow-next-word)
    '("W" . meow-next-symbol)
+   '("x" . meow-delete)
+   '("X" . meow-backward-delete)
    '("y" . meow-save)
    '("z" . meow-pop-selection)
    '("'" . repeat)
-   '("<escape>" . ignore)))
+   '("<escape>" . ignore)
+   '("RET" . avy-goto-line)
+   ;; Some vim-like bindings
+   '(":" . execute-extended-command)
+   '("="   . indent-region)
+   '("C-q" . delete-window)
+   '("M-q" . qqh/kill-buffer)))
 
 (require 'meow)
 (meow-setup)
 (meow-global-mode 1)
 ;; enable esc mode for terminal use
 (meow-esc-mode 1)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; Global Keybindings
-;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defun qqh/kill-buffer ()
-  (interactive)
-  (persp-kill-buffer* (current-buffer)))
-
-(meow-normal-define-key
- '("C-q" . delete-window)
- '("M-q" . qqh/kill-buffer))
-
-
-;;   ;; defines leader key bindings
-;;   (qqh/leader-definer
-;;     ;; top level bindings
-;;     "SPC" 'consult-buffer
-;;     "TAB" 'other-window
-;;     "RET" 'avy-goto-char-2
-;;     "g" 'magit
-;;     "," 'evil-switch-to-windows-last-buffer
-;;     ":" 'eval-expression
 
 ;;     ;; Open (o)
 ;;     "of" 'find-file

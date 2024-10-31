@@ -12,7 +12,7 @@
       echo "TODO: Make this unstow necessary conf files"
 #+end_src
 
-** Project dir-locals 
+** Project dir-locals
 
 #+begin_src emacs-lisp :tangle .dir-locals.el
  ((nil . ((compile-command . "just build"))))
@@ -20,8 +20,10 @@
 
 * Links
 * Tasks
-** Emacs [0/2]
+** Emacs [1/3]
 *** TODO Modeline configuration
-*** STARTED Meow!!
+*** DONE Meow!!
+- State "DONE"       from "STARTED"    [2024-10-31 Thu 12:44]
 - State "STARTED"    from "TODO"       [2024-10-29 Tue 20:25]
+*** TODO Put perspectives on the tab bar?
 * Questions

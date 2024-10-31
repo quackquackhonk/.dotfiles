@@ -95,6 +95,8 @@
          )
 
   :config
+  ;; Don't show bookmarks in consult-buffer
+  (consult-customize consult--source-bookmark :hidden t :default :nil)
   ;; Narrowing lets you restrict results to certain groups of candidates
   (setq consult-narrow-key "<"))
 
@@ -220,6 +222,14 @@
 ;;;   Misc. editing enhancements
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;; A better auto indentation mode
+(use-package aggressive-indent
+  :init
+  ;; disable electric-indent-mode
+  (electric-indent-mode -1)
+  :config
+  (global-aggressive-indent-mode 1))
 
 (use-package ripgrep)
 
