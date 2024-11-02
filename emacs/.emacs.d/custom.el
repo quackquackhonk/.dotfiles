@@ -18,15 +18,14 @@
              (pyvenv-activate
               "/Users/i34866/code/amps/amps-surface-roughness/spack_env/.spack-env/view")))))
  '(package-selected-packages
-   '(aggressive-indent avy cape cargo catppuccin-theme cmake-mode
-                       corfu-terminal devdocs diminish dts-mode eat
-                       eglot-booster embark-consult
-                       exec-path-from-shell fancy-compilation forge
-                       grip-mode hl-todo json-mode just-mode kind-icon
-                       ligature marginalia meow nerd-icons orderless
-                       persp-projectile protobuf-mode pyvenv
-                       rainbow-delimiters rainbow-mode ripgrep
-                       rust-mode solaire-mode vertico wgrep yaml-mode))
+   '(avy cape cargo catppuccin-theme cmake-mode consult-todo
+         corfu-terminal devdocs diminish dts-mode eat eglot-booster
+         eldoc-box embark-consult exec-path-from-shell
+         fancy-compilation forge grip-mode hl-todo json-mode just-mode
+         kind-icon ligature marginalia meow nerd-icons orderless
+         persp-projectile protobuf-mode pyvenv rainbow-delimiters
+         rainbow-mode ripgrep rust-mode solaire-mode vertico wgrep
+         yaml-mode))
  '(package-vc-selected-packages
    '((eglot-booster :vc-backend Git :url
                     "https://github.com/jdtsmith/eglot-booster")

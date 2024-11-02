@@ -6,7 +6,8 @@
 ;;;  - Version Control
 ;;;  - Project Management
 ;;;  - Common file types
-;;;  - LSP-mode
+;;;  - Docs + Diagnostics
+;;;  - Eglot
 ;;;  - PL Specific Configuration
 ;;;    - C/C++
 ;;;    - Python
@@ -28,6 +29,7 @@
   :hook
   ;; Auto parenthesis matching
   ((prog-mode . electric-pair-mode)))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -113,8 +115,27 @@
 (use-package just-mode)
 (use-package cmake-mode)
 
-;; Devdocs
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;;   Documentation and Diagnostics
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Show eldoc in a popup box
+(use-package eldoc-box
+  :config
+  ;; Don't show on hover, only on keypress
+  (eldoc-box-hover-mode -1)
+  (setq eldoc-echo-area-use-multiline-p nil)
+  (require 'meow)
+  (meow-normal-define-key
+   '("K" . eldoc-box-help-at-point)))
+
+(use-package consult-todo-narrow
+  :demand t)
+
+;; Devdocs integration
 (use-package devdocs
+  :bind (("C-h D" . devdocs-lookup))
   :hook (('python-mode-hook . (lambda () (setq-local devdocs-current-docs '("python~3.11"))))
          ('python-ts-mode-hook . (lambda () (setq-local devdocs-current-docs '("python~3.11"))))
          ('c-mode-hook . (lamdba () (setq-local devdocs-current-docs '("c"))))
@@ -144,13 +165,13 @@
   (eglot-extend-to-xref t)              ; activate Eglot in referenced non-project files
   :config
   ;; Disable inlay hints globally
-  (setq eglot-ignored-server-capabilities '(:inlayHintProvider))
+  (add-to-list 'eglot-ignored-server-capabilities :inlayHintProvider)
 
   ;; clangd for c/c++
   (add-to-list 'eglot-server-programs '((c++-mode c-mode) "clangd"))
 
   ;; format on save
-  (add-hook 'after-save-hook
+  (add-hook 'before-save-hook
             (lambda () (if (eglot-managed-p)
                            (eglot-format-buffer))))
 
@@ -160,18 +181,18 @@
   ;; server configurations
   (setq-default eglot-workspace-configuration
                 '((:pylsp . (:plugins (:pycodestyle (:enabled :json-false)
-                                       :mccabe (:enabled :json-false)
-                                       :pyflakes (:enabled :json-false)
-                                       :flake8 (:enabled :json-false
-                                                :maxLineLength 100)
-                                       :pylsp_mypy (:enabled t)
-                                       :ruff (:enabled t
-                                              :lineLength 100)
-                                       :pydocstyle (:enabled :json-false)
-                                       :yapf (:enabled :json-false)
-                                       :autopep8 (:enabled :json-false)
-                                       :black (:enabled t
-                                               :cache_config t)))))))
+                                                    :mccabe (:enabled :json-false)
+                                                    :pyflakes (:enabled :json-false)
+                                                    :flake8 (:enabled :json-false
+                                                                      :maxLineLength 100)
+                                                    :pylsp_mypy (:enabled t)
+                                                    :ruff (:enabled t
+                                                                    :lineLength 100)
+                                                    :pydocstyle (:enabled :json-false)
+                                                    :yapf (:enabled :json-false)
+                                                    :autopep8 (:enabled :json-false)
+                                                    :black (:enabled t
+                                                                     :cache_config t)))))))
 
 (use-package eglot-booster
   ;; Needs to be installed from VC,

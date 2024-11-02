@@ -30,7 +30,7 @@
   :demand t
   :bind (("C-c n" . avy-goto-line))
   :config
-  (setq avy-keys '(?a ?r ?s ?t ?g ?m ?n ?e ?i ?o)
+  (setq avy-keys '(?a ?r ?s ?t ?p ?l ?n ?e ?i ?o)
         avy-background nil))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -74,6 +74,7 @@
                           "--exclude .spack_env"
                           "--exclude .cache"
                           "--exclude .mypy_cache"
+                          "--exclude devdocs"
                           "--exclude build"))
 
 
@@ -95,15 +96,23 @@
          )
 
   :config
-  ;; Don't show bookmarks in consult-buffer
   (consult-customize consult--source-bookmark :hidden t :default :nil)
+  (setq-default consult-buffer-sources
+                '(consult--source-hidden-buffer
+                  consult--source-modified-buffer
+                  consult--source-buffer
+                  consult--source-recent-file
+                  consult--source-file-register
+                  ;; Don't show bookmarks in consult-buffer
+                  ;; consult--source-bookmark
+                  consult--source-project-buffer-hidden
+                  consult--source-project-recent-file-hidden))
   ;; Narrowing lets you restrict results to certain groups of candidates
   (setq consult-narrow-key "<"))
 
 (use-package embark
   :demand t
   :after avy
-  :bind (("C-c a" . embark-act))        ; bind this to an easy key to hit
   :init
   ;; Optionally replace the key help with a completing-read interface
   (setq prefix-help-command #'embark-prefix-help-command)
@@ -224,13 +233,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;; A better auto indentation mode
-(use-package aggressive-indent
-  :init
-  ;; disable electric-indent-mode
-  (electric-indent-mode -1)
-  :config
-  (global-aggressive-indent-mode 1))
-
 (use-package ripgrep)
 
 ;; Modify search results en masse

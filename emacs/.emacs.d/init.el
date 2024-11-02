@@ -43,14 +43,14 @@
   :ensure t
   :config
   ;; diminish built-in minor modes
+  (diminish 'visual-line-mode)
   (diminish 'eldoc-mode))
 
 (use-package exec-path-from-shell
   :init (setq-default explicit-shell-file-name "/bin/zsh")
   :config
-  (when (memq window-system '(mac ns x))
-   (exec-path-from-shell-initialize))
-  (when (daemonp)
+  (when (or (memq window-system '(mac ns x))
+            (daemonp))
    (exec-path-from-shell-initialize)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -144,9 +144,9 @@ If the new path's directories does not exist, create them."
 (setopt x-underline-at-descent-line nil)           ; Prettier underlines
 (setopt switch-to-buffer-obey-display-actions t)   ; Make switching buffers more consistent
 
-;; Don't show trailing whitespace, and delete it on save
+;; Don't show trailing whitespace, and delete when saving
 (setopt show-trailing-whitespace nil)
-(add-hook 'after-save-hook
+(add-hook 'before-save-hook
           (lambda ()
             (delete-trailing-whitespace)))
 
@@ -160,10 +160,6 @@ If the new path's directories does not exist, create them."
 (pixel-scroll-precision-mode)                         ; Smooth scrolling
 (setopt ring-bell-function 'ignore)                   ; disable the bell
 (setopt compilation-scroll-output t)                  ; follow compilation output by default
-
-;; Display line numbers in programming mode
-(add-hook 'prog-mode-hook 'display-line-numbers-mode)
-(setopt display-line-numbers-width 3)           ; Set a minimum width
 
 ;; Nice line wrapping when working with text
 (add-hook 'text-mode-hook 'visual-line-mode)
