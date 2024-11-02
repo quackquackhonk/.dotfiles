@@ -20,10 +20,15 @@
 
 * Links
 * Tasks
-** Emacs [1/3]
+** Emacs [1/7]
+*** TODO flatten the config
+*** TODO display-buffer customization
 *** TODO Modeline configuration
-*** DONE Meow!!
-- State "DONE"       from "STARTED"    [2024-10-31 Thu 12:44]
-- State "STARTED"    from "TODO"       [2024-10-29 Tue 20:25]
-*** TODO Put perspectives on the tab bar?
+*** Meow
+**** TODO custom meow "things"
+***** WAITING angled brackets <>
+***** TODO single quotes ''
+***** TODO backticks ``
+**** TODO can we set up use-package integration?
+*** TODO Put perspectives on the tab bar
 * Questions

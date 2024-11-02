@@ -13,6 +13,9 @@
 (setq warning-suppress-log-types '((comp) (bytecomp)))
 (setq native-comp-async-report-warnings-errors 'silent)
 
+;; Disable package.el for elpaca
+(setq package-enable-at-startup nil)
+
 ;; Silence stupid startup message
 (setq inhibit-startup-echo-area-message (user-login-name))
 

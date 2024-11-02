@@ -19,7 +19,7 @@
 (use-package undo-fu)
 
 (use-package evil
-  :ensure t
+  :straight t
   :init
   (setq evil-respect-visual-line-mode t)
   ;; collection settings
@@ -50,7 +50,7 @@
   (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state))
 
 (use-package evil-collection
-  :ensure t
+  :straight t
   :after evil
   :custom
   (evil-collection-want-unimpaired-p nil)
@@ -58,14 +58,14 @@
   (evil-collection-init))
 
 (use-package evil-commentary
-  :ensure t
+  :straight t
   :after evil
   :diminish evil-commentary-mode
   :config
   (evil-commentary-mode))
 
 (use-package evil-surround
-  :ensure t
+  :straight t
   :config
   (global-evil-surround-mode 1))
 
