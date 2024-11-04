@@ -51,7 +51,7 @@
   (diminish 'eldoc-mode))
 
 (use-package exec-path-from-shell
-  :init (setq-default explicit-shell-file-name "/bin/zsh")
+  :init (setq-default explicit-shell-file-name "/usr/bin/nu")
   :config
   ;; only run exec-path-from-shell when not running in terminal (GUI or daemon)
   (when (or (memq window-system '(mac ns x))
