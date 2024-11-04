@@ -12,6 +12,7 @@
    '("e9aa348abd3713a75f2c5ba279aa581b1c6ec187ebefbfa33373083ff8004c7c"
      "6454421996f0508c38215a633256e36c19a28591542fb0946cfc40f1dceb89cf"
      default))
+ '(eat-shell "/bin/zsh")
  '(ignored-local-variable-values
    '((eval progn
            (defun qqh/venv-on nil
@@ -57,5 +58,5 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :extend nil :stipple nil :background "#1e1e2e" :foreground "#cdd6f4" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight regular :height 110 :width normal :foundry "SAJA" :family "Iosevka"))))
+ '(default ((t (:inherit nil :extend nil :stipple nil :background "#1e1e2e" :foreground "#cdd6f4" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight regular :height 130 :width normal :foundry "nil" :family "Iosevka"))))
  '(font-lock-comment-face ((t (:inherit shadow)))))

@@ -36,9 +36,14 @@
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 
-;; Setup use-package for straight
 (straight-use-package 'use-package)
-(setq straight-use-package-by-default t)
+
+;; Setup use-package for straight
+(use-package straight
+  :custom
+  ;; add project and flymake to the pseudo-packages variable so straight.el doesn't download a separate version than what eglot downloads.
+  (straight-built-in-pseudo-packages '(emacs nadvice python image-mode project flymake xref))
+  (straight-use-package-by-default t))
 
 ;; always load the newest bytecode
 (setq load-prefer-newer t)
@@ -643,6 +648,7 @@ If the new path's directories does not exist, create them."
       (copy-file template file))
     (find-file file)))
 
+(use-package project)
 (use-package projectile
   :init
   (projectile-mode +1)
