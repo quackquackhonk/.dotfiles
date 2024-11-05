@@ -24,11 +24,17 @@
 *** TODO Get off HyDE
 Hyde kind of defeats the point of not going with a DE, I should rip out the guts and keep what i need
 *** TODO Waybar configuration without hyde
-** Emacs [0/4]
-*** TODO flatten the config
+** Emacs [1/4]
+*** TODO remove things that I don't know what they do
+*** DONE flatten the config
+- State "DONE"       from "TODO"       [2024-11-04 Mon 17:31]
+*** TODO split up linux / macos / terminal settings
 *** TODO display-buffer customization
 *** TODO Modeline configuration
 *** Meow [1/2]
+**** TODO surround integration
+**** TODO prefix maps in meow normal mode
+~g~ and ~z~ prefix maps?
 **** TODO custom meow "things"
 ***** WAITING angled brackets <>
 ***** TODO single quotes ''

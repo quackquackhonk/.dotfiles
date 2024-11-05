@@ -1,23 +1,14 @@
 ;;; init.el --- Entry point for my emacs config -*- lexical-binding: t; -*-
 
 ;;; Commentary:
-;;;  - Straight Initialization
-;;;  - Basic settings
-;;;  - Minibuffer/completion settings
-;;;  - Interface enhancements/defaults
-;;;  - Tab-bar configuration
-;;;  - Theme
-;;;  - Optional extras
-;;;  - Built-in customization framework
 
 ;;; Code:
 
-;;;; Guardrail
+;;; Guardrail
+(when (< emacs-major-version 30)
+  (error "[qqh] config assumes Emacs version 30+, currently running %s!" emacs-major-version))
 
-(when (< emacs-major-version 29)
-  (error "[qqh] config assumes Emacs version 29+, currently running %s!" emacs-major-version))
-
-;;;; Straight initialization
+;;; Straight initialization
 
 ;; bootstrap straight
 (defvar bootstrap-version)
@@ -56,7 +47,6 @@
   (diminish 'eldoc-mode))
 
 (use-package exec-path-from-shell
-  :init (setq-default explicit-shell-file-name "/usr/bin/nu")
   :config
   ;; only run exec-path-from-shell when not running in terminal (GUI or daemon)
   (when (or (memq window-system '(mac ns x))
@@ -187,7 +177,6 @@ If the new path's directories does not exist, create them."
   :diminish which-key-mode
   :config
   (which-key-mode))
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -386,6 +375,10 @@ If the new path's directories does not exist, create them."
   :custom
   (eat-term-name "xterm")
   :config
+  (when (eq system-type 'darwin)
+    (setq eat-shell "/bin/zsh"))
+  (when (eq system-type 'gnu/linux)
+    (setq eat-shell "/usr/bin/nu"))
   (eat-eshell-mode)                     ; use Eat to handle term codes in program output
   (eat-eshell-visual-command-mode))     ; commands like less will be handled by Eat
 
@@ -445,12 +438,17 @@ If the new path's directories does not exist, create them."
   (interactive)
   (persp-kill-buffer* (current-buffer)))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;;    Meow for modal editing
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; Meow for modal editing
-;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Install surround package
+(use-package surround)
+
+;; Make some transient keymaps
+(use-package transient)
 
 ;; Install meow
 (use-package meow :demand t)
@@ -459,8 +457,16 @@ If the new path's directories does not exist, create them."
   ;; colemak-dh cheatsheet
   (setq meow-cheatsheet-layout meow-cheatsheet-layout-colemak-dh)
 
-  ;; sets the thing table characters to use ([{ for grouping
-  ;; punctuations
+  ;; register some things
+  (meow-thing-register 'qqh/thing-<>
+                       '(pair ("<") (">"))
+                       '(pair ("<") (">")))
+  (meow-thing-register 'qqh/meow-thing-quote
+                       '(pair ("'") ("'"))
+                       '(pair ("'") ("'")))
+
+  ;; sets the thing table characters to use ([{ for grouping punctuations
+  ;; test ' asrtarstar '
   (setq meow-char-thing-table
         '((?\( . round)
           (?\) . round)
@@ -468,7 +474,10 @@ If the new path's directories does not exist, create them."
           (?\] . square)
           (?\{ . curly)
           (?\} . curly)
+          (?\< . qqh/thing-<>)
+          (?\> . qqh/thing-<>)
           (?\" . string)
+          (?\' . qqh/meow-thing-quote)
           (?s . symbol)
           (?w . window)
           (?b . buffer)
@@ -481,7 +490,7 @@ If the new path's directories does not exist, create them."
   ;; Change the keys used by keypad mode
   (setq meow-keypad-ctrl-meta-prefix ?\r          ;; Use RET for C-M-
         meow-keypad-meta-prefix ?z                ;; Use z for M-
-        meow-keypad-literal-prefix ?\')           ;; Use ' for literal keys
+        meow-keypad-literal-prefix 32)            ;; Use SPC for literal keys
 
   (meow-motion-overwrite-define-key
    ;; Use e to move up, n to move down.
@@ -570,7 +579,7 @@ If the new path's directories does not exist, create them."
    '("q" . meow-quit)
    '("r" . meow-replace)
    '("s" . meow-insert)
-   '("S" . 'surround-keymap)
+   (cons "S" surround-keymap)
    '("t" . meow-till)
    '("u" . meow-undo)
    '("U" . meow-undo-in-selection)
@@ -595,9 +604,6 @@ If the new path's directories does not exist, create them."
 (meow-global-mode 1)
 ;; enable esc mode for terminal use
 (meow-esc-mode 1)
-
-(use-package surround
-  :bind-keymap (("M-'" . surround-keymap)))
 
 ;; Packages for software development
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -624,7 +630,6 @@ If the new path's directories does not exist, create them."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Magit: best Git client to ever exist
-(use-package transient)
 (use-package magit)
 
 (use-package forge
