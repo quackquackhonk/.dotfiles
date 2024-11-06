@@ -461,9 +461,6 @@ If the new path's directories does not exist, create them."
   (meow-thing-register 'qqh/thing-<>
                        '(pair ("<") (">"))
                        '(pair ("<") (">")))
-  (meow-thing-register 'qqh/meow-thing-quote
-                       '(pair ("'") ("'"))
-                       '(pair ("'") ("'")))
 
   ;; sets the thing table characters to use ([{ for grouping punctuations
   ;; test ' asrtarstar '
@@ -477,7 +474,6 @@ If the new path's directories does not exist, create them."
           (?\< . qqh/thing-<>)
           (?\> . qqh/thing-<>)
           (?\" . string)
-          (?\' . qqh/meow-thing-quote)
           (?s . symbol)
           (?w . window)
           (?b . buffer)
