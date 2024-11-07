@@ -12,7 +12,7 @@
    '("e9aa348abd3713a75f2c5ba279aa581b1c6ec187ebefbfa33373083ff8004c7c"
      "6454421996f0508c38215a633256e36c19a28591542fb0946cfc40f1dceb89cf"
      default))
- '(eat-shell "/bin/zsh")
+ '(eat-shell "/opt/homebrew/bin/fish")
  '(ignored-local-variable-values
    '((eval progn
            (defun qqh/venv-on nil

@@ -56,7 +56,7 @@
   (diminish 'eldoc-mode))
 
 (use-package exec-path-from-shell
-  :init (setq-default explicit-shell-file-name "/usr/bin/nu")
+  :init (setq-default explicit-shell-file-name "/opt/homebrew/bin/fish")
   :config
   ;; only run exec-path-from-shell when not running in terminal (GUI or daemon)
   (when (or (memq window-system '(mac ns x))
@@ -451,6 +451,10 @@ If the new path's directories does not exist, create them."
 ;;; Meow for modal editing
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Global bindings
+(global-set-key (kbd "<home>") 'beginning-of-line)
+(global-set-key (kbd "<end>") 'end-of-line)
 
 ;; Install meow
 (use-package meow :demand t)

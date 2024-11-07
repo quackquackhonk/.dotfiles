@@ -22,9 +22,13 @@
 * Tasks
 ** Emacs [1/7]
 *** TODO flatten the config
+*** TODO DAP mode for c/c++
 *** TODO display-buffer customization
 *** TODO Modeline configuration
 *** Meow
+**** TODO transient keybindings for g and z
+- [ ] need to
+-
 **** TODO custom meow "things"
 ***** WAITING angled brackets <>
 ***** TODO single quotes ''
