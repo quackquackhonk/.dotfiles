@@ -21,22 +21,28 @@
 * Links
 * Tasks
 ** Hyprland [0/2]
-*** TODO Get off HyDE
+*** STARTED Get off HyDE
+- State "STARTED"    from "TODO"       [2024-11-07 Thu 18:27]
+  This should be done, there mignt need to be some leftover stuff.
+
 Hyde kind of defeats the point of not going with a DE, I should rip out the guts and keep what i need
+
 *** TODO Waybar configuration without hyde
 ** Emacs [1/4]
 *** TODO remove things that I don't know what they do
-*** DONE flatten the config
-- State "DONE"       from "TODO"       [2024-11-04 Mon 17:31]
 *** TODO split up linux / macos / terminal settings
 *** TODO display-buffer customization
 *** TODO Modeline configuration
-*** Meow [1/2]
-**** TODO surround integration
+*** DONE flatten the config
+- State "DONE"       from "TODO"       [2024-11-04 Mon 17:31]
+*** Meow [2/4]
+**** DONE surround integration
+- State "DONE"       from "TODO"       [2024-11-07 Thu 18:26]
 **** TODO prefix maps in meow normal mode
 ~g~ and ~z~ prefix maps?
 **** TODO custom meow "things"
-***** WAITING angled brackets <>
+***** DONE angled brackets <>
+- State "DONE"       from "WAITING"    [2024-11-07 Thu 18:26]
 ***** TODO single quotes ''
 ***** TODO backticks ``
 **** OBSOLETE can we set up use-package integration?
