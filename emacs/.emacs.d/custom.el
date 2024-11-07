@@ -18,20 +18,6 @@
            (defun qqh/venv-on nil
              (pyvenv-activate
               "/Users/i34866/code/amps/amps-surface-roughness/spack_env/.spack-env/view")))))
- '(package-selected-packages
-   '(avy cape cargo catppuccin-theme cmake-mode consult-todo
-         corfu-terminal devdocs diminish dts-mode eat eglot-booster
-         eldoc-box embark-consult exec-path-from-shell
-         fancy-compilation forge grip-mode hl-todo json-mode just-mode
-         kind-icon ligature marginalia meow nerd-icons orderless
-         persp-projectile protobuf-mode pyvenv rainbow-delimiters
-         rainbow-mode ripgrep rust-mode solaire-mode vertico wgrep
-         yaml-mode))
- '(package-vc-selected-packages
-   '((eglot-booster :vc-backend Git :url
-                    "https://github.com/jdtsmith/eglot-booster")
-     (rose-pine-emacs :vc-backend Git :url
-                      "https://github.com/thongpv87/rose-pine-emacs.git")))
  '(safe-local-variable-values
    '((eval progn
            (pyvenv-activate
@@ -58,5 +44,5 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :extend nil :stipple nil :background "#1e1e2e" :foreground "#cdd6f4" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight regular :height 130 :width normal :foundry "nil" :family "Iosevka"))))
+ '(default ((t (:inherit nil :extend nil :stipple nil :background "#1e1e2e" :foreground "#cdd6f4" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight regular :height 110 :width normal :foundry "nil" :family "Iosevka"))))
  '(font-lock-comment-face ((t (:inherit shadow)))))

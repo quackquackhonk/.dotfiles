@@ -60,6 +60,8 @@ def "config emacs" [] {
     edit ~/.emacs.d/init.el
 }
 
+pokemon-colorscripts --no-title -r 1-8
+
 # CLI tool integrations
 use ~/.cache/starship/init.nu
 source ~/.zoxide.nu

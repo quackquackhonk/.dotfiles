@@ -20,19 +20,27 @@
 
 * Links
 * Tasks
-** Emacs [1/7]
-*** TODO flatten the config
-*** TODO DAP mode for c/c++
+** Hyprland [0/2]
+*** TODO Get off HyDE
+Hyde kind of defeats the point of not going with a DE, I should rip out the guts and keep what i need
+*** TODO Waybar configuration without hyde
+** Emacs [1/4]
+*** TODO remove things that I don't know what they do
+*** DONE flatten the config
+- State "DONE"       from "TODO"       [2024-11-04 Mon 17:31]
+*** TODO split up linux / macos / terminal settings
 *** TODO display-buffer customization
 *** TODO Modeline configuration
-*** Meow
-**** TODO transient keybindings for g and z
-- [ ] need to
--
+*** Meow [1/2]
+**** TODO surround integration
+**** TODO prefix maps in meow normal mode
+~g~ and ~z~ prefix maps?
 **** TODO custom meow "things"
 ***** WAITING angled brackets <>
 ***** TODO single quotes ''
 ***** TODO backticks ``
-**** TODO can we set up use-package integration?
+**** OBSOLETE can we set up use-package integration?
+- State "OBSOLETE"   from "TODO"       [2024-11-04 Mon 17:22] \\
+  already can be implemented using :bind (:map meow-STATE-state-map (...))
 *** TODO Put perspectives on the tab bar
 * Questions
