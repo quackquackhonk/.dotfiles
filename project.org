@@ -28,8 +28,13 @@ Hyde kind of defeats the point of not going with a DE, I should rip out the guts
 *** TODO remove things that I don't know what they do
 *** DONE flatten the config
 - State "DONE"       from "TODO"       [2024-11-04 Mon 17:31]
+*** TODO c / c++ debugging?
 *** TODO split up linux / macos / terminal settings
 *** TODO display-buffer customization
+- [ ] compilation buffer always in a new tab, switch back on "close"
+- [ ] ~eat-project~ as full horizontal split
+- [ ] ~eat~ in a new tab (auto close tab)
+- [ ] magit buffer in new tab (auto close tab)
 *** TODO Modeline configuration
 *** Meow [1/2]
 **** TODO surround integration

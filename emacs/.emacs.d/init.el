@@ -44,6 +44,7 @@
   :config
   ;; diminish built-in minor modes
   (diminish 'visual-line-mode)
+  (diminish 'smerge-mode)
   (diminish 'eldoc-mode))
 
 (use-package exec-path-from-shell
