@@ -8,7 +8,7 @@
 (when (< emacs-major-version 30)
   (error "[qqh] config assumes Emacs version 30+, currently running %s!" emacs-major-version))
 
-;;; Straight initialization
+;; + Straight initialization
 
 ;; bootstrap straight
 (defvar bootstrap-version)
@@ -39,6 +39,7 @@
 ;; always load the newest bytecode
 (setq load-prefer-newer t)
 
+;; * Some initial packages
 ;; Load diminish for :diminish constructs in use-package
 (use-package diminish
   :config
@@ -54,12 +55,12 @@
             (daemonp))
     (exec-path-from-shell-initialize)))
 
-;;;; Variable definitions
+;;; QQH definitions
 
 (defvar qqh/modules-dir (expand-file-name "qqh" user-emacs-directory)
   "The directory containing my module files.")
 
-;;;; Basic settings
+;;; Basic settings
 (setopt inhibit-splash-screen t)
 (setopt initial-major-mode 'fundamental-mode)  ; default mode for the *scratch* buffer
 (setopt display-time-default-load-average nil) ; this information is useless for most
@@ -93,7 +94,7 @@
 (setq find-program "fd"
       grep-program "rg")
 
-;;; Minibuffer/completion settings
+;; ** Minibuffer/completion settings
 ;; For help, see: https://www.masteringemacs.org/article/understanding-minibuffer-completion
 
 ;; Save history of minibuffer
@@ -114,12 +115,6 @@
 
 (keymap-set minibuffer-mode-map "TAB" 'minibuffer-complete) ; TAB acts more like how it does in the shell
 
-;;; Dired
-(use-package dired
-  :straight nil
-  :config
-  (setq dired-kill-when-opening-new-dired-buffer t))
-
 ;; Don't litter file system with *~ backup files; put them all inside
 ;; ~/.emacs.d/backup
 (defun qqh/backup-file-name (fpath)
@@ -131,6 +126,61 @@ If the new path's directories does not exist, create them."
     (make-directory (file-name-directory backupFilePath) (file-name-directory backupFilePath))
     backupFilePath))
 (setopt make-backup-file-name-function 'qqh/backup-file-name)
+
+;; * Built-Ins.
+;; ** Dired
+(use-package dired
+  :straight nil
+  :config
+  (setq dired-kill-when-opening-new-dired-buffer t))
+
+;; Make outline-minor-mode operate a bit more like org-mode <tab> &
+;; S-<tab>. org-mode has lots of baggage eg many intrusive keymaps. If
+;; text-folding is all you need then outline is much simpler eg 1593
+;; LOC vs 127834 LOC for org (excl blanks, comments)
+
+(defun qqh//outline-show-heading-path ()
+  "Display the full path of the headings containing point in the echo area."
+  (interactive)
+  (let ((path (qqh//outline-get-heading-path)))
+    (if path
+        (message "Heading Path: %s" (mapconcat 'identity path "/"))
+      (message "Not in an outline"))))
+
+(defun qqh//outline-get-heading-path ()
+  "Get the full path of the heading at point."
+  (save-excursion
+    (let ((path '())
+          (heading (outline-back-to-heading)))
+      (while heading
+        (let ((sub-heading (buffer-substring-no-properties (line-beginning-position) (line-end-position))))
+          (setq sub-heading (replace-regexp-in-string (concat "^" outline-regexp) "" sub-heading))
+          (setq path (cons sub-heading path))
+          (setq heading (ignore-errors (progn (outline-up-heading 1) (outline-back-to-heading))))))
+      path)))
+
+(with-eval-after-load "outline"
+  (define-key outline-minor-mode-map (kbd "C-c C-c")
+              ;; this enables C-c C-c to be used instead of the very awkward C-c C-@ prefix:
+              (lookup-key outline-minor-mode-map (kbd "C-c @"))))
+
+(add-hook 'outline-minor-mode-hook
+          (lambda ()
+            (define-key outline-minor-mode-map [backtab] 'outline-cycle-buffer)
+            (define-key outline-minor-mode-map (kbd "C-c C-n") 'outline-next-visible-heading)
+            (define-key outline-minor-mode-map (kbd "C-c C-p") 'outline-previous-visible-heading)
+            (define-key outline-minor-mode-map (kbd "C-c C-f") 'outline-forward-same-level)
+            (define-key outline-minor-mode-map (kbd "C-c C-b") 'outline-backward-same-level)
+            (define-key outline-minor-mode-map (kbd "C-c C-u") 'outline-up-heading)
+            (define-key outline-minor-mode-map (kbd "C-c C-a") 'outline-show-all)
+            (define-key outline-minor-mode-map (kbd "C-c ?")   'qqh//outline-show-heading-path)
+            (define-key outline-minor-mode-map (kbd "C-c C-c C-a") 'outline-show-all)
+            (define-key outline-minor-mode-map (kbd "<f1>") 'outline-toggle-children)
+
+            (setq-local outline-minor-mode-use-buttons 'in-margins)
+            (setq-local outline-minor-mode-highlight 'append)
+            (setq-local outline-minor-mode-cycle t)))
+
 
 ;;; Interface enhancements/defaults
 ;; Mode line information
@@ -397,7 +447,7 @@ If the new path's directories does not exist, create them."
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;; A better auto indentation mode
+;; A better auto indentation mode
 (use-package ripgrep)
 
 ;; Modify search results en masse
@@ -434,7 +484,7 @@ If the new path's directories does not exist, create them."
 
 ;; Vim-bindings in Emacs (evil-mode configuration)
 ;; (load-file (expand-file-name "bindings-evil.el" qqh/modules-dir))
-;;; Some declarations for Keybindings
+;; Some declarations for Keybindings
 (defun qqh/kill-buffer ()
   (interactive)
   (persp-kill-buffer* (current-buffer)))
@@ -797,16 +847,12 @@ If the new path's directories does not exist, create them."
   :hook (('emacs-lisp-mode-hook . flymake-mode)))
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;;   Language specific configuration
-;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Language specific configuration
 
-;;; C / C++
+;;;; C / C++
 (setq-default c-basic-offset 4)
 
-;;; PYTHON
+;;;; PYTHON
 ;; Built-in Python utilities
 (use-package python
   :custom
@@ -820,7 +866,7 @@ If the new path's directories does not exist, create them."
   (setenv "WORKON_HOME" "/opt/homebrew/Caskroom/miniconda/base/envs/")
   (pyvenv-mode 1))
 
-;;; RUST
+;;;; RUST
 (use-package rust-mode
   :config
   ;; rustfmt
@@ -832,11 +878,7 @@ If the new path's directories does not exist, create them."
 (use-package cargo
   :after rust-mode)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;;   Critical variables
-;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Org Mode
 
 ;; Agenda variables
 (setq org-directory "~/org/")         ; Non-absolute paths for agenda and
@@ -884,11 +926,6 @@ If the new path's directories does not exist, create them."
               ("C-c l s" . org-store-link)          ; Mnemonic: link → store
               ("C-c l i" . org-insert-link-global)) ; Mnemonic: link → insert
   :config
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;;   Phase 1: editing and exporting files
-;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
   (require 'oc-csl)                     ; citation support
   (add-to-list 'org-export-backends 'md)
@@ -900,12 +937,6 @@ If the new path's directories does not exist, create them."
   (setq org-export-with-smart-quotes t               ; Make exporting quotes better
         org-return-follows-link t                    ; RET follows links
         )
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;;   Phase 2: todos, agenda generation, and task tracking
-;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
   ;; Instead of just two states (TODO, DONE) we set up a few different states
   ;; that a task can be in. Run
@@ -941,13 +972,8 @@ If the new path's directories does not exist, create them."
           ("w" "Work" agenda ""
            ((org-agenda-files '("work.org"))))))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;;   Phase 3: extensions
-;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;; Babel Language activation
+;;;; Babel Language activation
 
   (org-babel-do-load-languages
    'org-babel-load-languages
