@@ -1,6 +1,6 @@
 ;;; init.el --- Entry point for my emacs config -*- lexical-binding: t; -*-
 
-;;; Commentary:
+;; Commentary:
 
 ;;; Code:
 
