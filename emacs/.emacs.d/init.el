@@ -610,7 +610,6 @@ If the new path's directories does not exist, create them."
    '("e" . meow-prev)
    '("E" . meow-prev-expand)
    '("f" . meow-find)
-   ;; TODO:
    '("g" . ignore)
    '("G" . meow-grab)
    '("m" . meow-left)

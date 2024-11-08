@@ -47,6 +47,9 @@ alias gc = git commit
 alias gp = git pull
 alias gP = git push
 
+alias l = ls -las
+alias b = bat
+
 # Edit the given file using 'emacsclient'
 # If the emacs daemon is not running, starts one and attach to it.
 def edit [...args] {
