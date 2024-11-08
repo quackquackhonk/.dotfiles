@@ -33,7 +33,6 @@ Hyde kind of defeats the point of not going with a DE, I should rip out the guts
 *** DONE flatten the config
 - State "DONE"       from "TODO"       [2024-11-04 Mon 17:31]
 *** TODO c / c++ debugging?
-
 *** TODO split up linux / macos / terminal settings
 *** TODO display-buffer customization
 - [ ] compilation buffer always in a new tab, switch back on "close"
@@ -43,10 +42,11 @@ Hyde kind of defeats the point of not going with a DE, I should rip out the guts
 *** TODO Modeline configuration
 *** DONE flatten the config
 - State "DONE"       from "TODO"       [2024-11-04 Mon 17:31]
-*** Meow [2/4]
+*** Meow [3/4]
 **** DONE surround integration
 - State "DONE"       from "TODO"       [2024-11-07 Thu 18:26]
-**** TODO prefix maps in meow normal mode
+**** DONE prefix maps in meow normal mode
+- State "DONE"       from "TODO"       [2024-11-08 Fri 13:45]
 ~g~ and ~z~ prefix maps?
 **** TODO custom meow "things"
 ***** DONE angled brackets <>

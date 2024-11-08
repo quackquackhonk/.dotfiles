@@ -8,7 +8,7 @@
 (when (< emacs-major-version 30)
   (error "[qqh] config assumes Emacs version 30+, currently running %s!" emacs-major-version))
 
-;; + Straight initialization
+;;; Straight initialization
 
 ;; bootstrap straight
 (defvar bootstrap-version)
@@ -39,14 +39,14 @@
 ;; always load the newest bytecode
 (setq load-prefer-newer t)
 
-;; * Some initial packages
+;;; Some initial packages
 ;; Load diminish for :diminish constructs in use-package
 (use-package diminish
   :config
   ;; diminish built-in minor modes
   (diminish 'visual-line-mode)
-  (diminish 'smerge-mode)
-  (diminish 'eldoc-mode))
+  (diminish 'outline-minor-mode)
+  (diminish 'smerge-mode))
 
 (use-package exec-path-from-shell
   :config
@@ -54,6 +54,13 @@
   (when (or (memq window-system '(mac ns x))
             (daemonp))
     (exec-path-from-shell-initialize)))
+
+;; which-key: shows a popup of available keybindings when typing a long key
+;; sequence (e.g. C-x ...)
+(use-package which-key
+  :diminish which-key-mode
+  :config
+  (which-key-mode))
 
 ;;; QQH definitions
 
@@ -94,8 +101,7 @@
 (setq find-program "fd"
       grep-program "rg")
 
-;; ** Minibuffer/completion settings
-;; For help, see: https://www.masteringemacs.org/article/understanding-minibuffer-completion
+;; Minibuffer/completion settings
 
 ;; Save history of minibuffer
 (savehist-mode)
@@ -114,84 +120,6 @@
 (setopt completion-auto-select 'second-tab)            ; Much more eager
 
 (keymap-set minibuffer-mode-map "TAB" 'minibuffer-complete) ; TAB acts more like how it does in the shell
-
-;; Don't litter file system with *~ backup files; put them all inside
-;; ~/.emacs.d/backup
-(defun qqh/backup-file-name (fpath)
-  "Return a new file path of a given file path (FPATH).
-If the new path's directories does not exist, create them."
-  (let* ((backupRootDir (concat user-emacs-directory "backups/"))
-         (filePath (replace-regexp-in-string "[A-Za-z]:" "" fpath )) ; remove Windows driver letter in path
-         (backupFilePath (replace-regexp-in-string "//" "/" (concat backupRootDir filePath "~") )))
-    (make-directory (file-name-directory backupFilePath) (file-name-directory backupFilePath))
-    backupFilePath))
-(setopt make-backup-file-name-function 'qqh/backup-file-name)
-
-;; * Built-Ins.
-;; ** Dired
-(use-package dired
-  :straight nil
-  :config
-  (setq dired-kill-when-opening-new-dired-buffer t))
-
-;; Make outline-minor-mode operate a bit more like org-mode <tab> &
-;; S-<tab>. org-mode has lots of baggage eg many intrusive keymaps. If
-;; text-folding is all you need then outline is much simpler eg 1593
-;; LOC vs 127834 LOC for org (excl blanks, comments)
-
-(defun qqh//outline-show-heading-path ()
-  "Display the full path of the headings containing point in the echo area."
-  (interactive)
-  (let ((path (qqh//outline-get-heading-path)))
-    (if path
-        (message "Heading Path: %s" (mapconcat 'identity path "/"))
-      (message "Not in an outline"))))
-
-(defun qqh//outline-get-heading-path ()
-  "Get the full path of the heading at point."
-  (save-excursion
-    (let ((path '())
-          (heading (outline-back-to-heading)))
-      (while heading
-        (let ((sub-heading (buffer-substring-no-properties (line-beginning-position) (line-end-position))))
-          (setq sub-heading (replace-regexp-in-string (concat "^" outline-regexp) "" sub-heading))
-          (setq path (cons sub-heading path))
-          (setq heading (ignore-errors (progn (outline-up-heading 1) (outline-back-to-heading))))))
-      path)))
-
-(with-eval-after-load "outline"
-  (define-key outline-minor-mode-map (kbd "C-c C-c")
-              ;; this enables C-c C-c to be used instead of the very awkward C-c C-@ prefix:
-              (lookup-key outline-minor-mode-map (kbd "C-c @"))))
-
-(add-hook 'outline-minor-mode-hook
-          (lambda ()
-            (define-key outline-minor-mode-map [backtab] 'outline-cycle-buffer)
-            (define-key outline-minor-mode-map (kbd "C-c C-n") 'outline-next-visible-heading)
-            (define-key outline-minor-mode-map (kbd "C-c C-p") 'outline-previous-visible-heading)
-            (define-key outline-minor-mode-map (kbd "C-c C-f") 'outline-forward-same-level)
-            (define-key outline-minor-mode-map (kbd "C-c C-b") 'outline-backward-same-level)
-            (define-key outline-minor-mode-map (kbd "C-c C-u") 'outline-up-heading)
-            (define-key outline-minor-mode-map (kbd "C-c C-a") 'outline-show-all)
-            (define-key outline-minor-mode-map (kbd "C-c ?")   'qqh//outline-show-heading-path)
-            (define-key outline-minor-mode-map (kbd "C-c C-c C-a") 'outline-show-all)
-            (define-key outline-minor-mode-map (kbd "<f1>") 'outline-toggle-children)
-
-            (setq-local outline-minor-mode-use-buttons 'in-margins)
-            (setq-local outline-minor-mode-highlight 'append)
-            (setq-local outline-minor-mode-cycle t)))
-
-
-;;; Interface enhancements/defaults
-;; Mode line information
-(setopt x-underline-at-descent-line nil)           ; Prettier underlines
-(setopt switch-to-buffer-obey-display-actions t)   ; Make switching buffers more consistent
-
-;; Don't show trailing whitespace, and delete when saving
-(setopt show-trailing-whitespace nil)
-(add-hook 'before-save-hook
-          (lambda ()
-            (delete-trailing-whitespace)))
 
 ;; Tabs BTFO
 (setopt indent-tabs-mode nil)
@@ -217,39 +145,100 @@ If the new path's directories does not exist, create them."
 (setq indicate-empty-lines t)
 (setq inhibit-startup-message t)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;;   Discovery aids
-;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; which-key: shows a popup of available keybindings when typing a long key
-;; sequence (e.g. C-x ...)
-(use-package which-key
-  :diminish which-key-mode
+
+;; Don't litter file system with *~ backup files; put them all inside
+;; ~/.emacs.d/backup
+(defun qqh/backup-file-name (fpath)
+  "Return a new file path of a given file path (FPATH).
+If the new path's directories does not exist, create them."
+  (let* ((backupRootDir (concat user-emacs-directory "backups/"))
+         (filePath (replace-regexp-in-string "[A-Za-z]:" "" fpath )) ; remove Windows driver letter in path
+         (backupFilePath (replace-regexp-in-string "//" "/" (concat backupRootDir filePath "~") )))
+    (make-directory (file-name-directory backupFilePath) (file-name-directory backupFilePath))
+    backupFilePath))
+(setopt make-backup-file-name-function 'qqh/backup-file-name)
+
+;;; Built-Ins.
+;;;; Dired
+(use-package dired
+  :straight nil
   :config
-  (which-key-mode))
+  (setq dired-kill-when-opening-new-dired-buffer t))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;;   Motion aids
-;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Outline-mode
+;; Make outline-minor-mode operate a bit more like org-mode <tab> &
+;; S-<tab>. org-mode has lots of baggage eg many intrusive keymaps. If
+;; text-folding is all you need then outline is much simpler eg 1593
+;; LOC vs 127834 LOC for org (excl blanks, comments)
 
+(defun qqh/outline-show-heading-path ()
+  "Display the full path of the headings containing point in the echo area."
+  (interactive)
+  (let ((path (qqh/outline-get-heading-path)))
+    (if path
+        (message "Heading Path: %s" (mapconcat 'identity path "/"))
+      (message "Not in an outline"))))
+
+(defun qqh/outline-get-heading-path ()
+  "Get the full path of the heading at point."
+  (save-excursion
+    (let ((path '())
+          (heading (outline-back-to-heading)))
+      (while heading
+        (let ((sub-heading (buffer-substring-no-properties (line-beginning-position) (line-end-position))))
+          (setq sub-heading (replace-regexp-in-string (concat "^" outline-regexp) "" sub-heading))
+          (setq path (cons sub-heading path))
+          (setq heading (ignore-errors (progn (outline-up-heading 1) (outline-back-to-heading))))))
+      path)))
+
+(with-eval-after-load "outline"
+  (define-key outline-minor-mode-map (kbd "C-c C-c")
+              ;; this enables C-c C-c to be used instead of the very awkward C-c C-@ prefix:
+              (lookup-key outline-minor-mode-map (kbd "C-c @"))))
+
+(add-hook 'outline-minor-mode-hook
+          (lambda ()
+            (define-key outline-minor-mode-map [backtab] 'outline-cycle-buffer)
+            (define-key outline-minor-mode-map (kbd "C-c C-n") 'outline-next-visible-heading)
+            (define-key outline-minor-mode-map (kbd "C-c C-p") 'outline-previous-visible-heading)
+            (define-key outline-minor-mode-map (kbd "C-c C-f") 'outline-forward-same-level)
+            (define-key outline-minor-mode-map (kbd "C-c C-b") 'outline-backward-same-level)
+            (define-key outline-minor-mode-map (kbd "C-c C-u") 'outline-up-heading)
+            (define-key outline-minor-mode-map (kbd "C-c C-a") 'outline-show-all)
+            (define-key outline-minor-mode-map (kbd "C-c ?")   'qqh/outline-show-heading-path)
+            (define-key outline-minor-mode-map (kbd "C-c C-c C-a") 'outline-show-all)
+            (define-key outline-minor-mode-map (kbd "<f1>") 'outline-toggle-children)
+
+            (setq-local outline-minor-mode-use-buttons 'in-margins)
+            (setq-local outline-minor-mode-highlight 'append)
+            (setq-local outline-minor-mode-cycle t)))
+
+(add-hook 'emacs-lisp-mode-hook 'outline-minor-mode)
+
+
+;;; Interface enhancements/defaults
+;; Mode line information
+(setopt x-underline-at-descent-line nil)           ; Prettier underlines
+(setopt switch-to-buffer-obey-display-actions t)   ; Make switching buffers more consistent
+
+;; Don't show trailing whitespace, and delete when saving
+(setopt show-trailing-whitespace nil)
+(add-hook 'before-save-hook
+          (lambda ()
+            (delete-trailing-whitespace)))
+
+;;; Movement
 (use-package avy
-  :demand t
+    :demand t
   :bind (("C-c n" . avy-goto-line))
   :config
   (setq avy-keys '(?a ?r ?s ?t ?p ?l ?n ?e ?i ?o)
         avy-background nil))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;;   Power-ups: Embark and Consult
-;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Minibuffer & Completion
 (use-package embark-consult)
 
-;; Consult: Misc. enhanced commands
+;;;; Embark and Consult
 (use-package consult
   :after embark-consult
   ;; Enable automatic preview at point in the *Completions* buffer. This is
@@ -323,6 +312,7 @@ If the new path's directories does not exist, create them."
 (use-package embark
   :demand t
   :after '(avy embark-consult)
+  :bind (("C-c a" . embark-act))
   :init
   ;; Optionally replace the key help with a completing-read interface
   (setq prefix-help-command #'embark-prefix-help-command)
@@ -341,14 +331,8 @@ If the new path's directories does not exist, create them."
   ;; candidate you select
   (setf (alist-get ?. avy-dispatch-alist) 'qqh/avy-action-embark))
 
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;;   Minibuffer and completion
-;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 ;; Vertico: better vertical completion for minibuffer commands
+;;;; Vertico
 (use-package vertico
   :custom
   (vertico-count 30)
@@ -368,7 +352,15 @@ If the new path's directories does not exist, create them."
   :config
   (marginalia-mode))
 
-;; Popup completion-at-point
+;; Orderless: powerful completion style
+(use-package orderless
+  :custom
+  ;; Configure a custom style dispatcher (see the Consult wiki)
+  (completion-styles '(orderless basic))
+  (completion-category-defaults nil)
+  (completion-category-overrides '((file (styles partial-completion)))))
+
+;;;; Popup completion-at-point
 (use-package corfu
   :init
   (global-corfu-mode)
@@ -412,6 +404,7 @@ If the new path's directories does not exist, create them."
   :config
   (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
 
+;;; Terminal emulation
 (use-package eshell
   :straight nil
   :init
@@ -421,35 +414,20 @@ If the new path's directories does not exist, create them."
     (keymap-set eshell-mode-map "C-r" 'consult-history))
   :hook ((eshell-mode . qqh/setup-eshell)))
 
-;; Eat: Emulate A Terminal
+;;;; Eat: Emulate A Terminal
 (use-package eat
   :custom
   (eat-term-name "xterm")
   :config
   (when (eq system-type 'darwin)
-    (setq eat-shell "/bin/zsh"))
+    (setq eat-shell "/opt/homebrew/bin/fish"))
   (when (eq system-type 'gnu/linux)
     (setq eat-shell "/usr/bin/nu"))
   (eat-eshell-mode)                     ; use Eat to handle term codes in program output
   (eat-eshell-visual-command-mode))     ; commands like less will be handled by Eat
 
-;; Orderless: powerful completion style
-(use-package orderless
-  :custom
-  ;; Configure a custom style dispatcher (see the Consult wiki)
-  (completion-styles '(orderless basic))
-  (completion-category-defaults nil)
-  (completion-category-overrides '((file (styles partial-completion)))))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;;   Misc. editing enhancements
-;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;; A better auto indentation mode
+;;; Misc. editing enhancements
 (use-package ripgrep)
-
 ;; Modify search results en masse
 (use-package wgrep
   :config
@@ -482,18 +460,10 @@ If the new path's directories does not exist, create them."
         '(read-only t cursor-intangible t face minibuffer-prompt))
   (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode))
 
-;; Vim-bindings in Emacs (evil-mode configuration)
-;; (load-file (expand-file-name "bindings-evil.el" qqh/modules-dir))
-;; Some declarations for Keybindings
+;;; Keybindings
 (defun qqh/kill-buffer ()
   (interactive)
   (persp-kill-buffer* (current-buffer)))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;;    Meow for modal editing
-;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Install surround package
 (use-package surround)
@@ -501,9 +471,11 @@ If the new path's directories does not exist, create them."
 ;; Make some transient keymaps
 (use-package transient)
 
-;; Global bindings
+;;;; Global bindings
 (global-set-key (kbd "<home>") 'beginning-of-line)
 (global-set-key (kbd "<end>") 'end-of-line)
+
+;;;; Meow
 
 ;; Install meow
 (use-package meow :demand t)
@@ -542,6 +514,18 @@ If the new path's directories does not exist, create them."
   (setq meow-keypad-ctrl-meta-prefix ?\r          ;; Use RET for C-M-
         meow-keypad-meta-prefix ?z                ;; Use z for M-
         meow-keypad-literal-prefix 32)            ;; Use SPC for literal keys
+
+  ;; Set up some transient maps for additional leaders
+  (transient-define-prefix qqh/g-prefix-menu () "This isn't documentation"
+    [["LSP"
+      ("d" "definition (xref)" xref-find-definitions)
+      ("R" "rename" eglot-rename)
+      ("SPC" "code actions" eglot-code-actions)]
+     ["Move"
+      ("g" "top" beginning-of-buffer)
+      ("G" "bottom" end-of-buffer)
+      ("t" "next tab" tab-next)
+      ("T" "previous tab" tab-previous)]])
 
   (meow-motion-overwrite-define-key
    ;; Use e to move up, n to move down.
@@ -610,7 +594,7 @@ If the new path's directories does not exist, create them."
    '("e" . meow-prev)
    '("E" . meow-prev-expand)
    '("f" . meow-find)
-   '("g" . ignore)
+   '("g" . qqh/g-prefix-menu)
    '("G" . meow-grab)
    '("m" . meow-left)
    '("M" . meow-left-expand)
@@ -655,12 +639,9 @@ If the new path's directories does not exist, create them."
 ;; enable esc mode for terminal use
 (meow-esc-mode 1)
 
-;; Packages for software development
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;;   Built-in config for developers
-;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Dev
+
+;;;; Built-in dev config
 (use-package emacs
   :straight nil
   :config
@@ -673,11 +654,7 @@ If the new path's directories does not exist, create them."
   ((prog-mode . electric-pair-mode)))
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;;   Version Control
-;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; VC
 
 ;; Magit: best Git client to ever exist
 (use-package magit)
@@ -687,11 +664,7 @@ If the new path's directories does not exist, create them."
   ;; Configure auth source
   (setq auth-sources '("~/.authinfo")))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;;   Project Management
-;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Project Management
 
 (defun qqh/open-project-org-file ()
   (interactive)
@@ -730,11 +703,9 @@ If the new path's directories does not exist, create them."
   :config
   (define-key projectile-command-map (kbd "P") 'projectile-persp-switch-project))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;;   Common file types
-;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(use-package consult-todo :demand t)
+
+;;;; Common file types
 
 (use-package markdown-mode
   :hook ((markdown-mode . visual-line-mode))
@@ -758,11 +729,7 @@ If the new path's directories does not exist, create them."
 (use-package just-mode)
 (use-package cmake-mode)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;;   Documentation and Diagnostics
-;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Documentation and Diagnostics
 ;; Show eldoc in a popup box
 (use-package eldoc-box
   :config
@@ -771,9 +738,6 @@ If the new path's directories does not exist, create them."
   (setq eldoc-echo-area-use-multiline-p nil)
   :bind (:map meow-normal-state-keymap
               ("K" . eldoc-box-help-at-point)))
-
-(use-package consult-todo :demand t)
-
 ;; Devdocs integration
 (use-package devdocs
   :bind (("C-h D" . devdocs-lookup))
@@ -783,15 +747,7 @@ If the new path's directories does not exist, create them."
          ('c++-mode-hook . (lamdba () (setq-local devdocs-current-docs '("cpp"))))))
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;;   Eglot, the built-in LSP client for Emacs
-;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;; Helpful resources:
-;;
-;;  - https://www.masteringemacs.org/article/seamlessly-merge-multiple-documentation-sources-eldoc
+;;;; Eglot
 
 (use-package eglot
   :defer t
@@ -839,19 +795,19 @@ If the new path's directories does not exist, create them."
   :after eglot
   :config (eglot-booster-mode))
 
-;; Diagnostic
-(use-package eldoc)
+(use-package eldoc
+  :diminish eldoc-mode)
 (use-package flymake
   :after eglot
   :hook (('emacs-lisp-mode-hook . flymake-mode)))
 
 
-;;; Language specific configuration
+;;;; Language specific configuration
 
-;;;; C / C++
+;;;;; C / C++
 (setq-default c-basic-offset 4)
 
-;;;; PYTHON
+;;;;; PYTHON
 ;; Built-in Python utilities
 (use-package python
   :custom
@@ -865,7 +821,7 @@ If the new path's directories does not exist, create them."
   (setenv "WORKON_HOME" "/opt/homebrew/Caskroom/miniconda/base/envs/")
   (pyvenv-mode 1))
 
-;;;; RUST
+;;;;; RUST
 (use-package rust-mode
   :config
   ;; rustfmt
