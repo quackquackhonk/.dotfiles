@@ -8,9 +8,17 @@
 (when (< emacs-major-version 30)
   (error "[qqh] config assumes Emacs version 30+, currently running %s!" emacs-major-version))
 
+;;; Definitions
+(defvar qqh/modules-dir (expand-file-name "qqh" user-emacs-directory)
+  "The directory containing my module files.")
+
+(defun qqh/in-terminal-p ()
+  "Returns true if the current frame is running in a character terminal"
+  (eq window-system nil))
+
 ;;; Straight initialization
 
-;; bootstrap straight
+;;;; bootstrap straight
 (defvar bootstrap-version)
 (let ((bootstrap-file
        (expand-file-name
@@ -29,7 +37,7 @@
 
 (straight-use-package 'use-package)
 
-;; Setup use-package for straight
+;;;; Setup use-package for straight
 (use-package straight
   :custom
   ;; add project and flymake to the pseudo-packages variable so straight.el doesn't download a separate version than what eglot downloads.
@@ -42,10 +50,9 @@
 ;;; Some initial packages
 ;; Load diminish for :diminish constructs in use-package
 (use-package diminish
-  :config
+  :init
   ;; diminish built-in minor modes
   (diminish 'visual-line-mode)
-  (diminish 'outline-minor-mode)
   (diminish 'smerge-mode))
 
 (use-package exec-path-from-shell
@@ -70,8 +77,32 @@
 ;; Install surround package
 (use-package surround)
 
-;; Make some transient keymaps
-(use-package transient)
+;; Make some transient- keymaps
+(use-package transient
+  :config
+  (transient-bind-q-to-quit))
+
+;; Set up some transient maps for additional leaders
+(transient-define-prefix qqh/g-prefix-menu () "This isn't documentation"
+  [["Edit"
+    ("c" "comment" comment-dwim)]
+   ["Move"
+    ("g" "top" beginning-of-buffer)
+    ("G" "bottom" end-of-buffer)
+    ("RET" "char" avy-goto-char-2)]])
+
+(transient-define-prefix qqh/next-prefix-menu ()
+  "Transient map for going to the next thing"
+  [["Next"
+    ("t" "tab" tab-next)
+    ("p" "perspective" persp-next)]])
+
+(transient-define-prefix qqh/prev-prefix-menu ()
+  "Transient map for going to the previous thing"
+  [["Previous"
+    ("t" "tab" tab-previous)
+    ("p" "perspective" persp-prev)]])
+
 
 ;;;; Global bindings
 (global-set-key (kbd "<home>") 'beginning-of-line)
@@ -79,7 +110,6 @@
 
 ;;;; Meow
 
-;; Install meow
 (use-package meow :demand t)
 
 (defun meow-setup ()
@@ -117,33 +147,6 @@
         meow-keypad-meta-prefix ?z                ;; Use z for M-
         meow-keypad-literal-prefix 32)            ;; Use SPC for literal keys
 
-  ;; Set up some transient maps for additional leaders
-  (transient-define-prefix qqh/g-prefix-menu () "This isn't documentation"
-    [["LSP"
-      ("d" "definition (xref)" xref-find-definitions)
-      ("R" "rename" eglot-rename)
-      ("SPC" "code actions" eglot-code-actions)]
-     ["Edit"
-      ("c" "comment" comment-dwim)]
-     ["Move"
-      ("g" "top" beginning-of-buffer)
-      ("G" "bottom" end-of-buffer)
-      ("RET" "char" avy-goto-char-2)]])
-
-  (transient-define-prefix qqh/next-prefix-menu ()
-    "Transient map for going to the next thing"
-    [["Next"
-      ("d" "diagnostic" flymake-goto-next-error)
-      ("t" "tab" tab-next)
-      ("p" "perspective" persp-next)]])
-
-  (transient-define-prefix qqh/prev-prefix-menu ()
-    "Transient map for going to the previous thing"
-    [["Previous"
-      ("d" "diagnostic" flymake-goto-prev-error)
-      ("t" "tab" tab-previous)
-      ("p" "perspective" persp-prev)]])
-
   (meow-motion-overwrite-define-key
    ;; Use e to move up, n to move down.
    ;; Since special modes usually use n to move down, we only overwrite e here.
@@ -154,7 +157,6 @@
   (meow-leader-define-key
    '("?" . meow-cheatsheet)
    '("SPC" . consult-buffer)
-   '("TAB" . other-window)
    '("," . meow-last-buffer)
    '(":" . eval-expression)
    '("g" . magit)
@@ -169,7 +171,7 @@
    '(";c" . (lambda ()
               (interactive)
               (find-file user-init-file)))
-   '(";c" . (lambda ()
+   '(";p" . (lambda ()
               (interactive)
               (qqh/open-project-org-file)))
 
@@ -258,10 +260,11 @@
    '("[" . qqh/prev-prefix-menu)
    '("]" . qqh/next-prefix-menu)
 
-   ;;Embark Bindings
    '("C-." . embark-act)        ;; pick some comfortable binding
    '("C-;" . embark-dwim)       ;; good alternative: M-.
    '("C-h B" . embark-bindings) ;; alternative for `describe-bindings'
+
+
    ))
 
 (require 'meow)
@@ -277,8 +280,7 @@
 
 
 ;; Enable terminal mouse mode in WSL
-(when (and (eq system-type 'gnu/linux)
-           (getenv "WSLENV"))
+(when (qqh/in-terminal-p)
   (xterm-mouse-mode t))
 
 ;; Automatically reread from disk if the underlying file changes
@@ -298,29 +300,16 @@
 (defalias 'yes-or-no-p 'y-or-n-p)
 
 ;; Make ESC quit prompts
-(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+(global-set-key (kbd "<escape>") 'keyboard-quit)
 
 ;; use the faster programs
 (setq find-program "fd"
       grep-program "rg")
 
-;; Minibuffer/completion settings
-
 ;; Save history of minibuffer
 (savehist-mode)
 
 (setopt enable-recursive-minibuffers t)                ; Use the minibuffer whilst in the minibuffer
-(setopt completion-cycle-threshold 1)                  ; TAB cycles candidates
-(setopt completions-detailed t)                        ; Show annotations
-(setopt tab-always-indent 'complete)                   ; When I hit TAB, try to complete, otherwise, indent
-(setopt completion-styles '(basic initials substring)) ; Different styles to match input to candidates
-
-(setopt completion-auto-help 'lazy)                  ; Open completion always; `lazy' another option
-(setopt completions-max-height 20)                     ; This is arbitrary
-(setopt completions-detailed t)
-(setopt completions-format 'one-column)
-(setopt completions-group t)
-(setopt completion-auto-select 'second-tab)            ; Much more eager
 
 (keymap-set minibuffer-mode-map "TAB" 'minibuffer-complete) ; TAB acts more like how it does in the shell
 
@@ -329,11 +318,12 @@
 (setopt tab-width 4)
 
 ;; Misc. UI tweaks
-(scroll-bar-mode -1)
+(scroll-bar-mode -1)                                  ; no scrollbars
 (blink-cursor-mode -1)                                ; Steady cursor
 (pixel-scroll-precision-mode)                         ; Smooth scrolling
 (setopt ring-bell-function 'ignore)                   ; disable the bell
 (setopt compilation-scroll-output t)                  ; follow compilation output by default
+(setq frame-resize-pixelwise t)
 
 ;; Nice line wrapping when working with text
 (add-hook 'text-mode-hook 'visual-line-mode)
@@ -342,15 +332,13 @@
 (let ((hl-line-hooks '(text-mode-hook prog-mode-hook)))
   (mapc (lambda (hook) (add-hook hook 'hl-line-mode)) hl-line-hooks))
 
-(setq frame-resize-pixelwise t)
-
 (setq vc-follow-symlinks t)                             ; auto follow VC links
 (setq indicate-empty-lines t)
 (setq inhibit-startup-message t)
 
 
 ;; Don't litter file system with *~ backup files; put them all inside
-;; ~/.emacs.d/backup
+;; ~/.emacs.d/backups
 (defun qqh/backup-file-name (fpath)
   "Return a new file path of a given file path (FPATH).
 If the new path's directories does not exist, create them."
@@ -369,63 +357,57 @@ If the new path's directories does not exist, create them."
   (setq dired-kill-when-opening-new-dired-buffer t))
 
 ;;;; Outline-mode
-;; Make outline-minor-mode operate a bit more like org-mode <tab> &
-;; S-<tab>. org-mode has lots of baggage eg many intrusive keymaps. If
-;; text-folding is all you need then outline is much simpler eg 1593
-;; LOC vs 127834 LOC for org (excl blanks, comments)
-
-(defun qqh/outline-show-heading-path ()
-  "Display the full path of the headings containing point in the echo area."
-  (interactive)
-  (let ((path (qqh/outline-get-heading-path)))
-    (if path
-        (message "Heading Path: %s" (mapconcat 'identity path "/"))
-      (message "Not in an outline"))))
-
-(defun qqh/outline-get-heading-path ()
-  "Get the full path of the heading at point."
-  (save-excursion
-    (let ((path '())
-          (heading (outline-back-to-heading)))
-      (while heading
-        (let ((sub-heading (buffer-substring-no-properties (line-beginning-position) (line-end-position))))
-          (setq sub-heading (replace-regexp-in-string (concat "^" outline-regexp) "" sub-heading))
-          (setq path (cons sub-heading path))
-          (setq heading (ignore-errors (progn (outline-up-heading 1) (outline-back-to-heading))))))
-      path)))
-
-(with-eval-after-load "outline"
+(use-package outline
+  :straight nil
+  :diminish outline-minor-mode
+  :config
   (define-key outline-minor-mode-map (kbd "C-c C-c")
-              ;; this enables C-c C-c to be used instead of the very awkward C-c C-@ prefix:
-              (lookup-key outline-minor-mode-map (kbd "C-c @"))))
+              (lookup-key outline-minor-mode-map (kbd "C-c @")))
 
-(add-hook 'outline-minor-mode-hook
-          (lambda ()
-            (define-key outline-minor-mode-map [backtab] 'outline-cycle-buffer)
-            (define-key outline-minor-mode-map (kbd "C-c C-n") 'outline-next-visible-heading)
-            (define-key outline-minor-mode-map (kbd "C-c C-p") 'outline-previous-visible-heading)
-            (define-key outline-minor-mode-map (kbd "C-c C-f") 'outline-forward-same-level)
-            (define-key outline-minor-mode-map (kbd "C-c C-b") 'outline-backward-same-level)
-            (define-key outline-minor-mode-map (kbd "C-c C-u") 'outline-up-heading)
-            (define-key outline-minor-mode-map (kbd "C-c C-a") 'outline-show-all)
-            (define-key outline-minor-mode-map (kbd "C-c ?")   'qqh/outline-show-heading-path)
-            (define-key outline-minor-mode-map (kbd "C-c C-c C-a") 'outline-show-all)
-            (define-key outline-minor-mode-map (kbd "<f1>") 'outline-toggle-children)
-            (keymap-unset outline-minor-mode-map "RET" t)
+  (setq-local outline-minor-mode-use-buttons 'in-margins)
+  (setq-local outline-minor-mode-highlight 'append)
+  (setq-local outline-minor-mode-cycle t)
 
-            (setq-local outline-minor-mode-use-buttons 'in-margins)
-            (setq-local outline-minor-mode-highlight 'append)
-            (setq-local outline-minor-mode-cycle t)))
-
-(add-hook 'emacs-lisp-mode-hook 'outline-minor-mode)
+  :bind (:map outline-minor-mode-map
+              ("<backtab>" . outline-cycle-buffer)
+              ("C-c <tab>" . outline-cycle)
+              ("C-c C-n" . outline-next-visible-heading)
+              ("C-c C-p" . outline-previous-visible-heading)
+              ("C-c C-f" . outline-forward-same-level)
+              ("C-c C-b" . outline-backward-same-level)
+              ("C-c C-u" . outline-up-heading)
+              ("C-c C-a" . outline-show-all)
+              ("C-c C-c C-a" . outline-show-all)
+              ("<f1>" . outline-toggle-children))
+  :hook (emacs-lisp-mode . outline-minor-mode))
 
 
-;;; Movement
+;;;; Eshell
+(use-package eshell
+  :straight nil
+  :init
+  (defun qqh/setup-eshell ()
+    ;; Something funny is going on with how Eshell sets up its keymaps; this is
+    ;; a work-around to make C-r bound in the keymap
+    (keymap-set eshell-mode-map "C-r" 'consult-history))
+  :hook ((eshell-mode . qqh/setup-eshell)))
+
+
+;;; Misc. editing enhancements
 (use-package avy
   :demand t
   :config
   (setq avy-keys '(?a ?r ?s ?t ?p ?l ?n ?e ?i ?o)
         avy-background nil))
+
+;; faster searching
+(use-package ripgrep)
+
+;; Modify search results en masse
+(use-package wgrep
+  :config
+  (setq wgrep-auto-save-buffer t))
+
 
 ;;; Minibuffer & Completion
 (use-package embark-consult)
@@ -504,6 +486,9 @@ If the new path's directories does not exist, create them."
 (use-package embark
   :demand t
   :after '(avy embark-consult)
+  :bind (("C-." . embark-act)         ;; pick some comfortable binding
+         ("C-;" . embark-dwim)        ;; good alternative: M-.
+         ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
   :init
   ;; Optionally replace the key help with a completing-read interface
   (setq prefix-help-command #'embark-prefix-help-command)
@@ -538,12 +523,12 @@ If the new path's directories does not exist, create them."
   :bind (:map vertico-map
               ("M-DEL" . vertico-directory-delete-word)))
 
-;; Marginalia: annotations for minibuffer
+;;;; Marginalia: annotations for minibuffer
 (use-package marginalia
   :config
   (marginalia-mode))
 
-;; Orderless: powerful completion style
+;;;; Orderless: powerful completion style
 (use-package orderless
   :custom
   ;; Configure a custom style dispatcher (see the Consult wiki)
@@ -551,7 +536,7 @@ If the new path's directories does not exist, create them."
   (completion-category-defaults nil)
   (completion-category-overrides '((file (styles partial-completion)))))
 
-;;;; Popup completion-at-point
+;;;; Corfu: Popup completion-at-point
 (use-package corfu
   :init
   (global-corfu-mode)
@@ -564,7 +549,7 @@ If the new path's directories does not exist, create them."
         ("C-n" . corfu-next)
         ("C-p" . corfu-previous)))
 
-;; Part of corfu
+;;;;; Corfu popupinfo
 (use-package corfu-popupinfo
   :straight nil
   :after corfu
@@ -575,56 +560,28 @@ If the new path's directories does not exist, create them."
   :config
   (corfu-popupinfo-mode))
 
-;; Make corfu popup come up in terminal overlay
+;;;;; Make corfu popup come up in terminal overlay
 (use-package corfu-terminal
   :if (not (display-graphic-p))
   :config
   (corfu-terminal-mode))
 
-;; Fancy completion-at-point functions; there's too much in the cape package to
-;; configure here; dive in when you're comfortable!
-(use-package cape
-  :init
-  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
-  (add-to-list 'completion-at-point-functions #'cape-file))
-
-;; Pretty icons for corfu
+;;;;; Pretty icons for corfu
 (use-package kind-icon
   :if (display-graphic-p)
   :after corfu
   :config
   (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
 
-;;; Terminal emulation
-(use-package eshell
-  :straight nil
+
+;;;; Cape: Fancy completion-at-point functions
+;; there's too much in the cape package to configure here; dive in when you're comfortable!
+(use-package cape
   :init
-  (defun qqh/setup-eshell ()
-    ;; Something funny is going on with how Eshell sets up its keymaps; this is
-    ;; a work-around to make C-r bound in the keymap
-    (keymap-set eshell-mode-map "C-r" 'consult-history))
-  :hook ((eshell-mode . qqh/setup-eshell)))
+  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+  (add-to-list 'completion-at-point-functions #'cape-file))
 
-;;;; Eat: Emulate A Terminal
-(use-package eat
-  :custom
-  (eat-term-name "xterm")
-  :config
-  (when (eq system-type 'darwin)
-    (setq eat-shell "/opt/homebrew/bin/fish"))
-  (when (eq system-type 'gnu/linux)
-    (setq eat-shell "/usr/bin/nu"))
-  (eat-eshell-mode)                     ; use Eat to handle term codes in program output
-  (eat-eshell-visual-command-mode))     ; commands like less will be handled by Eat
-
-;;; Misc. editing enhancements
-(use-package ripgrep)
-;; Modify search results en masse
-(use-package wgrep
-  :config
-  (setq wgrep-auto-save-buffer t))
-
-;; A few more useful configurations...
+;;;; A few more useful configurations...
 (use-package emacs
   :straight nil
   :custom
@@ -665,10 +622,20 @@ If the new path's directories does not exist, create them."
   ;; Auto parenthesis matching
   ((prog-mode . electric-pair-mode)))
 
+;;;; Eat: Terminal Emulation
+(use-package eat
+  :custom
+  (eat-term-name "xterm")
+  :config
+  (when (eq system-type 'darwin)
+    (setq eat-shell "/opt/homebrew/bin/fish"))
+  (when (eq system-type 'gnu/linux)
+    (setq eat-shell "/usr/bin/nu"))
+  (eat-eshell-mode)                     ; use Eat to handle term codes in program output
+  (eat-eshell-visual-command-mode))     ; commands like less will be handled by Eat
 
-;;;; VC
 
-;; Magit: best Git client to ever exist
+;;;; Magit: best Git client to ever exist
 (use-package magit)
 
 (use-package forge
@@ -677,6 +644,15 @@ If the new path's directories does not exist, create them."
   (setq auth-sources '("~/.authinfo")))
 
 ;;;; Project Management
+;;;;; Projectile
+(use-package project)
+(use-package projectile
+  :init
+  (projectile-mode +1)
+
+  (setq projectile-project-search-path '(("~/code/" . 2)
+					                     "~/sources/")
+        projectile-switch-project-action 'qqh/open-project-org-file))
 
 (defun qqh/open-project-org-file ()
   (interactive)
@@ -688,16 +664,7 @@ If the new path's directories does not exist, create them."
       (copy-file template file))
     (find-file file)))
 
-(use-package project)
-(use-package projectile
-  :init
-  (projectile-mode +1)
-
-  (setq projectile-project-search-path '(("~/code/" . 2)
-					                     "~/.sources/")
-	    projectile-mode-line-prefix " In "
-        projectile-switch-project-action 'qqh/open-project-org-file))
-
+;;;;; Perspective
 (use-package perspective
   :after consult
   :custom
@@ -710,12 +677,13 @@ If the new path's directories does not exist, create them."
   (consult-customize consult--source-buffer :hidden t :default nil)
   (add-to-list 'consult-buffer-sources persp-consult-source))
 
-;; make them play nice
+;;;;; make them play nice
 (use-package persp-projectile
   :config
   (define-key projectile-command-map (kbd "P") 'projectile-persp-switch-project))
 
-(use-package consult-todo :demand t)
+;;;;; Consult-todo: Search project todos
+(use-package consult-todo)
 
 ;;;; Common file types
 
@@ -742,7 +710,11 @@ If the new path's directories does not exist, create them."
 (use-package cmake-mode)
 
 ;;;; Documentation and Diagnostics
-;; Show eldoc in a popup box
+
+;;;;; Eldoc
+(use-package eldoc
+  :diminish eldoc-mode)
+;; Eldoc-box: show eldoc in a popup box
 (use-package eldoc-box
   :config
   ;; Don't show on hover, only on keypress
@@ -750,7 +722,21 @@ If the new path's directories does not exist, create them."
   (setq eldoc-echo-area-use-multiline-p nil)
   :bind (:map meow-normal-state-keymap
               ("K" . eldoc-box-help-at-point)))
-;; Devdocs integration
+
+;;;;; Flymake diagnostics
+(use-package flymake
+  :after eglot
+  :hook (('emacs-lisp-mode-hook . flymake-mode))
+  :config
+    (defun qqh/flymake/add-bracketed-keybinds ()
+    "Add the flymake-goto-[next prev]-error suffix commands to the qqh/[next prev]-prefix-menu transients."
+    (transient-insert-suffix qqh/next-prefix-menu "d"
+      '("d" "diagnostic" flymake-goto-next-error))
+    (transient-insert-suffix qqh/prev-prefix-menu "d"
+      '("d" "diagnostic" flymake-goto-prev-error)))
+  (add-hook 'flymake-mode-hook 'qqh/flymake/add-bracketed-keybinds))
+
+;;;;; Devdocs integration
 (use-package devdocs
   :bind (("C-h D" . devdocs-lookup))
   :hook (('python-mode-hook . (lambda () (setq-local devdocs-current-docs '("python~3.11"))))
@@ -758,9 +744,7 @@ If the new path's directories does not exist, create them."
          ('c-mode-hook . (lamdba () (setq-local devdocs-current-docs '("c"))))
          ('c++-mode-hook . (lamdba () (setq-local devdocs-current-docs '("cpp"))))))
 
-
 ;;;; Eglot
-
 (use-package eglot
   :defer t
   :hook (;; Python
@@ -782,6 +766,15 @@ If the new path's directories does not exist, create them."
   (add-hook 'before-save-hook
             (lambda () (if (eglot-managed-p)
                            (eglot-format-buffer))))
+
+  ;; LSP keybinds in the `g' transient
+  (defun qqh/eglot/add-lsp-keybinds ()
+    (transient-insert-suffix qqh/g-prefix-menu "LSP"
+      '["LSP"
+        ("R" "rename" eglot-rename)
+        ("SPC" "code actions" eglot-code-actions)]
+      ))
+  (add-hook 'eglot-connect-hook 'qqh/eglot/add-lsp-keybinds)
 
   ;; PERF: dont log every event
   (fset #'jsonrpc--log-event #'ignore)
@@ -806,14 +799,6 @@ If the new path's directories does not exist, create them."
   :straight (eglot-booster :type git :host github :repo "jdtsmith/eglot-booster")
   :after eglot
   :config (eglot-booster-mode))
-
-(use-package eldoc
-  :diminish eldoc-mode)
-(use-package flymake
-  :after eglot
-  :hook (('emacs-lisp-mode-hook . flymake-mode)))
-
-
 ;;;; Language specific configuration
 
 ;;;;; C / C++
@@ -950,35 +935,33 @@ If the new path's directories does not exist, create them."
 
 ;;; Themes / UI customization
 
+;;;; Settings
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
 
-;; Mode line information
-(setopt x-underline-at-descent-line nil)           ; Prettier underlines
-(setopt switch-to-buffer-obey-display-actions t)   ; Make switching buffers more consistent
 ;; Don't show trailing whitespace, and delete when saving
 (setopt show-trailing-whitespace nil)
 (add-hook 'before-save-hook
           (lambda ()
             (delete-trailing-whitespace)))
 
-
+;;;; Color Schemes
 (use-package catppuccin-theme
   :config
   (setq catppuccin-flavor 'mocha
 	    catppuccin-italic-comments t
 	    catppuccin-highlight-matches t)
 
-
   (add-hook 'server-after-make-frame-hook #'catppuccin-reload)
 
   (load-theme 'catppuccin :no-confirm t)
   (catppuccin-reload))
 
-(use-package nerd-icons)
-
+;;;; Misc. Theming Packages
 (use-package rainbow-mode
   :hook (prog-mode . rainbow-mode)
   :diminish rainbow-mode)
+
+(use-package nerd-icons)
 
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode)
@@ -1009,24 +992,33 @@ If the new path's directories does not exist, create them."
 
 ;;;; Modeline configurtaion
 
-;; (setq-default mode-line-format
-;;               '("%e" mode-line-front-space
-;;                 (:propertize
-;;                  ("" mode-line-mule-info mode-line-client mode-line-modified mode-line-remote)
-;;                  display
-;;                  (min-width
-;;                   (5.0)))
-;;                 mode-line-frame-identification mode-line-buffer-identification "   " mode-line-position evil-mode-line-tag
-;;                 (vc-mode vc-mode)
-;;                 "  " mode-line-modes mode-line-misc-info mode-line-end-spaces))
+;;;;; Major mode
 
-;; (setq-default mode-line-format
-;;               '("%e" mode-line-buffer-identification mode-line-modified mode-line-remote
-;;                 " @ " mode-line-position evil-mode-line-tag
-;;                 (vc-mode vc-mode)
-;;                 "  " mode-line-modes mode-line-misc-info))
+(defun qqh/modeline/this-buffer-and-mode ()
+  "Return the "
+  (concat (symbol-name major-mode)
+          ":"))
 
-;; (force-mode-line-update)
+(setq-default mode-line-format
+              '("%e%n"
+                "  "
+                (:eval (meow-indicator))
+                " "
+                (:eval (qqh/modeline/major-mode-name))
+                " "
+                mode-line-buffer-identification
+                (vc-mode ("on" vc-mode))
+                " "
+                mode-line-process
+
+                mode-line-format-right-align         ;; emacs 30
+                mode-line-misc-info
+                " "
+                qqh/modeline/flymake
+                " "
+                mode-line-modes
+                "  "))
+
 
 ;;; Customization file
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
