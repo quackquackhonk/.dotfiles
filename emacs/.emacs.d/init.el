@@ -12,6 +12,10 @@
 (defvar qqh/modules-dir (expand-file-name "qqh" user-emacs-directory)
   "The directory containing my module files.")
 
+(defvar qqh/eglot-managed-modes
+  '(python-ts-mode python-mode c-mode c++-mode)
+  "A list of modes to enable eglot for.")
+
 (defun qqh/in-terminal-p ()
   "Returns true if the current frame is running in a character terminal"
   (eq window-system nil))
@@ -68,210 +72,6 @@
   :diminish which-key-mode
   :config
   (which-key-mode))
-
-;;; Keybindings
-(defun qqh/kill-buffer ()
-  (interactive)
-  (persp-kill-buffer* (current-buffer)))
-
-;; Install surround package
-(use-package surround)
-
-;; Make some transient- keymaps
-(use-package transient
-  :config
-  (transient-bind-q-to-quit))
-
-;; Set up some transient maps for additional leaders
-(transient-define-prefix qqh/g-prefix-menu () "This isn't documentation"
-  [["Edit"
-    ("c" "comment" comment-dwim)]
-   ["Move"
-    ("g" "top" beginning-of-buffer)
-    ("G" "bottom" end-of-buffer)
-    ("RET" "char" avy-goto-char-2)]])
-
-(transient-define-prefix qqh/next-prefix-menu ()
-  "Transient map for going to the next thing"
-  [["Next"
-    ("t" "tab" tab-next)
-    ("p" "perspective" persp-next)]])
-
-(transient-define-prefix qqh/prev-prefix-menu ()
-  "Transient map for going to the previous thing"
-  [["Previous"
-    ("t" "tab" tab-previous)
-    ("p" "perspective" persp-prev)]])
-
-
-;;;; Global bindings
-(global-set-key (kbd "<home>") 'beginning-of-line)
-(global-set-key (kbd "<end>") 'end-of-line)
-
-;;;; Meow
-
-(use-package meow :demand t)
-
-(defun meow-setup ()
-  ;; colemak-dh cheatsheet
-  (setq meow-cheatsheet-layout meow-cheatsheet-layout-colemak-dh)
-
-  ;; register some things
-  (meow-thing-register 'qqh/thing-<>
-                       '(pair ("<") (">"))
-                       '(pair ("<") (">")))
-
-  ;; sets the thing table characters to use ([{ for grouping punctuations
-  ;; test ' asrtarstar '
-  (setq meow-char-thing-table
-        '((?\( . round)
-          (?\) . round)
-          (?\[ . square)
-          (?\] . square)
-          (?\{ . curly)
-          (?\} . curly)
-          (?\< . qqh/thing-<>)
-          (?\> . qqh/thing-<>)
-          (?\" . string)
-          (?s . symbol)
-          (?w . window)
-          (?b . buffer)
-          (?b . paragraph)
-          (?l . line)
-          (?v . visual-line)
-          (?f . defun)
-          (?\. . sentence)))
-
-  ;; Change the keys used by keypad mode
-  (setq meow-keypad-ctrl-meta-prefix ?\r          ;; Use RET for C-M-
-        meow-keypad-meta-prefix ?z                ;; Use z for M-
-        meow-keypad-literal-prefix 32)            ;; Use SPC for literal keys
-
-  (meow-motion-overwrite-define-key
-   ;; Use e to move up, n to move down.
-   ;; Since special modes usually use n to move down, we only overwrite e here.
-   '("e" . meow-prev)
-   '("<escape>" . ignore))
-
-  ;; default meow leader bindings
-  (meow-leader-define-key
-   '("?" . meow-cheatsheet)
-   '("SPC" . consult-buffer)
-   '("," . meow-last-buffer)
-   '(":" . eval-expression)
-   '("g" . magit)
-   '("f" . consult-fd)
-   '("p" . projectile-command-map)
-   '("RET" . avy-goto-line)
-
-   ;; Emacs bindings
-   '(";r" . (lambda ()
-              (interactive)
-              (load-file user-init-file)))
-   '(";c" . (lambda ()
-              (interactive)
-              (find-file user-init-file)))
-   '(";p" . (lambda ()
-              (interactive)
-              (qqh/open-project-org-file)))
-
-
-   ;; To execute the originally e in MOTION state, use SPC e.
-   '("e" . "H-e")
-   '("1" . meow-digit-argument)
-   '("2" . meow-digit-argument)
-   '("3" . meow-digit-argument)
-   '("4" . meow-digit-argument)
-   '("5" . meow-digit-argument)
-   '("6" . meow-digit-argument)
-   '("7" . meow-digit-argument)
-   '("8" . meow-digit-argument)
-   '("9" . meow-digit-argument)
-   '("0" . meow-digit-argument))
-
-  (meow-normal-define-key
-   '("0" . meow-expand-0)
-   '("1" . meow-expand-1)
-   '("2" . meow-expand-2)
-   '("3" . meow-expand-3)
-   '("4" . meow-expand-4)
-   '("5" . meow-expand-5)
-   '("6" . meow-expand-6)
-   '("7" . meow-expand-7)
-   '("8" . meow-expand-8)
-   '("9" . meow-expand-9)
-   '("-" . negative-argument)
-   '(";" . meow-reverse)
-   '("," . meow-inner-of-thing)
-   '("." . meow-bounds-of-thing)
-   '("(" . meow-beginning-of-thing)
-   '(")" . meow-end-of-thing)
-   '("/" . meow-visit)
-   '("a" . meow-append)
-   '("A" . ignore)
-   '("b" . meow-back-word)
-   '("B" . meow-back-symbol)
-   '("c" . meow-change)
-   '("d" . meow-kill)
-   '("e" . meow-prev)
-   '("E" . meow-prev-expand)
-   '("f" . meow-find)
-   '("G" . meow-grab)
-   '("m" . meow-left)
-   '("M" . meow-left-expand)
-   '("i" . meow-right)
-   '("I" . meow-right-expand)
-   '("j" . meow-join)
-   '("l" . meow-line)
-   '("L" . meow-goto-line)
-   '("h" . meow-mark-word)
-   '("H" . meow-mark-symbol)
-   '("n" . meow-next)
-   '("N" . meow-next-expand)
-   '("o" . meow-open-below)
-   '("O" . meow-open-above)
-   '("p" . meow-yank)
-   '("q" . meow-quit)
-   '("r" . meow-replace)
-   '("s" . meow-insert)
-   (cons "S" surround-keymap)
-   '("t" . meow-till)
-   '("u" . meow-undo)
-   '("U" . meow-undo-in-selection)
-   '("v" . meow-search)
-   '("w" . meow-next-word)
-   '("W" . meow-next-symbol)
-   '("x" . meow-delete)
-   '("X" . meow-backward-delete)
-   '("y" . meow-save)
-   '("z" . meow-pop-selection)
-   '("'" . repeat)
-   '("<escape>" . meow-cancel-selection)
-   '("RET" . avy-goto-line)
-
-   ;; Some vim-like bindings
-   '("g" . qqh/g-prefix-menu)
-   '(":" . meow-M-x)
-   '("="   . meow-indent)
-   '("C-q" . delete-window)
-   '("M-q" . qqh/kill-buffer)
-
-   ;; Bracketed movement
-   '("[" . qqh/prev-prefix-menu)
-   '("]" . qqh/next-prefix-menu)
-
-   '("C-." . embark-act)        ;; pick some comfortable binding
-   '("C-;" . embark-dwim)       ;; good alternative: M-.
-   '("C-h B" . embark-bindings) ;; alternative for `describe-bindings'
-
-
-   ))
-
-(require 'meow)
-(meow-setup)
-(meow-global-mode 1)
-;; enable esc mode for terminal use
-(meow-esc-mode 1)
 
 ;;; Basic settings
 (setopt inhibit-splash-screen t)
@@ -364,9 +164,8 @@ If the new path's directories does not exist, create them."
   (define-key outline-minor-mode-map (kbd "C-c C-c")
               (lookup-key outline-minor-mode-map (kbd "C-c @")))
 
-  (setq-local outline-minor-mode-use-buttons 'in-margins)
-  (setq-local outline-minor-mode-highlight 'append)
-  (setq-local outline-minor-mode-cycle t)
+  (setq outline-minor-mode-highlight 'append)
+  (setq outline-minor-mode-cycle t)
 
   :bind (:map outline-minor-mode-map
               ("<backtab>" . outline-cycle-buffer)
@@ -652,7 +451,7 @@ If the new path's directories does not exist, create them."
 
   (setq projectile-project-search-path '(("~/code/" . 2)
 					                     "~/sources/")
-        projectile-switch-project-action 'qqh/open-project-org-file))
+        projectile-switch-project-action 'consult-fd))
 
 (defun qqh/open-project-org-file ()
   (interactive)
@@ -714,67 +513,53 @@ If the new path's directories does not exist, create them."
 ;;;;; Eldoc
 (use-package eldoc
   :diminish eldoc-mode)
-;; Eldoc-box: show eldoc in a popup box
-(use-package eldoc-box
-  :config
-  ;; Don't show on hover, only on keypress
-  (eldoc-box-hover-mode -1)
-  (setq eldoc-echo-area-use-multiline-p nil)
-  :bind (:map meow-normal-state-keymap
-              ("K" . eldoc-box-help-at-point)))
 
-;;;;; Flymake diagnostics
-(use-package flymake
-  :after eglot
-  :hook (('emacs-lisp-mode-hook . flymake-mode))
+;;;;; Flycheck diagnostics
+(use-package flycheck
+  :init (global-flycheck-mode))
+
+(use-package flycheck-eglot
+  :after (flycheck eglot)
   :config
-    (defun qqh/flymake/add-bracketed-keybinds ()
-    "Add the flymake-goto-[next prev]-error suffix commands to the qqh/[next prev]-prefix-menu transients."
-    (transient-insert-suffix qqh/next-prefix-menu "d"
-      '("d" "diagnostic" flymake-goto-next-error))
-    (transient-insert-suffix qqh/prev-prefix-menu "d"
-      '("d" "diagnostic" flymake-goto-prev-error)))
-  (add-hook 'flymake-mode-hook 'qqh/flymake/add-bracketed-keybinds))
+  (global-flycheck-eglot-mode 1))
+
+(use-package flycheck-popup-tip
+  :after flycheck
+  :commands (flycheck-popup-tip-mode flycheck-popup-tip)
+  :hook (flycheck-mode . flycheck-popup-tip-mode))
 
 ;;;;; Devdocs integration
 (use-package devdocs
   :bind (("C-h D" . devdocs-lookup))
-  :hook (('python-mode-hook . (lambda () (setq-local devdocs-current-docs '("python~3.11"))))
-         ('python-ts-mode-hook . (lambda () (setq-local devdocs-current-docs '("python~3.11"))))
-         ('c-mode-hook . (lamdba () (setq-local devdocs-current-docs '("c"))))
-         ('c++-mode-hook . (lamdba () (setq-local devdocs-current-docs '("cpp"))))))
+  :config
+  (add-hook 'python-mode-hook (lambda () (setq-local devdocs-current-docs '("python~11"))))
+  (add-hook 'python-ts-mode-hook (lambda () (setq-local devdocs-current-docs '("python~11"))))
+  (add-hook 'c-mode-hook (lamdba () (setq-local devdocs-current-docs '("c"))))
+  (add-hook 'c++-mode-hook (lamdba () (setq-local devdocs-current-docs-hook '("cpp")))))
 
 ;;;; Eglot
 (use-package eglot
   :defer t
-  :hook (;; Python
-         (python-ts-mode . eglot-ensure)
-         ;; C / C++
-         ((c-mode c++-mode) . eglot-ensure)
-         )
+  :commands (qqh/get-major-mode-hook-name)
   :custom
   (eglot-send-changes-idle-time 0.1)
   (eglot-extend-to-xref t)              ; activate Eglot in referenced non-project files
+  :init
+  ;; Setup the hooks
+  (defun qqh/get-major-mode-hook-name (mode)
+    "Return the hook for the major mode MODE."
+    (intern (concat (symbol-name mode) "-hook")))
+
+  (defun qqh/eglot/add-eglot-hook (mode)
+    (add-hook (qqh/get-major-mode-hook-name mode) #'eglot-ensure))
+
+  (mapc 'qqh/eglot/add-eglot-hook qqh/eglot-managed-modes)
   :config
   ;; Disable inlay hints globally
   (add-to-list 'eglot-ignored-server-capabilities :inlayHintProvider)
 
   ;; clangd for c/c++
   (add-to-list 'eglot-server-programs '((c++-mode c-mode) "clangd"))
-
-  ;; format on save
-  (add-hook 'before-save-hook
-            (lambda () (if (eglot-managed-p)
-                           (eglot-format-buffer))))
-
-  ;; LSP keybinds in the `g' transient
-  (defun qqh/eglot/add-lsp-keybinds ()
-    (transient-insert-suffix qqh/g-prefix-menu "LSP"
-      '["LSP"
-        ("R" "rename" eglot-rename)
-        ("SPC" "code actions" eglot-code-actions)]
-      ))
-  (add-hook 'eglot-connect-hook 'qqh/eglot/add-lsp-keybinds)
 
   ;; PERF: dont log every event
   (fset #'jsonrpc--log-event #'ignore)
@@ -834,7 +619,7 @@ If the new path's directories does not exist, create them."
 
 ;; Agenda variables
 (setq org-directory "~/org/")         ; Non-absolute paths for agenda and
-                                        ; capture templates will look here.
+                                      ; capture templates will look here.
 
 (setq org-agenda-files '("inbox.org" "work.org"))
 
@@ -857,19 +642,12 @@ If the new path's directories does not exist, create them."
                       ("review")
                       ("reading")))
 
-;; Org-refile: where should org-refile look?
+;; TODO: Org-refile: where should org-refile look?
 ;; (setq org-refile-targets 'FIXME)
-
 
 ;; Org-roam variables
 (setq org-roam-directory "~/org/roam/")
 (setq org-roam-index-file "~/org/roam/index.org")
-
-;; Advanced: Custom link types
-;; This example is for linking a person's 7-character ID to their page on the
-;; free genealogy website Family Search.
-;; (setq org-link-abbrev-alist
-;;       '(("family_search" . "https://www.familysearch.org/tree/person/details/%s")))
 
 (use-package org
   :hook ((org-mode . visual-line-mode))  ; wrap lines at word breaks
@@ -925,13 +703,10 @@ If the new path's directories does not exist, create them."
            ((org-agenda-files '("work.org"))))))
 
 
-;;;; Babel Language activation
-
+  ;; Babel Language activation
   (org-babel-do-load-languages
    'org-babel-load-languages
-   '((shell . t)))
-
-  )
+   '((shell . t))))
 
 ;;; Themes / UI customization
 
@@ -952,6 +727,7 @@ If the new path's directories does not exist, create them."
 	    catppuccin-highlight-matches t)
 
   (add-hook 'server-after-make-frame-hook #'catppuccin-reload)
+  (add-hook 'after-make-frame-functions #'catppuccin-reload)
 
   (load-theme 'catppuccin :no-confirm t)
   (catppuccin-reload))
@@ -979,25 +755,13 @@ If the new path's directories does not exist, create them."
   :config
   (fancy-compilation-mode))
 
-(use-package ligature
-  :config
-  ;; Enable all Iosevka ligatures in programming modes
-  (ligature-set-ligatures 'prog-mode '("<---" "<--"  "<<-" "<-" "->" "-->" "--->" "<->" "<-->" "<--->" "<---->" "<!--"
-                                       "<==" "<===" "<=" "=>" "=>>" "==>" "===>" ">=" "<=>" "<==>" "<===>" "<====>" "<!---"
-                                       "<~~" "<~" "~>" "~~>" "::" ":::" "==" "!=" "===" "!=="
-                                       ":=" ":-" ":+" "<*" "<*>" "*>" "<|" "<|>" "|>" "+:" "-:" "=:" "<******>" "++" "+++"))
-  ;; Enables ligature checks globally in all buffers. You can also do it
-  ;; per mode with `ligature-mode'.
-  (global-ligature-mode t))
-
 ;;;; Modeline configurtaion
 
 ;;;;; Major mode
 
-(defun qqh/modeline/this-buffer-and-mode ()
-  "Return the "
-  (concat (symbol-name major-mode)
-          ":"))
+(defun qqh/modeline/major-mode-name ()
+  "Return the major mode of the current buffer with a colon after it"
+  (concat (symbol-name major-mode) ":"))
 
 (setq-default mode-line-format
               '("%e%n"
@@ -1007,18 +771,228 @@ If the new path's directories does not exist, create them."
                 (:eval (qqh/modeline/major-mode-name))
                 " "
                 mode-line-buffer-identification
-                (vc-mode ("on" vc-mode))
+                (vc-mode (" on" vc-mode))
                 " "
                 mode-line-process
 
                 mode-line-format-right-align         ;; emacs 30
                 mode-line-misc-info
                 " "
-                qqh/modeline/flymake
-                " "
                 mode-line-modes
                 "  "))
 
+
+;;; Keybindings
+(defun qqh/kill-buffer ()
+  (interactive)
+  (persp-kill-buffer* (current-buffer)))
+
+;; Install surround package
+(use-package surround)
+
+;; Make some transient- keymaps
+(use-package transient
+  :config
+  (transient-bind-q-to-quit))
+
+;; Set up some transient maps for additional leaders
+(transient-define-prefix qqh/g-prefix-menu ()
+  "Transient map for emulating vim's g- leader keybinding."
+  [["Edit"
+    ("c" "comment" comment-dwim)]
+   ;; LSP keybinds in the `g' transient
+   ["LSP" :if-mode qqh/eglot-managed-modes
+    ("R" "rename" eglot-rename)
+    ("SPC" "code actions" eglot-code-actions)]
+   ["Move"
+    ("g" "top" beginning-of-buffer)
+    ("G" "bottom" end-of-buffer)
+    ("RET" "char pair" avy-goto-char-2)]])
+
+(transient-define-prefix qqh/next-prefix-menu ()
+  "Transient map for going to the next thing"
+  [["Next"
+    ("e" "error" next-error)
+    ("t" "tab" tab-next)
+    ("p" "perspective" persp-next)]])
+
+(transient-define-prefix qqh/prev-prefix-menu ()
+  "Transient map for going to the previous thing"
+  [["Previous"
+    ("e" "error" previous-error)
+    ("t" "tab" tab-previous)
+    ("p" "perspective" persp-prev)]])
+
+;;;; Global bindings
+(global-set-key (kbd "<home>") 'beginning-of-line)
+(global-set-key (kbd "<end>") 'end-of-line)
+
+;;;; Meow
+
+(use-package meow :demand t)
+
+(defun meow-setup ()
+  ;; colemak-dh cheatsheet
+  (setq meow-cheatsheet-layout meow-cheatsheet-layout-colemak-dh)
+
+  ;; register some things
+  (meow-thing-register 'qqh/thing-<>
+                       '(pair ("<") (">"))
+                       '(pair ("<") (">")))
+
+  ;; sets the thing table characters to use ([{ for grouping punctuations
+  ;; test ' asrtarstar '
+  (setq meow-char-thing-table
+        '((?\( . round)
+          (?\) . round)
+          (?\[ . square)
+          (?\] . square)
+          (?\{ . curly)
+          (?\} . curly)
+          (?\< . qqh/thing-<>)
+          (?\> . qqh/thing-<>)
+          (?\" . string)
+          (?s . symbol)
+          (?w . window)
+          (?b . buffer)
+          (?b . paragraph)
+          (?l . line)
+          (?v . visual-line)
+          (?f . defun)
+          (?\. . sentence)))
+
+  ;; Change the keys used by keypad mode
+  (setq meow-keypad-ctrl-meta-prefix ?\r          ;; Use RET for C-M-
+        meow-keypad-meta-prefix ?z                ;; Use z for M-
+        meow-keypad-literal-prefix 32)            ;; Use SPC for literal keys
+
+  (meow-motion-overwrite-define-key
+   ;; Use e to move up, n to move down.
+   ;; Since special modes usually use n to move down, we only overwrite e here.
+   '("e" . meow-prev)
+   '("<escape>" . ignore))
+
+  ;; default meow leader bindings
+  (meow-leader-define-key
+   '("?" . meow-cheatsheet)
+   '("SPC" . consult-buffer)
+   '("," . meow-last-buffer)
+   '(":" . eval-expression)
+   '("g" . magit)
+   '("f" . consult-fd)
+   '("p" . projectile-command-map)
+   '("RET" . avy-goto-line)
+
+   ;; Emacs bindings
+   '(";r" . (lambda ()
+              (interactive)
+              (load-file user-init-file)))
+   '(";c" . (lambda ()
+              (interactive)
+              (find-file user-init-file)))
+   '(";p" . (lambda ()
+              (interactive)
+              (qqh/open-project-org-file)))
+
+
+   ;; To execute the originally e in MOTION state, use SPC e.
+   '("e" . "H-e")
+   '("1" . meow-digit-argument)
+   '("2" . meow-digit-argument)
+   '("3" . meow-digit-argument)
+   '("4" . meow-digit-argument)
+   '("5" . meow-digit-argument)
+   '("6" . meow-digit-argument)
+   '("7" . meow-digit-argument)
+   '("8" . meow-digit-argument)
+   '("9" . meow-digit-argument)
+   '("0" . meow-digit-argument))
+
+  (meow-normal-define-key
+   '("0" . meow-expand-0)
+   '("1" . meow-expand-1)
+   '("2" . meow-expand-2)
+   '("3" . meow-expand-3)
+   '("4" . meow-expand-4)
+   '("5" . meow-expand-5)
+   '("6" . meow-expand-6)
+   '("7" . meow-expand-7)
+   '("8" . meow-expand-8)
+   '("9" . meow-expand-9)
+   '("-" . negative-argument)
+   '(";" . meow-reverse)
+   '("," . meow-inner-of-thing)
+   '("." . meow-bounds-of-thing)
+   '("(" . meow-beginning-of-thing)
+   '(")" . meow-end-of-thing)
+   '("/" . meow-visit)
+   '("a" . meow-append)
+   '("A" . ignore)
+   '("b" . meow-back-word)
+   '("B" . meow-back-symbol)
+   '("c" . meow-change)
+   '("d" . meow-kill)
+   '("e" . meow-prev)
+   '("E" . meow-prev-expand)
+   '("f" . meow-find)
+   '("G" . meow-grab)
+   '("m" . meow-left)
+   '("M" . meow-left-expand)
+   '("i" . meow-right)
+   '("I" . meow-right-expand)
+   '("j" . meow-join)
+   '("k" . ignore)
+   '("K" . eldoc)
+   '("l" . meow-line)
+   '("L" . meow-goto-line)
+   '("h" . meow-mark-word)
+   '("H" . meow-mark-symbol)
+   '("n" . meow-next)
+   '("N" . meow-next-expand)
+   '("o" . meow-open-below)
+   '("O" . meow-open-above)
+   '("p" . meow-yank)
+   '("q" . meow-quit)
+   '("r" . meow-replace)
+   '("s" . meow-insert)
+   (cons "S" surround-keymap)
+   '("t" . meow-till)
+   '("u" . meow-undo)
+   '("U" . meow-undo-in-selection)
+   '("v" . meow-search)
+   '("w" . meow-next-word)
+   '("W" . meow-next-symbol)
+   '("x" . meow-delete)
+   '("X" . meow-backward-delete)
+   '("y" . meow-save)
+   '("z" . meow-pop-selection)
+   '("'" . repeat)
+   '("<escape>" . meow-cancel-selection)
+   '("RET" . avy-goto-line)
+
+   ;; Some vim-like bindings
+   '("g" . qqh/g-prefix-menu)
+   '(":" . meow-M-x)
+   '("="   . meow-indent)
+   '("C-q" . delete-window)
+   '("M-q" . qqh/kill-buffer)
+
+   ;; Bracketed movement
+   '("[" . qqh/prev-prefix-menu)
+   '("]" . qqh/next-prefix-menu)
+
+   '("C-." . embark-act)        ;; pick some comfortable binding
+   '("C-;" . embark-dwim)       ;; good alternative: M-.
+   '("C-h B" . embark-bindings) ;; alternative for `describe-bindings'
+
+
+   ))
+
+(require 'meow)
+(meow-setup)
+(meow-global-mode 1)
+;; enable esc mode for terminal use
+(meow-esc-mode 1)
 
 ;;; Customization file
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
