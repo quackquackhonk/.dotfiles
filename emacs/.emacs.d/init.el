@@ -423,13 +423,11 @@ If the new path's directories does not exist, create them."
 
 ;;;; Eat: Terminal Emulation
 (use-package eat
+  :init
+  (setq eat-shell (executable-find "nu"))
   :custom
   (eat-term-name "xterm")
   :config
-  (when (eq system-type 'darwin)
-    (setq eat-shell "/opt/homebrew/bin/fish"))
-  (when (eq system-type 'gnu/linux)
-    (setq eat-shell "/usr/bin/nu"))
   (eat-eshell-mode)                     ; use Eat to handle term codes in program output
   (eat-eshell-visual-command-mode))     ; commands like less will be handled by Eat
 
@@ -449,13 +447,14 @@ If the new path's directories does not exist, create them."
   :init
   (projectile-mode +1)
 
-  (setq projectile-project-search-path '(("~/code/" . 2)
+  (setq projectile-auto-discover nil
+        projectile-project-search-path '(("~/code/" . 1)
 					                     "~/sources/")
         projectile-switch-project-action 'consult-fd))
 
 (defun qqh/open-project-org-file ()
+  "Open the project.org file at the root of the current project. If no project.org file is found, create a new one from a template."
   (interactive)
-  (require 'projectile)
   (let ((file     (projectile-expand-root "project.org"))
         (template (expand-file-name "templates/project-template.org"
                                     qqh/modules-dir)))
@@ -527,6 +526,8 @@ If the new path's directories does not exist, create them."
   :after flycheck
   :commands (flycheck-popup-tip-mode flycheck-popup-tip)
   :hook (flycheck-mode . flycheck-popup-tip-mode))
+
+(use-package consult-flycheck)
 
 ;;;;; Devdocs integration
 (use-package devdocs
@@ -727,7 +728,7 @@ If the new path's directories does not exist, create them."
 	    catppuccin-highlight-matches t)
 
   (add-hook 'server-after-make-frame-hook #'catppuccin-reload)
-  (add-hook 'after-make-frame-functions #'catppuccin-reload)
+  (add-to-list 'after-make-frame-functions #'catppuccin-reload)
 
   (load-theme 'catppuccin :no-confirm t)
   (catppuccin-reload))
@@ -745,6 +746,13 @@ If the new path's directories does not exist, create them."
 
 (use-package hl-todo
   :config
+  (setq hl-todo-keyword-faces
+        (list (cons "TODO" (catppuccin-color 'sky))
+              (cons "HACK" (catppuccin-color 'peach))
+              (cons "FIXME" (catppuccin-color 'red))
+              (cons "NOTE" (catppuccin-color 'mauve))
+              (cons "PERF" (catppuccin-color 'lavender))))
+
   (global-hl-todo-mode))
 
 (use-package solaire-mode
@@ -767,18 +775,15 @@ If the new path's directories does not exist, create them."
               '("%e%n"
                 "  "
                 (:eval (meow-indicator))
-                " "
-                (:eval (qqh/modeline/major-mode-name))
-                " "
-                mode-line-buffer-identification
-                (vc-mode (" on" vc-mode))
+                " %b: "
+                mode-line-modes
                 " "
                 mode-line-process
 
                 mode-line-format-right-align         ;; emacs 30
-                mode-line-misc-info
+                (vc-mode vc-mode)
                 " "
-                mode-line-modes
+                mode-line-misc-info
                 "  "))
 
 
@@ -882,6 +887,11 @@ If the new path's directories does not exist, create them."
    '("f" . consult-fd)
    '("p" . projectile-command-map)
    '("RET" . avy-goto-line)
+
+   ;; Open (o)
+   '("od" . consult-flycheck)
+   '("oi" . consult-imenu)
+   '("ot" . eat)
 
    ;; Emacs bindings
    '(";r" . (lambda ()

@@ -36,17 +36,6 @@ Hyde kind of defeats the point of not going with a DE, I should rip out the guts
 - State "DONE"       from "TODO"       [2024-11-04 Mon 17:31]
 *** TODO c / c++ debugging?
 *** TODO split up linux / macos / terminal settings
-*** TODO display-buffer customization
-- [ ] compilation buffer always in a new tab, switch back on "close"
-- [ ] ~eat-project~ as full horizontal split
-- [ ] ~eat~ in a new tab (auto close tab)
-- [ ] magit buffer in new tab (auto close tab)
-*** TODO Modeline configuration
-
-Ideally is should be layed out as
-
-| meow mode | buffer | major mode |  empty space | active environment | vc branch | project |
-
 *** DONE flatten the config
 - State "DONE"       from "TODO"       [2024-11-04 Mon 17:31]
 *** Keybindings [3/4]
@@ -62,7 +51,23 @@ Ideally is should be layed out as
 ***** TODO backticks ``
 **** Change keybindings for split management
 Ideally, I want something more like vim's ~C-w <key>~ as opposed to the ~C-x <digit>~ convention.
+
+I think theres a snippet in the meow FAQs about doing this exactly...
 **** OBSOLETE can we set up use-package integration?
 - State "OBSOLETE"   from "TODO"       [2024-11-04 Mon 17:22] \\
   already can be implemented using :bind (:map meow-STATE-state-map (...))
+*** Theming / UI
+**** TODO display-buffer customization
+- [ ] compilation buffer always in a new tab, switch back on "close"
+- [ ] ~eat-project~ as full horizontal split
+- [ ] ~eat~ in a new tab (auto close tab)
+- [ ] magit buffer in new tab (auto close tab)
+**** TODO Modeline configuration
+
+Ideally is should be layed out as
+
+| meow mode | buffer | major mode |  empty space | active environment | vc branch | project |
+**** TODO hl-todo customizations
+- [ ] Swap the background / foreground of current todo highlighting
+- [ ] Explore changing the entire /comment/ to the highlight color
 * Questions
