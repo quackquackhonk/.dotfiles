@@ -8,6 +8,8 @@ nvim/.netrwhist
 nvim/plugin/*
 work.lua
 
+redwood/.config/dconf/user
+
 nushell/.config/nushell/history.txt
 
 emacs/.emacs.d/auto-save-list/**
