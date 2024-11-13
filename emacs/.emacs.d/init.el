@@ -59,13 +59,6 @@
   (diminish 'visual-line-mode)
   (diminish 'smerge-mode))
 
-(use-package exec-path-from-shell
-  :config
-  ;; only run exec-path-from-shell when not running in terminal (GUI or daemon)
-  (when (or (memq window-system '(mac ns x))
-            (daemonp))
-    (exec-path-from-shell-initialize)))
-
 ;; which-key: shows a popup of available keybindings when typing a long key
 ;; sequence (e.g. C-x ...)
 (use-package which-key
@@ -746,12 +739,17 @@ If the new path's directories does not exist, create them."
 
 (use-package hl-todo
   :config
+  (defface qqh/hl-todo/todo-face
+    `((t . (:bold t :background ,(catppuccin-color 'sky) :foreground ,(catppuccin-color 'base))))
+    "The face highlighting TODOs in projects."
+    :group 'hl-todo)
+
   (setq hl-todo-keyword-faces
-        (list (cons "TODO" (catppuccin-color 'sky))
-              (cons "HACK" (catppuccin-color 'peach))
-              (cons "FIXME" (catppuccin-color 'red))
-              (cons "NOTE" (catppuccin-color 'mauve))
-              (cons "PERF" (catppuccin-color 'lavender))))
+        `(("TODO" . ,(catppuccin-color 'sky))
+          ("HACK" . ,(catppuccin-color 'peach))
+          ("FIXME" . ,(catppuccin-color 'red))
+          ("NOTE" . ,(catppuccin-color 'mauve))
+          ("PERF" . ,(catppuccin-color 'lavender))))
 
   (global-hl-todo-mode))
 
@@ -789,6 +787,7 @@ If the new path's directories does not exist, create them."
 
 ;;; Keybindings
 (defun qqh/kill-buffer ()
+  "Kill the current buffer using the persp-kill-buffer* command"
   (interactive)
   (persp-kill-buffer* (current-buffer)))
 
@@ -817,6 +816,7 @@ If the new path's directories does not exist, create them."
 (transient-define-prefix qqh/next-prefix-menu ()
   "Transient map for going to the next thing"
   [["Next"
+    ("d" "todo" hl-todo-next)
     ("e" "error" next-error)
     ("t" "tab" tab-next)
     ("p" "perspective" persp-next)]])
@@ -824,6 +824,7 @@ If the new path's directories does not exist, create them."
 (transient-define-prefix qqh/prev-prefix-menu ()
   "Transient map for going to the previous thing"
   [["Previous"
+    ("d" "todo" hl-todo-previous)
     ("e" "error" previous-error)
     ("t" "tab" tab-previous)
     ("p" "perspective" persp-prev)]])

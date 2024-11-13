@@ -30,7 +30,7 @@ Hyde kind of defeats the point of not going with a DE, I should rip out the guts
 *** TODO Waybar configuration without hyde
 *** TODO See we we can bind the thumb button to LGUI
 *** TODO delay before key repeat should be less
-** Emacs [1/4]
+** Emacs [2/5]
 *** TODO remove things that I don't know what they do
 *** DONE flatten the config
 - State "DONE"       from "TODO"       [2024-11-04 Mon 17:31]
