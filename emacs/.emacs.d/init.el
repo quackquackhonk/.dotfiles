@@ -56,6 +56,7 @@
 (use-package diminish
   :init
   ;; diminish built-in minor modes
+  (diminish 'abbrev-mode)
   (diminish 'visual-line-mode)
   (diminish 'smerge-mode))
 
@@ -326,20 +327,29 @@ If the new path's directories does not exist, create them."
   ;; Configure a custom style dispatcher (see the Consult wiki)
   (completion-styles '(orderless basic))
   (completion-category-defaults nil)
-  (completion-category-overrides '((file (styles partial-completion)))))
+  (completion-category-overrides '((file (styles partial-completion))
+                                   (eglot (styles orderless))
+                                   (eglot-capf (styles orderless)))))
 
 ;;;; Corfu: Popup completion-at-point
 (use-package corfu
+  ;; Optional customizations
+  :custom
+  (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
+  (corfu-auto t)                 ;; Enable auto completion
+  (corfu-preview-current nil)    ;; Disable current candidate preview
+  (corfu-preselect 'prompt)      ;; Preselect the prompt
+  (corfu-on-exact-match nil)     ;; Configure handling of exact matches
+
+  ;; Recommended: Enable Corfu globally.  This is recommended since Dabbrev can
+  ;; be used globally (M-/).  See also the customization variable
+  ;; `global-corfu-modes' to exclude certain modes.
   :init
   (global-corfu-mode)
-  :custom
-  (corfu-auto t)                 ;; Enable auto completion
-  (corfu-quit-no-match t)
-  :bind
-  (:map corfu-map
-        ("SPC" . corfu-insert-separator)
-        ("C-n" . corfu-next)
-        ("C-p" . corfu-previous)))
+  :bind (:map corfu-map
+              ("SPC" . corfu-insert-separator)
+              ("C-n" . corfu-next)
+              ("C-p" . corfu-previous)))
 
 ;;;;; Corfu popupinfo
 (use-package corfu-popupinfo
@@ -383,6 +393,10 @@ If the new path's directories does not exist, create them."
   ;; Corfu settings
   (tab-always-indent 'complete)
 
+  ;; Emacs 30 and newer: Disable Ispell completion function.
+  ;; Try `cape-dict' as an alternative.
+  (text-mode-ispell-word-completion nil)
+
   :init
   ;; Add prompt indicator to `completing-read-multiple'.
   ;; We display [CRM<separator>], e.g., [CRM,] if the separator is a comma.
@@ -413,6 +427,11 @@ If the new path's directories does not exist, create them."
   :hook
   ;; Auto parenthesis matching
   ((prog-mode . electric-pair-mode)))
+
+(use-package track-changes
+  :config
+  ;; FIXME: This shouldn't be necessary
+  (setq track-changes-record-errors nil))
 
 ;;;; Eat: Terminal Emulation
 (use-package eat
@@ -505,6 +524,9 @@ If the new path's directories does not exist, create them."
 ;;;;; Eldoc
 (use-package eldoc
   :diminish eldoc-mode)
+
+;;;;; ts-docstr
+(use-package docstr)
 
 ;;;;; Flycheck diagnostics
 (use-package flycheck
@@ -805,7 +827,7 @@ If the new path's directories does not exist, create them."
   [["Edit"
     ("c" "comment" comment-dwim)]
    ;; LSP keybinds in the `g' transient
-   ["LSP" :if-mode qqh/eglot-managed-modes
+   ["LSP" :if eglot-managed-p
     ("R" "rename" eglot-rename)
     ("SPC" "code actions" eglot-code-actions)]
    ["Move"

@@ -32,13 +32,20 @@ Hyde kind of defeats the point of not going with a DE, I should rip out the guts
 *** TODO delay before key repeat should be less
 ** Emacs [2/5]
 *** TODO remove things that I don't know what they do
-*** DONE flatten the config
-- State "DONE"       from "TODO"       [2024-11-04 Mon 17:31]
-*** TODO c / c++ debugging?
 *** TODO split up linux / macos / terminal settings
+*** Development Settings [0/1]
+**** TODO C / C++ [0/3]
+***** TODO Debugging
+PRIMARILY need lldb support
+***** TODO track-changes-mode is logging errors on document change
+#+begin_src
+Warning (emacs): Missing/incorrect calls to ‘before/after-change-functions’!!
+Details logged to ‘track-changes--error-log’
+#+end_src
+***** TODO non-included documents aren't being added unless eglot is restarted
 *** DONE flatten the config
 - State "DONE"       from "TODO"       [2024-11-04 Mon 17:31]
-*** Keybindings [3/4]
+*** Keybindings [3/5]
 **** DONE surround integration
 - State "DONE"       from "TODO"       [2024-11-07 Thu 18:26]
 **** DONE prefix maps in meow normal mode
@@ -49,7 +56,7 @@ Hyde kind of defeats the point of not going with a DE, I should rip out the guts
 - State "DONE"       from "WAITING"    [2024-11-07 Thu 18:26]
 ***** TODO single quotes ''
 ***** TODO backticks ``
-**** Change keybindings for split management
+**** TODO Change keybindings for split management
 Ideally, I want something more like vim's ~C-w <key>~ as opposed to the ~C-x <digit>~ convention.
 
 I think theres a snippet in the meow FAQs about doing this exactly...
