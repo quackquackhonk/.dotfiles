@@ -525,8 +525,10 @@ If the new path's directories does not exist, create them."
 (use-package eldoc
   :diminish eldoc-mode)
 
-;;;;; ts-docstr
-(use-package docstr)
+;;;;; documentation comment generation
+(use-package docstr
+  :diminish docstr-mode
+  :config (global-docstr-mode 1))
 
 ;;;;; Flycheck diagnostics
 (use-package flycheck
@@ -555,8 +557,6 @@ If the new path's directories does not exist, create them."
 
 ;;;; Eglot
 (use-package eglot
-  :defer t
-  :commands (qqh/get-major-mode-hook-name)
   :custom
   (eglot-send-changes-idle-time 0.1)
   (eglot-extend-to-xref t)              ; activate Eglot in referenced non-project files
@@ -570,6 +570,7 @@ If the new path's directories does not exist, create them."
     (add-hook (qqh/get-major-mode-hook-name mode) #'eglot-ensure))
 
   (mapc 'qqh/eglot/add-eglot-hook qqh/eglot-managed-modes)
+
   :config
   ;; Disable inlay hints globally
   (add-to-list 'eglot-ignored-server-capabilities :inlayHintProvider)
@@ -743,7 +744,6 @@ If the new path's directories does not exist, create them."
 	    catppuccin-highlight-matches t)
 
   (add-hook 'server-after-make-frame-hook #'catppuccin-reload)
-  (add-to-list 'after-make-frame-functions #'catppuccin-reload)
 
   (load-theme 'catppuccin :no-confirm t)
   (catppuccin-reload))
@@ -825,15 +825,20 @@ If the new path's directories does not exist, create them."
 (transient-define-prefix qqh/g-prefix-menu ()
   "Transient map for emulating vim's g- leader keybinding."
   [["Edit"
-    ("c" "comment" comment-dwim)]
-   ;; LSP keybinds in the `g' transient
-   ["LSP" :if eglot-managed-p
-    ("R" "rename" eglot-rename)
-    ("SPC" "code actions" eglot-code-actions)]
+    ("c" "comment" comment-dwim)
+    ("R" "rename" eglot-rename)]
+   ["Find"
+    ("d" "definition" xref-find-definitions)
+    ("r" "references" xref-find-references)]
    ["Move"
     ("g" "top" beginning-of-buffer)
     ("G" "bottom" end-of-buffer)
     ("RET" "char pair" avy-goto-char-2)]])
+
+;; (add-hook 'eglot-connect-hook
+;;           (lambda ()
+;;             (transient-insert-suffix 'qqh/g-prefix-menu '(0 0 0)
+;;               '("R" "rename" eglot-rename))))
 
 (transient-define-prefix qqh/next-prefix-menu ()
   "Transient map for going to the next thing"
@@ -899,6 +904,20 @@ If the new path's directories does not exist, create them."
    ;; Since special modes usually use n to move down, we only overwrite e here.
    '("e" . meow-prev)
    '("<escape>" . ignore))
+
+  (defvar qqh/meow/window-keymap
+    (let ((keymap (make-keymap)))
+      (define-key keymap (kbd "w") #'ace-window)
+      (define-key keymap (kbd "u") #'winner-undo)
+      (define-key keymap (kbd "r") #'winner-redo)
+      (define-key keymap (kbd "h") #'split-window-below)
+      (define-key keymap (kbd "v") #'split-window-right)
+      (define-key keymap (kbd "c") #'delete-window)
+      (define-key keymap (kbd "o") #'delete-other-windows)
+      keymap))
+
+  ;; define an alias for your keymap
+  (defalias 'window-keymap qqh/meow/window-keymap)
 
   ;; default meow leader bindings
   (meow-leader-define-key
