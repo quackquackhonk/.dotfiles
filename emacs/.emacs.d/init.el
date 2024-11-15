@@ -331,15 +331,18 @@ If the new path's directories does not exist, create them."
                                    (eglot (styles orderless))
                                    (eglot-capf (styles orderless)))))
 
+;;;; Yaspnippet: snippet expansion
+(use-package yasnippet
+  :config
+  (yas-global-mode 1))
+
 ;;;; Corfu: Popup completion-at-point
 (use-package corfu
   ;; Optional customizations
   :custom
   (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
   (corfu-auto t)                 ;; Enable auto completion
-  (corfu-preview-current nil)    ;; Disable current candidate preview
-  (corfu-preselect 'prompt)      ;; Preselect the prompt
-  (corfu-on-exact-match nil)     ;; Configure handling of exact matches
+  (corfu-quit-no-match t)        ;; Quit when no matches
 
   ;; Recommended: Enable Corfu globally.  This is recommended since Dabbrev can
   ;; be used globally (M-/).  See also the customization variable
@@ -436,7 +439,7 @@ If the new path's directories does not exist, create them."
 ;;;; Eat: Terminal Emulation
 (use-package eat
   :init
-  (setq eat-shell (executable-find "nu"))
+  (setq eat-shell (executable-find "fish"))
   :custom
   (eat-term-name "xterm")
   :config
@@ -523,7 +526,12 @@ If the new path's directories does not exist, create them."
 
 ;;;;; Eldoc
 (use-package eldoc
-  :diminish eldoc-mode)
+  :diminish eldoc-mode
+  :config
+  ;; Don't show flymake errors in echo area
+  (add-hook 'eldoc-mode-hook (lambda ()
+                                      (setq eldoc-documentation-functions
+                                            '(eglot-signature-eldoc-function eglot-hover-eldoc-function t)))))
 
 ;;;;; documentation comment generation
 (use-package docstr
@@ -531,20 +539,14 @@ If the new path's directories does not exist, create them."
   :config (global-docstr-mode 1))
 
 ;;;;; Flycheck diagnostics
-(use-package flycheck
-  :init (global-flycheck-mode))
+(use-package flymake
+  :straight nil
+  :hook (emacs-lisp-mode . flymake-mode))
 
-(use-package flycheck-eglot
-  :after (flycheck eglot)
+(use-package flymake-diagnostic-at-point
+  :after flymake
   :config
-  (global-flycheck-eglot-mode 1))
-
-(use-package flycheck-popup-tip
-  :after flycheck
-  :commands (flycheck-popup-tip-mode flycheck-popup-tip)
-  :hook (flycheck-mode . flycheck-popup-tip-mode))
-
-(use-package consult-flycheck)
+  (add-hook 'flymake-mode-hook #'flymake-diagnostic-at-point-mode))
 
 ;;;;; Devdocs integration
 (use-package devdocs
@@ -580,6 +582,7 @@ If the new path's directories does not exist, create them."
 
   ;; PERF: dont log every event
   (fset #'jsonrpc--log-event #'ignore)
+
 
   ;; server configurations
   (setq-default eglot-workspace-configuration
@@ -835,16 +838,10 @@ If the new path's directories does not exist, create them."
     ("G" "bottom" end-of-buffer)
     ("RET" "char pair" avy-goto-char-2)]])
 
-;; (add-hook 'eglot-connect-hook
-;;           (lambda ()
-;;             (transient-insert-suffix 'qqh/g-prefix-menu '(0 0 0)
-;;               '("R" "rename" eglot-rename))))
-
 (transient-define-prefix qqh/next-prefix-menu ()
   "Transient map for going to the next thing"
   [["Next"
     ("d" "todo" hl-todo-next)
-    ("e" "error" next-error)
     ("t" "tab" tab-next)
     ("p" "perspective" persp-next)]])
 
@@ -852,9 +849,16 @@ If the new path's directories does not exist, create them."
   "Transient map for going to the previous thing"
   [["Previous"
     ("d" "todo" hl-todo-previous)
-    ("e" "error" previous-error)
     ("t" "tab" tab-previous)
     ("p" "perspective" persp-prev)]])
+
+(add-hook 'flymake-mode-hook
+          (lambda ()
+            (transient-insert-suffix 'qqh/next-prefix-menu '(0 0 0)
+              '("e" "error" flymake-goto-next-error))
+            (transient-insert-suffix 'qqh/prev-prefix-menu '(0 0 0)
+              '("e" "error" flymake-goto-prev-error))))
+
 
 ;;;; Global bindings
 (global-set-key (kbd "<home>") 'beginning-of-line)
@@ -933,7 +937,8 @@ If the new path's directories does not exist, create them."
    ;; Open (o)
    '("od" . consult-flycheck)
    '("oi" . consult-imenu)
-   '("ot" . eat)
+   '("oe". eshell)
+   '("ot" . eat-project)
 
    ;; Emacs bindings
    '(";r" . (lambda ()
@@ -942,9 +947,7 @@ If the new path's directories does not exist, create them."
    '(";c" . (lambda ()
               (interactive)
               (find-file user-init-file)))
-   '(";p" . (lambda ()
-              (interactive)
-              (qqh/open-project-org-file)))
+   '(";p" . qqh/open-project-org-file)
 
 
    ;; To execute the originally e in MOTION state, use SPC e.

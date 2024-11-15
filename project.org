@@ -32,8 +32,12 @@ Hyde kind of defeats the point of not going with a DE, I should rip out the guts
 ** TODO delay before key repeat should be less
 * Emacs [2/5]
 ** TODO remove things that I don't know what they do
-** TODO split up linux / macos / terminal settings
-** Development Settings [0/2]
+** TODO split up linux / maco / terminal settings
+** Org [/]
+*** Get started with org-roam
+** Development Settings [0/3]
+*** TODO eshell configuration
+- [ ] I want C-d exit
 *** TODO I need a snippet system, yasnippet or tempel
 *** TODO C / C++ [0/3]
 **** TODO Debugging
