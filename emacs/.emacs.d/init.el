@@ -1,6 +1,6 @@
 ;;; init.el --- Entry point for my emacs config -*- lexical-binding: t; -*-
 
-;; Commentary:
+;;; Commentary:
 
 ;;; Code:
 
@@ -19,6 +19,10 @@
 (defun qqh/in-terminal-p ()
   "Returns true if the current frame is running in a character terminal"
   (eq window-system nil))
+
+(defun qqh/macos-p ()
+  "Check if the current frame is an OSX gui frame."
+  (eq window-system 'darwin))
 
 ;;; Straight initialization
 
@@ -333,6 +337,7 @@ If the new path's directories does not exist, create them."
 
 ;;;; Yaspnippet: snippet expansion
 (use-package yasnippet
+  :diminish yas-minor-mode
   :config
   (yas-global-mode 1))
 
@@ -439,7 +444,9 @@ If the new path's directories does not exist, create them."
 ;;;; Eat: Terminal Emulation
 (use-package eat
   :init
-  (setq eat-shell (executable-find "fish"))
+  (setq eat-shell (if (eq window-system 'darwin)
+                      (executable-find "fish")
+                    (executable-find "nu")))
   :custom
   (eat-term-name "xterm")
   :config
@@ -526,12 +533,7 @@ If the new path's directories does not exist, create them."
 
 ;;;;; Eldoc
 (use-package eldoc
-  :diminish eldoc-mode
-  :config
-  ;; Don't show flymake errors in echo area
-  (add-hook 'eldoc-mode-hook (lambda ()
-                                      (setq eldoc-documentation-functions
-                                            '(eglot-signature-eldoc-function eglot-hover-eldoc-function t)))))
+  :diminish eldoc-mode)
 
 ;;;;; documentation comment generation
 (use-package docstr
@@ -539,19 +541,25 @@ If the new path's directories does not exist, create them."
   :config (global-docstr-mode 1))
 
 ;;;;; Flycheck diagnostics
-(use-package flymake
-  :straight nil
-  :hook (emacs-lisp-mode . flymake-mode))
+(use-package flycheck
+  :init (global-flycheck-mode))
 
-(use-package flymake-diagnostic-at-point
-  :after flymake
+(use-package flycheck-eglot
+  :after (flycheck eglot)
   :config
-  (add-hook 'flymake-mode-hook #'flymake-diagnostic-at-point-mode))
+  (global-flycheck-eglot-mode 1))
+
+(use-package flycheck-popup-tip
+  :after flycheck
+  :commands (flycheck-popup-tip-mode flycheck-popup-tip)
+  :hook (flycheck-mode . flycheck-popup-tip-mode))
+
+(use-package consult-flycheck)
 
 ;;;;; Devdocs integration
 (use-package devdocs
   :bind (("C-h D" . devdocs-lookup))
-  :config
+ :config
   (add-hook 'python-mode-hook (lambda () (setq-local devdocs-current-docs '("python~11"))))
   (add-hook 'python-ts-mode-hook (lambda () (setq-local devdocs-current-docs '("python~11"))))
   (add-hook 'c-mode-hook (lamdba () (setq-local devdocs-current-docs '("c"))))
@@ -676,9 +684,6 @@ If the new path's directories does not exist, create them."
               ("C-c l s" . org-store-link)          ; Mnemonic: link → store
               ("C-c l i" . org-insert-link-global)) ; Mnemonic: link → insert
   :config
-
-  (require 'oc-csl)                     ; citation support
-  (add-to-list 'org-export-backends 'md)
 
   ;; Make org-open-at-point follow file links in the same window
   (setf (cdr (assoc 'file org-link-frame-setup)) 'find-file)
@@ -911,13 +916,10 @@ If the new path's directories does not exist, create them."
 
   (defvar qqh/meow/window-keymap
     (let ((keymap (make-keymap)))
-      (define-key keymap (kbd "w") #'ace-window)
-      (define-key keymap (kbd "u") #'winner-undo)
-      (define-key keymap (kbd "r") #'winner-redo)
+      (define-key keymap (kbd "w") #'other-window)
       (define-key keymap (kbd "h") #'split-window-below)
       (define-key keymap (kbd "v") #'split-window-right)
-      (define-key keymap (kbd "c") #'delete-window)
-      (define-key keymap (kbd "o") #'delete-other-windows)
+      (define-key keymap (kbd "q") #'delete-window)
       keymap))
 
   ;; define an alias for your keymap
@@ -933,6 +935,7 @@ If the new path's directories does not exist, create them."
    '("f" . consult-fd)
    '("p" . projectile-command-map)
    '("RET" . avy-goto-line)
+   '("w" . window-keymap)
 
    ;; Open (o)
    '("od" . consult-flycheck)
@@ -1039,8 +1042,6 @@ If the new path's directories does not exist, create them."
    '("C-." . embark-act)        ;; pick some comfortable binding
    '("C-;" . embark-dwim)       ;; good alternative: M-.
    '("C-h B" . embark-bindings) ;; alternative for `describe-bindings'
-
-
    ))
 
 (require 'meow)

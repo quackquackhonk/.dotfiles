@@ -28,13 +28,14 @@
 Hyde kind of defeats the point of not going with a DE, I should rip out the guts and keep what i need
 
 ** TODO Waybar configuration without hyde
-** TODO See we we can bind the thumb button to LGUI
+** TODO See if we can bind the thumb button to LGUI
 ** TODO delay before key repeat should be less
 * Emacs [2/5]
 ** TODO remove things that I don't know what they do
 ** TODO split up linux / maco / terminal settings
-** Org [/]
-*** Get started with org-roam
+** Org [0/1]
+*** change the colors of the todo labels
+*** TODO Get started with org-roam
 ** Development Settings [0/3]
 *** TODO eshell configuration
 - [ ] I want C-d exit
@@ -74,11 +75,11 @@ I think theres a snippet in the meow FAQs about doing this exactly...
 - [ ] ~eat-project~ as full horizontal split
 - [ ] ~eat~ in a new tab (auto close tab)
 - [ ] magit buffer in new tab (auto close tab)
-*** STARTED Modeline configuration [0/2]
+*** STARTED Modeline configuration [0/3]
 - State "STARTED"    from "TODO"       [2024-11-13 Wed 18:07]
+**** TODO Colors on the modeline!!!
 **** TODO truncate git branch length
 **** TODO extract flycheck and projectile from mode-line-modes, remove mode-line-modes from modeline
-
 *** TODO hl-todo customizations
 - [ ] Swap the background / foreground of current todo highlighting
 - [ ] Explore changing the entire /comment/ to the highlight color
