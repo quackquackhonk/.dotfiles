@@ -462,6 +462,7 @@ If the new path's directories does not exist, create them."
 ;;;;; Projectile
 (use-package project)
 (use-package projectile
+  :diminish projectile-mode
   :init
   (projectile-mode +1)
 
@@ -501,7 +502,7 @@ If the new path's directories does not exist, create them."
 ;;;;; Consult-todo: Search project todos
 (use-package consult-todo)
 
-;;;; Common file types
+;;;; Miscellaneous file types
 
 (use-package markdown-mode
   :hook ((markdown-mode . visual-line-mode))
