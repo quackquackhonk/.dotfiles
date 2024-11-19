@@ -73,7 +73,7 @@
 
 ;;; Basic settings
 (setopt inhibit-splash-screen t)
-(setopt initial-major-mode 'fundamental-mode)  ; default mode for the *scratch* buffer
+(setopt initial-major-mode 'emacs-lisp-mode)  ; default mode for the *scratch* buffer
 (setopt display-time-default-load-average nil) ; this information is useless for most
 
 
@@ -353,11 +353,7 @@ If the new path's directories does not exist, create them."
   ;; be used globally (M-/).  See also the customization variable
   ;; `global-corfu-modes' to exclude certain modes.
   :init
-  (global-corfu-mode)
-  :bind (:map corfu-map
-              ("SPC" . corfu-insert-separator)
-              ("C-n" . corfu-next)
-              ("C-p" . corfu-previous)))
+  (global-corfu-mode))
 
 ;;;;; Corfu popupinfo
 (use-package corfu-popupinfo
@@ -542,7 +538,8 @@ If the new path's directories does not exist, create them."
 
 ;;;;; Flycheck diagnostics
 (use-package flycheck
-  :init (global-flycheck-mode))
+  :init
+  (global-flycheck-mode))
 
 (use-package flycheck-eglot
   :after (flycheck eglot)
@@ -754,7 +751,22 @@ If the new path's directories does not exist, create them."
   (add-hook 'server-after-make-frame-hook #'catppuccin-reload)
 
   (load-theme 'catppuccin :no-confirm t)
-  (catppuccin-reload))
+  (catppuccin-reload)
+
+  ;; Face customizations
+  (set-face-attribute 'window-divider nil
+                      :background (catppuccin-color 'mantle)
+                      :foreground (catppuccin-color 'mantle))
+  (set-face-attribute 'fringe nil
+                      :background (catppuccin-color 'mantle))
+  (set-face-attribute 'flycheck-error nil
+                      :background (catppuccin-color 'red)
+                      :underline nil
+                      :foreground (catppuccin-color 'base))
+  (set-face-attribute 'flycheck-info nil
+                      :underline (catppuccin-color 'green))
+  (set-face-attribute 'flycheck-warning nil
+                      :underline (catppuccin-color 'peach)))
 
 ;;;; Misc. Theming Packages
 (use-package rainbow-mode
@@ -783,9 +795,15 @@ If the new path's directories does not exist, create them."
 
   (global-hl-todo-mode))
 
-(use-package solaire-mode
+;; dim inactive buffers
+(use-package auto-dim-other-buffers
   :config
-  (solaire-global-mode +1))
+  (set-face-attribute 'auto-dim-other-buffers-face nil
+                      :background (catppuccin-color 'mantle))
+  (set-face-attribute 'auto-dim-other-buffers-hide-face nil
+                      :background (catppuccin-color 'mantle)
+                      :foreground (catppuccin-color 'mantle))
+  (auto-dim-other-buffers-mode))
 
 (use-package fancy-compilation
   :config
@@ -796,8 +814,17 @@ If the new path's directories does not exist, create them."
 ;;;;; Major mode
 
 (defun qqh/modeline/major-mode-name ()
-  "Return the major mode of the current buffer with a colon after it"
+  "Return the major mode of the current buffer with a colon after it."
   (concat (symbol-name major-mode) ":"))
+
+(defun qqh/modeline/project-and-vc ()
+  "Report project name and VC information in the modeline."
+  (let ((project-name (projectile-project-name)))
+    (format "%s%s"
+            (or project-name "")
+            (if vc-mode
+                (format " on%s" vc-mode))
+            )))
 
 (setq-default mode-line-format
               '("%e%n"
@@ -808,8 +835,9 @@ If the new path's directories does not exist, create them."
                 " "
                 mode-line-process
 
+                ;; emacs 30: right align the rest of the modeline
                 mode-line-format-right-align         ;; emacs 30
-                (vc-mode vc-mode)
+                (:eval (qqh/modeline/project-and-vc))
                 " "
                 mode-line-misc-info
                 "  "))
@@ -817,7 +845,7 @@ If the new path's directories does not exist, create them."
 
 ;;; Keybindings
 (defun qqh/kill-buffer ()
-  "Kill the current buffer using the persp-kill-buffer* command"
+  "Kill the current buffer using the persp-kill-buffer* command."
   (interactive)
   (persp-kill-buffer* (current-buffer)))
 
@@ -847,6 +875,7 @@ If the new path's directories does not exist, create them."
   "Transient map for going to the next thing"
   [["Next"
     ("d" "todo" hl-todo-next)
+    ("e" "error" flycheck-next-error)
     ("t" "tab" tab-next)
     ("p" "perspective" persp-next)]])
 
@@ -854,16 +883,9 @@ If the new path's directories does not exist, create them."
   "Transient map for going to the previous thing"
   [["Previous"
     ("d" "todo" hl-todo-previous)
+    ("e" "error" flycheck-previous-error)
     ("t" "tab" tab-previous)
     ("p" "perspective" persp-prev)]])
-
-(add-hook 'flymake-mode-hook
-          (lambda ()
-            (transient-insert-suffix 'qqh/next-prefix-menu '(0 0 0)
-              '("e" "error" flymake-goto-next-error))
-            (transient-insert-suffix 'qqh/prev-prefix-menu '(0 0 0)
-              '("e" "error" flymake-goto-prev-error))))
-
 
 ;;;; Global bindings
 (global-set-key (kbd "<home>") 'beginning-of-line)

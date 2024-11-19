@@ -20,8 +20,13 @@ $env.PATH = ($env.PATH | uniq)
 $env.TERM = "xterm-256color"
 $env.COLORTERM = "truecolor"
 
-$env.EDITOR = "emacs"
-$env.VISUAL = "emacs"
+$env.EDITOR = "emacsclient -a=''"
+$env.VISUAL = "emacsclient -a=''"
+
+# setup external completion
+$env.CARAPACE_BRIDGES = 'zsh,fish,bash,inshellisense' # optional
+mkdir ~/.cache/carapace
+carapace _carapace nushell | save --force ~/.cache/carapace/init.nu
 
 # starship
 mkdir ~/.cache/starship

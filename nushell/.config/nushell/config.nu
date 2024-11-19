@@ -68,5 +68,6 @@ pokemon-colorscripts --no-title -r 1-8
 # CLI tool integrations
 use ~/.cache/starship/init.nu
 source ~/.zoxide.nu
+source ~/.cache/carapace/init.nu
 
 use ($nu.default-config-dir | path join mise.nu)
