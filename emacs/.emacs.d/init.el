@@ -73,7 +73,7 @@
 
 ;;; Basic settings
 (setopt inhibit-splash-screen t)
-(setopt initial-major-mode 'emacs-lisp-mode)  ; default mode for the *scratch* buffer
+(setopt initial-major-mode 'fundamental-mode)  ; default mode for the *scratch* buffer
 (setopt display-time-default-load-average nil) ; this information is useless for most
 
 
@@ -752,22 +752,22 @@ If the new path's directories does not exist, create them."
   (add-hook 'server-after-make-frame-hook #'catppuccin-reload)
 
   (load-theme 'catppuccin :no-confirm t)
-  (catppuccin-reload)
+  (catppuccin-reload))
 
-  ;; Face customizations
-  (set-face-attribute 'window-divider nil
-                      :background (catppuccin-color 'mantle)
-                      :foreground (catppuccin-color 'mantle))
-  (set-face-attribute 'fringe nil
-                      :background (catppuccin-color 'mantle))
-  (set-face-attribute 'flycheck-error nil
-                      :background (catppuccin-color 'red)
-                      :underline nil
-                      :foreground (catppuccin-color 'base))
-  (set-face-attribute 'flycheck-info nil
-                      :underline (catppuccin-color 'green))
-  (set-face-attribute 'flycheck-warning nil
-                      :underline (catppuccin-color 'peach)))
+;; Face customizations
+(set-face-attribute 'window-divider nil
+                    :background (catppuccin-color 'mantle)
+                    :foreground (catppuccin-color 'mantle))
+(set-face-attribute 'fringe nil
+                    :background (catppuccin-color 'mantle))
+(set-face-attribute 'flycheck-error nil
+                    :background (catppuccin-color 'red)
+                    :underline nil
+                    :foreground (catppuccin-color 'base))
+(set-face-attribute 'flycheck-info nil
+                    :underline nil)
+(set-face-attribute 'flycheck-warning nil
+                    :underline (catppuccin-color 'peach))
 
 ;;;; Misc. Theming Packages
 (use-package rainbow-mode
