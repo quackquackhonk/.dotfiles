@@ -820,7 +820,7 @@ If the new path's directories does not exist, create them."
   (add-hook 'server-after-make-frame-hook #'catppuccin-reload)
 
   (load-theme 'catppuccin :no-confirm t)
-  (catppuccin-reload)
+  (catppuccin-reload))
 
   ;; Face customizations
   (set-face-attribute 'window-divider nil
