@@ -830,10 +830,10 @@ If the new path's directories does not exist, create them."
                       :background (catppuccin-color 'mantle))
   (set-face-attribute 'flycheck-error nil
                       :underline (catppuccin-color 'red))
-  (set-face-attribute 'flycheck-info nil
-                      :underline (catppuccin-color 'green))
   (set-face-attribute 'flycheck-warning nil
                       :underline (catppuccin-color 'peach)))
+  (set-face-attribute 'flycheck-info nil
+                      :underline (catppuccin-color 'green))
 
 ;;;; Misc. Theming Packages
 (use-package rainbow-mode
