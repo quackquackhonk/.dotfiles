@@ -1,4 +1,4 @@
-;;; early-init.el
+;;; early-init.el --- Early init config file.
 
 ;;; Commentary:
 
@@ -36,15 +36,14 @@
 (add-to-list 'exec-path (format "%s/.local/bin" (getenv "HOME")))
 (add-to-list 'exec-path (format "%s/.cargo/bin" (getenv "HOME")))
 
+;; OSX settings
 (when (and (eq system-type 'darwin))
   (setenv "LIBRARY_PATH"
           "/opt/homebrew/opt/gcc/lib/gcc/14:/opt/homebrew/opt/libgccjit/lib/gcc/14:/opt/homebrew/opt/gcc/lib/gcc/14/gcc/aarch64-apple-darwin23/14")
   (setenv "XDG_CONFIG_HOME" "/Users/i34866/.config")
   (add-to-list 'exec-path "/opt/homebrew/bin")
+  (add-to-list 'exec-path "/opt/homebrew/opt/llvm/bin")
   (add-to-list 'exec-path "/opt/homebrew/Caskroom/miniconda/base/bin"))
-
-(when (and (eq system-type 'gnu/linux) (getenv "WSLENV"))
- (add-to-list 'exec-path "/home/sahana/.local/share/mise/installs/python/3.12/bin/"))
 
 (setenv "TERM" "xterm-256color")
 

@@ -9,6 +9,10 @@
   (error "[qqh] config assumes Emacs version 30+, currently running %s!" emacs-major-version))
 
 ;;; Definitions
+(defgroup qqh-emacs nil
+  "User options for my Emacs configuration."
+  :group 'file)
+
 (defvar qqh/modules-dir (expand-file-name "qqh" user-emacs-directory)
   "The directory containing my module files.")
 
@@ -17,7 +21,7 @@
   "A list of modes to enable eglot for.")
 
 (defun qqh/in-terminal-p ()
-  "Returns true if the current frame is running in a character terminal"
+  "Return true if the current frame is running in a character terminal."
   (eq window-system nil))
 
 (defun qqh/macos-p ()
@@ -73,7 +77,7 @@
 
 ;;; Basic settings
 (setopt inhibit-splash-screen t)
-(setopt initial-major-mode 'emacs-lisp-mode)  ; default mode for the *scratch* buffer
+(setopt initial-major-mode 'fundamental-mode)  ; default mode for the *scratch* buffer
 (setopt display-time-default-load-average nil) ; this information is useless for most
 
 
@@ -148,6 +152,9 @@ If the new path's directories does not exist, create them."
 (setopt make-backup-file-name-function 'qqh/backup-file-name)
 
 ;;; Built-Ins.
+;;;; Repeat Mode
+(use-package repeat
+  :config (repeat-mode))
 ;;;; Dired
 (use-package dired
   :straight nil
@@ -333,13 +340,41 @@ If the new path's directories does not exist, create them."
   (completion-category-defaults nil)
   (completion-category-overrides '((file (styles partial-completion))
                                    (eglot (styles orderless))
-                                   (eglot-capf (styles orderless)))))
+                                  (eglot-capf (styles orderless)))))
+;;;; Tempel: Templates (snippets) for emacs
+;; Configure Tempel
+(use-package tempel
+  ;; Require trigger prefix before template name when completing.
+  ;; :custom
+  ;; (tempel-trigger-prefix "<")
+  :bind (("M-+" . tempel-complete) ;; Alternative tempel-expand
+         ("M-*" . tempel-insert))
+  :init
+  ;; Setup completion at point
+  (defun tempel-setup-capf ()
+    ;; Add the Tempel Capf to `completion-at-point-functions'.
+    ;; `tempel-expand' only triggers on exact matches. Alternatively use
+    ;; `tempel-complete' if you want to see all matches, but then you
+    ;; should also configure `tempel-trigger-prefix', such that Tempel
+    ;; does not trigger too often when you don't expect it. NOTE: We add
+    ;; `tempel-expand' *before* the main programming mode Capf, such
+    ;; that it will be tried first.
+    (setq-local completion-at-point-functions
+                (cons #'tempel-expand
+                      completion-at-point-functions)))
 
-;;;; Yaspnippet: snippet expansion
-(use-package yasnippet
-  :diminish yas-minor-mode
-  :config
-  (yas-global-mode 1))
+  (add-hook 'conf-mode-hook 'tempel-setup-capf)
+  (add-hook 'prog-mode-hook 'tempel-setup-capf)
+  (add-hook 'text-mode-hook 'tempel-setup-capf)
+
+  ;; Optionally make the Tempel templates available to Abbrev,
+  ;; either locally or globally. `expand-abbrev' is bound to C-x '.
+  ;; (add-hook 'prog-mode-hook #'tempel-abbrev-mode)
+  ;; (global-tempel-abbrev-mode)
+)
+
+;; The package is young and doesn't have comprehensive coverage.
+(use-package tempel-collection)
 
 ;;;; Corfu: Popup completion-at-point
 (use-package corfu
@@ -439,10 +474,6 @@ If the new path's directories does not exist, create them."
 
 ;;;; Eat: Terminal Emulation
 (use-package eat
-  :init
-  (setq eat-shell (if (eq window-system 'darwin)
-                      (executable-find "fish")
-                    (executable-find "nu")))
   :custom
   (eat-term-name "xterm")
   :config
@@ -467,7 +498,7 @@ If the new path's directories does not exist, create them."
   (projectile-mode +1)
 
   (setq projectile-auto-discover nil
-        projectile-project-search-path '(("~/code/" . 1)
+        projectile-project-search-path '(("~/code/" . 2)
 					                     "~/sources/")
         projectile-switch-project-action 'consult-fd))
 
@@ -539,6 +570,7 @@ If the new path's directories does not exist, create them."
 
 ;;;;; Flycheck diagnostics
 (use-package flycheck
+  :diminish flycheck-mode
   :init
   (global-flycheck-mode))
 
@@ -549,6 +581,8 @@ If the new path's directories does not exist, create them."
 
 (use-package flycheck-popup-tip
   :after flycheck
+  :config
+  (setq popup-tip-max-width 120)
   :commands (flycheck-popup-tip-mode flycheck-popup-tip)
   :hook (flycheck-mode . flycheck-popup-tip-mode))
 
@@ -589,6 +623,8 @@ If the new path's directories does not exist, create them."
   ;; PERF: dont log every event
   (fset #'jsonrpc--log-event #'ignore)
 
+  (setq mode-line-misc-info
+        (delete '(eglot--managed-mode (" [" eglot--mode-line-format "] ")) mode-line-misc-info))
 
   ;; server configurations
   (setq-default eglot-workspace-configuration
@@ -610,6 +646,38 @@ If the new path's directories does not exist, create them."
   :straight (eglot-booster :type git :host github :repo "jdtsmith/eglot-booster")
   :after eglot
   :config (eglot-booster-mode))
+
+;;;; Dape: DAP support for eglot
+(use-package dape
+  :preface
+  ;; By default dape shares the same keybinding prefix as `gud'
+  ;; If you do not want to use any prefix, set it to nil.
+  ;; (setq dape-key-prefix "\C-x\C-a")
+
+  :hook
+  ((kill-emacs . dape-breakpoint-save)  ;; Save breakpoints on quit
+   (after-init . dape-breakpoint-load)) ;; Load breakpoints on startup
+
+  :config
+  ;; Turn on global bindings for setting breakpoints with mouse
+  (dape-breakpoint-global-mode)
+
+  ;; Info buffers to the right
+  ;; (setq dape-buffer-window-arrangement 'right)
+
+  ;; Info buffers like gud (gdb-mi)
+  ;; (setq dape-buffer-window-arrangement 'gud)
+  ;; (setq dape-info-hide-mode-line nil)
+
+  ;; Save buffers on startup, useful for interpreted languages
+  (add-hook 'dape-start-hook (lambda () (save-some-buffers t t)))
+
+  ;; Kill compile buffer on build success
+  (add-hook 'dape-compile-hook 'kill-buffer)
+
+  ;; Projectile users
+  (setq dape-cwd-fn 'projectile-project-root))
+
 ;;;; Language specific configuration
 
 ;;;;; C / C++
@@ -761,9 +829,7 @@ If the new path's directories does not exist, create them."
   (set-face-attribute 'fringe nil
                       :background (catppuccin-color 'mantle))
   (set-face-attribute 'flycheck-error nil
-                      :background (catppuccin-color 'red)
-                      :underline nil
-                      :foreground (catppuccin-color 'base))
+                      :underline (catppuccin-color 'red))
   (set-face-attribute 'flycheck-info nil
                       :underline (catppuccin-color 'green))
   (set-face-attribute 'flycheck-warning nil
@@ -785,7 +851,7 @@ If the new path's directories does not exist, create them."
   (defface qqh/hl-todo/todo-face
     `((t . (:bold t :background ,(catppuccin-color 'sky) :foreground ,(catppuccin-color 'base))))
     "The face highlighting TODOs in projects."
-    :group 'hl-todo)
+    :group 'qqh-emacs)
 
   (setq hl-todo-keyword-faces
         `(("TODO" . ,(catppuccin-color 'sky))
@@ -808,6 +874,8 @@ If the new path's directories does not exist, create them."
 
 (use-package fancy-compilation
   :config
+  (set-face-attribute 'fancy-compilation-default-face nil
+                      :background (catppuccin-color 'base))
   (fancy-compilation-mode))
 
 ;;;; Modeline configurtaion
@@ -824,25 +892,97 @@ If the new path's directories does not exist, create them."
     (format "%s%s"
             (or project-name "")
             (if vc-mode
-                (format " on%s" vc-mode))
+                (format " on%s" vc-mode)
+              "")
             )))
+
+(defface qqh/modeline/flycheck-error-face
+  `((t . (:bold t :foreground ,(catppuccin-color 'red))))
+  "The face to highlight flycheck modeline errors."
+  :group 'qqh-emacs)
+(defface qqh/modeline/flycheck-warning-face
+  `((t . (:bold t :foreground ,(catppuccin-color 'yellow))))
+  "The face to highlight flycheck modeline warnings."
+  :group 'qqh-emacs)
+(defface qqh/modeline/flycheck-info-face
+  `((t . (:bold t :foreground ,(catppuccin-color 'green))))
+  "The face to highlight flycheck modeline infos."
+  :group 'qqh-emacs)
+
+(defun qqh/modeline/flycheck-status-text ()
+  "Get a text describing STATUS for use in the mode line.
+
+This has been adapted from `flycheck-mode-line-status-text'"
+  (let* ((current-status flycheck-last-status-change)
+         (errors (let-alist (flycheck-count-errors flycheck-current-errors)
+                   (propertize (format "Ⓔ%s" (or .error 0))
+                               'face 'qqh/modeline/flycheck-error-face)))
+         (warnings (let-alist (flycheck-count-errors flycheck-current-errors)
+                     (propertize (format "Ⓦ%s" (or .warning 0))
+                                 'face 'qqh/modeline/flycheck-warning-face)))
+         (infos (let-alist (flycheck-count-errors flycheck-current-errors)
+                  (propertize (format "Ⓘ%s" (or .info 0))
+                              'face 'qqh/modeline/flycheck-info-face)))
+         (indicator (pcase current-status
+                      (`not-checked "")
+                      (`no-checker "missing checker")
+                      (`running "...")
+                      (`errored "!!!")
+                      (`finished
+                       (let-alist (flycheck-count-errors flycheck-current-errors)
+                         (if (or .error .warning .info)
+                             (format "%s %s %s" errors warnings infos)
+                           "yippie!")))
+                      (`interrupted "xxx")
+                      (`suspicious "???")))
+         (face (pcase current-status
+                 (`not-checked nil)
+                 (`no-checker 'error)
+                 (`running 'warning)
+                 (`errored 'error)
+                 (`finished
+                  (let-alist (flycheck-count-errors flycheck-current-errors)
+                    (if (or .error .warning .info) nil 'success)))
+                 (`interrupted 'error)
+                 (`suspicious 'warning)) ))
+    (when (not (string= "" indicator))
+      (format " [%s]" (if face
+                          (propertize indicator 'face face)
+                        indicator)))))
+
+(defvar-local qqh/modeline/flycheck
+    `(:eval (when (and (featurep 'flycheck)
+                       (mode-line-window-selected-p))
+              (qqh/modeline/flycheck-status-text)))
+  "Mode line construct for reporting flycheck status of the current buffer.")
+
+(defvar-local qqh/modeline/eglot
+  `(:eval
+    (when (and (featurep 'eglot) (mode-line-window-selected-p))
+      '(eglot--managed-mode (" [" eglot--mode-line-format "]"))))
+  "Mode line construct for reporting eglot status of the current buffer..")
 
 (setq-default mode-line-format
               '("%e%n"
                 "  "
                 (:eval (meow-indicator))
-                " %b: "
-                mode-line-modes
                 " "
+                (:eval (qqh/modeline/major-mode-name))
+                " %b "
                 mode-line-process
 
                 ;; emacs 30: right align the rest of the modeline
                 mode-line-format-right-align         ;; emacs 30
                 (:eval (qqh/modeline/project-and-vc))
+                qqh/modeline/flycheck
+                qqh/modeline/eglot
                 " "
                 mode-line-misc-info
                 "  "))
 
+(dolist (construct '(qqh/modeline/flycheck
+                     qqh/modeline/eglot))
+  (put construct 'risky-local-variable t))
 
 ;;; Keybindings
 (defun qqh/kill-buffer ()
@@ -869,8 +1009,7 @@ If the new path's directories does not exist, create them."
     ("r" "references" xref-find-references)]
    ["Move"
     ("g" "top" beginning-of-buffer)
-    ("G" "bottom" end-of-buffer)
-    ("RET" "char pair" avy-goto-char-2)]])
+    ("G" "bottom" end-of-buffer)]])
 
 (transient-define-prefix qqh/next-prefix-menu ()
   "Transient map for going to the next thing"
@@ -897,11 +1036,12 @@ If the new path's directories does not exist, create them."
 (use-package meow :demand t)
 
 (defun meow-setup ()
+  "Function for setting up meow keybindings."
   ;; colemak-dh cheatsheet
   (setq meow-cheatsheet-layout meow-cheatsheet-layout-colemak-dh)
 
   ;; register some things
-  (meow-thing-register 'qqh/thing-<>
+  (meow-thing-register 'angle
                        '(pair ("<") (">"))
                        '(pair ("<") (">")))
 
@@ -914,8 +1054,8 @@ If the new path's directories does not exist, create them."
           (?\] . square)
           (?\{ . curly)
           (?\} . curly)
-          (?\< . qqh/thing-<>)
-          (?\> . qqh/thing-<>)
+          (?\< . angle)
+          (?\> . angle)
           (?\" . string)
           (?s . symbol)
           (?w . window)
@@ -957,7 +1097,7 @@ If the new path's directories does not exist, create them."
    '("g" . magit)
    '("f" . consult-fd)
    '("p" . projectile-command-map)
-   '("RET" . avy-goto-line)
+   '("RET" . avy-goto-char-2)
    '("w" . window-keymap)
 
    ;; Open (o)

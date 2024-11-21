@@ -33,6 +33,10 @@ Hyde kind of defeats the point of not going with a DE, I should rip out the guts
 * Emacs [2/5]
 ** TODO remove things that I don't know what they do
 ** TODO split up linux / maco / terminal settings
+** Bugs / Behavior I don't like [0/2]
+*** TODO non-included documents aren't being added unless eglot is restarted
+*** TODO ~n~ and ~e~ open files in compilation-mode instead of scrolling output
+I think this is probably becuse of some underlying binding that binds ~C-n~ and ~C-p~ to something that navigates to errors instead of scrolling
 ** Org [0/1]
 *** change the colors of the todo labels
 *** TODO Get started with org-roam
@@ -41,14 +45,15 @@ Hyde kind of defeats the point of not going with a DE, I should rip out the guts
 - [ ] I want C-d exit
 *** TODO I need a snippet system, yasnippet or tempel
 *** TODO C / C++ [0/3]
-**** TODO Debugging
-PRIMARILY need lldb support
 **** TODO track-changes-mode is logging errors on document change
 #+begin_src
 Warning (emacs): Missing/incorrect calls to ‘before/after-change-functions’!!
 Details logged to ‘track-changes--error-log’
 #+end_src
-**** TODO non-included documents aren't being added unless eglot is restarted
+
+This also causes corfu to crash, complaining about the problems with track changes
+**** TODO Debugging
+PRIMARILY need lldb support
 ** DONE flatten the config
 - State "DONE"       from "TODO"       [2024-11-04 Mon 17:31]
 ** Keybindings [3/5]
@@ -69,17 +74,19 @@ I think theres a snippet in the meow FAQs about doing this exactly...
 *** OBSOLETE can we set up use-package integration?
 - State "OBSOLETE"   from "TODO"       [2024-11-04 Mon 17:22] \\
   already can be implemented using :bind (:map meow-STATE-state-map (...))
-** Theming / UI [/]
+** Theming / UI [0/3]
 *** TODO display-buffer customization
 - [ ] compilation buffer always in a new tab, switch back on "close"
 - [ ] ~eat-project~ as full horizontal split
 - [ ] ~eat~ in a new tab (auto close tab)
 - [ ] magit buffer in new tab (auto close tab)
-*** STARTED Modeline configuration [0/3]
+*** STARTED Modeline configuration [1/4]
 - State "STARTED"    from "TODO"       [2024-11-13 Wed 18:07]
 **** TODO Colors on the modeline!!!
 **** TODO truncate git branch length
-**** TODO extract flycheck and projectile from mode-line-modes, remove mode-line-modes from modeline
+**** TODO extract flycheck from mode-line-modes, remove mode-line-modes from modeline
+**** DONE extract projectile from mode-line-modes
+- State "DONE"       from "TODO"       [2024-11-20 Wed 16:02]
 *** TODO hl-todo customizations
 - [ ] Swap the background / foreground of current todo highlighting
 - [ ] Explore changing the entire /comment/ to the highlight color
