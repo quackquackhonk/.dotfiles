@@ -6,7 +6,7 @@
 
 ;;; Guardrail
 (when (< emacs-major-version 30)
-  (error "[qqh] config assumes Emacs version 30+, currently running %s!" emacs-major-version))
+  (error "[qqh] config requires Emacs version 30+, currently running %s!" emacs-major-version))
 
 ;;; Definitions
 (defgroup qqh-emacs nil
@@ -15,14 +15,6 @@
 
 (defvar qqh/modules-dir (expand-file-name "qqh" user-emacs-directory)
   "The directory containing my module files.")
-
-(defvar qqh/eglot-managed-modes
-  '(python-ts-mode python-mode c-mode c++-mode)
-  "A list of modes to enable eglot for.")
-
-(defun qqh/in-terminal-p ()
-  "Return true if the current frame is running in a character terminal."
-  (eq window-system nil))
 
 (defun qqh/macos-p ()
   "Check if the current frame is an OSX gui frame."
@@ -477,6 +469,8 @@ If the new path's directories does not exist, create them."
   :custom
   (eat-term-name "xterm")
   :config
+  (when (eq window-system 'x)
+    (setq eat-shell (executable-find "nu")))
   (eat-eshell-mode)                     ; use Eat to handle term codes in program output
   (eat-eshell-visual-command-mode))     ; commands like less will be handled by Eat
 
@@ -572,7 +566,21 @@ If the new path's directories does not exist, create them."
 (use-package flycheck
   :diminish flycheck-mode
   :init
-  (global-flycheck-mode))
+  (global-flycheck-mode)
+  :config
+  (set-face-attribute 'flycheck-info nil
+                      :background (catppuccin-darken (catppuccin-color 'teal) 70))
+  :custom-face
+  (flycheck-error ((t (:underline  ,(catppuccin-darken (catppuccin-color 'red) 60)))))
+  (flycheck-fringe-warning ((t (:foreground ,(catppuccin-color 'red)))))
+  (flycheck-error-list-err ((t (:foreground ,(catppuccin-color 'red)))))
+
+  (flycheck-warning ((t (:underline ,(catppuccin-darken (catppuccin-color 'peach) 60)))))
+  (flycheck-fringe-warning ((t (:foreground ,(catppuccin-color 'peach)))))
+  (flycheck-error-list-err ((t (:foreground ,(catppuccin-color 'peach)))))
+
+  (flycheck-fringe-info ((t (:foreground ,(catppuccin-color 'teal)))))
+  (flycheck-error-list-info ((t (:foreground ,(catppuccin-color 'teal))))))
 
 (use-package flycheck-eglot
   :after (flycheck eglot)
@@ -588,31 +596,21 @@ If the new path's directories does not exist, create them."
 
 (use-package consult-flycheck)
 
-;;;;; Devdocs integration
+;;;;; Devdocs.io integration
 (use-package devdocs
   :bind (("C-h D" . devdocs-lookup))
- :config
+  :config
   (add-hook 'python-mode-hook (lambda () (setq-local devdocs-current-docs '("python~11"))))
   (add-hook 'python-ts-mode-hook (lambda () (setq-local devdocs-current-docs '("python~11"))))
-  (add-hook 'c-mode-hook (lamdba () (setq-local devdocs-current-docs '("c"))))
-  (add-hook 'c++-mode-hook (lamdba () (setq-local devdocs-current-docs-hook '("cpp")))))
+  (add-hook 'c-mode-hook (lambda () (setq-local devdocs-current-docs '("c"))))
+  (add-hook 'c++-mode-hook (lambda () (setq-local devdocs-current-docs-hook '("cpp")))))
 
 ;;;; Eglot
 (use-package eglot
   :custom
   (eglot-send-changes-idle-time 0.1)
-  (eglot-extend-to-xref t)              ; activate Eglot in referenced non-project files
-  :init
-  ;; Setup the hooks
-  (defun qqh/get-major-mode-hook-name (mode)
-    "Return the hook for the major mode MODE."
-    (intern (concat (symbol-name mode) "-hook")))
-
-  (defun qqh/eglot/add-eglot-hook (mode)
-    (add-hook (qqh/get-major-mode-hook-name mode) #'eglot-ensure))
-
-  (mapc 'qqh/eglot/add-eglot-hook qqh/eglot-managed-modes)
-
+  (eglot-extend-to-xref t) ; activate Eglot in referenced non-project files
+  :hook ((python-mode python-ts-mode c-mode c++-mode) . eglot-ensure)
   :config
   ;; Disable inlay hints globally
   (add-to-list 'eglot-ignored-server-capabilities :inlayHintProvider)
@@ -822,18 +820,12 @@ If the new path's directories does not exist, create them."
   (load-theme 'catppuccin :no-confirm t)
   (catppuccin-reload))
 
-  ;; Face customizations
-  (set-face-attribute 'window-divider nil
-                      :background (catppuccin-color 'mantle)
-                      :foreground (catppuccin-color 'mantle))
-  (set-face-attribute 'fringe nil
-                      :background (catppuccin-color 'mantle))
-  (set-face-attribute 'flycheck-error nil
-                      :underline (catppuccin-color 'red))
-  (set-face-attribute 'flycheck-warning nil
-                      :underline (catppuccin-color 'peach)))
-  (set-face-attribute 'flycheck-info nil
-                      :underline (catppuccin-color 'green))
+;;;; Face customizations
+(set-face-attribute 'window-divider nil
+                    :background (catppuccin-color 'mantle)
+                    :foreground (catppuccin-color 'mantle))
+(set-face-attribute 'fringe nil
+                    :background (catppuccin-color 'mantle))
 
 ;;;; Misc. Theming Packages
 (use-package rainbow-mode
@@ -886,28 +878,28 @@ If the new path's directories does not exist, create them."
   "Return the major mode of the current buffer with a colon after it."
   (concat (symbol-name major-mode) ":"))
 
+(defface qqh/modeline/modified-buffer-face
+  `((t . (:bold t :foreground ,(catppuccin-color 'yellow))))
+  "The face to use for the names of modified buffers on the mode line."
+  :group 'qqh-emacs)
+
+(defun qqh/modeline/buffer-name ()
+  "Return the name of the current buffer."
+  (let ((text " %b")
+        (face (if (and (buffer-modified-p)
+                      (mode-line-window-selected-p))
+                  'qqh/modeline/modified-buffer-face
+                nil)))
+    (if face
+        (propertize text 'face face)
+      text)))
+
 (defun qqh/modeline/project-and-vc ()
   "Report project name and VC information in the modeline."
   (let ((project-name (projectile-project-name)))
     (format "%s%s"
             (or project-name "")
-            (if vc-mode
-                (format " on%s" vc-mode)
-              "")
-            )))
-
-(defface qqh/modeline/flycheck-error-face
-  `((t . (:bold t :foreground ,(catppuccin-color 'red))))
-  "The face to highlight flycheck modeline errors."
-  :group 'qqh-emacs)
-(defface qqh/modeline/flycheck-warning-face
-  `((t . (:bold t :foreground ,(catppuccin-color 'yellow))))
-  "The face to highlight flycheck modeline warnings."
-  :group 'qqh-emacs)
-(defface qqh/modeline/flycheck-info-face
-  `((t . (:bold t :foreground ,(catppuccin-color 'green))))
-  "The face to highlight flycheck modeline infos."
-  :group 'qqh-emacs)
+            (if vc-mode (format " on%s" vc-mode) ""))))
 
 (defun qqh/modeline/flycheck-status-text ()
   "Get a text describing STATUS for use in the mode line.
@@ -915,14 +907,14 @@ If the new path's directories does not exist, create them."
 This has been adapted from `flycheck-mode-line-status-text'"
   (let* ((current-status flycheck-last-status-change)
          (errors (let-alist (flycheck-count-errors flycheck-current-errors)
-                   (propertize (format "Ⓔ%s" (or .error 0))
-                               'face 'qqh/modeline/flycheck-error-face)))
+                   (propertize (format "%se" (or .error 0))
+                               'face 'flycheck-fringe-error)))
          (warnings (let-alist (flycheck-count-errors flycheck-current-errors)
-                     (propertize (format "Ⓦ%s" (or .warning 0))
-                                 'face 'qqh/modeline/flycheck-warning-face)))
+                     (propertize (format "%sw" (or .warning 0))
+                                 'face 'flycheck-fringe-warning)))
          (infos (let-alist (flycheck-count-errors flycheck-current-errors)
-                  (propertize (format "Ⓘ%s" (or .info 0))
-                              'face 'qqh/modeline/flycheck-info-face)))
+                  (propertize (format "%si" (or .info 0))
+                              'face 'flycheck-fringe-info)))
          (indicator (pcase current-status
                       (`not-checked "")
                       (`no-checker "missing checker")
@@ -938,11 +930,11 @@ This has been adapted from `flycheck-mode-line-status-text'"
          (face (pcase current-status
                  (`not-checked nil)
                  (`no-checker 'error)
-                 (`running 'warning)
+                 (`running 'flycheck-fringe-warning)
                  (`errored 'error)
                  (`finished
                   (let-alist (flycheck-count-errors flycheck-current-errors)
-                    (if (or .error .warning .info) nil 'success)))
+                    (if (or .error .warning .info) nil 'flycheck-fringe-info)))
                  (`interrupted 'error)
                  (`suspicious 'warning)) ))
     (when (not (string= "" indicator))
@@ -959,8 +951,8 @@ This has been adapted from `flycheck-mode-line-status-text'"
 (defvar-local qqh/modeline/eglot
   `(:eval
     (when (and (featurep 'eglot) (mode-line-window-selected-p))
-      '(eglot--managed-mode (" [" eglot--mode-line-format "]"))))
-  "Mode line construct for reporting eglot status of the current buffer..")
+      '(eglot--managed-mode ("[" eglot--mode-line-format "]"))))
+  "Mode line construct for reporting eglot status of the current buffer.")
 
 (setq-default mode-line-format
               '("%e%n"
@@ -968,7 +960,7 @@ This has been adapted from `flycheck-mode-line-status-text'"
                 (:eval (meow-indicator))
                 " "
                 (:eval (qqh/modeline/major-mode-name))
-                " %b "
+                (:eval (qqh/modeline/buffer-name))
                 mode-line-process
 
                 ;; emacs 30: right align the rest of the modeline
@@ -977,7 +969,8 @@ This has been adapted from `flycheck-mode-line-status-text'"
                 qqh/modeline/flycheck
                 qqh/modeline/eglot
                 " "
-                mode-line-misc-info
+                (:eval (when (mode-line-window-selected-p)
+                         mode-line-misc-info))
                 "  "))
 
 (dolist (construct '(qqh/modeline/flycheck
@@ -1033,7 +1026,23 @@ This has been adapted from `flycheck-mode-line-status-text'"
 
 ;;;; Meow
 
-(use-package meow :demand t)
+(use-package meow
+  :demand t
+  :custom-face
+  (meow-position-highlight-number-1 ((t (:background ,(catppuccin-lighten (catppuccin-color 'mauve) 25)))))
+  (meow-position-highlight-number-2 ((t (:background ,(catppuccin-color 'mauve)))))
+  (meow-position-highlight-number-3 ((t (:background ,(catppuccin-darken (catppuccin-color 'mauve) 25)))))
+
+  (meow-position-highlight-reverse-number-1 ((t (:background ,(catppuccin-lighten (catppuccin-color 'pink) 25)))))
+  (meow-position-highlight-reverse-number-2 ((t (:background ,(catppuccin-color 'pink)))))
+  (meow-position-highlight-reverse-number-3 ((t (:background ,(catppuccin-darken (catppuccin-color 'pink) 25)))))
+  ;; mode line faces
+  (meow-normal-indicator ((t (:bold t :foreground ,(catppuccin-color 'base) :background ,(catppuccin-color 'mauve)))))
+  (meow-motion-indicator ((t (:bold t :foreground ,(catppuccin-color 'base) :background ,(catppuccin-color 'red)))))
+  (meow-keypad-indicator ((t (:bold t :foreground ,(catppuccin-color 'base) :background ,(catppuccin-color 'peach)))))
+  (meow-insert-indicator ((t (:bold t :foreground ,(catppuccin-color 'base) :background ,(catppuccin-color 'green)))))
+  (meow-beacon-indicator ((t (:bold t :foreground ,(catppuccin-color 'base) :background ,(catppuccin-color 'sapphire))))))
+
 
 (defun meow-setup ()
   "Function for setting up meow keybindings."
