@@ -9,7 +9,7 @@
   (error "[qqh] config requires Emacs version 30+, currently running %s!" emacs-major-version))
 
 ;;; Definitions
-(defgroup qqh-emacs nil
+(defgroup qqh nil
   "User options for my Emacs configuration."
   :group 'file)
 
@@ -67,15 +67,24 @@
   :config
   (which-key-mode))
 
+;; Catppuccin for using colors in other packages
+(add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
+(use-package catppuccin-theme
+  :config
+  (setq catppuccin-flavor 'mocha
+	    catppuccin-italic-comments t
+	    catppuccin-highlight-matches t)
+
+  (add-hook 'server-after-make-frame-hook #'catppuccin-reload)
+
+  (load-theme 'catppuccin :no-confirm t)
+  (catppuccin-reload))
+
+
 ;;; Basic settings
 (setopt inhibit-splash-screen t)
 (setopt initial-major-mode 'fundamental-mode)  ; default mode for the *scratch* buffer
 (setopt display-time-default-load-average nil) ; this information is useless for most
-
-
-;; Enable terminal mouse mode in WSL
-(when (qqh/in-terminal-p)
-  (xterm-mouse-mode t))
 
 ;; Automatically reread from disk if the underlying file changes
 (setopt auto-revert-avoid-polling t)
@@ -125,6 +134,13 @@
 ;; Modes to highlight the current line with
 (let ((hl-line-hooks '(text-mode-hook prog-mode-hook)))
   (mapc (lambda (hook) (add-hook hook 'hl-line-mode)) hl-line-hooks))
+
+;; Don't show trailing whitespace, and delete when saving
+(setopt show-trailing-whitespace nil)
+(add-hook 'before-save-hook
+          (lambda ()
+            (delete-trailing-whitespace)))
+
 
 (setq vc-follow-symlinks t)                             ; auto follow VC links
 (setq indicate-empty-lines t)
@@ -332,53 +348,35 @@ If the new path's directories does not exist, create them."
   (completion-category-defaults nil)
   (completion-category-overrides '((file (styles partial-completion))
                                    (eglot (styles orderless))
-                                  (eglot-capf (styles orderless)))))
-;;;; Tempel: Templates (snippets) for emacs
-;; Configure Tempel
-(use-package tempel
-  ;; Require trigger prefix before template name when completing.
-  ;; :custom
-  ;; (tempel-trigger-prefix "<")
-  :bind (("M-+" . tempel-complete) ;; Alternative tempel-expand
-         ("M-*" . tempel-insert))
-  :init
-  ;; Setup completion at point
-  (defun tempel-setup-capf ()
-    ;; Add the Tempel Capf to `completion-at-point-functions'.
-    ;; `tempel-expand' only triggers on exact matches. Alternatively use
-    ;; `tempel-complete' if you want to see all matches, but then you
-    ;; should also configure `tempel-trigger-prefix', such that Tempel
-    ;; does not trigger too often when you don't expect it. NOTE: We add
-    ;; `tempel-expand' *before* the main programming mode Capf, such
-    ;; that it will be tried first.
-    (setq-local completion-at-point-functions
-                (cons #'tempel-expand
-                      completion-at-point-functions)))
-
-  (add-hook 'conf-mode-hook 'tempel-setup-capf)
-  (add-hook 'prog-mode-hook 'tempel-setup-capf)
-  (add-hook 'text-mode-hook 'tempel-setup-capf)
-
-  ;; Optionally make the Tempel templates available to Abbrev,
-  ;; either locally or globally. `expand-abbrev' is bound to C-x '.
-  ;; (add-hook 'prog-mode-hook #'tempel-abbrev-mode)
-  ;; (global-tempel-abbrev-mode)
-)
-
-;; The package is young and doesn't have comprehensive coverage.
-(use-package tempel-collection)
+                                   (eglot-capf (styles orderless)))))
 
 ;;;; Corfu: Popup completion-at-point
 (use-package corfu
-  ;; Optional customizations
   :custom
   (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
-  (corfu-auto t)                 ;; Enable auto completion
+  (corfu-auto t)                 ;; auto completion
   (corfu-quit-no-match t)        ;; Quit when no matches
-
+  :init
   ;; Recommended: Enable Corfu globally.  This is recommended since Dabbrev can
   ;; be used globally (M-/).  See also the customization variable
   ;; `global-corfu-modes' to exclude certain modes.
+  (global-corfu-mode)
+  :config
+  )
+
+(use-package corfu
+  ;; TAB-and-Go customizations
+  :custom
+  (corfu-cycle t)           ;; Enable cycling for `corfu-next/previous'
+  (corfu-preselect 'prompt) ;; Always preselect the prompt
+
+  :bind (:map corfu-map
+              ;; Use TAB for cycling, default is `corfu-complete'.
+              ("TAB" . corfu-next)
+              ([tab] . corfu-next)
+              ("S-TAB" . corfu-previous)
+              ([backtab] . corfu-previous))
+
   :init
   (global-corfu-mode))
 
@@ -406,13 +404,25 @@ If the new path's directories does not exist, create them."
   :config
   (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
 
-
 ;;;; Cape: Fancy completion-at-point functions
 ;; there's too much in the cape package to configure here; dive in when you're comfortable!
 (use-package cape
   :init
   (add-to-list 'completion-at-point-functions #'cape-dabbrev)
   (add-to-list 'completion-at-point-functions #'cape-file))
+
+;;;; yasnippet: Snippets!
+(use-package yasnippet
+  :config
+  (yas-global-mode 1))
+
+;; for completion-at-point-functions integration
+(use-package yasnippet-capf
+  :after cape
+  :config
+  (add-to-list 'completion-at-point-functions #'yasnippet-capf))
+
+(use-package yasnippet-snippets)
 
 ;;;; A few more useful configurations...
 (use-package emacs
@@ -568,14 +578,17 @@ If the new path's directories does not exist, create them."
   :init
   (global-flycheck-mode)
   :config
+  ;; Disable flycheck in org mode
+  (setq flycheck-global-modes '(not org-mode))
+
   (set-face-attribute 'flycheck-info nil
-                      :background (catppuccin-darken (catppuccin-color 'teal) 70))
+                      :underline  (catppuccin-color 'teal))
   :custom-face
-  (flycheck-error ((t (:underline  ,(catppuccin-darken (catppuccin-color 'red) 60)))))
+  (flycheck-error ((t (:underline  ,(catppuccin-color 'red)))))
   (flycheck-fringe-warning ((t (:foreground ,(catppuccin-color 'red)))))
   (flycheck-error-list-err ((t (:foreground ,(catppuccin-color 'red)))))
 
-  (flycheck-warning ((t (:underline ,(catppuccin-darken (catppuccin-color 'peach) 60)))))
+  (flycheck-warning ((t (:underline ,(catppuccin-color 'peach)))))
   (flycheck-fringe-warning ((t (:foreground ,(catppuccin-color 'peach)))))
   (flycheck-error-list-err ((t (:foreground ,(catppuccin-color 'peach)))))
 
@@ -617,10 +630,12 @@ If the new path's directories does not exist, create them."
 
   ;; clangd for c/c++
   (add-to-list 'eglot-server-programs '((c++-mode c-mode) "clangd"))
-
+  (advice-add 'eglot-completion-at-point :around #'cape-wrap-buster)
+  (advice-add 'eglot-completion-at-point :around #'cape-wrap-noninterruptible)
   ;; PERF: dont log every event
   (fset #'jsonrpc--log-event #'ignore)
 
+  ;; Remove the eglot indicator from the mode-line-misc-info variable
   (setq mode-line-misc-info
         (delete '(eglot--managed-mode (" [" eglot--mode-line-format "] ")) mode-line-misc-info))
 
@@ -709,18 +724,18 @@ If the new path's directories does not exist, create them."
 
 ;;; Org Mode
 
+;;;; Settings
 ;; Agenda variables
 (setq org-directory "~/org/")         ; Non-absolute paths for agenda and
-                                      ; capture templates will look here.
+                                        ; capture templates will look here.
 
-(setq org-agenda-files '("inbox.org" "work.org"))
+(setq org-agenda-files '("inbox.org"))
 
 ;; Default tags
 (setq org-tag-alist '(;; locale
                       (:startgroup)
-                      ("home" . ?h)
+                      ("personal" . ?p)
                       ("work" . ?w)
-                      ("school" . ?s)
                       (:endgroup)
                       (:newline)
                       ;; scale
@@ -731,16 +746,14 @@ If the new path's directories does not exist, create them."
                       (:endgroup)
                       ;; misc
                       ("meta")
+                      ("resource")
                       ("review")
                       ("reading")))
 
 ;; TODO: Org-refile: where should org-refile look?
 ;; (setq org-refile-targets 'FIXME)
 
-;; Org-roam variables
-(setq org-roam-directory "~/org/roam/")
-(setq org-roam-index-file "~/org/roam/index.org")
-
+;;;; Org package
 (use-package org
   :hook ((org-mode . visual-line-mode))  ; wrap lines at word breaks
 
@@ -752,10 +765,8 @@ If the new path's directories does not exist, create them."
   ;; Make org-open-at-point follow file links in the same window
   (setf (cdr (assoc 'file org-link-frame-setup)) 'find-file)
 
-
-  (setq org-export-with-smart-quotes t               ; Make exporting quotes better
-        org-return-follows-link t                    ; RET follows links
-        )
+  (setq org-export-with-smart-quotes t                ; Make exporting quotes better
+        org-return-follows-link t)                    ; RET follows links
 
   ;; Instead of just two states (TODO, DONE) we set up a few different states
   ;; that a task can be in. Run
@@ -767,19 +778,6 @@ If the new path's directories does not exist, create them."
   ;; Refile configuration
   (setq org-outline-path-complete-in-steps nil)
   (setq org-refile-use-outline-path 'file)
-
-  (setq org-capture-templates
-        '(("c" "Default Capture" entry (file "inbox.org")
-           "* TODO %?\n%U\n%i")
-          ;; Capture and keep an org-link to the thing we're currently working with
-          ("r" "Capture with Reference" entry (file "inbox.org")
-           "* TODO %?\n%U\n%i\n%a")
-          ;; Define a section
-          ("w" "Work")
-          ("wm" "Work meeting" entry (file+headline "work.org" "Meetings")
-           "** TODO %?\n%U\n%i\n%a")
-          ("wr" "Work report" entry (file+headline "work.org" "Reports")
-           "** TODO %?\n%U\n%i\n%a")))
 
   ;; An agenda view lets you see your TODO items filtered and
   ;; formatted in different ways. You can have multiple agenda views;
@@ -797,28 +795,35 @@ If the new path's directories does not exist, create them."
    'org-babel-load-languages
    '((shell . t))))
 
-;;; Themes / UI customization
+;;;; Org-roam
+(use-package org-roam
+  :init
+  ;; Org-roam variables
+  (setq org-roam-directory "~/org/roam/")
+  (setq org-roam-index-file "~/org/roam/index.org")
 
-;;;; Settings
-(add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
-
-;; Don't show trailing whitespace, and delete when saving
-(setopt show-trailing-whitespace nil)
-(add-hook 'before-save-hook
-          (lambda ()
-            (delete-trailing-whitespace)))
-
-;;;; Color Schemes
-(use-package catppuccin-theme
+  (setq org-roam-completion-everywhere nil)
+  (setq org-roam-capture-templates
+        '(("n" "note" plain
+           "%?"
+           :if-new (file+head "main/${slug}.org"
+                              "#+title: ${title}\n")
+           :immediate-finish t
+           :unnarrowed t)
+          ("r" "reference" plain "%?"
+           :if-new
+           (file+head "reference/${title}.org" "#+title: ${title}\n")
+           :immediate-finish t
+           :unnarrowed t)
+          ("m" "meeting" plain "%?"
+           :if-new
+           (file+head "work/meeting/${title}.org" "#+title: ${title}\n#+filetags: :work-meeting:\n")
+           :immediate-finish t
+           :unnarrowed t)))
   :config
-  (setq catppuccin-flavor 'mocha
-	    catppuccin-italic-comments t
-	    catppuccin-highlight-matches t)
+  (org-roam-db-autosync-mode))
 
-  (add-hook 'server-after-make-frame-hook #'catppuccin-reload)
-
-  (load-theme 'catppuccin :no-confirm t)
-  (catppuccin-reload))
+;;; Themes / UI customization
 
 ;;;; Face customizations
 (set-face-attribute 'window-divider nil
@@ -827,10 +832,10 @@ If the new path's directories does not exist, create them."
 (set-face-attribute 'fringe nil
                     :background (catppuccin-color 'mantle))
 
-;;;; Misc. Theming Packages
-(use-package rainbow-mode
-  :hook (prog-mode . rainbow-mode)
-  :diminish rainbow-mode)
+;;;; Packages
+(use-package colorful-mode
+  :hook (prog-mode text-mode)
+  :diminish colorful-mode)
 
 (use-package nerd-icons)
 
@@ -843,7 +848,7 @@ If the new path's directories does not exist, create them."
   (defface qqh/hl-todo/todo-face
     `((t . (:bold t :background ,(catppuccin-color 'sky) :foreground ,(catppuccin-color 'base))))
     "The face highlighting TODOs in projects."
-    :group 'qqh-emacs)
+    :group 'qqh)
 
   (setq hl-todo-keyword-faces
         `(("TODO" . ,(catppuccin-color 'sky))
@@ -872,28 +877,43 @@ If the new path's directories does not exist, create them."
 
 ;;;; Modeline configurtaion
 
-;;;;; Major mode
+;;;;; Common
+(defgroup qqh/modeline nil
+  "User options for my modeline configuration."
+  :group 'qqh)
+
+(defgroup qqh/modeline/faces nil
+  "Faces for my modeline configuration."
+  :group 'qqh/modeline)
+
+(defcustom qqh/modeline/truncation-length 12
+  "Length to truncate mode-line strings to in small windows."
+  :type 'natnum
+  :group 'qqh/modeline)
+
+;;;;; Buffer ID
 
 (defun qqh/modeline/major-mode-name ()
   "Return the major mode of the current buffer with a colon after it."
   (concat (symbol-name major-mode) ":"))
 
-(defface qqh/modeline/modified-buffer-face
+(defface qqh/modeline/faces/bold-yellow
   `((t . (:bold t :foreground ,(catppuccin-color 'yellow))))
   "The face to use for the names of modified buffers on the mode line."
-  :group 'qqh-emacs)
+  :group 'qqh/modeline/faces)
 
 (defun qqh/modeline/buffer-name ()
   "Return the name of the current buffer."
   (let ((text " %b")
         (face (if (and (buffer-modified-p)
-                      (mode-line-window-selected-p))
-                  'qqh/modeline/modified-buffer-face
+                       (mode-line-window-selected-p))
+                  'qqh/modeline/faces/bold-yellow
                 nil)))
     (if face
         (propertize text 'face face)
       text)))
 
+;;;;; Project / VC
 (defun qqh/modeline/project-and-vc ()
   "Report project name and VC information in the modeline."
   (let ((project-name (projectile-project-name)))
@@ -901,6 +921,7 @@ If the new path's directories does not exist, create them."
             (or project-name "")
             (if vc-mode (format " on%s" vc-mode) ""))))
 
+;;;;; Flycheck
 (defun qqh/modeline/flycheck-status-text ()
   "Get a text describing STATUS for use in the mode line.
 
@@ -948,10 +969,11 @@ This has been adapted from `flycheck-mode-line-status-text'"
               (qqh/modeline/flycheck-status-text)))
   "Mode line construct for reporting flycheck status of the current buffer.")
 
+;;;;; Eglot
 (defvar-local qqh/modeline/eglot
-  `(:eval
-    (when (and (featurep 'eglot) (mode-line-window-selected-p))
-      '(eglot--managed-mode ("[" eglot--mode-line-format "]"))))
+    `(:eval
+      (when (and (featurep 'eglot) (mode-line-window-selected-p))
+        '(eglot--managed-mode (" [" eglot--mode-line-format "]"))))
   "Mode line construct for reporting eglot status of the current buffer.")
 
 (setq-default mode-line-format
@@ -961,6 +983,7 @@ This has been adapted from `flycheck-mode-line-status-text'"
                 " "
                 (:eval (qqh/modeline/major-mode-name))
                 (:eval (qqh/modeline/buffer-name))
+                " "
                 mode-line-process
 
                 ;; emacs 30: right align the rest of the modeline
@@ -1114,6 +1137,11 @@ This has been adapted from `flycheck-mode-line-status-text'"
    '("oi" . consult-imenu)
    '("oe". eshell)
    '("ot" . eat-project)
+
+   ;; Notes (n)
+   '("nc" . org-roam-capture)
+   '("nf" . org-roam-node-find)
+   '("ni" . org-roam-node-insert)
 
    ;; Emacs bindings
    '(";r" . (lambda ()
