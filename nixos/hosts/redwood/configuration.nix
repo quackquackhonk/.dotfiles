@@ -66,11 +66,6 @@
   services.openssh.enable = true;
   # networking.firewall.allowedTCPPorts = [ 22 ];
 
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
-  environment.systemPackages = with pkgs; [
-    kitty
-  ];
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   programs.zsh.enable = true;

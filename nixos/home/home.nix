@@ -7,7 +7,7 @@
   pkgs,
   ...
 }: {
-  # You can import other home-manager modules here
+  # you can import other home-manager modules here
   imports = [
     # If you want to use home-manager modules from other flakes (such as nix-colors):
     # inputs.nix-colors.homeManagerModule
@@ -39,8 +39,6 @@
   # The home.packages option allows you to install Nix packages into your
   # environment.
   home.packages = with pkgs; [
-    # ESSENTIALS
-    nixpkgs.emacs30
     # archives
     zip
     xz
@@ -104,8 +102,25 @@
     imv
   ];
 
-  home.sessionVariables = {
-    EDITOR = "emacsclient -c -a=''";
+  # HYPRLAND
+  wayland.windowManager.hyprland.settings = {
+    "$mod" = "SUPER";
+    "$browser" = "firefox";
+    bind = [
+      "$mod, B, exec, firefox"
+      "$mod, E, exec, emacsclient -a =''"
+    ] ++ (
+      # workspaces:
+      builtins.concatLists (builtins.genList (i:
+        let ws = i + 1;
+        in [
+          # bind ~$mod NUM~ to goto workspace NUM
+          "$mod, code:1${toString i}, workspace, ${toString ws}"
+          # bind ~$mod SHIFT NUM~ to move window to workspace NUM
+          "$mod, code:1${toString i}, movetoworkspace, ${toString ws}"
+        ]
+      ))
+    )
   };
 
   # Let Home Manager install and manage itself.
