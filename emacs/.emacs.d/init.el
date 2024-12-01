@@ -32,7 +32,7 @@
       (bootstrap-version 7))
   (unless (file-exists-p bootstrap-file)
     (with-current-buffer
-        (url-retrieve-synchronously
+       (url-retrieve-synchronously
          "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
          'silent 'inhibit-cookies)
       (goto-char (point-max))
@@ -807,6 +807,9 @@
 ;;; Themes / UI customization
 
 ;;;; Face customizations
+(set-face-attribute 'default nil
+                    :family "Iosevka"
+                    :height 120)
 (set-face-attribute 'window-divider nil
                     :background (catppuccin-color 'base)
                     :foreground (catppuccin-color 'base))
@@ -1078,11 +1081,6 @@ This has been adapted from `flycheck-mode-line-status-text'"
           (?f . defun)
           (?\. . sentence)))
 
-  ;; Change the keys used by keypad mode
-  (setq meow-keypad-ctrl-meta-prefix ?\r          ;; Use RET for C-M-
-        meow-keypad-meta-prefix ?z                ;; Use z for M-
-        meow-keypad-literal-prefix 32)            ;; Use SPC for literal keys
-
   (meow-motion-overwrite-define-key
    ;; Use e to move up, n to move down.
    ;; Since special modes usually use n to move down, we only overwrite e here.
@@ -1103,34 +1101,34 @@ This has been adapted from `flycheck-mode-line-status-text'"
   ;; default meow leader bindings
   (meow-leader-define-key
    '("?" . meow-cheatsheet)
-   '("SPC" . consult-buffer)
-   '("," . meow-last-buffer)
-   '(":" . eval-expression)
-   '("g" . magit)
-   '("f" . consult-fd)
-   '("p" . projectile-command-map)
-   '("RET" . avy-goto-char-2)
-   '("w" . window-keymap)
+   ;; '("SPC" . consult-buffer)
+   ;; '("," . meow-last-buffer)
+   ;; '(":" . eval-expression)
+   ;; '("g" . magit)
+   ;; '("f" . consult-fd)
+   ;; '("p" . projectile-command-map)
+   ;; '("RET" . avy-goto-char-2)
+   ;; '("w" . window-keymap)
 
    ;; Open (o)
-   '("od" . consult-flycheck)
-   '("oi" . consult-imenu)
-   '("oe". eshell)
-   '("ot" . eat-project)
+   ;; '("od" . consult-flycheck)
+   ;; '("oi" . consult-imenu)
+   ;; '("oe". eshell)
+   ;; '("ot" . eat-project)
 
    ;; Notes (n)
-   '("nc" . org-roam-capture)
-   '("nf" . org-roam-node-find)
-   '("ni" . org-roam-node-insert)
+   ;; '("nc" . org-roam-capture)
+   ;; '("nf" . org-roam-node-find)
+   ;; '("ni" . org-roam-node-insert)
 
    ;; Emacs bindings
-   '(";r" . (lambda ()
-              (interactive)
-              (load-file user-init-file)))
-   '(";c" . (lambda ()
-              (interactive)
-              (find-file user-init-file)))
-   '(";p" . qqh/open-project-org-file)
+   ;; '(";r" . (lambda ()
+   ;;            (interactive)
+   ;;            (load-file (expand-file-name (concat user-emacs-directory "init.el")))))
+   ;; '(";c" . (lambda ()
+   ;;            (interactive)
+   ;;            (find-file (expand-file-name (concat user-emacs-directory "init.el")))))
+   ;; '(";p" . qqh/open-project-org-file)
 
 
    ;; To execute the originally e in MOTION state, use SPC e.
@@ -1235,6 +1233,7 @@ This has been adapted from `flycheck-mode-line-status-text'"
 (load custom-file 'noerror)
 
 ;;; Cleanup
+(catppuccin-reload)
 (setq gc-cons-threshold (or qqh/initial-gc-threshold 800000))
 
 

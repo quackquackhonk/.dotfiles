@@ -12,15 +12,19 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
+    curl
     emacs30
-    # eglot-lsp-booster
     kitty
     git
     gcc
     gnumake
     gnupg
     wget
-    curl
+
+    inputs.zen-browser.packages."${system}".default
+  ];
+  fonts.packages = with pkgs; [
+    iosevka
   ];
 
   programs.zsh = {
