@@ -28,7 +28,7 @@
 
   home.username = "sahana";
   home.homeDirectory = "/home/sahana";
-  home.stateVersion = "24.05"; # Please read the comment before changing.
+  home.stateVersion = "24.11"; # Please read the comment before changing.
 
   programs.git = {
     enable = true;
@@ -39,6 +39,8 @@
   # The home.packages option allows you to install Nix packages into your
   # environment.
   home.packages = with pkgs; [
+    # ESSENTIALS
+    nixpkgs.emacs30
     # archives
     zip
     xz
@@ -53,12 +55,9 @@
     eza
     bat
     zellij
-    ripgrep
     fd
     jq
     yq-go
-    eza
-    fzf
 
     # networking tools
     mtr
@@ -99,7 +98,6 @@
     wlogout
 
     # apps
-    emacs
     firefox
     alacritty
     zathura

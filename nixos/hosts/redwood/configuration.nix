@@ -39,14 +39,6 @@
   # NVIDIA settings
   services.xserver.videoDrivers = ["nvidia"];
   
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.sahana = {
-    isNormalUser = true;
-    description = "Sahana Tankala";
-    extraGroups = [ "networkmanager" "wheel" ];
-    packages = with pkgs; [];
-  };
-
   # unfree
   nixpkgs.config.allowUnfree = true;
 
@@ -59,16 +51,13 @@
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "24.11"; # Did you read the comment?
   
-  networking.hostName = "monstera";
-  networking.networkmanager.enable = true;
-  time.timeZone = "US/Eastern";
-  i18n.defaultLocale = "en_US.UTF-8";
-
   programs.sway.enable = true;
   programs.hyprland.enable = true;
+  
   programs.light.enable = true;
 
   services.printing.enable = true;
+
   services.pipewire = {
     enable = true;
     pulse.enable = true;
@@ -80,11 +69,12 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
+    kitty
   ];
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
-  programs.fish.enable = true;
-  users.defaultUserShell = pkgs.fish;
+  programs.zsh.enable = true;
+  users.defaultUserShell = pkgs.zsh;
   users.users.sahana = {
     isNormalUser = true;
     extraGroups = ["wheel" "networkmanager" "docker" "video"];
