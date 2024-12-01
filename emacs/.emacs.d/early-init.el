@@ -46,6 +46,10 @@
   (add-to-list 'exec-path "/opt/homebrew/opt/llvm/bin")
   (add-to-list 'exec-path "/opt/homebrew/Caskroom/miniconda/base/bin"))
 
+;; NixOS settings
+(when (and (eq system-type 'gnu/linux))
+  (add-to-list 'exec-path "/home/sahana/.local/bin"))
+
 (setenv "TERM" "xterm-256color")
 
 ;;; early-init.el ends here

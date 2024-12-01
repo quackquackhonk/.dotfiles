@@ -631,6 +631,9 @@
                                                                      :cache_config t)))))))
 
 (use-package eglot-booster
+  :init
+  (unless (executable-find "emacs-lsp-booster")
+    (add-to-list 'exec-path "/home/sahana/.local/bin"))
   :straight (eglot-booster :type git :host github :repo "jdtsmith/eglot-booster")
   :after eglot
   :config (eglot-booster-mode))
