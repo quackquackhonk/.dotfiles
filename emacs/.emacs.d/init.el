@@ -80,52 +80,49 @@
   (load-theme 'catppuccin :no-confirm t)
   (catppuccin-reload))
 
-
 ;;; Basic settings
 (setopt inhibit-splash-screen t)
-(setopt initial-major-mode 'fundamental-mode)  ; default mode for the *scratch* buffer
-(setopt display-time-default-load-average nil) ; this information is useless for most
-
-;; Automatically reread from disk if the underlying file changes
-(setopt auto-revert-avoid-polling t)
+(setopt initial-major-mode 'fundamental-mode)             ;; default mode for the *scratch* buffer
+(setopt display-time-default-load-average nil)            ;; this information is useless for most
+(setopt auto-revert-avoid-polling t)                      ;; Automatically reread from disk if the underlying file changes
 (setopt auto-revert-interval 2)
 (setopt auto-revert-check-vc-info t)
 (global-auto-revert-mode)
-
-;; Move through windows with Control-<arrow keys>
+(setq vc-follow-symlinks t)                               ;; auto follow VC links
+(setq indicate-empty-lines t)
+(setq inhibit-startup-message t)
 (require 'windmove)
-(windmove-default-keybindings 'control)
-
-;; Fix archaic defaults
-(setopt sentence-end-double-space nil)
-
-;; only "y or n" prompts
-(defalias 'yes-or-no-p 'y-or-n-p)
-
-;; Make ESC quit prompts
-(global-set-key (kbd "<escape>") 'keyboard-quit)
-
-;; use the faster programs
-(setq find-program "fd"
+(windmove-default-keybindings 'control)                   ;; Move through windows with Control-<arrow keys>
+(setopt sentence-end-double-space nil)                    ;; Fix archaic defaults
+(defalias 'yes-or-no-p 'y-or-n-p)                         ;; only "y or n" prompts
+(global-set-key (kbd "<escape>") 'keyboard-quit)          ;; Make ESC quit prompts
+(setq find-program "fd"                                   ;; use the faster programs
       grep-program "rg")
-
-;; Save history of minibuffer
-(savehist-mode)
-
-(setopt enable-recursive-minibuffers t)                ; Use the minibuffer whilst in the minibuffer
-
-(keymap-set minibuffer-mode-map "TAB" 'minibuffer-complete) ; TAB acts more like how it does in the shell
-
-;; Tabs BTFO
-(setopt indent-tabs-mode nil)
+(savehist-mode)                                           ;; Save history of minibuffer
+(setopt enable-recursive-minibuffers t)                   ;; Use the minibuffer whilst in the minibuffer
+(setopt indent-tabs-mode nil)                             ;; Tabs BTFO
 (setopt tab-width 4)
+(setq make-backup-files nil)                              ;; Get rid of backup files
+(setq backup-inhibited nil)                               ;; Not sure if needed, given `make-backup-files'
+(setq create-lockfiles nil)
 
-;; Misc. UI tweaks
-(scroll-bar-mode -1)                                  ; no scrollbars
-(blink-cursor-mode -1)                                ; Steady cursor
-(pixel-scroll-precision-mode)                         ; Smooth scrolling
-(setopt ring-bell-function 'ignore)                   ; disable the bell
-(setopt compilation-scroll-output t)                  ; follow compilation output by default
+                                                          ;; Make native compilation silent and prune its cache.
+(when (native-comp-available-p)
+  (setq native-comp-async-report-warnings-errors 'silent) ;; Emacs 28 with native compilation
+  (setq native-compile-prune-cache t))                    ;; Emacs 29
+
+(keymap-set minibuffer-mode-map "TAB"
+            'minibuffer-complete)                         ;; TAB acts more like how it does in the shell
+
+(unless (eq window-system 'darwin)
+  (setq explicit-shell-file-name (executable-find "nu")
+        shell-file-name (executable-find "nu")))          ;; nu as the default shell
+                                                          ;; Misc. UI tweaks
+(scroll-bar-mode -1)                                      ;; no scrollbars
+(blink-cursor-mode -1)                                    ;; Steady cursor
+(pixel-scroll-precision-mode)                             ;; Smooth scrolling
+(setopt ring-bell-function 'ignore)                       ;; disable the bell
+(setopt compilation-scroll-output t)                      ;; follow compilation output by default
 (setq frame-resize-pixelwise t)
 
 ;; Nice line wrapping when working with text
@@ -141,28 +138,11 @@
           (lambda ()
             (delete-trailing-whitespace)))
 
-
-(setq vc-follow-symlinks t)                             ; auto follow VC links
-(setq indicate-empty-lines t)
-(setq inhibit-startup-message t)
-
-
-;; Don't litter file system with *~ backup files; put them all inside
-;; ~/.emacs.d/backups
-(defun qqh/backup-file-name (fpath)
-  "Return a new file path of a given file path (FPATH).
-If the new path's directories does not exist, create them."
-  (let* ((backupRootDir (concat user-emacs-directory "backups/"))
-         (filePath (replace-regexp-in-string "[A-Za-z]:" "" fpath )) ; remove Windows driver letter in path
-         (backupFilePath (replace-regexp-in-string "//" "/" (concat backupRootDir filePath "~") )))
-    (make-directory (file-name-directory backupFilePath) (file-name-directory backupFilePath))
-    backupFilePath))
-(setopt make-backup-file-name-function 'qqh/backup-file-name)
-
 ;;; Built-Ins.
 ;;;; Repeat Mode
 (use-package repeat
   :config (repeat-mode))
+
 ;;;; Dired
 (use-package dired
   :straight nil
@@ -476,11 +456,12 @@ If the new path's directories does not exist, create them."
 
 ;;;; Eat: Terminal Emulation
 (use-package eat
+  :init
+  (when (eq window-system 'darwin)
+    (setq eat-shell (executable-find "zsh")))
   :custom
   (eat-term-name "xterm")
   :config
-  (when (eq window-system 'x)
-    (setq eat-shell (executable-find "nu")))
   (eat-eshell-mode)                     ; use Eat to handle term codes in program output
   (eat-eshell-visual-command-mode))     ; commands like less will be handled by Eat
 
@@ -556,7 +537,8 @@ If the new path's directories does not exist, create them."
 (use-package json-mode)
 (use-package protobuf-mode)
 
-(use-package dts-mode)
+(use-package dts-mode
+  :mode "\\.keymap\\'")
 
 (use-package just-mode)
 (use-package cmake-mode)
@@ -578,21 +560,21 @@ If the new path's directories does not exist, create them."
   :init
   (global-flycheck-mode)
   :config
-  ;; Disable flycheck in org mode
-  (setq flycheck-global-modes '(not org-mode))
+  ;; Disable flycheck in certain mode
+  (setq flycheck-global-modes '(not org-mode dts-mode just-mode))
 
   (set-face-attribute 'flycheck-info nil
                       :underline  (catppuccin-color 'teal))
   :custom-face
-  (flycheck-error ((t (:underline  ,(catppuccin-color 'red)))))
-  (flycheck-fringe-warning ((t (:foreground ,(catppuccin-color 'red)))))
-  (flycheck-error-list-err ((t (:foreground ,(catppuccin-color 'red)))))
+  (flycheck-error           ((t (:underline  ,(catppuccin-color 'red)))))
+  (flycheck-fringe-warning  ((t (:foreground ,(catppuccin-color 'red)))))
+  (flycheck-error-list-err  ((t (:foreground ,(catppuccin-color 'red)))))
 
-  (flycheck-warning ((t (:underline ,(catppuccin-color 'peach)))))
-  (flycheck-fringe-warning ((t (:foreground ,(catppuccin-color 'peach)))))
-  (flycheck-error-list-err ((t (:foreground ,(catppuccin-color 'peach)))))
+  (flycheck-warning         ((t (:underline ,(catppuccin-color 'peach)))))
+  (flycheck-fringe-warning  ((t (:foreground ,(catppuccin-color 'peach)))))
+  (flycheck-error-list-err  ((t (:foreground ,(catppuccin-color 'peach)))))
 
-  (flycheck-fringe-info ((t (:foreground ,(catppuccin-color 'teal)))))
+  (flycheck-fringe-info     ((t (:foreground ,(catppuccin-color 'teal)))))
   (flycheck-error-list-info ((t (:foreground ,(catppuccin-color 'teal))))))
 
 (use-package flycheck-eglot
@@ -696,6 +678,9 @@ If the new path's directories does not exist, create them."
 ;;;;; C / C++
 (setq-default c-basic-offset 4)
 
+;;;;; Ni
+(use-package nix-mode
+  :mode "\\.nix\\'")
 ;;;;; PYTHON
 ;; Built-in Python utilities
 (use-package python
@@ -827,14 +812,13 @@ If the new path's directories does not exist, create them."
 
 ;;;; Face customizations
 (set-face-attribute 'window-divider nil
-                    :background (catppuccin-color 'mantle)
-                    :foreground (catppuccin-color 'mantle))
+                    :background (catppuccin-color 'base)
+                    :foreground (catppuccin-color 'base))
 (set-face-attribute 'fringe nil
                     :background (catppuccin-color 'mantle))
 
 ;;;; Packages
 (use-package colorful-mode
-  :hook (prog-mode text-mode)
   :diminish colorful-mode)
 
 (use-package nerd-icons)

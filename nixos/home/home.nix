@@ -99,8 +99,7 @@
     wlogout
 
     # apps
-    gitui
-    gimp
+    emacs
     firefox
     alacritty
     zathura

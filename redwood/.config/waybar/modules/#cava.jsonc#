@@ -1,4 +1,4 @@
-"custom/cava": {
+"qqh/cava": {
 	"format": "{}",
 	"exec": "waybar_cava.sh",
 	"restart-interval": 1,

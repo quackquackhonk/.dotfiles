@@ -1,4 +1,4 @@
-;;; early-init.el --- Early init config file.
+;;; early-init.el --- Early init config file. -*- lexical-binding: t -*-
 
 ;;; Commentary:
 
@@ -35,6 +35,7 @@
 ;; Setup PATH
 (add-to-list 'exec-path (format "%s/.local/bin" (getenv "HOME")))
 (add-to-list 'exec-path (format "%s/.cargo/bin" (getenv "HOME")))
+
 
 ;; OSX settings
 (when (and (eq system-type 'darwin))

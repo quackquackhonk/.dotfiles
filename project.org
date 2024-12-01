@@ -20,6 +20,10 @@
 
 * Links
 * Tasks
+* NixOS
+some links:
+- zen-browser flake: https://github.com/MarceColl/zen-browser-flake/tree/master
+** test out nixos in a VM
 * Hyprland [0/4]
 ** STARTED Get off HyDE
 - State "STARTED"    from "TODO"       [2024-11-07 Thu 18:27]

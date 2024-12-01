@@ -16,8 +16,8 @@
 // positions generated based on config.ctl //
 
 	"modules-left": ["custom/padd","custom/l_end","hyprland/workspaces","custom/r_end","custom/padd"],
-	"modules-center": ["custom/padd","custom/l_end","custom/cava","idle_inhibitor","clock","custom/r_end","custom/padd"],
-	"modules-right": ["custom/padd","custom/l_end", "tray", "custom/r_end", "custom/l_end","backlight","pulseaudio","pulseaudio#microphone","custom/r_end", "custom/l_end","custom/cliphist","custom/power","custom/r_end","custom/padd"],
+	"modules-center": ["custom/padd","custom/l_end","hyprland/window","custom/r_end","custom/padd"],
+	"modules-right": ["custom/padd","custom/l_end", "tray", "custom/r_end", "custom/l_end","backlight","pulseaudio","pulseaudio#microphone","custom/r_end", "custom/l_end","clock","custom/power","custom/r_end","custom/padd"],
 
 
 // sourced from modules based on config.ctl //
@@ -32,20 +32,6 @@
         "on-scroll-up": "hyprctl dispatch workspace -1",
         "on-scroll-down": "hyprctl dispatch workspace +1",
         "persistent-workspaces": {
-        }
-    },
-
-"custom/cava": {
-	"format": "{}",
-	"exec": "waybar_cava.sh",
-	"restart-interval": 1,
-	"hide-empty": true
-},    "idle_inhibitor": {
-        "format": "{icon}",
-        "rotate": 0,
-        "format-icons": {
-            "activated": "󰥔",
-            "deactivated": ""
         }
     },
 
