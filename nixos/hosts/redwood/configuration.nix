@@ -15,9 +15,9 @@
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-  
+
   nix.settings.experimental-features = ["nix-command" "flakes"];
-  
+
   networking.hostName = "redwood"; # Define your hostname.
 
   networking.networkmanager.enable = true;
@@ -38,11 +38,11 @@
 
   # NVIDIA settings
   services.xserver.videoDrivers = ["nvidia"];
-  
+
   # unfree
   nixpkgs.config.allowUnfree = true;
 
-  
+
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
   # on your system were taken. It‘s perfectly fine and recommended to leave
@@ -50,10 +50,10 @@
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "24.11"; # Did you read the comment?
-  
+
   programs.sway.enable = true;
   programs.hyprland.enable = true;
-  
+
   programs.light.enable = true;
 
   services.printing.enable = true;
@@ -66,9 +66,10 @@
   services.openssh.enable = true;
   # networking.firewall.allowedTCPPorts = [ 22 ];
 
+  # install flatpak
+  services.flatpak.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
-  programs.zsh.enable = true;
   users.defaultUserShell = pkgs.zsh;
   users.users.sahana = {
     isNormalUser = true;

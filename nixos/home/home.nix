@@ -52,7 +52,6 @@
     zoxide
     eza
     bat
-    zellij
     fd
     jq
     yq-go
@@ -84,6 +83,7 @@
     usbutils # lsusb
 
     # languages
+    eglot-lsp-booster
     rustup
     luajit
 
@@ -101,6 +101,11 @@
     zathura
     imv
   ];
+
+  programs.emacs = {
+    enable = true;
+    extraPackages = epkgs: [];
+  };
 
   # HYPRLAND
   wayland.windowManager.hyprland.settings = {
@@ -128,4 +133,9 @@
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
+
+  # ZSH
+  programs.zsh = {
+    enable = true;
+  };
 }

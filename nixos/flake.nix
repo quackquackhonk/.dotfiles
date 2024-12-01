@@ -6,8 +6,10 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
     # Home manager
-    home-manager.url = "github:nix-community/home-manager";
-    home-manager.inputs.nixpkgs.follows = "nixpkgs";
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     # Alejandra (nix formatter)
     alejandra.url = "github:kamadorueda/alejandra/3.0.0";
@@ -25,6 +27,8 @@
     alejandra,
     ...
   } @ inputs: let
+    system = "x86_64-linux";
+    pkgs = nixpkgs.legacyPackages.${system};
     inherit (self) outputs;
   in {
     # NixOS configuration entrypoint
@@ -37,16 +41,8 @@
           ./hosts/monstera/configuration.nix
           {environment.systemPackages = [alejandra.defaultPackage.${system}];}
           inputs.flake-programs-sqlite.nixosModules.programs-sqlite
-          home-manager.nixosModules.home-manager
-          {
-            home-manager.backupFileExtension = "backup";
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-
-            home-manager.users.sahana = import ./home/home.nix;
-          }
         ];
-      };
+     };
 
       redwood = nixpkgs.lib.nixosSystem rec {
         specialArgs = {inherit inputs outputs;};
@@ -54,14 +50,13 @@
         modules = [
           ./hosts/redwood/configuration.nix
           {environment.systemPackages = [alejandra.defaultPackage.${system}];}
-          home-manager.nixosModules.home-manager
-          {
-            home-manager.backupFileExtension = "backup";
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
 
-            home-manager.users.sahana = import ./home/home.nix;
-          }
+	  home-manager.nixosModules.home-manager
+	  {
+	    home-manager.useGlobalPkgs = true;
+	    home-manager.useUserPackages = true;
+	    home-manager.users.sahana = import ./home/home.nix;
+	  }
         ];
       };
     };

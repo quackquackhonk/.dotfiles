@@ -105,19 +105,12 @@
 (setq make-backup-files nil)                              ;; Get rid of backup files
 (setq backup-inhibited nil)                               ;; Not sure if needed, given `make-backup-files'
 (setq create-lockfiles nil)
-
-                                                          ;; Make native compilation silent and prune its cache.
+;; Make native compilation silent and prune its cache.
 (when (native-comp-available-p)
   (setq native-comp-async-report-warnings-errors 'silent) ;; Emacs 28 with native compilation
   (setq native-compile-prune-cache t))                    ;; Emacs 29
-
 (keymap-set minibuffer-mode-map "TAB"
             'minibuffer-complete)                         ;; TAB acts more like how it does in the shell
-
-(unless (eq window-system 'darwin)
-  (setq explicit-shell-file-name (executable-find "nu")
-        shell-file-name (executable-find "nu")))          ;; nu as the default shell
-                                                          ;; Misc. UI tweaks
 (scroll-bar-mode -1)                                      ;; no scrollbars
 (blink-cursor-mode -1)                                    ;; Steady cursor
 (pixel-scroll-precision-mode)                             ;; Smooth scrolling
