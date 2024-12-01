@@ -1,5 +1,5 @@
 {
-  description = "Your new nix config";
+  description = "its my emacs configuration!!";
 
   inputs = {
     # Nixpkgs
@@ -49,15 +49,11 @@
           }
         ];
       };
+
       redwood = nixpkgs.lib.nixosSystem rec {
         specialArgs = {inherit inputs outputs;};
         system = "x86_64-linux";
         modules = [
-          nixos-wsl.nixosModules.default
-          {
-            system.stateVersion = "23.11";
-            wsl.enable = true;
-          }
           ./hosts/redwood/configuration.nix
           {environment.systemPackages = [alejandra.defaultPackage.${system}];}
           home-manager.nixosModules.home-manager
