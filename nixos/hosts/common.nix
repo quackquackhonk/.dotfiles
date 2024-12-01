@@ -13,6 +13,7 @@
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     emacs30
+    eglot-lsp-booster
     kitty
     git
     gcc

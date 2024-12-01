@@ -83,7 +83,6 @@
     usbutils # lsusb
 
     # languages
-    eglot-lsp-booster
     rustup
     luajit
 
@@ -101,11 +100,6 @@
     zathura
     imv
   ];
-
-  programs.emacs = {
-    enable = true;
-    extraPackages = epkgs: [];
-  };
 
   # HYPRLAND
   wayland.windowManager.hyprland.settings = {
