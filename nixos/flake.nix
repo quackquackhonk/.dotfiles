@@ -4,7 +4,6 @@
   inputs = {
     # Nixpkgs
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
 
     # Home manager
     home-manager.url = "github:nix-community/home-manager";
@@ -22,7 +21,6 @@
   outputs = {
     self,
     nixpkgs,
-    nixos-wsl,
     home-manager,
     alejandra,
     ...

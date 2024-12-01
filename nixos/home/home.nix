@@ -106,9 +106,12 @@
   wayland.windowManager.hyprland.settings = {
     "$mod" = "SUPER";
     "$browser" = "firefox";
+    "$term" = "kitty";
     bind = [
-      "$mod, B, exec, firefox"
+      "$mod, Return, exec, $term"
+      "$mod, B, exec, $browser"
       "$mod, E, exec, emacsclient -a =''"
+
     ] ++ (
       # workspaces:
       builtins.concatLists (builtins.genList (i:
@@ -120,7 +123,7 @@
           "$mod, code:1${toString i}, movetoworkspace, ${toString ws}"
         ]
       ))
-    )
+    );
   };
 
   # Let Home Manager install and manage itself.
