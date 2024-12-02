@@ -35,21 +35,11 @@
     LC_TELEPHONE = "en_US.UTF-8";
     LC_TIME = "en_US.UTF-8";
   };
-
-  # NVIDIA settings
-  services.xserver.videoDrivers = ["nvidia"];
-
   # unfree
   nixpkgs.config.allowUnfree = true;
 
-
-  # This value determines the NixOS release from which the default
-  # settings for stateful data, like file locations and database versions
-  # on your system were taken. It‘s perfectly fine and recommended to leave
-  # this value at the release version of the first install of this system.
-  # Before changing this value read the documentation for this option
-  # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "24.11"; # Did you read the comment?
+  # NVIDIA settings
+  services.xserver.videoDrivers = ["nvidia"];
 
   programs.sway.enable = true;
   programs.hyprland.enable = true;
@@ -64,7 +54,6 @@
   };
   services.libinput.enable = true;
   services.openssh.enable = true;
-  # networking.firewall.allowedTCPPorts = [ 22 ];
 
   # install flatpak
   services.flatpak.enable = true;
@@ -75,4 +64,20 @@
     isNormalUser = true;
     extraGroups = ["wheel" "networkmanager" "docker" "video"];
   };
+
+  # Steam
+  programs.steam = {
+    enable = true;
+    remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
+    dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
+    localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers
+  };
+
+  # This value determines the NixOS release from which the default
+  # settings for stateful data, like file locations and database versions
+  # on your system were taken. It‘s perfectly fine and recommended to leave
+  # this value at the release version of the first install of this system.
+  # Before changing this value read the documentation for this option
+  # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
+  system.stateVersion = "24.11"; # Did you read the comment?
 }
