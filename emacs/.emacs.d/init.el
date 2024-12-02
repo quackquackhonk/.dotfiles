@@ -1173,7 +1173,6 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
    '("E" . meow-prev-expand)
    '("f" . meow-find)
    '("G" . meow-grab)
-   '("g" . meow-cancel-selection)
    '("m" . meow-left)
    '("M" . meow-left-expand)
    '("i" . meow-right)
@@ -1205,7 +1204,7 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
    '("y" . meow-save)
    '("z" . meow-pop-selection)
    '("'" . repeat)
-   '("<escape>" . meow-keypad)
+   '("<escape>" . keyboard-quit)
    '("SPC" . qqh/transient/leader)
 
    ;; Some vim-like bindings
