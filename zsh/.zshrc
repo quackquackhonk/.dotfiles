@@ -26,14 +26,6 @@ export EDITOR="emacsclient -nw -a=''"
 alias zshconf="$EDITOR ~/.zshrc && source ~/.zshrc"
 alias zshsrc="source ~/.zshrc"
 
-alias ls='eza'
-alias l='eza -lah'
-alias b='bat'
-alias cd='z'
-
-alias t='tmux'
-
-alias em='emacsclient -nw'
 alias emd='emacs --debug-init --fg-daemon'
 alias emkill='emacsclient -e "(kill-emacs)"'
 

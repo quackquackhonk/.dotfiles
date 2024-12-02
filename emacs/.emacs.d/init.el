@@ -475,7 +475,8 @@
   :init
   (projectile-mode +1)
 
-  (setq projectile-auto-discover nil
+  (setq projectile-enable-caching t
+        projectile-auto-discover nil
         projectile-project-search-path '(("~/code/" . 2)
 					                     "~/sources/")
         projectile-switch-project-action 'consult-fd))
@@ -809,7 +810,7 @@
 ;;;; Face customizations
 (set-face-attribute 'default nil
                     :family "Iosevka"
-                    :height 120)
+                    :height 110)
 (set-face-attribute 'window-divider nil
                     :background (catppuccin-color 'base)
                     :foreground (catppuccin-color 'base))
@@ -984,20 +985,59 @@ This has been adapted from `flycheck-mode-line-status-text'"
   (put construct 'risky-local-variable t))
 
 ;;; Keybindings
+
+;;;; Definitions
 (defun qqh/kill-buffer ()
   "Kill the current buffer using the persp-kill-buffer* command."
   (interactive)
   (persp-kill-buffer* (current-buffer)))
 
-;; Install surround package
+(defun qqh/emacs/reload ()
+  "Load my Emacs configuration."
+  (interactive)
+  (load-file user-init-file))
+
+(defun qqh/emacs/open-config ()
+  "Load my Emacs configuration."
+  (interactive)
+  (find-file user-init-file))
+
+;;;; surround: surround selections with custom delimiters
 (use-package surround)
 
-;; Make some transient- keymaps
-(use-package transient
-  :config
-  (transient-bind-q-to-quit))
+;;;; transient: so many leader keys
+(use-package transient)
 
 ;; Set up some transient maps for additional leaders
+(transient-define-prefix qqh/transient/leader ()
+  "Transient map for my leader bindings.
+
+These bindings are preferred over `meow-leader-define-key', since I have less restrictions here!"
+  [["leader bindings..."
+    ("<escape>" "quit" transient-quit-one)
+    ("g" "magit" magit)
+    ("SPC" "buffers" consult-buffer)
+    ("RET" "lines" avy-goto-line)
+    ("," "last buffer" meow-last-buffer)
+    (":" "eval expression" eval-expression)]
+   ["(c)ode..."
+    ("cc" "compile" compile)]
+   ["(f)ind..."
+    ("ff" "find file" consult-fd)
+    ("fn" "find note" org-roam-node-find)]
+   ["(n)otes..."
+    ("nc" "capture note" org-roam-capture)
+    ("ni" "insert note" org-roam-node-insert)]
+   ["(o)pen..."
+    ("od" "open diagnostics panel" consult-flycheck)
+    ("oi" "open imenu" consult-imenu)
+    ("ot" "open terminal" eat)
+    ("oT" "open project terminal" eat-project)]
+   ["(;) misc"
+    (";r" "reload config" qqh/emacs/reload)
+    (";c" "edit config" qqh/emacs/open-config)
+    (";p" "open project file" qqh/open-project-org-file)]])
+
 (transient-define-prefix qqh/g-prefix-menu ()
   "Transient map for emulating vim's g- leader keybinding."
   [["Edit"
@@ -1008,7 +1048,9 @@ This has been adapted from `flycheck-mode-line-status-text'"
     ("r" "references" xref-find-references)]
    ["Move"
     ("g" "top" beginning-of-buffer)
-    ("G" "bottom" end-of-buffer)]])
+    ("G" "bottom" end-of-buffer)
+    ("RET" "2 chars" avy-goto-char-2)]])
+
 
 (transient-define-prefix qqh/next-prefix-menu ()
   "Transient map for going to the next thing"
@@ -1033,6 +1075,7 @@ This has been adapted from `flycheck-mode-line-status-text'"
 ;;;; Meow
 
 (use-package meow
+  :straight t
   :demand t
   :custom-face
   (meow-position-highlight-number-1 ((t (:background ,(catppuccin-lighten (catppuccin-color 'mauve) 25)))))
@@ -1056,9 +1099,9 @@ This has been adapted from `flycheck-mode-line-status-text'"
   (setq meow-cheatsheet-layout meow-cheatsheet-layout-colemak-dh)
 
   ;; register some things
-  (meow-thing-register 'angle
-                       '(pair ("<") (">"))
-                       '(pair ("<") (">")))
+  ;; (meow-thing-register 'angle
+  ;;                      '(pair ("<") (">"))
+  ;;                      '(pair ("<") (">")))
 
   ;; sets the thing table characters to use ([{ for grouping punctuations
   ;; test ' asrtarstar '
@@ -1069,8 +1112,8 @@ This has been adapted from `flycheck-mode-line-status-text'"
           (?\] . square)
           (?\{ . curly)
           (?\} . curly)
-          (?\< . angle)
-          (?\> . angle)
+          ;; (?\< . angle)
+          ;; (?\> . angle)
           (?\" . string)
           (?s . symbol)
           (?w . window)
@@ -1087,50 +1130,8 @@ This has been adapted from `flycheck-mode-line-status-text'"
    '("e" . meow-prev)
    '("<escape>" . ignore))
 
-  (defvar qqh/meow/window-keymap
-    (let ((keymap (make-keymap)))
-      (define-key keymap (kbd "w") #'other-window)
-      (define-key keymap (kbd "h") #'split-window-below)
-      (define-key keymap (kbd "v") #'split-window-right)
-      (define-key keymap (kbd "q") #'delete-window)
-      keymap))
-
-  ;; define an alias for your keymap
-  (defalias 'window-keymap qqh/meow/window-keymap)
-
   ;; default meow leader bindings
   (meow-leader-define-key
-   '("?" . meow-cheatsheet)
-   ;; '("SPC" . consult-buffer)
-   ;; '("," . meow-last-buffer)
-   ;; '(":" . eval-expression)
-   ;; '("g" . magit)
-   ;; '("f" . consult-fd)
-   ;; '("p" . projectile-command-map)
-   ;; '("RET" . avy-goto-char-2)
-   ;; '("w" . window-keymap)
-
-   ;; Open (o)
-   ;; '("od" . consult-flycheck)
-   ;; '("oi" . consult-imenu)
-   ;; '("oe". eshell)
-   ;; '("ot" . eat-project)
-
-   ;; Notes (n)
-   ;; '("nc" . org-roam-capture)
-   ;; '("nf" . org-roam-node-find)
-   ;; '("ni" . org-roam-node-insert)
-
-   ;; Emacs bindings
-   ;; '(";r" . (lambda ()
-   ;;            (interactive)
-   ;;            (load-file (expand-file-name (concat user-emacs-directory "init.el")))))
-   ;; '(";c" . (lambda ()
-   ;;            (interactive)
-   ;;            (find-file (expand-file-name (concat user-emacs-directory "init.el")))))
-   ;; '(";p" . qqh/open-project-org-file)
-
-
    ;; To execute the originally e in MOTION state, use SPC e.
    '("e" . "H-e")
    '("1" . meow-digit-argument)
@@ -1172,6 +1173,7 @@ This has been adapted from `flycheck-mode-line-status-text'"
    '("E" . meow-prev-expand)
    '("f" . meow-find)
    '("G" . meow-grab)
+   '("g" . meow-cancel-selection)
    '("m" . meow-left)
    '("M" . meow-left-expand)
    '("i" . meow-right)
@@ -1203,8 +1205,8 @@ This has been adapted from `flycheck-mode-line-status-text'"
    '("y" . meow-save)
    '("z" . meow-pop-selection)
    '("'" . repeat)
-   '("<escape>" . meow-cancel-selection)
-   '("RET" . avy-goto-line)
+   '("<escape>" . meow-keypad)
+   '("SPC" . qqh/transient/leader)
 
    ;; Some vim-like bindings
    '("g" . qqh/g-prefix-menu)
@@ -1225,8 +1227,7 @@ This has been adapted from `flycheck-mode-line-status-text'"
 (require 'meow)
 (meow-setup)
 (meow-global-mode 1)
-;; enable esc mode for terminal use
-(meow-esc-mode 1)
+(meow-esc-mode 1)               ;; enable esc mode for terminal use
 
 ;;; Customization file
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
