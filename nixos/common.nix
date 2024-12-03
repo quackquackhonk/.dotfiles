@@ -20,8 +20,6 @@
     gnumake
     gnupg
     wget
-
-    inputs.zen-browser.packages."${system}".default
   ];
   fonts.packages = with pkgs; [
     iosevka

@@ -14,9 +14,6 @@
     # Alejandra (nix formatter)
     alejandra.url = "github:kamadorueda/alejandra/3.0.0";
     alejandra.inputs.nixpkgs.follows = "nixpkgs";
-
-    # Zen browser
-    zen-browser.url = "github:MarceColl/zen-browser-flake";
   };
 
   outputs = {
@@ -24,7 +21,6 @@
       nixpkgs,
       home-manager,
       alejandra,
-      zen-browser,
       ...
   } @ inputs: let
     system = "x86_64-linux";
@@ -34,21 +30,23 @@
     # NixOS configuration entrypoint
     # Available through 'nixos-rebuild --flake .#your-hostname'
     nixosConfigurations = {
+      # laptop configuration
       monstera = nixpkgs.lib.nixosSystem rec {
         specialArgs = {inherit inputs outputs;};
         system = "x86_64-linux";
         modules = [
-          ./hosts/monstera/configuration.nix
+          ./nixos/monstera/configuration.nix
           {environment.systemPackages = [alejandra.defaultPackage.${system}];}
           inputs.flake-programs-sqlite.nixosModules.programs-sqlite
         ];
       };
 
+      # Desktop configuratio
       redwood = nixpkgs.lib.nixosSystem rec {
         specialArgs = {inherit inputs outputs;};
         system = "x86_64-linux";
         modules = [
-          ./hosts/redwood/configuration.nix
+          ./nixos/redwood/configuration.nix
           {environment.systemPackages = [alejandra.defaultPackage.${system}];}
 
 	        home-manager.nixosModules.home-manager
@@ -56,7 +54,7 @@
             home-manager.backupFileExtension = "backup";
 	          home-manager.useGlobalPkgs = true;
 	          home-manager.useUserPackages = true;
-	          home-manager.users.sahana = import ./home/home.nix;
+	          home-manager.users.sahana = import ./home-manager/home.nix;
 	        }
         ];
       };

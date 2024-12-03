@@ -101,30 +101,6 @@
     imv
   ];
 
-  # HYPRLAND
-  wayland.windowManager.hyprland.settings = {
-    "$mod" = "SUPER";
-    "$browser" = "firefox";
-    "$term" = "kitty";
-    bind = [
-      "$mod, Return, exec, $term"
-      "$mod, B, exec, $browser"
-      "$mod, E, exec, emacsclient -a =''"
-
-    ] ++ (
-      # workspaces:
-      builtins.concatLists (builtins.genList (i:
-        let ws = i + 1;
-        in [
-          # bind ~$mod NUM~ to goto workspace NUM
-          "$mod, code:1${toString i}, workspace, ${toString ws}"
-          # bind ~$mod SHIFT NUM~ to move window to workspace NUM
-          "$mod, code:1${toString i}, movetoworkspace, ${toString ws}"
-        ]
-      ))
-    );
-  };
-
   services.gpg-agent = {
     enable = true;
     defaultCacheTtl = 1800;
@@ -133,4 +109,6 @@
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
+
+  # Let home-manager manage my dotfiles
 }

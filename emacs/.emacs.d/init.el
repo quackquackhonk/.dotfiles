@@ -810,7 +810,7 @@
 ;;;; Face customizations
 (set-face-attribute 'default nil
                     :family "Iosevka"
-                    :height 110)
+                    :height 100)
 (set-face-attribute 'window-divider nil
                     :background (catppuccin-color 'base)
                     :foreground (catppuccin-color 'base))
