@@ -1017,7 +1017,6 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
     ("<escape>" "quit" transient-quit-one)
     ("g" "magit" magit)
     ("SPC" "buffers" consult-buffer)
-    ("RET" "lines" avy-goto-line)
     ("," "last buffer" meow-last-buffer)
     (":" "eval expression" eval-expression)]
    ["(c)ode..."
@@ -1033,10 +1032,14 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
     ("oi" "open imenu" consult-imenu)
     ("ot" "open terminal" eat)
     ("oT" "open project terminal" eat-project)]
+   ["(p)rojects..."
+    ("p;" "open project.org" qqh/open-project-org-file)
+    ("pp" "switch to project" projectile-switch-project)
+    ("pP" "switch to project (new perspective)" projectile-persp-switch-project)
+    ("pt" "open project terminal" eat-project)]
    ["(;) misc"
     (";r" "reload config" qqh/emacs/reload)
-    (";c" "edit config" qqh/emacs/open-config)
-    (";p" "open project file" qqh/open-project-org-file)]])
+    (";c" "edit config" qqh/emacs/open-config)]])
 
 (transient-define-prefix qqh/g-prefix-menu ()
   "Transient map for emulating vim's g- leader keybinding."
@@ -1067,6 +1070,7 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
     ("e" "error" flycheck-previous-error)
     ("t" "tab" tab-previous)
     ("p" "perspective" persp-prev)]])
+
 
 ;;;; Global bindings
 (global-set-key (kbd "<home>") 'beginning-of-line)
@@ -1181,7 +1185,7 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
    '("k" . ignore)
    '("K" . eldoc)
    '("l" . meow-line)
-   '("L" . meow-goto-line)
+   '("L" . avy-goto-line)
    '("h" . meow-mark-word)
    '("H" . meow-mark-symbol)
    '("n" . meow-next)
@@ -1205,11 +1209,12 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
    '("z" . meow-pop-selection)
    '("'" . repeat)
    '("<escape>" . keyboard-quit)
+   '("RET" . meow-keypad)
    '("SPC" . qqh/transient/leader)
 
    ;; Some vim-like bindings
    '("g" . qqh/g-prefix-menu)
-   '(":" . meow-M-x)
+   '(":" . universal-argument)
    '("="   . meow-indent)
    '("C-q" . delete-window)
    '("M-q" . qqh/kill-buffer)
