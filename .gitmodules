@@ -1,9 +1,3 @@
-[submodule "nushell/.config/nushell/nu_scripts"]
-	path = nushell/.config/nushell/nu_scripts
-	url = https://github.com/nushell/nu_scripts.git
 [submodule "sources/ShyFox"]
 	path = sources/ShyFox
 	url = git@github.com:Naezr/ShyFox.git
-[submodule "sources/catppuccin/tofi"]
-	path = sources/catppuccin/tofi
-	url = https://github.com/catppuccin/tofi
