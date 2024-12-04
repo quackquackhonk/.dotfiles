@@ -1035,7 +1035,6 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
    ["(p)rojects..."
     ("p;" "open project.org" qqh/open-project-org-file)
     ("pp" "switch to project" projectile-switch-project)
-    ("pP" "switch to project (new perspective)" projectile-persp-switch-project)
     ("pt" "open project terminal" eat-project)]
    ["(;) misc"
     (";r" "reload config" qqh/emacs/reload)
@@ -1172,6 +1171,7 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
    '("b" . meow-back-word)
    '("B" . meow-back-symbol)
    '("c" . meow-change)
+   '("C" . "C-c")
    '("d" . meow-kill)
    '("e" . meow-prev)
    '("E" . meow-prev-expand)
@@ -1185,7 +1185,7 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
    '("k" . ignore)
    '("K" . eldoc)
    '("l" . meow-line)
-   '("L" . avy-goto-line)
+   '("L" . meow-goto-line)
    '("h" . meow-mark-word)
    '("H" . meow-mark-symbol)
    '("n" . meow-next)
@@ -1204,12 +1204,12 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
    '("w" . meow-next-word)
    '("W" . meow-next-symbol)
    '("x" . meow-delete)
-   '("X" . meow-backward-delete)
+   '("X" . "C-x")
    '("y" . meow-save)
    '("z" . meow-pop-selection)
    '("'" . repeat)
    '("<escape>" . keyboard-quit)
-   '("RET" . meow-keypad)
+   '("RET" . avy-goto-line)
    '("SPC" . qqh/transient/leader)
 
    ;; Some vim-like bindings
