@@ -45,13 +45,19 @@
   programs.hyprland.enable = true;
 
   programs.light.enable = true;
-
   services.printing.enable = true;
 
+  # audio & bluetooth
   services.pipewire = {
     enable = true;
     pulse.enable = true;
   };
+  hardware.bluetooth = {
+    enable = true;
+    powerOnBoot = true;
+  };
+  services.blueman.enable = true;
+
   services.libinput.enable = true;
   services.openssh.enable = true;
 
@@ -59,6 +65,7 @@
   services.flatpak.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
+  programs.zsh.enable = true;
   users.defaultUserShell = pkgs.zsh;
   users.users.sahana = {
     isNormalUser = true;

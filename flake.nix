@@ -41,7 +41,7 @@
         ];
       };
 
-      # Desktop configuratio
+      # Desktop configuration
       redwood = nixpkgs.lib.nixosSystem rec {
         specialArgs = {inherit inputs outputs;};
         system = "x86_64-linux";

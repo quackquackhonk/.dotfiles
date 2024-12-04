@@ -11,9 +11,7 @@
   imports = [
     # If you want to use home-manager modules from other flakes (such as nix-colors):
     # inputs.nix-colors.homeManagerModule
-
-    # You can also split up your configuration and import pieces of it here:
-    # ./nvim.nix
+    ./shell.nix
   ];
 
   nixpkgs = {
@@ -39,22 +37,18 @@
   # The home.packages option allows you to install Nix packages into your
   # environment.
   home.packages = with pkgs; [
+    # utils
+    eza
+    bat
+    fd
+    ripgrep
+    jq
+    yq-go
     # archives
     zip
     xz
     unzip
     p7zip
-
-    # utils
-    stow
-    starship
-    fzf
-    zoxide
-    eza
-    bat
-    fd
-    jq
-    yq-go
 
     # networking tools
     mtr
@@ -86,7 +80,9 @@
     rustup
     luajit
 
-    # desktop utils
+    # hyprland utils
+    xdg-desktop-portal-hyprland
+    hyprpolkitagent
     waybar
     tofi
     dunst
@@ -101,14 +97,25 @@
     imv
   ];
 
+
   services.gpg-agent = {
     enable = true;
     defaultCacheTtl = 1800;
     enableSshSupport = true;
   };
 
+  services.mpris-proxy.enable = true;
+
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 
   # Let home-manager manage my dotfiles
+  home.file = {
+    ".config/starship".source = ../starship/.config/starship.toml;
+    ".config/hypr" = {
+      source = ../hypr;
+      recursive = true;
+    };
+    ".config/tofi/config".source = ../sources/catppuccin/tofi/themes/catppuccin-mocha;
+  };
 }
