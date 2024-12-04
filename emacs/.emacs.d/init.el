@@ -1034,7 +1034,7 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
     ("oT" "open project terminal" eat-project)]
    ["(p)rojects..."
     ("p;" "open project.org" qqh/open-project-org-file)
-    ("pp" "switch to project" projectile-switch-project)
+    ("pp" "switch to project" projectile-persp-switch-project)
     ("pt" "open project terminal" eat-project)]
    ["(;) misc"
     (";r" "reload config" qqh/emacs/reload)
@@ -1185,7 +1185,7 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
    '("k" . ignore)
    '("K" . eldoc)
    '("l" . meow-line)
-   '("L" . meow-goto-line)
+   '("L" . avy-goto-line)
    '("h" . meow-mark-word)
    '("H" . meow-mark-symbol)
    '("n" . meow-next)
@@ -1209,7 +1209,7 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
    '("z" . meow-pop-selection)
    '("'" . repeat)
    '("<escape>" . keyboard-quit)
-   '("RET" . avy-goto-line)
+   '("RET" . ignore)
    '("SPC" . qqh/transient/leader)
 
    ;; Some vim-like bindings
