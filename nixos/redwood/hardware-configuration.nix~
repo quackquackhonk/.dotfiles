@@ -18,21 +18,19 @@
       fsType = "ext4";
     };
 
+  fileSystems."/home/sahana/drives/m2drive" = {
+    device = "/dev/disk/by-uuid/ef134591-f581-42c6-96e7-fae15fb975db";
+  };
+
+  fileSystems."/home/sahana/drives/mass_storage" = {
+    device = "/dev/disk/by-uuid/a2ac135c-ce7f-40d0-a7ab-31bbdb15a835";
+  };
+
   fileSystems."/boot" =
     { device = "/dev/disk/by-uuid/122A-61B0";
       fsType = "vfat";
       options = [ "fmask=0077" "dmask=0077" ];
     };
-
-  fileSystems."/mnt/m2drive" = {
-    device = "/dev/disk/by-uuid/ef134591-f581-42c6-96e7-fae15fb975db";
-    fsType = "auto";
-  };
-
-  fileSystems."/mnt/mass_storage" = {
-    device = "/dev/disk/by-uuid/a2ac135c-ce7f-40d0-a7ab-31bbdb15a835";
-    fsType = "auto";
-  };
 
   swapDevices =
     [ { device = "/dev/disk/by-uuid/063b0a4e-7158-4538-96e0-384326800e8f"; }
