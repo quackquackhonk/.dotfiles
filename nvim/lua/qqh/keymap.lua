@@ -42,10 +42,10 @@ wk.register({
 		name = "+find",
 		f = { cmd("Telescope find_files"), "Find Files" },
 		g = { cmd("Telescope git_files"), "Git Files" },
-		a = { cmd("Telescope aerial"), "Symbol in file" },
+		a = { cmd("AerialNavToggle"), "Symbol in file" },
 		r = { cmd("Telescope frecency"), "Recent Files" },
 		s = { cmd("Telescope live_grep"), "Live Grep" },
-		p = { cmd("tabnew | Telescope project"), "Find Project" },
+		p = { cmd("tabnew | Telescope project display_type=full"), "Find Project" },
 		u = { cmd("Telescope undo"), "Find undo" },
 	},
 	e = {
@@ -95,6 +95,10 @@ wk.register({
 		},
 	},
 	g = { cmd("Neogit"), "Git Status" },
+	s = {
+		name = "+settings",
+		r = { cmd("set rnu!"), "Relative Numbers" },
+	},
 	d = {
 		name = "+debugging",
 		b = { dap.toggle_breakpoint, "Toggle Breakpoint" },
@@ -106,7 +110,7 @@ wk.register({
 	o = {
 		name = "+open",
 		f = { cmd("Oil"), "Filebrowser" },
-		d = { cmd("TroubleToggle"), "Diagnostics" },
+		d = { cmd("Trouble diagnostics toggle focus=true"), "Diagnostics" },
 		t = { cmd("TodoTelescope keywords=TODO,FIX,FIXME"), "Show project TODOs" },
 		o = { cmd("OverseerToggle"), "Open Overseer window" },
 	},
@@ -114,11 +118,7 @@ wk.register({
 		name = "window",
 		v = { cmd("vsplit"), "Create vertical split" },
 		s = { cmd("split"), "Create vertical split" },
-		q = { cmd("close"), "Create vertical split" },
-	},
-	s = {
-		name = "+settings",
-		r = { cmd("set rnu!"), "Relative Numbers" },
+		q = { cmd("close"), "Close window" },
 	},
 	[";"] = {
 		name = "+neovim",
@@ -154,11 +154,18 @@ wk.register({
 wk.register({
 	["<F8>"] = { require("maximize").toggle, "Maximize window" },
 	["<C-q>"] = { cmd("close"), "Close window" },
-	["<A-Left>"] = { cmd("NavigatorLeft"), "Move focus left" },
-	["<A-Right>"] = { cmd("NavigatorRight"), "Move focus right" },
-	["<A-Up>"] = { cmd("NavigatorUp"), "Move focus up" },
-	["<A-Down>"] = { cmd("NavigatorDown"), "Move focus down" },
+	["<C-Left>"] = { "<C-w>h", "Move focus left" },
+	["<C-Right>"] = { "<C-w>l", "Move focus right" },
+	["<C-Up>"] = { "<C-w>k", "Move focus up" },
+	["<C-Down>"] = { "<C-w>j", "Move focus down" },
 }, { mode = { "n", "i" } })
+
+wk.register({
+	["<M-m>"] = { "<Left>", "Move left" },
+	["<M-i>"] = { "<Right>", "Move right" },
+	["<M-e>"] = { "<Up>", "Move up" },
+	["<M-n>"] = { "<Down>", "Move down" },
+}, { mode = { "n", "i", "v" } })
 
 -- Keybindings for HOP
 -- place this in one of your configuration file(s)
@@ -177,22 +184,6 @@ vim.keymap.set("", "T", function()
 	hop.hint_char1({ direction = directions.BEFORE_CURSOR, current_line_only = true, hint_offset = 1 })
 end, { remap = true })
 
--- UFO keybindings
-vim.api.nvim_create_user_command("ToggleFolds", function()
-	local bufnr = vim.api.nvim_get_current_buf()
-	if vim.b[bufnr].bufferfoldclosed then
-		require("ufo").openAllFolds()
-		vim.b[bufnr].bufferfoldclosed = false
-	else
-		require("ufo").closeAllFolds()
-		vim.b[bufnr].bufferfoldclosed = true
-	end
-end, {})
-vim.keymap.set("n", "zR", require("ufo").openAllFolds)
-vim.keymap.set("n", "zM", require("ufo").closeAllFolds)
-vim.keymap.set("n", "<S-Tab>", cmd("ToggleFolds"))
-vim.keymap.set("n", "<Tab>", "za")
-
 -- DIAL keybindings
 vim.api.nvim_set_keymap("n", "<C-a>", require("dial.map").inc_normal(), { noremap = true })
 vim.api.nvim_set_keymap("v", "<C-a>", require("dial.map").inc_normal(), { noremap = true })
@@ -201,6 +192,10 @@ vim.api.nvim_set_keymap("v", "<C-x>", require("dial.map").dec_normal(), { norema
 vim.api.nvim_set_keymap("v", "g<C-a>", require("dial.map").inc_gvisual(), { noremap = true })
 vim.api.nvim_set_keymap("v", "g<C-x>", require("dial.map").dec_gvisual(), { noremap = true })
 keymap({ "n", "v" }, "<Return>", cmd("HopChar2"))
+
+-- Fold keymaps
+vim.keymap.set("n", "<S-Tab>", require("fold-cycle").open, { silent = true, desc = "Fold-cycle: open folds" })
+vim.keymap.set("n", "<Tab>", "za", { silent = true, desc = "Fold-cycle: open folds" })
 
 -- Visual Mode
 -- Stay in visual mode when indenting
@@ -214,6 +209,7 @@ wk.register({
 }, { prefix = "<Leader>", mode = "v" })
 
 -- HYDRA keymappings
+
 -- Window move/resize hydra
 hydra({
 	name = "Windows",

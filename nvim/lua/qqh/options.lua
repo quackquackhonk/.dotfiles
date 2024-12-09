@@ -39,5 +39,3 @@ vim.cmd([[autocmd FileType * set formatoptions-=o]])
 vim.cmd("set t_ZH=[3m")
 vim.cmd("set t_ZH=[23m")
 vim.cmd("set fo-=l")
-
-vim.b.bufferfoldclosed = false

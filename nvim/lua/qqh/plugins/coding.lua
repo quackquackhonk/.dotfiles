@@ -2,6 +2,7 @@ return {
 	-- Git Integration
 	{
 		"NeogitOrg/neogit",
+		tag = "v0.0.1",
 		dependencies = {
 			"nvim-lua/plenary.nvim", -- required
 			"sindrets/diffview.nvim", -- optional - Diff integration
@@ -16,14 +17,15 @@ return {
 		"zbirenbaum/copilot.lua",
 		config = function()
 			require("copilot").setup({
-				suggestion = {
-					enabled = true,
-					auto_trigger = true,
-					keymap = {
-						accept = "<M-Return>",
-					},
-				},
+				panel = { enabled = false },
+				suggestion = { enabled = false },
 			})
+		end,
+	},
+	{
+		"zbirenbaum/copilot-cmp",
+		config = function()
+			require("copilot_cmp").setup()
 		end,
 	},
 	{
@@ -55,17 +57,30 @@ return {
 			layout = {
 				width = 0.2,
 			},
+			nav = {
+				keymaps = {
+					["<Left>"] = "actions.left",
+					["<Right>"] = "actions.right",
+				},
+			},
 			-- optionally use on_attach to set keymaps when aerial has attached to a buffer
 			on_attach = function(bufnr)
 				-- Jump forwards/backwards with '{' and '}'
-				vim.keymap.set("n", "{", "<cmd>AerialPrev<CR>", { buffer = bufnr })
-				vim.keymap.set("n", "}", "<cmd>AerialNext<CR>", { buffer = bufnr })
+				vim.keymap.set("n", "[[", "<cmd>AerialPrev<CR>", { buffer = bufnr })
+				vim.keymap.set("n", "]]", "<cmd>AerialNext<CR>", { buffer = bufnr })
 			end,
 		},
 	},
 	{
 		"nvim-treesitter/nvim-treesitter",
 		build = ":TSUpdate",
+	},
+	{
+		"nvim-treesitter/nvim-treesitter-textobjects",
+		dependencies = { "nvim-treesitter/nvim-treesitter" },
+		config = function()
+			require("nvim-treesitter.configs").setup({})
+		end,
 	},
 	"neovim/nvim-lspconfig",
 	{
