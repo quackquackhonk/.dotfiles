@@ -91,7 +91,10 @@ function spackcert() {
     cat ~/cert/ZscalerRootCertificate-2048-SHA256.crt >> $CERT_PATH
 }
 alias lzd='lazydocker'
-alias mp='awsnonprod && mprocs'
+
+alias nonprod-login='okta-aws-cli web --profile nonprod --expiry-aws-variables --cache-access-token --write-aws-credentials'
+alias production-login='okta-aws-cli web --profile production --expiry-aws-variables --cache-access-token --write-aws-credentials'
+alias nonprod='eval "$(aws configure export-credentials --profile nonprod --format env)" && aws ecr get-login-password --region us-west-u | docker login --username AWS --password-stdin 589310964831.dkr.ecr.us-west-2.amazonaws.com'
 
 export BAT_THEME="Catppuccin Mocha"
 export FZF_DEFAULT_OPTS=" \
@@ -108,27 +111,27 @@ eval "$(starship init zsh)"
 if [[ $HOST == "LVV3TW207K" ]]; then
     . /Users/i34866/opt/git/spack/share/spack/setup-env.sh *
 else
-    . /storage/shared/spack/git/spack/share/spack/setup-env.sh *
+    . /storage/stankala/opt/git/spack/share/spack/setup-env.sh
 fi
 
 
-export PYENV_ROOT="$HOME/.pyenv"
-[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)"
+# export PYENV_ROOT="$HOME/.pyenv"
+# [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+# eval "$(pyenv init -)"
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/opt/homebrew/Caskroom/miniconda/base/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/opt/homebrew/Caskroom/miniconda/base/etc/profile.d/conda.sh" ]; then
-        . "/opt/homebrew/Caskroom/miniconda/base/etc/profile.d/conda.sh"
-    else
-        export PATH="/opt/homebrew/Caskroom/miniconda/base/bin:$PATH"
-    fi
-fi
-unset __conda_setup
+# __conda_setup="$('/opt/homebrew/Caskroom/miniconda/base/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+# if [ $? -eq 0 ]; then
+#     eval "$__conda_setup"
+# else
+#     if [ -f "/opt/homebrew/Caskroom/miniconda/base/etc/profile.d/conda.sh" ]; then
+#         . "/opt/homebrew/Caskroom/miniconda/base/etc/profile.d/conda.sh"
+#     else
+#         export PATH="/opt/homebrew/Caskroom/miniconda/base/bin:$PATH"
+#     fi
+# fi
+# unset __conda_setup
 # <<< conda initialize <<<
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
