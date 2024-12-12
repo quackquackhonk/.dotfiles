@@ -21,13 +21,15 @@
 
 * Links
 * Tasks
-* NixOS
-some links:
-- zen-browser flake: https://github.com/MarceColl/zen-browser-flake/tree/master
-** waybar
-** steam
-* Hyprland [0/4]
-** STARTED Get off HyDE
+* NixOS [2/4]
+** TODO login manager (SDDM)
+** TODO wlogout theming + waybar integration
+** DONE waybar
+- State "DONE"       from              [2024-12-12 Thu 16:41]
+** DONE steam
+* Hyprland [1/4]
+** DONE TARTED Get off HyDE
+- State "DONE"       from              [2024-12-12 Thu 16:40]
 - State "STARTED"    from "TODO"       [2024-11-07 Thu 18:27]
   This should be done, there mignt need to be some leftover stuff.
 

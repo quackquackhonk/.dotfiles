@@ -40,8 +40,11 @@
 
   # NVIDIA settings
   services.xserver.videoDrivers = ["nvidia"];
+  environment.systemPackages = with pkgs; [
+    xwayland
+    wayland-utils
+  ];
 
-  programs.sway.enable = true;
   programs.hyprland.enable = true;
 
   programs.light.enable = true;

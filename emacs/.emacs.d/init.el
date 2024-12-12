@@ -809,7 +809,7 @@
 
 ;;;; Face customizations
 (set-face-attribute 'default nil
-                    :family "Iosevka"
+                    :family "Iosevka Nerd Font"
                     :height 100)
 (set-face-attribute 'window-divider nil
                     :background (catppuccin-color 'base)

@@ -14,6 +14,7 @@
   environment.systemPackages = with pkgs; [
     curl
     emacs30
+    networkmanagerapplet
     kitty
     git
     gcc
@@ -23,6 +24,6 @@
   ];
 
   fonts.packages = with pkgs; [
-    iosevka
+    nerd-fonts.iosevka
   ];
 }

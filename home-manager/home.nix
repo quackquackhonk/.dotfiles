@@ -89,6 +89,7 @@
 
     # apps
     firefox
+    nautilus
   ];
 
 
@@ -110,6 +111,10 @@
       source = ../hypr;
       recursive = true;
     };
+    ".config/waybar" = {
+      source = ../waybar;
+      recursive = true;
+    };
     ".config/tofi/config".text = ''
 # Catppuccin Mocha
 width = 100%
@@ -120,7 +125,7 @@ padding-left = 35%
 padding-top = 35%
 result-spacing = 25
 num-results = 5
-font = Iosevka
+font = Iosevka Nerd Font
 text-color = #cdd6f4
 prompt-color = #f38ba8
 selection-color = #f9e2af

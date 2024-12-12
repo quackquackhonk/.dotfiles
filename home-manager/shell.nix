@@ -19,7 +19,7 @@
       ga = "git add";
       gc = "git commit";
 
-      update = "sudo nixos-rebuild switch --flake /home/sahana/dotfiles/.";
+      update = "cd ~/dotfiles && git add . && sudo nixos-rebuild switch --flake /home/sahana/dotfiles/. && hyprctl reload && cd -";
     };
 
     oh-my-zsh = {
