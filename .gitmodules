@@ -1,3 +1,6 @@
 [submodule "sources/ShyFox"]
 	path = sources/ShyFox
 	url = git@github.com:Naezr/ShyFox.git
+[submodule "nvim-kickstart/.config/nvim"]
+	path = nvim-kickstart/.config/nvim
+	url = git@github.com:quackquackhonk/kickstart.nvim.git
