@@ -1,0 +1,27 @@
+#+TITLE: 
+
+* Configuration files
+
+** Justfile
+#+begin_src just :tangle justfile
+  # This is an example justfile
+  build:
+      echo "BUILD NOT CONFIGURED"
+
+  test:
+      echo "TEST NOT CONFIGURED"
+#+end_src
+
+** Project Setup
+
+#+begin_src emacs-lisp :tangle .dir-locals.el
+  ((nil . ((compile-command . "just build")
+           ;; Put more config values here
+           (eval . (progn
+                     (pyvenv-activate (projectile-expand-root "spack_env/.spack-env/view"))))
+           )))
+#+end_src
+
+* Links
+* Tasks
+* Questions

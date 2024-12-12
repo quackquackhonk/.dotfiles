@@ -1,0 +1,241 @@
+(undo-tree-save-format-version . 1)
+"c8841d2b567b8fd067074667746e512b75d52aab"
+[nil nil nil nil (26384 16773 157163 0) 0 nil]
+([nil nil ((8913 . 9152) (#("(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )" 0 239 (fontified nil)) . -8913) (8910 . 8912) (#("
+" 0 1 (fontified nil)) . -8910) (8910 . 8911) (8859 . 8865) (#(" " 0 1 (fontified nil)) . 8859) (8858 . 8859) (8817 . 8904) (#(" " 0 1 (fontified nil)) . 8817) (8676 . 8818) (#("
+" 0 1 (fontified nil)) . -8676) (8676 . 8677) (8664 . 8668) (8662 . 8663) (8592 . 8596) (8590 . 8591) (8520 . 8524) (8518 . 8519) (8448 . 8452) (8446 . 8447) (8376 . 8380) (8374 . 8375) (8304 . 8308) (8302 . 8303) (8230 . 8646) (#(" " 0 1 (fontified nil)) . 8230) (7934 . 8231) (#("(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(custom-enabled-themes nil)
+ '(custom-safe-themes
+   '(\"551320837bd87074e3de38733e0a8553618c13f7208eda8ec9633d59a70bc284\"
+     \"8363207a952efb78e917230f5a4d3326b2916c63237c1f61d7e5fe07def8d378\"
+     \"09b833239444ac3230f591e35e3c28a4d78f1556b107bafe0eb32b5977204d93\"
+     \"6e13ff2c27cf87f095db987bf30beca8697814b90cd837ef4edca18bdd381901\"
+     \"98b4ef49c451350c28a8c20c35c4d2def5d0b8e5abbc962da498c423598a1cdd\"
+     default))
+ '(dracula-alternate-mode-line-and-minibuffer t)
+ '(eat-shell \"/bin/zsh\")
+ '(package-selected-packages nil)
+ '(package-vc-selected-packages
+   '((eglot-booster :vc-backend Git :url
+		    \"https://github.com/jdtsmith/eglot-booster\"))))" 0 906 (fontified nil)) . -7934)) nil (26384 16783 253903 0) 0 nil])
+([nil nil ((9381 . 9620) (#("(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )" 0 239 (fontified nil)) . -9381) (9378 . 9380) (#("
+" 0 1 (fontified nil)) . -9378) (9378 . 9379) (9327 . 9333) (#(" " 0 1 (fontified nil)) . 9327) (9326 . 9327) (9285 . 9372) (#(" " 0 1 (fontified nil)) . 9285) (9252 . 9286) (#("
+" 0 1 (fontified nil)) . -9252) (9252 . 9253) (9236 . 9238) (#(" " 0 1 (fontified nil)) . 9236) (9235 . 9236) (9177 . 9179) (#(" " 0 1 (fontified nil)) . 9177) (9176 . 9177) (9125 . 9127) (#(" " 0 1 (fontified nil)) . 9125) (9124 . 9125) (9075 . 9077) (#(" " 0 1 (fontified nil)) . 9075) (9074 . 9075) (9015 . 9017) (#(" " 0 1 (fontified nil)) . 9015) (9014 . 9015) (8953 . 8955) (#(" " 0 1 (fontified nil)) . 8953) (8952 . 8953) (8902 . 8904) (#(" " 0 1 (fontified nil)) . 8902) (8901 . 8902) (8848 . 8850) (#(" " 0 1 (fontified nil)) . 8848) (8847 . 8848) (8780 . 9236) (#(" " 0 1 (fontified nil)) . 8780) (8676 . 8781) (#("
+" 0 1 (fontified nil)) . -8676) (8676 . 8677) (8664 . 8668) (8662 . 8663) (8592 . 8596) (8590 . 8591) (8520 . 8524) (8518 . 8519) (8448 . 8452) (8446 . 8447) (8376 . 8380) (8374 . 8375) (8304 . 8308) (8302 . 8303) (8230 . 8646) (#(" " 0 1 (fontified nil)) . 8230) (7934 . 8231) (#("(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(custom-enabled-themes nil)
+ '(custom-safe-themes
+   '(\"889584526e36775884a0018e70cafcd7b4c1adca1232c97653676938afb5474c\"
+     \"551320837bd87074e3de38733e0a8553618c13f7208eda8ec9633d59a70bc284\"
+     \"8363207a952efb78e917230f5a4d3326b2916c63237c1f61d7e5fe07def8d378\"
+     \"09b833239444ac3230f591e35e3c28a4d78f1556b107bafe0eb32b5977204d93\"
+     \"6e13ff2c27cf87f095db987bf30beca8697814b90cd837ef4edca18bdd381901\"
+     \"98b4ef49c451350c28a8c20c35c4d2def5d0b8e5abbc962da498c423598a1cdd\"
+     default))
+ '(dracula-alternate-mode-line-and-minibuffer t)
+ '(eat-shell \"/bin/zsh\")
+ '(package-selected-packages nil)
+ '(package-vc-selected-packages
+   '((eglot-booster :vc-backend Git :url
+		    \"https://github.com/jdtsmith/eglot-booster\"))))" 0 978 (fontified nil)) . -7934)) nil (26384 17172 557985 0) 0 nil])
+([nil nil ((9389 . 9628) (#("(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )" 0 237 (fontified nil) 237 238 (fontified nil) 238 239 (fontified nil)) . -9389) (9386 . 9388) (#("
+" 0 1 (fontified nil)) . -9386) (9386 . 9387) (9335 . 9341) (#(" " 0 1 (fontified nil)) . 9335) (9334 . 9335) (9293 . 9380) (#(" " 0 1 (fontified nil)) . 9293) (9260 . 9294) (#("
+" 0 1 (fontified nil)) . -9260) (9260 . 9261) (9234 . 9236) (#(" " 0 1 (fontified nil)) . 9234) (9233 . 9234) (9177 . 9179) (#(" " 0 1 (fontified nil)) . 9177) (9176 . 9177) (9125 . 9127) (#(" " 0 1 (fontified nil)) . 9125) (9124 . 9125) (9075 . 9077) (#(" " 0 1 (fontified nil)) . 9075) (9074 . 9075) (9015 . 9017) (#(" " 0 1 (fontified nil)) . 9015) (9014 . 9015) (8953 . 8955) (#(" " 0 1 (fontified nil)) . 8953) (8952 . 8953) (8902 . 8904) (#(" " 0 1 (fontified nil)) . 8902) (8901 . 8902) (8848 . 8850) (#(" " 0 1 (fontified nil)) . 8848) (8847 . 8848) (8780 . 9244) (#(" " 0 1 (fontified nil)) . 8780) (8676 . 8781) (#("
+" 0 1 (fontified nil)) . -8676) (8676 . 8677) (8664 . 8668) (8662 . 8663) (8592 . 8596) (8590 . 8591) (8520 . 8524) (8518 . 8519) (8448 . 8452) (8446 . 8447) (8376 . 8380) (8374 . 8375) (8304 . 8308) (8302 . 8303) (8230 . 8646) (#(" " 0 1 (fontified nil)) . 8230) (7934 . 8231) (#("(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(custom-enabled-themes nil)
+ '(custom-safe-themes
+   '(\"889584526e36775884a0018e70cafcd7b4c1adca1232c97653676938afb5474c\"
+     \"551320837bd87074e3de38733e0a8553618c13f7208eda8ec9633d59a70bc284\"
+     \"8363207a952efb78e917230f5a4d3326b2916c63237c1f61d7e5fe07def8d378\"
+     \"09b833239444ac3230f591e35e3c28a4d78f1556b107bafe0eb32b5977204d93\"
+     \"6e13ff2c27cf87f095db987bf30beca8697814b90cd837ef4edca18bdd381901\"
+     \"98b4ef49c451350c28a8c20c35c4d2def5d0b8e5abbc962da498c423598a1cdd\"
+     default))
+ '(dracula-alternate-mode-line-and-minibuffer t)
+ '(eat-shell \"/bin/zsh\")
+ '(package-selected-packages
+   '(avy blacken cargo catppuccin-theme ccls challenger-deep-theme
+	 cmake-mode corfu diminish doom-modeline doom-themes
+	 dracula-theme eat embark-consult evil-collection
+	 evil-commentary evil-surround general gruvbox-theme hl-todo
+	 json-mode just-mode kind-icon magit marginalia nord-theme
+	 orderless persp-projectile protobuf-mode pyvenv
+	 rainbow-delimiters rainbow-mode ripgrep rust-mode
+	 solaire-mode undo-tree vertico wgrep yaml-mode yasnippet
+	 zenburn-theme))
+ '(package-vc-selected-packages
+   '((eglot-booster :vc-backend Git :url
+		    \"https://github.com/jdtsmith/eglot-booster\"))))" 0 245 (fontified nil) 245 248 (fontified nil) 248 269 (fontified nil) 269 270 (fontified nil) 270 273 (fontified nil) 273 274 (fontified nil) 274 275 (fontified nil) 275 278 (fontified nil) 278 300 (fontified nil) 300 368 (fontified nil) 368 369 (fontified nil) 369 440 (fontified nil) 440 441 (fontified nil) 441 512 (fontified nil) 512 513 (fontified nil) 513 584 (fontified nil) 584 585 (fontified nil) 585 656 (fontified nil) 656 657 (fontified nil) 657 728 (fontified nil) 728 729 (fontified nil) 729 742 (fontified nil) 742 743 (fontified nil) 743 744 (fontified nil) 744 747 (fontified nil) 747 789 (fontified nil) 789 790 (fontified nil) 790 791 (fontified nil) 791 792 (fontified nil) 792 793 (fontified nil) 793 796 (fontified nil) 796 805 (fontified nil) 805 806 (fontified nil) 806 816 (fontified nil) 816 817 (fontified nil) 817 818 (fontified nil) 818 821 (fontified nil) 821 850 (fontified nil) 850 913 (fontified nil) 913 916 (fontified nil) 916 967 (fontified nil) 967 970 (fontified nil) 970 1018 (fontified nil) 1018 1021 (fontified nil) 1021 1080 (fontified nil) 1080 1083 (fontified nil) 1083 1140 (fontified nil) 1140 1143 (fontified nil) 1143 1190 (fontified nil) 1190 1193 (fontified nil) 1193 1242 (fontified nil) 1242 1245 (fontified nil) 1245 1301 (fontified nil) 1301 1304 (fontified nil) 1304 1318 (fontified nil) 1318 1319 (fontified nil) 1319 1320 (fontified nil) 1320 1323 (fontified nil) 1323 1355 (fontified nil) 1355 1392 (fontified nil) 1392 1399 (fontified nil) 1399 1444 (fontified nil) 1444 1445 (fontified nil) 1445 1446 (fontified nil)) . -7934)) nil (26384 17172 622958 0) 0 nil])
+([nil nil ((9379 . 9618) ("(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )" . -9379) (9376 . 9378) (#("
+" 0 1 (fontified nil)) . -9376) (9376 . 9377) (9325 . 9331) (#(" " 0 1 (fontified nil)) . 9325) (9324 . 9325) (9283 . 9370) (#(" " 0 1 (fontified nil)) . 9283) (9250 . 9284) (#("
+" 0 1 (fontified nil)) . -9250) (9250 . 9251) (9234 . 9236) (#(" " 0 1 (fontified nil)) . 9234) (9233 . 9234) (9177 . 9179) (#(" " 0 1 (fontified nil)) . 9177) (9176 . 9177) (9125 . 9127) (#(" " 0 1 (fontified nil)) . 9125) (9124 . 9125) (9075 . 9077) (#(" " 0 1 (fontified nil)) . 9075) (9074 . 9075) (9015 . 9017) (#(" " 0 1 (fontified nil)) . 9015) (9014 . 9015) (8953 . 8955) (#(" " 0 1 (fontified nil)) . 8953) (8952 . 8953) (8902 . 8904) (#(" " 0 1 (fontified nil)) . 8902) (8901 . 8902) (8848 . 8850) (#(" " 0 1 (fontified nil)) . 8848) (8847 . 8848) (8780 . 9234) (#(" " 0 1 (fontified nil)) . 8780) (8676 . 8781) (#("
+" 0 1 (fontified nil)) . -8676) (8676 . 8677) (8664 . 8668) (8662 . 8663) (8592 . 8596) (8590 . 8591) (8520 . 8524) (8518 . 8519) (8448 . 8452) (8446 . 8447) (8376 . 8380) (8374 . 8375) (8304 . 8308) (8302 . 8303) (8230 . 8646) (#(" " 0 1 (fontified nil)) . 8230) (7934 . 8231) ("(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(custom-enabled-themes nil)
+ '(custom-safe-themes
+   '(\"889584526e36775884a0018e70cafcd7b4c1adca1232c97653676938afb5474c\"
+     \"551320837bd87074e3de38733e0a8553618c13f7208eda8ec9633d59a70bc284\"
+     \"8363207a952efb78e917230f5a4d3326b2916c63237c1f61d7e5fe07def8d378\"
+     \"09b833239444ac3230f591e35e3c28a4d78f1556b107bafe0eb32b5977204d93\"
+     \"6e13ff2c27cf87f095db987bf30beca8697814b90cd837ef4edca18bdd381901\"
+     \"98b4ef49c451350c28a8c20c35c4d2def5d0b8e5abbc962da498c423598a1cdd\"
+     default))
+ '(dracula-alternate-mode-line-and-minibuffer t)
+ '(eat-shell \"/bin/zsh\")
+ '(package-selected-packages
+   '(avy blacken cargo catppuccin-theme ccls challenger-deep-theme
+	 cmake-mode corfu diminish doom-modeline doom-themes
+	 dracula-theme eat embark-consult evil-collection
+	 evil-commentary evil-surround general gruvbox-theme hl-todo
+	 json-mode just-mode kind-icon magit marginalia nord-theme
+	 orderless persp-projectile protobuf-mode pyvenv
+	 rainbow-delimiters rainbow-mode ripgrep rust-mode
+	 solaire-mode undo-fu undo-tree vertico wgrep yaml-mode
+	 yasnippet zenburn-theme))
+ '(package-vc-selected-packages
+   '((eglot-booster :vc-backend Git :url
+		    \"https://github.com/jdtsmith/eglot-booster\"))))" . -7934)) nil (26384 17181 111633 0) 0 nil])
+([nil nil ((9355 . 9594) ("(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )" . -9355) (9352 . 9354) (#("
+" 0 1 (fontified nil)) . -9352) (9352 . 9353) (9301 . 9307) (#(" " 0 1 (fontified nil)) . 9301) (9300 . 9301) (9259 . 9346) (#(" " 0 1 (fontified nil)) . 9259) (9226 . 9260) (#("
+" 0 1 (fontified nil)) . -9226) (9226 . 9227) (9200 . 9202) (#(" " 0 1 (fontified nil)) . 9200) (9199 . 9200) (9143 . 9145) (#(" " 0 1 (fontified nil)) . 9143) (9142 . 9143) (9080 . 9082) (#(" " 0 1 (fontified nil)) . 9080) (9079 . 9080) (9029 . 9031) (#(" " 0 1 (fontified nil)) . 9029) (9028 . 9029) (8969 . 8971) (#(" " 0 1 (fontified nil)) . 8969) (8968 . 8969) (8913 . 8915) (#(" " 0 1 (fontified nil)) . 8913) (8912 . 8913) (8852 . 8854) (#(" " 0 1 (fontified nil)) . 8852) (8851 . 8852) (8780 . 9212) (#(" " 0 1 (fontified nil)) . 8780) (8676 . 8781) (#("
+" 0 1 (fontified nil)) . -8676) (8676 . 8677) (8664 . 8668) (8662 . 8663) (8592 . 8596) (8590 . 8591) (8520 . 8524) (8518 . 8519) (8448 . 8452) (8446 . 8447) (8376 . 8380) (8374 . 8375) (8304 . 8308) (8302 . 8303) (8230 . 8646) (#(" " 0 1 (fontified nil)) . 8230) (7934 . 8231) ("(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(custom-enabled-themes nil)
+ '(custom-safe-themes
+   '(\"889584526e36775884a0018e70cafcd7b4c1adca1232c97653676938afb5474c\"
+     \"551320837bd87074e3de38733e0a8553618c13f7208eda8ec9633d59a70bc284\"
+     \"8363207a952efb78e917230f5a4d3326b2916c63237c1f61d7e5fe07def8d378\"
+     \"09b833239444ac3230f591e35e3c28a4d78f1556b107bafe0eb32b5977204d93\"
+     \"6e13ff2c27cf87f095db987bf30beca8697814b90cd837ef4edca18bdd381901\"
+     \"98b4ef49c451350c28a8c20c35c4d2def5d0b8e5abbc962da498c423598a1cdd\"
+     default))
+ '(dracula-alternate-mode-line-and-minibuffer t)
+ '(eat-shell \"/bin/zsh\")
+ '(package-selected-packages
+   '(avy blacken cargo catppuccin-theme ccls challenger-deep-theme
+	 cmake-mode corfu diminish doom-modeline doom-themes
+	 dracula-theme eat embark-consult evil-collection
+	 evil-commentary evil-surround general gruvbox-theme hl-todo
+	 json-mode just-mode kind-icon magit marginalia nord-theme
+	 orderless persp-projectile protobuf-mode pyvenv
+	 rainbow-delimiters rainbow-mode ripgrep rust-mode
+	 solaire-mode undo-fu vertico wgrep yaml-mode yasnippet
+	 zenburn-theme))
+ '(package-vc-selected-packages
+   '((eglot-booster :vc-backend Git :url
+		    \"https://github.com/jdtsmith/eglot-booster\"))))" . -7934)) nil (26384 17186 689224 0) 0 nil])
+([nil nil ((9341 . 9580) ("(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )" . -9341) (9338 . 9340) (#("
+" 0 1 (fontified nil)) . -9338) (9338 . 9339) (9287 . 9293) (#(" " 0 1 (fontified nil)) . 9287) (9286 . 9287) (9245 . 9332) (#(" " 0 1 (fontified nil)) . 9245) (9212 . 9246) (#("
+" 0 1 (fontified nil)) . -9212) (9212 . 9213) (9196 . 9198) (#(" " 0 1 (fontified nil)) . 9196) (9195 . 9196) (9139 . 9141) (#(" " 0 1 (fontified nil)) . 9139) (9138 . 9139) (9087 . 9089) (#(" " 0 1 (fontified nil)) . 9087) (9086 . 9087) (9037 . 9039) (#(" " 0 1 (fontified nil)) . 9037) (9036 . 9037) (8977 . 8979) (#(" " 0 1 (fontified nil)) . 8977) (8976 . 8977) (8915 . 8917) (#(" " 0 1 (fontified nil)) . 8915) (8914 . 8915) (8852 . 8854) (#(" " 0 1 (fontified nil)) . 8852) (8851 . 8852) (8780 . 9198) (#(" " 0 1 (fontified nil)) . 8780) (8676 . 8781) (#("
+" 0 1 (fontified nil)) . -8676) (8676 . 8677) (8664 . 8668) (8662 . 8663) (8592 . 8596) (8590 . 8591) (8520 . 8524) (8518 . 8519) (8448 . 8452) (8446 . 8447) (8376 . 8380) (8374 . 8375) (8304 . 8308) (8302 . 8303) (8230 . 8646) (#(" " 0 1 (fontified nil)) . 8230) (7934 . 8231) ("(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(custom-enabled-themes nil)
+ '(custom-safe-themes
+   '(\"889584526e36775884a0018e70cafcd7b4c1adca1232c97653676938afb5474c\"
+     \"551320837bd87074e3de38733e0a8553618c13f7208eda8ec9633d59a70bc284\"
+     \"8363207a952efb78e917230f5a4d3326b2916c63237c1f61d7e5fe07def8d378\"
+     \"09b833239444ac3230f591e35e3c28a4d78f1556b107bafe0eb32b5977204d93\"
+     \"6e13ff2c27cf87f095db987bf30beca8697814b90cd837ef4edca18bdd381901\"
+     \"98b4ef49c451350c28a8c20c35c4d2def5d0b8e5abbc962da498c423598a1cdd\"
+     default))
+ '(dracula-alternate-mode-line-and-minibuffer t)
+ '(eat-shell \"/bin/zsh\")
+ '(package-selected-packages
+   '(avy blacken cargo catppuccin-theme ccls cmake-mode corfu diminish
+	 doom-modeline doom-themes dracula-theme eat embark-consult
+	 evil-collection evil-commentary evil-surround general
+	 gruvbox-theme hl-todo json-mode just-mode kind-icon magit
+	 marginalia nord-theme orderless persp-projectile
+	 protobuf-mode pyvenv rainbow-delimiters rainbow-mode ripgrep
+	 rust-mode solaire-mode undo-fu vertico wgrep yaml-mode
+	 yasnippet zenburn-theme))
+ '(package-vc-selected-packages
+   '((eglot-booster :vc-backend Git :url
+		    \"https://github.com/jdtsmith/eglot-booster\"))))" . -7934)) nil (26384 17189 777841 0) 0 nil])
+([nil current ((9413 . 9652) (#("(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )" 0 237 (fontified nil) 237 238 (fontified nil) 238 239 (fontified nil)) . -9413) (9410 . 9412) (#("
+" 0 1 (fontified nil)) . -9410) (9410 . 9411) (9359 . 9365) (#(" " 0 1 (fontified nil)) . 9359) (9358 . 9359) (9317 . 9404) (#(" " 0 1 (fontified nil)) . 9317) (9284 . 9318) (#("
+" 0 1 (fontified nil)) . -9284) (9284 . 9285) (9268 . 9270) (#(" " 0 1 (fontified nil)) . 9268) (9267 . 9268) (9211 . 9213) (#(" " 0 1 (fontified nil)) . 9211) (9210 . 9211) (9159 . 9161) (#(" " 0 1 (fontified nil)) . 9159) (9158 . 9159) (9109 . 9111) (#(" " 0 1 (fontified nil)) . 9109) (9108 . 9109) (9049 . 9051) (#(" " 0 1 (fontified nil)) . 9049) (9048 . 9049) (8987 . 8989) (#(" " 0 1 (fontified nil)) . 8987) (8986 . 8987) (8924 . 8926) (#(" " 0 1 (fontified nil)) . 8924) (8923 . 8924) (8852 . 9270) (#(" " 0 1 (fontified nil)) . 8852) (8748 . 8853) (#("
+" 0 1 (fontified nil)) . -8748) (8748 . 8749) (8736 . 8740) (8734 . 8735) (8664 . 8668) (8662 . 8663) (8592 . 8596) (8590 . 8591) (8520 . 8524) (8518 . 8519) (8448 . 8452) (8446 . 8447) (8376 . 8380) (8374 . 8375) (8304 . 8308) (8302 . 8303) (8230 . 8713) (#(" " 0 1 (fontified nil)) . 8230) (7934 . 8231) (#("(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(custom-enabled-themes nil)
+ '(custom-safe-themes
+   '(\"889584526e36775884a0018e70cafcd7b4c1adca1232c97653676938afb5474c\"
+     \"551320837bd87074e3de38733e0a8553618c13f7208eda8ec9633d59a70bc284\"
+     \"8363207a952efb78e917230f5a4d3326b2916c63237c1f61d7e5fe07def8d378\"
+     \"09b833239444ac3230f591e35e3c28a4d78f1556b107bafe0eb32b5977204d93\"
+     \"6e13ff2c27cf87f095db987bf30beca8697814b90cd837ef4edca18bdd381901\"
+     \"98b4ef49c451350c28a8c20c35c4d2def5d0b8e5abbc962da498c423598a1cdd\"
+     default))
+ '(dracula-alternate-mode-line-and-minibuffer t)
+ '(eat-shell \"/bin/zsh\")
+ '(package-selected-packages
+   '(avy blacken cargo catppuccin-theme ccls cmake-mode corfu diminish
+	 doom-modeline doom-themes eat embark-consult evil-collection
+	 evil-commentary evil-surround general gruvbox-theme hl-todo
+	 json-mode just-mode kind-icon magit marginalia nord-theme
+	 orderless persp-projectile protobuf-mode pyvenv
+	 rainbow-delimiters rainbow-mode ripgrep rust-mode
+	 solaire-mode undo-fu vertico wgrep yaml-mode yasnippet
+	 zenburn-theme))
+ '(package-vc-selected-packages
+   '((eglot-booster :vc-backend Git :url
+		    \"https://github.com/jdtsmith/eglot-booster\"))))" 0 245 (fontified nil) 245 248 (fontified nil) 248 269 (fontified nil) 269 270 (fontified nil) 270 273 (fontified nil) 273 274 (fontified nil) 274 275 (fontified nil) 275 278 (fontified nil) 278 300 (fontified nil) 300 368 (fontified nil) 368 369 (fontified nil) 369 440 (fontified nil) 440 441 (fontified nil) 441 512 (fontified nil) 512 513 (fontified nil) 513 584 (fontified nil) 584 585 (fontified nil) 585 656 (fontified nil) 656 657 (fontified nil) 657 728 (fontified nil) 728 729 (fontified nil) 729 742 (fontified nil) 742 743 (fontified nil) 743 744 (fontified nil) 744 747 (fontified nil) 747 789 (fontified nil) 789 790 (fontified nil) 790 791 (fontified nil) 791 792 (fontified nil) 792 793 (fontified nil) 793 796 (fontified nil) 796 805 (fontified nil) 805 806 (fontified nil) 806 816 (fontified nil) 816 817 (fontified nil) 817 818 (fontified nil) 818 821 (fontified nil) 821 850 (fontified nil) 850 917 (fontified nil) 917 920 (fontified nil) 920 980 (fontified nil) 980 983 (fontified nil) 983 1042 (fontified nil) 1042 1045 (fontified nil) 1045 1102 (fontified nil) 1102 1105 (fontified nil) 1105 1152 (fontified nil) 1152 1155 (fontified nil) 1155 1204 (fontified nil) 1204 1207 (fontified nil) 1207 1261 (fontified nil) 1261 1264 (fontified nil) 1264 1278 (fontified nil) 1278 1279 (fontified nil) 1279 1280 (fontified nil) 1280 1283 (fontified nil) 1283 1315 (fontified nil) 1315 1352 (fontified nil) 1352 1359 (fontified nil) 1359 1404 (fontified nil) 1404 1405 (fontified nil) 1405 1406 (fontified nil)) . -7934)) nil (26384 17241 218830 0) 0 nil])
+nil

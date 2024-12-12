@@ -1,0 +1,100 @@
+
+#+TITLE: Dotfiles Organization
+
+* Configuration files
+
+** Justfile
+#+begin_src just :tangle justfile
+  # This is an example justfile
+  up:
+      echo "TODO: Make this stow necessary conf files"
+
+  down:
+      echo "TODO: Make this unstow necessary conf files"
+#+end_src
+
+** Project dir-locals
+
+#+begin_src emacs-lisp :tangle .dir-locals.el
+ ((nil . ((compile-command . "just build"))))
+#+end_src
+
+* Links
+* Tasks
+* NixOS
+some links:
+- zen-browser flake: https://github.com/MarceColl/zen-browser-flake/tree/master
+** waybar
+** steam
+* Hyprland [0/4]
+** STARTED Get off HyDE
+- State "STARTED"    from "TODO"       [2024-11-07 Thu 18:27]
+  This should be done, there mignt need to be some leftover stuff.
+
+Hyde kind of defeats the point of not going with a DE, I should rip out the guts and keep what i need
+
+** TODO Waybar configuration without hyde
+** TODO See if we can bind the thumb button to LGUI
+** TODO delay before key repeat should be less
+* Emacs [2/5]
+** TODO remove things that I don't know what they do
+** TODO split up linux / maco / terminal settings
+** Bugs / Behavior I don't like [0/2]
+*** TODO non-included documents aren't being added unless eglot is restarted
+*** TODO ~n~ and ~e~ open files in compilation-mode instead of scrolling output
+I think this is probably becuse of some underlying binding that binds ~C-n~ and ~C-p~ to something that navigates to errors instead of scrolling
+** Org [0/1]
+*** change the colors of the todo labels
+*** TODO Get started with org-roam
+** Development Settings [0/3]
+*** TODO eshell configuration
+- [ ] I want C-d exit
+*** TODO I need a snippet system, yasnippet or tempel
+*** TODO C / C++ [0/3]
+**** TODO track-changes-mode is logging errors on document change
+#+begin_src
+Warning (emacs): Missing/incorrect calls to ‘before/after-change-functions’!!
+Details logged to ‘track-changes--error-log’
+#+end_src
+
+This also causes corfu to crash, complaining about the problems with track changes
+**** TODO Debugging
+PRIMARILY need lldb support
+** DONE flatten the config
+- State "DONE"       from "TODO"       [2024-11-04 Mon 17:31]
+** Keybindings [3/5]
+*** DONE surround integration
+- State "DONE"       from "TODO"       [2024-11-07 Thu 18:26]
+*** DONE prefix maps in meow normal mode
+- State "DONE"       from "TODO"       [2024-11-08 Fri 13:45]
+~g~ and ~z~ prefix maps?
+*** TODO custom meow "things"
+**** DONE angled brackets <>
+- State "DONE"       from "WAITING"    [2024-11-07 Thu 18:26]
+**** TODO single quotes ''
+**** TODO backticks ``
+*** TODO Change keybindings for split management
+Ideally, I want something more like vim's ~C-w <key>~ as opposed to the ~C-x <digit>~ convention.
+
+I think theres a snippet in the meow FAQs about doing this exactly...
+*** OBSOLETE can we set up use-package integration?
+- State "OBSOLETE"   from "TODO"       [2024-11-04 Mon 17:22] \\
+  already can be implemented using :bind (:map meow-STATE-state-map (...))
+** Theming / UI [0/3]
+*** TODO display-buffer customization
+- [ ] compilation buffer always in a new tab, switch back on "close"
+- [ ] ~eat-project~ as full horizontal split
+- [ ] ~eat~ in a new tab (auto close tab)
+- [ ] magit buffer in new tab (auto close tab)
+*** STARTED Modeline configuration [1/4]
+- State "STARTED"    from "TODO"       [2024-11-13 Wed 18:07]
+**** TODO Colors on the modeline!!!
+**** TODO truncate git branch length
+**** TODO extract flycheck from mode-line-modes, remove mode-line-modes from modeline
+**** DONE extract projectile from mode-line-modes
+- State "DONE"       from "TODO"       [2024-11-20 Wed 16:02]
+*** TODO hl-todo customizations
+- [ ] Swap the background / foreground of current todo highlighting
+- [ ] Explore changing the entire /comment/ to the highlight color
+
+* Questions

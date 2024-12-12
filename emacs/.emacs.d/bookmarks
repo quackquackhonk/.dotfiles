@@ -1,0 +1,14 @@
+;;;; Emacs Bookmark Format Version 1;;;; -*- coding: utf-8-emacs; mode: lisp-data -*-
+;;; This format is meant to be slightly human-readable;
+;;; nevertheless, you probably don't want to edit it.
+;;; -*- End Of Bookmark File Format Version Stamp -*-
+(("org-refile-last-stored" (filename . "~/.dotfiles/project.org")
+ (front-context-string . "** TODO non-incl")
+ (rear-context-string . "ighlight color\n\n") (position . 3264)
+ (last-modified 26430 19793 390068 0))
+("org-capture-last-stored"
+ (filename . "~/org/roam/work/meeting/swm-tornado-handoff.org")
+ (front-context-string . "\nSevere Weather ")
+ (rear-context-string . " :work-meeting:\n") (position . 124)
+ (last-modified 26449 65213 537200 0))
+)
