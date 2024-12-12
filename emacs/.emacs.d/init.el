@@ -449,9 +449,6 @@
 
 ;;;; Eat: Terminal Emulation
 (use-package eat
-  :init
-  (when (eq window-system 'darwin)
-    (setq eat-shell (executable-find "zsh")))
   :custom
   (eat-term-name "xterm")
   :config
@@ -599,7 +596,7 @@
   :custom
   (eglot-send-changes-idle-time 0.1)
   (eglot-extend-to-xref t) ; activate Eglot in referenced non-project files
-  :hook ((python-mode python-ts-mode c-mode c++-mode) . eglot-ensure)
+  ;; :hook ((python-mode python-ts-mode c-mode c++-mode) . eglot-ensure)
   :config
   ;; Disable inlay hints globally
   (add-to-list 'eglot-ignored-server-capabilities :inlayHintProvider)
@@ -810,7 +807,7 @@
 ;;;; Face customizations
 (set-face-attribute 'default nil
                     :family "Iosevka"
-                    :height 100)
+                    :height 130)
 (set-face-attribute 'window-divider nil
                     :background (catppuccin-color 'base)
                     :foreground (catppuccin-color 'base))

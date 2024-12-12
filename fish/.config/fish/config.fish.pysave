@@ -6,8 +6,8 @@ if status is-login
     end
 end
 
-# export CERT_PATH=$(python -c 'import site; print(site.getsitepackages()[0] + "/certifi/cacert.pem")')
-# export SSL_CERT_FILE=$CERT_PATH
+export CERT_PATH=$(python -c 'import site; print(site.getsitepackages()[0] + "/certifi/cacert.pem")')
+export SSL_CERT_FILE=$CERT_PATH
 
 if status is-interactive
     export TERM=xterm-256color
@@ -104,7 +104,3 @@ if [ "$hostname" = "LVV3TW207K" ]
         export AWS_PROFILE="production"
     end
 end
-
-# Setting PATH for Python 3.11
-# The original version is saved in /Users/i34866/.config/fish/config.fish.pysave
-set -x PATH "/Library/Frameworks/Python.framework/Versions/3.11/bin" "$PATH"

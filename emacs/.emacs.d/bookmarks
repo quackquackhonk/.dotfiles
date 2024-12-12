@@ -7,8 +7,8 @@
  (rear-context-string . "ighlight color\n\n") (position . 3264)
  (last-modified 26430 19793 390068 0))
 ("org-capture-last-stored"
- (filename . "~/org/reference/hail melting handoff document.org")
- (front-context-string . "\nSharepoint link")
- (rear-context-string . "andoff document\n") (position . 107)
- (last-modified 26432 49763 336470 0))
+ (filename . "~/org/roam/work/meeting/swm-tornado-handoff.org")
+ (front-context-string . "\nSevere Weather ")
+ (rear-context-string . " :work-meeting:\n") (position . 124)
+ (last-modified 26449 65213 537200 0))
 )
