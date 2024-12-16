@@ -76,14 +76,17 @@
     # languages
     rustup
     luajit
+    python312
 
     # hyprland utils
+    nwg-look
     xdg-desktop-portal-hyprland
     hyprpolkitagent
     waybar
     tofi
     dunst
     hyprpaper
+    hyprcursor
     hyprlock
     wlogout
 
