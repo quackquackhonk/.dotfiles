@@ -58,6 +58,7 @@
     gnupg
     btop # replacement of htop/nmon
     lsof # list open files
+    pkg-config
 
     # networking tools
     mtr
@@ -75,6 +76,13 @@
 
     # languages
     rustup
+    ocaml
+    opam
+    dune_3
+    ocamlPackages.findlib
+    ocamlPackages.merlin
+    ocamlPackages.ocp-indent
+    ocamlPackages.utop
     luajit
     python312
 
@@ -113,6 +121,11 @@
     ".config/hypr" = {
       source = ../hypr;
       recursive = true;
+    };
+    ".config/wlogout" = {
+      source = ../wlogout;
+      recursive = true;
+
     };
     ".config/waybar" = {
       source = ../waybar;

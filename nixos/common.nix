@@ -37,4 +37,14 @@
   fonts.packages = with pkgs; [
     nerd-fonts.iosevka
   ];
+
+  # nix helper
+  programs.nh = {
+    enable = true;
+    clean = {
+      enable = true;
+      extraArgs = "--keep-since 4d --keep 3";
+    };
+    flake = "/home/sahana/dotfiles";
+  };
 }
