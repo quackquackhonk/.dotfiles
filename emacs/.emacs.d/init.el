@@ -596,7 +596,7 @@
   :custom
   (eglot-send-changes-idle-time 0.1)
   (eglot-extend-to-xref t) ; activate Eglot in referenced non-project files
-  ;; :hook ((python-mode python-ts-mode c-mode c++-mode) . eglot-ensure)
+  :hook ((python-mode python-ts-mode c-mode c++-mode) . eglot-ensure)
   :config
   ;; Disable inlay hints globally
   (add-to-list 'eglot-ignored-server-capabilities :inlayHintProvider)

@@ -65,20 +65,7 @@ zoxide init fish | source
 # Spack
 if [ "$hostname" = "LVV3TW207K" ]
 
-    # source /Users/i34866/opt/git/spack/share/spack/setup-env.fish
-
-    function spackon
-        spack env activate -d spack_env/
-    end
-
-    function spackoff
-        set -e SPACK_INSTALL_PREFIX
-        set -e USER_INCLUDE
-        set -e USER_LIBDIR
-        spack env deactivate
-    end
-
-    function spackcert
+    function pythoncert
         export CERT_PATH=$(python -c 'import site; print(site.getsitepackages()[0] + "/certifi/cacert.pem")')
         cat ~/cert/ZscalerRootCertificate-2048-SHA256.crt >> $CERT_PATH
     end
@@ -105,6 +92,16 @@ if [ "$hostname" = "LVV3TW207K" ]
     end
 end
 
-# Setting PATH for Python 3.11
-# The original version is saved in /Users/i34866/.config/fish/config.fish.pysave
-set -x PATH "/Library/Frameworks/Python.framework/Versions/3.11/bin" "$PATH"
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+if test -f /opt/homebrew/Caskroom/miniconda/base/bin/conda
+    eval /opt/homebrew/Caskroom/miniconda/base/bin/conda "shell.fish" "hook" $argv | source
+else
+    if test -f "/opt/homebrew/Caskroom/miniconda/base/etc/fish/conf.d/conda.fish"
+        . "/opt/homebrew/Caskroom/miniconda/base/etc/fish/conf.d/conda.fish"
+    else
+        set -x PATH "/opt/homebrew/Caskroom/miniconda/base/bin" $PATH
+    end
+end
+# <<< conda initialize <<<
+
