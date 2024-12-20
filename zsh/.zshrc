@@ -6,7 +6,6 @@ umask 002
 export PATH=$HOME/bin:/usr/local/bin:$PATH
 export PATH=$HOME/.local/bin:$PATH
 export PATH=$HOME/.cargo/bin:$PATH
-# export PATH=/opt/homebrew/bin:$PATH
 export PATH=/Library/PostgreSQL/16/bin:$PATH
 export PATH=$HOME/opt/grpc/bin:$PATH
 
@@ -15,12 +14,19 @@ export HOMEBREW_NO_AUTO_UPDATE=1
 
 export CMAKE_COLOR_DIAGNOSTICS=ON
 export CMAKE_EXPORT_COMPILE_COMMANDS=1
+export CMAKE_OSX_SYSROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk
 
 unsetopt PROMPT_SP
 
 export EDITOR="emacsclient -nw -a=''"
 
-source ~/.zprofile
+# homebrew stuff
+# source ~/.zprofile
+alias brew=/opt/homebrew/bin/brew
+function brewlink() {
+    ln -s /opt/homebrew/bin/${1} ~/.local/bin/${1}
+}
+alias brewlink="ln -s /opt/homebrew/bin/"
 
 export CERT_PATH=$(python3 -c 'import site; print(site.getsitepackages()[0] + "/certifi/cacert.pem")')
 export SSL_CERT_FILE=$CERT_PATH
@@ -89,7 +95,6 @@ alias ls='eza'
 alias l='eza -lah'
 
 # aliases
-alias zshconf="$EDITOR ~/.zshrc && source ~/.zshrc"
 alias zshsrc="source ~/.zshrc"
 
 alias emd='emacs --debug-init --fg-daemon'
@@ -122,8 +127,10 @@ eval "$(zoxide init zsh)"
 
 eval "$(starship init zsh)"
 
+eval "$(~/.local/bin/mise activate zsh)"
+
 if [[ $HOST == "LVV3TW207K" ]]; then
-    . /Users/i34866/opt/git/spack/share/spack/setup-env.sh *
+    . /Users/i34866/opt/git/spack/share/spack/setup-env.sh
 else
     . /storage/stankala/opt/git/spack/share/spack/setup-env.sh
 fi
