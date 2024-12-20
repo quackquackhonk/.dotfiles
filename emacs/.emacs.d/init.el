@@ -8,7 +8,7 @@
 (when (< emacs-major-version 30)
   (error "[qqh] config requires Emacs version 30+, currently running %s!" emacs-major-version))
 
-;;; Definitions
+;;; Top Level Definitions
 (defgroup qqh nil
   "User options for my Emacs configuration."
   :group 'file)
@@ -492,7 +492,7 @@
 (use-package perspective
   :after consult
   :custom
-  (persp-mode-prefix-key (kbd "M-p"))
+  (persp-mode-prefix-key (kbd "C-M-p"))
   :init
   (require 'consult)
   (persp-mode)
@@ -805,9 +805,14 @@
 ;;; Themes / UI customization
 
 ;;;; Face customizations
-(set-face-attribute 'default nil
-                    :family "Iosevka"
-                    :height 130)
+(if (eq window-system 'darwin)
+    (set-face-attribute 'default nil
+                        :family "Iosevka"
+                        :height 130)
+  (set-face-attribute 'default nil
+                      :family "Iosevka Nerd Font"
+                      :height 100))
+
 (set-face-attribute 'window-divider nil
                     :background (catppuccin-color 'base)
                     :foreground (catppuccin-color 'base))
@@ -1031,7 +1036,7 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
     ("oT" "open project terminal" eat-project)]
    ["(p)rojects..."
     ("p;" "open project.org" qqh/open-project-org-file)
-    ("pp" "switch to project" projectile-persp-switch-project)
+    ("pp" "switch to project" projectile-switch-project)
     ("pt" "open project terminal" eat-project)]
    ["(;) misc"
     (";r" "reload config" qqh/emacs/reload)

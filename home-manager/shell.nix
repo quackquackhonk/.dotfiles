@@ -14,12 +14,7 @@
       l = "eza -la";
       ls = "eza";
 
-      g = "git";
-      gs = "git status";
-      ga = "git add";
-      gc = "git commit";
-
-      update = "sudo nixos-rebuild switch --flake /home/sahana/dotfiles/.";
+      update = "cd ~/dotfiles && git add . && sudo nixos-rebuild switch --flake /home/sahana/dotfiles/. && hyprctl reload && cd -";
     };
 
     oh-my-zsh = {
@@ -27,6 +22,10 @@
       plugins = [ "git" ];
     };
 
+  };
+  programs.mise = {
+    enable = true;
+    enableZshIntegration = true;
   };
   programs.starship = {
     enable = true;

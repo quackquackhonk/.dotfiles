@@ -40,9 +40,20 @@
 
   # NVIDIA settings
   services.xserver.videoDrivers = ["nvidia"];
+  environment.systemPackages = with pkgs; [
+    xwayland
+    wayland-utils
+  ];
 
-  programs.sway.enable = true;
+  # hyprland + SDDM
   programs.hyprland.enable = true;
+  services.xserver.enable = true;
+  services.displayManager.sddm = {
+    enable = true;
+    wayland.enable = true;
+    theme = "catppuccin-mocha";
+    package = pkgs.kdePackages.sddm;
+  };
 
   programs.light.enable = true;
   services.printing.enable = true;
