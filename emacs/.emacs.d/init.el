@@ -465,6 +465,9 @@
   (setq auth-sources '("~/.authinfo")))
 
 ;;;; Project Management
+;;;;; direnv integration
+(use-package envrc
+  :hook (after-init . envrc-global-mode))
 ;;;;; Projectile
 (use-package project)
 (use-package projectile
@@ -596,15 +599,18 @@
   :custom
   (eglot-send-changes-idle-time 0.1)
   (eglot-extend-to-xref t) ; activate Eglot in referenced non-project files
-  :hook ((python-mode python-ts-mode c-mode c++-mode) . eglot-ensure)
+  :hook ((nix-mode python-mode python-ts-mode c-mode c++-mode) . eglot-ensure)
   :config
   ;; Disable inlay hints globally
   (add-to-list 'eglot-ignored-server-capabilities :inlayHintProvider)
 
-  ;; clangd for c/c++
+  ;; extra server binaries
   (add-to-list 'eglot-server-programs '((c++-mode c-mode) "clangd"))
+  (add-to-list 'eglot-server-programs '(nix-mode . ("nil")))
+
   (advice-add 'eglot-completion-at-point :around #'cape-wrap-buster)
   (advice-add 'eglot-completion-at-point :around #'cape-wrap-noninterruptible)
+
   ;; PERF: dont log every event
   (fset #'jsonrpc--log-event #'ignore)
 
@@ -676,7 +682,7 @@
 (use-package nix-mode
   :mode "\\.nix\\'")
 ;;;;; OCaml
-;; Major mode for OCaml programming
+;; Major-Mode mode for OCaml programming
 (use-package tuareg
   :mode (("\\.ocamlinit\\'" . tuareg-mode)))
 
@@ -722,7 +728,6 @@
 
 (use-package cargo
   :after rust-mode)
-
 ;;; Org Mode
 
 ;;;; Settings

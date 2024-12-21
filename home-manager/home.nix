@@ -11,8 +11,17 @@
   imports = [
     # If you want to use home-manager modules from other flakes (such as nix-colors):
     # inputs.nix-colors.homeManagerModule
-    ./shell.nix
+    ./zsh.nix
+    ./emacs.nix
   ];
+
+  services.gpg-agent = {
+    enable = true;
+    defaultCacheTtl = 1800;
+    enableSshSupport = true;
+  };
+
+  services.mpris-proxy.enable = true;
 
   nixpkgs = {
     # Configure your nixpkgs instance
@@ -58,7 +67,6 @@
     gnupg
     btop # replacement of htop/nmon
     lsof # list open files
-    pkg-config
 
     # networking tools
     mtr
@@ -66,25 +74,12 @@
     nmap
     ipcalc
 
-
     # system tools
     sysstat
     lm_sensors # for `sensors` command
     ethtool
     pciutils # lspci
     usbutils # lsusb
-
-    # languages
-    rustup
-    ocaml
-    opam
-    dune_3
-    ocamlPackages.findlib
-    ocamlPackages.merlin
-    ocamlPackages.ocp-indent
-    ocamlPackages.utop
-    luajit
-    python312
 
     # hyprland utils
     nwg-look
@@ -102,15 +97,6 @@
     firefox
     nautilus
   ];
-
-
-  services.gpg-agent = {
-    enable = true;
-    defaultCacheTtl = 1800;
-    enableSshSupport = true;
-  };
-
-  services.mpris-proxy.enable = true;
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;

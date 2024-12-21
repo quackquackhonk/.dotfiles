@@ -20,8 +20,16 @@
     oh-my-zsh = {
       enable = true;
       plugins = [ "git" ];
+      extraConfig = ''
+[ -n "$EAT_SHELL_INTEGRATION_DIR" ] && \
+  source "$EAT_SHELL_INTEGRATION_DIR/zsh"
+'';
     };
-
+  };
+  programs.direnv = {
+    enable = true;
+    nix-direnv.enable = true;
+    enableZshIntegration = true;
   };
   programs.mise = {
     enable = true;

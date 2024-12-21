@@ -1,4 +1,4 @@
-#+TITLE: 
+#+TITLE:
 
 * Configuration files
 
@@ -20,6 +20,21 @@
            (eval . (progn
                      (pyvenv-activate (projectile-expand-root "spack_env/.spack-env/view"))))
            )))
+#+end_src
+
+** Project Direnv
+
+#+begin_src envrc-file :tangle .envrc
+  use nix
+#+end_src
+
+#+begin_src nix :tangle shell.nix
+  # A very barebones shell.nix
+  { pkgs ? import <nixpkgs> {}}:
+
+  pkgs.mkShell {
+    packages = [ pkgs.hello ];
+  }
 #+end_src
 
 * Links
