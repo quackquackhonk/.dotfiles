@@ -1,26 +1,25 @@
 {
-  description = "its my emacs configuration!!";
+  description = "My system confugiration flake";
 
   inputs = {
-    # Nixpkgs
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
-    # Home manager
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Alejandra (nix formatter)
-    alejandra.url = "github:kamadorueda/alejandra/3.0.0";
-    alejandra.inputs.nixpkgs.follows = "nixpkgs";
+    systems.url = "github:nix-systems/default";
+    flake-utils = {
+      url = "github:numtide/flake-utils";
+      inputs.systems.follows = "systems";
+    };
   };
 
   outputs = {
     self,
       nixpkgs,
       home-manager,
-      alejandra,
       ...
   } @ inputs: let
     system = "x86_64-linux";
@@ -31,23 +30,22 @@
     # Available through 'nixos-rebuild --flake .#your-hostname'
     nixosConfigurations = {
       # laptop configuration
-      monstera = nixpkgs.lib.nixosSystem rec {
+      monstera = nixpkgs.lib.nixosSystem {
         specialArgs = {inherit inputs outputs;};
-        system = "x86_64-linux";
         modules = [
           ./nixos/monstera/configuration.nix
-          {environment.systemPackages = [alejandra.defaultPackage.${system}];}
+          {environment.systemPackages = [];}
           inputs.flake-programs-sqlite.nixosModules.programs-sqlite
         ];
       };
 
       # Desktop configuration
-      redwood = nixpkgs.lib.nixosSystem rec {
-        specialArgs = {inherit inputs outputs;};
+      redwood = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
+        specialArgs = {inherit inputs outputs ;};
         modules = [
           ./nixos/redwood/configuration.nix
-          {environment.systemPackages = [alejandra.defaultPackage.${system}];}
+          {environment.systemPackages = [];}
 
 	        home-manager.nixosModules.home-manager
 	        {

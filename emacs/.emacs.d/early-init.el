@@ -27,18 +27,16 @@
 (setq default-frame-alist '((fullscreen . maximized)
                             (background-color . "#000000")
                             (foreground-color . "#FFFFFF")
-                            (ns-appearance . dark)
-                            (ns-transparent-titlebar . t)))
+                            (ns-appearance . dark)))
 
-
-
-;; Setup PATH
-(add-to-list 'exec-path (format "%s/.local/bin" (getenv "HOME")))
-(add-to-list 'exec-path (format "%s/.cargo/bin" (getenv "HOME")))
 
 
 ;; OSX settings
 (when (and (eq system-type 'darwin))
+  ;; Setup PATH
+  (add-to-list 'exec-path (format "%s/.local/bin" (getenv "HOME")))
+  (add-to-list 'exec-path (format "%s/.cargo/bin" (getenv "HOME")))
+
   (setq explicit-shell-file-name "/bin/zsh")
   (setenv "LIBRARY_PATH"
           "/opt/homebrew/opt/gcc/lib/gcc/14:/opt/homebrew/opt/libgccjit/lib/gcc/14:/opt/homebrew/opt/gcc/lib/gcc/14/gcc/aarch64-apple-darwin23/14")
@@ -46,10 +44,6 @@
   (add-to-list 'exec-path "/opt/homebrew/bin")
   (add-to-list 'exec-path "/opt/homebrew/opt/llvm/bin")
   (add-to-list 'exec-path "/opt/homebrew/Caskroom/miniconda/base/bin"))
-
-;; NixOS settings
-(when (and (eq system-type 'gnu/linux))
-  (add-to-list 'exec-path "/home/sahana/.local/bin"))
 
 (setenv "TERM" "xterm-256color")
 

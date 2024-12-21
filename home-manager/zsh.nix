@@ -20,6 +20,11 @@
     oh-my-zsh = {
       enable = true;
       plugins = [ "git" ];
+      extraConfig = ''
+function qqh_flake_template() {
+    nix flake init -t github:nix-community/templates#"$1"
+}
+'';
     };
   };
   programs.direnv = {

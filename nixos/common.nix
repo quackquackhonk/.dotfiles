@@ -14,24 +14,14 @@
   environment.systemPackages = with pkgs; [
     curl
     emacs30
-    networkmanagerapplet
-    kitty
     git
     gcc
     gnumake
     gnupg
+    networkmanagerapplet
+    nixfmt-rfc-style
+    kitty
     wget
-
-    # catppuccin sddm overlay
-    (
-      catppuccin-sddm.override {
-        flavor = "mocha";
-        font  = "Noto Sans";
-        fontSize = "11";
-        background = "${../wallpapers/4k_pixel_at.png}";
-        loginBackground = true;
-      }
-    )
   ];
 
   fonts.packages = with pkgs; [

@@ -479,7 +479,7 @@
         projectile-auto-discover nil
         projectile-project-search-path '(("~/code/" . 2)
 					                     "~/sources/")
-        projectile-switch-project-action 'consult-fd))
+        projectile-switch-project-action 'projectile-find-file))
 
 (defun qqh/open-project-org-file ()
   "Open the project.org file at the root of the current project. If no project.org file is found, create a new one from a template."
@@ -594,19 +594,23 @@
   (add-hook 'c-mode-hook (lambda () (setq-local devdocs-current-docs '("c"))))
   (add-hook 'c++-mode-hook (lambda () (setq-local devdocs-current-docs-hook '("cpp")))))
 
+;;;; Code formatting
+(use-package format-all
+  :hook (prog-mode . format-all-mode)
+  :config
+  (setq-default format-all-formatters nil))
 ;;;; Eglot
 (use-package eglot
   :custom
   (eglot-send-changes-idle-time 0.1)
   (eglot-extend-to-xref t) ; activate Eglot in referenced non-project files
-  :hook ((nix-mode python-mode python-ts-mode c-mode c++-mode) . eglot-ensure)
+  :hook ((python-mode python-ts-mode c-mode c++-mode) . eglot-ensure)
   :config
   ;; Disable inlay hints globally
   (add-to-list 'eglot-ignored-server-capabilities :inlayHintProvider)
 
   ;; extra server binaries
   (add-to-list 'eglot-server-programs '((c++-mode c-mode) "clangd"))
-  (add-to-list 'eglot-server-programs '(nix-mode . ("nil")))
 
   (advice-add 'eglot-completion-at-point :around #'cape-wrap-buster)
   (advice-add 'eglot-completion-at-point :around #'cape-wrap-noninterruptible)
@@ -1021,6 +1025,14 @@ This has been adapted from `flycheck-mode-line-status-text'"
   (interactive)
   (persp-kill-buffer* (current-buffer)))
 
+(defun qqh/fuzzy-find-file ()
+  "Fuzzy find a file in the current directory."
+  (interactive)
+  (let ((invalidate-cache (not (equal current-prefix-arg nil))))
+    (if (projectile-project-root)
+        (projectile-find-file invalidate-cache)
+      (consult-fd))))
+
 (defun qqh/emacs/reload ()
   "Load my Emacs configuration."
   (interactive)
@@ -1062,7 +1074,7 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
    ["(c)ode..."
     ("cc" "compile" compile)]
    ["(f)ind..."
-    ("ff" "find file" consult-fd)
+    ("ff" "find file" qqh/fuzzy-find-file)
     ("fn" "find note" org-roam-node-find)]
    ["(n)otes..."
     ("nc" "capture note" org-roam-capture)

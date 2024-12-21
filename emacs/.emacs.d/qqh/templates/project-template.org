@@ -25,7 +25,7 @@
 ** Project Direnv
 
 #+begin_src envrc-file :tangle .envrc
-  use nix
+  use flake
 #+end_src
 
 #+begin_src nix :tangle flake.nix
@@ -46,7 +46,12 @@
           pkgs = nixpkgs.legacyPackages.${system};
         in
           {
-            devShells.default = pkgs.mkShell { packages = [ pkgs.bashInteractive ]; };
+            devShells.default = pkgs.mkShell {
+              packages = [
+                # Add more packages here
+                pkgs.zsh
+              ];
+            };
           }
       );
   }
