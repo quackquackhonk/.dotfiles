@@ -43,7 +43,7 @@
   (setenv "LIBRARY_PATH"
           "/opt/homebrew/opt/gcc/lib/gcc/14:/opt/homebrew/opt/libgccjit/lib/gcc/14:/opt/homebrew/opt/gcc/lib/gcc/14/gcc/aarch64-apple-darwin23/14")
   (setenv "XDG_CONFIG_HOME" "/Users/i34866/.config")
-  (add-to-list 'exec-path "/Library/Frameworks/Python.framework/Versions/3.11/bin/pylsp")
+  (add-to-list 'exec-path "/Library/Frameworks/Python.framework/Versions/3.11/bin")
   (add-to-list 'exec-path "/opt/homebrew/bin")
   (add-to-list 'exec-path "/opt/homebrew/opt/llvm/bin")
   (add-to-list 'exec-path "/opt/homebrew/Caskroom/miniconda/base/bin"))
