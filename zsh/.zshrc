@@ -8,6 +8,7 @@ export PATH=$HOME/.local/bin:$PATH
 export PATH=$HOME/.cargo/bin:$PATH
 export PATH=/Library/PostgreSQL/16/bin:$PATH
 export PATH=$HOME/opt/grpc/bin:$PATH
+export PATH=/Library/Frameworks/Python.framework/Versions/3.11/bin:$PATH
 
 export DOCKER_DEFAULT_PLATFORM=linux/amd64
 export HOMEBREW_NO_AUTO_UPDATE=1
@@ -113,6 +114,13 @@ alias nonprod='eval "$(aws configure export-credentials --profile nonprod --form
 
 alias spackon='spack env activate -d spack_env/.'
 alias spackoff='spack env deactivate'
+alias miseon='eval "$(~/.local/bin/mise activate zsh)"'
+
+function spackcert () {
+    SPACK_CERT_PATH=$(python -c 'import site; print(site.getsitepackages()[0] + "/certifi/cacert.pem")')
+    cat ~/cert/ZscalerRootCertificate-2048-SHA256.crt >> $SPACK_CERT_PATH
+}
+
 
 export BAT_THEME="Catppuccin Mocha"
 export FZF_DEFAULT_OPTS=" \
@@ -127,7 +135,7 @@ eval "$(zoxide init zsh)"
 
 eval "$(starship init zsh)"
 
-eval "$(~/.local/bin/mise activate zsh)"
+
 
 if [[ $HOST == "LVV3TW207K" ]]; then
     . /Users/i34866/opt/git/spack/share/spack/setup-env.sh
