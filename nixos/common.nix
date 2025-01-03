@@ -22,7 +22,18 @@
     nixfmt-rfc-style
     kitty
     wget
+    (
+      pkgs.catppuccin-sddm.override {
+        flavor = "mocha";
+        font  = "Noto Sans";
+        fontSize = "9";
+        background = "${../wallpapers/space.png}";
+        loginBackground = true;
+      }
+    )
   ];
+
+
 
   fonts.packages = with pkgs; [
     nerd-fonts.iosevka
