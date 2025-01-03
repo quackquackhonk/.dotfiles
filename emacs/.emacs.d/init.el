@@ -465,6 +465,9 @@
   (setq auth-sources '("~/.authinfo")))
 
 ;;;; Project Management
+;;;;; direnv integration
+(use-package envrc
+  :hook (after-init . envrc-global-mode))
 ;;;;; Projectile
 (use-package project)
 (use-package projectile
@@ -596,15 +599,18 @@
   :custom
   (eglot-send-changes-idle-time 0.1)
   (eglot-extend-to-xref t) ; activate Eglot in referenced non-project files
-  :hook ((python-mode python-ts-mode c-mode c++-mode) . eglot-ensure)
+  :hook ((nix-mode python-mode python-ts-mode c-mode c++-mode) . eglot-ensure)
   :config
   ;; Disable inlay hints globally
   (add-to-list 'eglot-ignored-server-capabilities :inlayHintProvider)
 
-  ;; clangd for c/c++
+  ;; extra server binaries
   (add-to-list 'eglot-server-programs '((c++-mode c-mode) "clangd"))
+  (add-to-list 'eglot-server-programs '(nix-mode . ("nil")))
+
   (advice-add 'eglot-completion-at-point :around #'cape-wrap-buster)
   (advice-add 'eglot-completion-at-point :around #'cape-wrap-noninterruptible)
+
   ;; PERF: dont log every event
   (fset #'jsonrpc--log-event #'ignore)
 
@@ -672,9 +678,31 @@
 ;;;;; C / C++
 (setq-default c-basic-offset 4)
 
-;;;;; Ni
+;;;;; Nix
 (use-package nix-mode
   :mode "\\.nix\\'")
+;;;;; OCaml
+;; Major-Mode mode for OCaml programming
+(use-package tuareg
+  :mode (("\\.ocamlinit\\'" . tuareg-mode)))
+
+;; Major mode for editing Dune project files
+(use-package dune)
+
+;; Merlin provides advanced IDE features
+(use-package merlin
+  :hook (tuareg-mode . merlin-mode)
+  :config
+  ;; we're using flycheck instead
+  (setq merlin-command (executable-find "ocamlmerlin"))
+  (setq merlin-error-after-save nil))
+
+(use-package merlin-eldoc
+  :hook ((tuareg-mode) . merlin-eldoc-setup))
+
+;; This uses Merlin internally
+(use-package flycheck-ocaml
+  :config (flycheck-ocaml-setup))
 ;;;;; PYTHON
 ;; Built-in Python utilities
 (use-package python
@@ -700,7 +728,6 @@
 
 (use-package cargo
   :after rust-mode)
-
 ;;; Org Mode
 
 ;;;; Settings
@@ -1004,6 +1031,17 @@ This has been adapted from `flycheck-mode-line-status-text'"
   (interactive)
   (find-file user-init-file))
 
+(defun qqh/config/open-nix-flake ()
+  "Open my nix flake."
+  (interactive)
+  (find-file "~/dotfiles/flake.nix"))
+
+(defun qqh/config/open-nix-home ()
+  "Open my nix home-manager home.nix."
+  (interactive)
+  (find-file "~/dotfiles/home-manager/home.nix"))
+
+
 ;;;; surround: surround selections with custom delimiters
 (use-package surround)
 
@@ -1036,10 +1074,13 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
     ("oT" "open project terminal" eat-project)]
    ["(p)rojects..."
     ("p;" "open project.org" qqh/open-project-org-file)
-    ("pp" "switch to project" projectile-switch-project)
+    ("pp" "switch to project" projectile-persp-switch-project)
+    ("pP" "switch to project" projectile-persp-switch-project)
     ("pt" "open project terminal" eat-project)]
-   ["(;) misc"
+   ["(;) configuration files.."
     (";r" "reload config" qqh/emacs/reload)
+    (";f" "open flake.nix" qqh/config/open-nix-flake)
+    (";n" "open home.nix" qqh/config/open-nix-home)
     (";c" "edit config" qqh/emacs/open-config)]])
 
 (transient-define-prefix qqh/g-prefix-menu ()

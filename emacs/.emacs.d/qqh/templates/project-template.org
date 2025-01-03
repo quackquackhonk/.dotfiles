@@ -1,4 +1,4 @@
-#+TITLE: 
+#+TITLE:
 
 * Configuration files
 
@@ -20,6 +20,36 @@
            (eval . (progn
                      (pyvenv-activate (projectile-expand-root "spack_env/.spack-env/view"))))
            )))
+#+end_src
+
+** Project Direnv
+
+#+begin_src envrc-file :tangle .envrc
+  use nix
+#+end_src
+
+#+begin_src nix :tangle flake.nix
+  {
+    description = "A basic flake with a shell";
+    inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    inputs.systems.url = "github:nix-systems/default";
+    inputs.flake-utils = {
+      url = "github:numtide/flake-utils";
+      inputs.systems.follows = "systems";
+    };
+
+    outputs =
+      { nixpkgs, flake-utils, ... }:
+      flake-utils.lib.eachDefaultSystem (
+        system:
+        let
+          pkgs = nixpkgs.legacyPackages.${system};
+        in
+          {
+            devShells.default = pkgs.mkShell { packages = [ pkgs.bashInteractive ]; };
+          }
+      );
+  }
 #+end_src
 
 * Links

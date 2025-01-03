@@ -11,8 +11,17 @@
   imports = [
     # If you want to use home-manager modules from other flakes (such as nix-colors):
     # inputs.nix-colors.homeManagerModule
-    ./shell.nix
+    ./zsh.nix
+    ./emacs.nix
   ];
+
+  services.gpg-agent = {
+    enable = true;
+    defaultCacheTtl = 1800;
+    enableSshSupport = true;
+  };
+
+  services.mpris-proxy.enable = true;
 
   nixpkgs = {
     # Configure your nixpkgs instance
@@ -65,18 +74,12 @@
     nmap
     ipcalc
 
-
     # system tools
     sysstat
     lm_sensors # for `sensors` command
     ethtool
     pciutils # lspci
     usbutils # lsusb
-
-    # languages
-    rustup
-    luajit
-    python312
 
     # hyprland utils
     nwg-look
@@ -95,15 +98,6 @@
     nautilus
   ];
 
-
-  services.gpg-agent = {
-    enable = true;
-    defaultCacheTtl = 1800;
-    enableSshSupport = true;
-  };
-
-  services.mpris-proxy.enable = true;
-
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 
@@ -113,6 +107,11 @@
     ".config/hypr" = {
       source = ../hypr;
       recursive = true;
+    };
+    ".config/wlogout" = {
+      source = ../wlogout;
+      recursive = true;
+
     };
     ".config/waybar" = {
       source = ../waybar;
