@@ -605,6 +605,10 @@
   (eglot-send-changes-idle-time 0.1)
   (eglot-extend-to-xref t) ; activate Eglot in referenced non-project files
   :hook ((python-mode python-ts-mode c-mode c++-mode) . eglot-ensure)
+  :bind (:map eglot-mode-map
+              ("C-c l r" . eglot-rename)
+              ("C-c l f" . eglot-format)
+              ("C-c l F" . eglot-format-buffer))
   :config
   ;; Disable inlay hints globally
   (add-to-list 'eglot-ignored-server-capabilities :inlayHintProvider)
@@ -767,9 +771,6 @@
 (use-package org
   :hook ((org-mode . visual-line-mode))  ; wrap lines at word breaks
 
-  :bind (:map global-map
-              ("C-c l s" . org-store-link)          ; Mnemonic: link → store
-              ("C-c l i" . org-insert-link-global)) ; Mnemonic: link → insert
   :config
 
   ;; Make org-open-at-point follow file links in the same window
@@ -1078,7 +1079,9 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
     ("fn" "find note" org-roam-node-find)]
    ["(n)otes..."
     ("nc" "capture note" org-roam-capture)
-    ("ni" "insert note" org-roam-node-insert)]
+    ("ni" "insert note" org-roam-node-insert)
+    ("nls" "store link" org-store-link)
+    ("nli" "insert link" org-insert-link-global)]
    ["(o)pen..."
     ("od" "open diagnostics panel" consult-flycheck)
     ("oi" "open imenu" consult-imenu)
@@ -1086,8 +1089,8 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
     ("oT" "open project terminal" eat-project)]
    ["(p)rojects..."
     ("p;" "open project.org" qqh/open-project-org-file)
-    ("pp" "switch to project" projectile-persp-switch-project)
-    ("pP" "switch to project" projectile-persp-switch-project)
+    ("pp" "switch to project" projectile-switch-project)
+    ("pP" "switch to project (new persp)" projectile-persp-switch-project)
     ("pt" "open project terminal" eat-project)]
    ["(;) configuration files.."
     (";r" "reload config" qqh/emacs/reload)
@@ -1095,21 +1098,21 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
     (";n" "open home.nix" qqh/config/open-nix-home)
     (";c" "edit config" qqh/emacs/open-config)]])
 
-(transient-define-prefix qqh/g-prefix-menu ()
+(transient-define-prefix qqh/transient/g ()
   "Transient map for emulating vim's g- leader keybinding."
   [["Edit"
-    ("c" "comment" comment-dwim)
-    ("R" "rename" eglot-rename)]
+    ("c" "comment" comment-dwim)]
    ["Find"
     ("d" "definition" xref-find-definitions)
     ("r" "references" xref-find-references)]
    ["Move"
     ("g" "top" beginning-of-buffer)
     ("G" "bottom" end-of-buffer)
+    ("l" "line" meow-goto-line)
     ("RET" "2 chars" avy-goto-char-2)]])
 
 
-(transient-define-prefix qqh/next-prefix-menu ()
+(transient-define-prefix qqh/transient/next ()
   "Transient map for going to the next thing"
   [["Next"
     ("d" "todo" hl-todo-next)
@@ -1117,7 +1120,7 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
     ("t" "tab" tab-next)
     ("p" "perspective" persp-next)]])
 
-(transient-define-prefix qqh/prev-prefix-menu ()
+(transient-define-prefix qqh/transient/prev ()
   "Transient map for going to the previous thing"
   [["Previous"
     ("d" "todo" hl-todo-previous)
@@ -1157,9 +1160,9 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
   (setq meow-cheatsheet-layout meow-cheatsheet-layout-colemak-dh)
 
   ;; register some things
-  ;; (meow-thing-register 'angle
-  ;;                      '(pair ("<") (">"))
-  ;;                      '(pair ("<") (">")))
+  (meow-thing-register 'angle
+                       '(pair ("<") (">"))
+                       '(pair ("<") (">")))
 
   ;; sets the thing table characters to use ([{ for grouping punctuations
   ;; test ' asrtarstar '
@@ -1170,8 +1173,8 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
           (?\] . square)
           (?\{ . curly)
           (?\} . curly)
-          ;; (?\< . angle)
-          ;; (?\> . angle)
+          (?\< . angle)
+          (?\> . angle)
           (?\" . string)
           (?s . symbol)
           (?w . window)
@@ -1268,15 +1271,15 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
    '("SPC" . qqh/transient/leader)
 
    ;; Some vim-like bindings
-   '("g" . qqh/g-prefix-menu)
+   '("g" . qqh/transient/g)
    '(":" . universal-argument)
    '("="   . meow-indent)
    '("C-q" . delete-window)
    '("M-q" . qqh/kill-buffer)
 
    ;; Bracketed movement
-   '("[" . qqh/prev-prefix-menu)
-   '("]" . qqh/next-prefix-menu)
+   '("[" . qqh/transient/prev)
+   '("]" . qqh/transient/next)
 
    '("C-." . embark-act)        ;; pick some comfortable binding
    '("C-;" . embark-dwim)       ;; good alternative: M-.
