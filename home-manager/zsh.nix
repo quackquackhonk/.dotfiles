@@ -14,7 +14,7 @@
       l = "eza -la";
       ls = "eza";
 
-      update = "cd ~/dotfiles && git add . && nh os switch --ask /home/sahana/dotfiles/. && hyprctl reload && cd -";
+      update = "cd ~/dotfiles && git add . && sudo nixos-rebuild switch --flake . && hyprctl reload && cd -";
     };
 
     oh-my-zsh = {

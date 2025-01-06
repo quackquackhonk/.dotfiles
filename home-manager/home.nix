@@ -67,8 +67,7 @@
     gnupg
     btop # replacement of htop/nmon
     lsof # list open files
-
-    # networking tools
+   # networking tools
     mtr
     dnsutils
     nmap
@@ -96,10 +95,23 @@
     # apps
     firefox
     nautilus
+    atlauncher
   ];
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
+
+  # manage desktop entries
+  xdg.desktopEntries = {
+    atlauncher = {
+      name = "AT Launcher";
+      type = "Application";
+      genericName = "Minecraft Launcher";
+      exec = "atlauncher";
+      terminal = false;
+      categories = [ "Application" ];
+    };
+  };
 
   # Let home-manager manage my dotfiles
   home.file = {

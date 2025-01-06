@@ -555,7 +555,7 @@
   (global-flycheck-mode)
   :config
   ;; Disable flycheck in certain mode
-  (setq flycheck-global-modes '(not org-mode dts-mode just-mode))
+  (setq flycheck-global-modes '(not org-mode dts-mode just-mode eat-mode))
 
   (set-face-attribute 'flycheck-info nil
                       :underline  (catppuccin-color 'teal))
@@ -709,8 +709,16 @@
   :hook ((tuareg-mode) . merlin-eldoc-setup))
 
 ;; This uses Merlin internally
+;; or this if you're into use-package
 (use-package flycheck-ocaml
-  :config (flycheck-ocaml-setup))
+  :config
+  (add-hook 'tuareg-mode-hook
+            (lambda ()
+              ;; disable Merlin's own error checking
+              (setq-local merlin-error-after-save nil)
+              ;; enable Flycheck checker
+              (flycheck-ocaml-setup))))
+
 ;;;;; PYTHON
 ;; Built-in Python utilities
 (use-package python
@@ -922,7 +930,7 @@
 
 (defun qqh/modeline/buffer-name ()
   "Return the name of the current buffer."
-  (let ((text " %b")
+  (let ((text (" %b"))
         (face (if (and (buffer-modified-p)
                        (mode-line-window-selected-p))
                   'qqh/modeline/faces/bold-yellow
@@ -931,60 +939,11 @@
         (propertize text 'face face)
       text)))
 
-;;;;; Project / VC
-(defun qqh/modeline/project-and-vc ()
-  "Report project name and VC information in the modeline."
-  (let ((project-name (projectile-project-name)))
-    (format "%s%s"
-            (or project-name "")
-            (if vc-mode (format " on%s" vc-mode) ""))))
-
 ;;;;; Flycheck
-(defun qqh/modeline/flycheck-status-text ()
-  "Get a text describing STATUS for use in the mode line.
-
-This has been adapted from `flycheck-mode-line-status-text'"
-  (let* ((current-status flycheck-last-status-change)
-         (errors (let-alist (flycheck-count-errors flycheck-current-errors)
-                   (propertize (format "%se" (or .error 0))
-                               'face 'flycheck-fringe-error)))
-         (warnings (let-alist (flycheck-count-errors flycheck-current-errors)
-                     (propertize (format "%sw" (or .warning 0))
-                                 'face 'flycheck-fringe-warning)))
-         (infos (let-alist (flycheck-count-errors flycheck-current-errors)
-                  (propertize (format "%si" (or .info 0))
-                              'face 'flycheck-fringe-info)))
-         (indicator (pcase current-status
-                      (`not-checked "")
-                      (`no-checker "missing checker")
-                      (`running "...")
-                      (`errored "!!!")
-                      (`finished
-                       (let-alist (flycheck-count-errors flycheck-current-errors)
-                         (if (or .error .warning .info)
-                             (format "%s %s %s" errors warnings infos)
-                           "yippie!")))
-                      (`interrupted "xxx")
-                      (`suspicious "???")))
-         (face (pcase current-status
-                 (`not-checked nil)
-                 (`no-checker 'error)
-                 (`running 'flycheck-fringe-warning)
-                 (`errored 'error)
-                 (`finished
-                  (let-alist (flycheck-count-errors flycheck-current-errors)
-                    (if (or .error .warning .info) nil 'flycheck-fringe-info)))
-                 (`interrupted 'error)
-                 (`suspicious 'warning)) ))
-    (when (not (string= "" indicator))
-      (format " [%s]" (if face
-                          (propertize indicator 'face face)
-                        indicator)))))
-
 (defvar-local qqh/modeline/flycheck
     `(:eval (when (and (featurep 'flycheck)
                        (mode-line-window-selected-p))
-              (qqh/modeline/flycheck-status-text)))
+              (concat " [" (s-trim (flycheck-mode-line-status-text)) "]")))
   "Mode line construct for reporting flycheck status of the current buffer.")
 
 ;;;;; Eglot
@@ -1006,7 +965,8 @@ This has been adapted from `flycheck-mode-line-status-text'"
 
                 ;; emacs 30: right align the rest of the modeline
                 mode-line-format-right-align         ;; emacs 30
-                (:eval (qqh/modeline/project-and-vc))
+                " "
+                (vc-mode vc-mode)
                 qqh/modeline/flycheck
                 qqh/modeline/eglot
                 " "
@@ -1014,8 +974,7 @@ This has been adapted from `flycheck-mode-line-status-text'"
                          mode-line-misc-info))
                 "  "))
 
-(dolist (construct '(qqh/modeline/flycheck
-                     qqh/modeline/eglot))
+(dolist (construct '(qqh/modeline/eglot))
   (put construct 'risky-local-variable t))
 
 ;;; Keybindings
