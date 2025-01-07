@@ -32,7 +32,7 @@
 
 
 ;; OSX settings
-(when (and (eq system-type 'darwin))
+(when (eq system-type 'darwin)
   ;; Setup PATH
   (add-to-list 'exec-path (format "%s/.local/bin" (getenv "HOME")))
   (add-to-list 'exec-path (format "%s/.cargo/bin" (getenv "HOME")))
