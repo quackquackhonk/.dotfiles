@@ -700,6 +700,9 @@
 ;; Merlin provides advanced IDE features
 (use-package merlin
   :hook (tuareg-mode . merlin-mode)
+  :custom-face
+  (caml-types-expr-face ((t :background ,(catppuccin-color 'green) :foreground ,(catppuccin-color 'crust))))
+  (caml-types-def-face ((t :background ,(catppuccin-color 'mauve) :foreground ,(catppuccin-color 'crust))))
   :config
   ;; we're using flycheck instead
   (setq merlin-command (executable-find "ocamlmerlin"))
