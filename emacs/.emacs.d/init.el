@@ -18,7 +18,7 @@
 
 (defun qqh/macos-p ()
   "Check if the current frame is an OSX gui frame."
-  (eq window-system 'darwin))
+  (eq system-type 'darwin))
 
 ;;; Straight initialization
 
@@ -475,11 +475,14 @@
   :init
   (projectile-mode +1)
 
+  (when (qqh/macos-p)
+    (setq projectile-fd-executable "/opt/homebrew/bin/fd"))
+
   (setq projectile-enable-caching t
         projectile-auto-discover nil
         projectile-project-search-path '(("~/code/" . 2)
 					                     "~/sources/")
-        projectile-switch-project-action 'projectile-find-file))
+        projectile-switch-project-action 'qqh/fuzzy-find-file))
 
 (defun qqh/open-project-org-file ()
   "Open the project.org file at the root of the current project. If no project.org file is found, create a new one from a template."
@@ -845,7 +848,7 @@
 ;;; Themes / UI customization
 
 ;;;; Face customizations
-(if (eq window-system 'darwin)
+(if (qqh/macos-p)
     (set-face-attribute 'default nil
                         :family "Iosevka"
                         :height 130)
@@ -930,7 +933,7 @@
 
 (defun qqh/modeline/buffer-name ()
   "Return the name of the current buffer."
-  (let ((text (" %b"))
+  (let ((text " %b")
         (face (if (and (buffer-modified-p)
                        (mode-line-window-selected-p))
                   'qqh/modeline/faces/bold-yellow
@@ -988,10 +991,7 @@
 (defun qqh/fuzzy-find-file ()
   "Fuzzy find a file in the current directory."
   (interactive)
-  (let ((invalidate-cache (not (equal current-prefix-arg nil))))
-    (if (projectile-project-root)
-        (projectile-find-file invalidate-cache)
-      (consult-fd))))
+  (consult-fd))
 
 (defun qqh/emacs/reload ()
   "Load my Emacs configuration."
@@ -1048,8 +1048,7 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
     ("oT" "open project terminal" eat-project)]
    ["(p)rojects..."
     ("p;" "open project.org" qqh/open-project-org-file)
-    ("pp" "switch to project" projectile-switch-project)
-    ("pP" "switch to project (new persp)" projectile-persp-switch-project)
+    ("pp" "switch to project" projectile-persp-switch-project)
     ("pt" "open project terminal" eat-project)]
    ["(;) configuration files.."
     (";r" "reload config" qqh/emacs/reload)
@@ -1148,6 +1147,8 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
    ;; Use e to move up, n to move down.
    ;; Since special modes usually use n to move down, we only overwrite e here.
    '("e" . meow-prev)
+   '(":" . meow-keypad)
+   '("SPC" . qqh/transient/leader)
    '("<escape>" . ignore))
 
   ;; default meow leader bindings
@@ -1188,7 +1189,7 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
    '("b" . meow-back-word)
    '("B" . meow-back-symbol)
    '("c" . meow-change)
-   '("C" . "C-c")
+   '("C" . ignore)
    '("d" . meow-kill)
    '("e" . meow-prev)
    '("E" . meow-prev-expand)
@@ -1221,7 +1222,7 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
    '("w" . meow-next-word)
    '("W" . meow-next-symbol)
    '("x" . meow-delete)
-   '("X" . "C-x")
+   '("X" . ignore)
    '("y" . meow-save)
    '("z" . meow-pop-selection)
    '("'" . repeat)
@@ -1231,7 +1232,7 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
 
    ;; Some vim-like bindings
    '("g" . qqh/transient/g)
-   '(":" . universal-argument)
+   '(":" . meow-keypad)
    '("="   . meow-indent)
    '("C-q" . delete-window)
    '("M-q" . qqh/kill-buffer)
