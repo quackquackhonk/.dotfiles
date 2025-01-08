@@ -563,6 +563,8 @@
 ;;;;; Flymake
 (use-package flymake
   :straight nil
+  :custom
+  (flymake-mode-line-format '(" " flymake-mode-line-counters flymake-mode-line-exception))
   :hook (prog-mode . flymake-mode))
 
 ;;;; Eglot
@@ -882,6 +884,10 @@
         (propertize text 'face face)
       text)))
 
+(defvar-local qqh/modeline/flymake
+    `(:eval (when (mode-line-window-selected-p)
+              flymake-mode-line-format)))
+
 ;;;;; Eglot
 (defvar-local qqh/modeline/eglot
     `(:eval
@@ -903,16 +909,51 @@
                 mode-line-format-right-align         ;; emacs 30
                 " "
                 (vc-mode vc-mode)
-                flymake-mode-line-format
+                ;; flymake-mode-line-format
+                qqh/modeline/flymake
                 qqh/modeline/eglot
                 " "
                 (:eval (when (mode-line-window-selected-p)
                          mode-line-misc-info))
                 "  "))
 
-(dolist (construct '(qqh/modeline/eglot))
+(dolist (construct '(qqh/modeline/eglot
+                     qqh/modeline/flymake))
   (put construct 'risky-local-variable t))
 
+;;;; Buffer display configuration
+(use-package popper
+  :straight t
+  :bind (("C-'"   . popper-toggle)
+         ("M-'"   . popper-cycle)
+         ("C-M-'" . popper-toggle-type))
+  :init
+  (setq popper-reference-buffers '("\\*Messages\\*"
+                                   "Output\\*$"
+                                   "\\*Async Shell Command\\*"
+                                   "^\\*.*eat.*\\*$" eat-mode
+                                   help-mode
+                                   compilation-mode)
+        popper-group-function #'popper-group-by-perspective
+        popper-echo-dispatch-keys '(?1 ?2 ?3 ?4 ?5 ?6 ?7 ?8 ?9 ?0))
+
+  (popper-mode +1)
+  ;; echo area hints
+  (popper-echo-mode +1))
+
+(add-to-list 'display-buffer-alist
+	     '("\\*\\(Compile-Log\\|Async-native-compile-log\\|Warnings\\)\\*"
+	       (display-buffer-no-window)
+	       (allow-no-window t)))
+
+(add-to-list 'display-buffer-alist
+	     '("\\*\\(Ibuffer\\|vc-dir\\|compilation\\|vc-diff\\|vc-change-log\\|Async Shell Command\\)\\*"
+	       (display-buffer-full-frame)))
+
+;; Show magit in a full window
+(add-to-list 'display-buffer-alist
+	     '("\\(magit: .+\\|magit-log.+\\|magit-revision.+\\)"
+	       (display-buffer-full-frame)))
 ;;; Keybindings
 
 ;;;; Definitions
