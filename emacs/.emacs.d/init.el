@@ -551,43 +551,6 @@
   :diminish docstr-mode
   :config (global-docstr-mode 1))
 
-;;;;; Flycheck diagnostics
-(use-package flycheck
-  :diminish flycheck-mode
-  :init
-  (global-flycheck-mode)
-  :config
-  ;; Disable flycheck in certain mode
-  (setq flycheck-global-modes '(not org-mode dts-mode just-mode eat-mode))
-
-  (set-face-attribute 'flycheck-info nil
-                      :underline  (catppuccin-color 'teal))
-  :custom-face
-  (flycheck-error           ((t (:underline  ,(catppuccin-color 'red)))))
-  (flycheck-fringe-warning  ((t (:foreground ,(catppuccin-color 'red)))))
-  (flycheck-error-list-err  ((t (:foreground ,(catppuccin-color 'red)))))
-
-  (flycheck-warning         ((t (:underline ,(catppuccin-color 'peach)))))
-  (flycheck-fringe-warning  ((t (:foreground ,(catppuccin-color 'peach)))))
-  (flycheck-error-list-err  ((t (:foreground ,(catppuccin-color 'peach)))))
-
-  (flycheck-fringe-info     ((t (:foreground ,(catppuccin-color 'teal)))))
-  (flycheck-error-list-info ((t (:foreground ,(catppuccin-color 'teal))))))
-
-(use-package flycheck-eglot
-  :after (flycheck eglot)
-  :config
-  (global-flycheck-eglot-mode 1))
-
-(use-package flycheck-popup-tip
-  :after flycheck
-  :config
-  (setq popup-tip-max-width 120)
-  :commands (flycheck-popup-tip-mode flycheck-popup-tip)
-  :hook (flycheck-mode . flycheck-popup-tip-mode))
-
-(use-package consult-flycheck)
-
 ;;;;; Devdocs.io integration
 (use-package devdocs
   :bind (("C-h D" . devdocs-lookup))
@@ -597,17 +560,17 @@
   (add-hook 'c-mode-hook (lambda () (setq-local devdocs-current-docs '("c"))))
   (add-hook 'c++-mode-hook (lambda () (setq-local devdocs-current-docs-hook '("cpp")))))
 
-;;;; Code formatting
-(use-package format-all
-  :hook (prog-mode . format-all-mode)
-  :config
-  (setq-default format-all-formatters nil))
+;;;;; Flymake
+(use-package flymake
+  :straight nil
+  :hook (prog-mode . flymake-mode))
+
 ;;;; Eglot
 (use-package eglot
   :custom
   (eglot-send-changes-idle-time 0.1)
   (eglot-extend-to-xref t) ; activate Eglot in referenced non-project files
-  :hook ((python-mode python-ts-mode c-mode c++-mode) . eglot-ensure)
+  :hook ((tuareg-mode python-mode python-ts-mode c-mode c++-mode) . eglot-ensure)
   :bind (:map eglot-mode-map
               ("C-c l r" . eglot-rename)
               ("C-c l f" . eglot-format)
@@ -618,7 +581,6 @@
 
   ;; extra server binaries
   (add-to-list 'eglot-server-programs '((c++-mode c-mode) "clangd"))
-
   (advice-add 'eglot-completion-at-point :around #'cape-wrap-buster)
   (advice-add 'eglot-completion-at-point :around #'cape-wrap-noninterruptible)
 
@@ -699,31 +661,6 @@
 
 ;; Major mode for editing Dune project files
 (use-package dune)
-
-;; Merlin provides advanced IDE features
-(use-package merlin
-  :hook (tuareg-mode . merlin-mode)
-  :custom-face
-  (caml-types-expr-face ((t :background ,(catppuccin-color 'green) :foreground ,(catppuccin-color 'crust))))
-  (caml-types-def-face ((t :background ,(catppuccin-color 'mauve) :foreground ,(catppuccin-color 'crust))))
-  :config
-  ;; we're using flycheck instead
-  (setq merlin-command (executable-find "ocamlmerlin"))
-  (setq merlin-error-after-save nil))
-
-(use-package merlin-eldoc
-  :hook ((tuareg-mode) . merlin-eldoc-setup))
-
-;; This uses Merlin internally
-;; or this if you're into use-package
-(use-package flycheck-ocaml
-  :config
-  (add-hook 'tuareg-mode-hook
-            (lambda ()
-              ;; disable Merlin's own error checking
-              (setq-local merlin-error-after-save nil)
-              ;; enable Flycheck checker
-              (flycheck-ocaml-setup))))
 
 ;;;;; PYTHON
 ;; Built-in Python utilities
@@ -945,13 +882,6 @@
         (propertize text 'face face)
       text)))
 
-;;;;; Flycheck
-(defvar-local qqh/modeline/flycheck
-    `(:eval (when (and (featurep 'flycheck)
-                       (mode-line-window-selected-p))
-              (concat " [" (s-trim (flycheck-mode-line-status-text)) "]")))
-  "Mode line construct for reporting flycheck status of the current buffer.")
-
 ;;;;; Eglot
 (defvar-local qqh/modeline/eglot
     `(:eval
@@ -973,7 +903,7 @@
                 mode-line-format-right-align         ;; emacs 30
                 " "
                 (vc-mode vc-mode)
-                qqh/modeline/flycheck
+                flymake-mode-line-format
                 qqh/modeline/eglot
                 " "
                 (:eval (when (mode-line-window-selected-p)
@@ -1045,7 +975,7 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
     ("nls" "store link" org-store-link)
     ("nli" "insert link" org-insert-link-global)]
    ["(o)pen..."
-    ("od" "open diagnostics panel" consult-flycheck)
+    ("od" "open diagnostics panel" consult-flymake)
     ("oi" "open imenu" consult-imenu)
     ("ot" "open terminal" eat)
     ("oT" "open project terminal" eat-project)]
@@ -1074,18 +1004,18 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
 
 
 (transient-define-prefix qqh/transient/next ()
-  "Transient map for going to the next thing"
+  "Transient map for going to the next thing."
   [["Next"
     ("d" "todo" hl-todo-next)
-    ("e" "error" flycheck-next-error)
+    ("e" "error" flymake-goto-next-error)
     ("t" "tab" tab-next)
     ("p" "perspective" persp-next)]])
 
 (transient-define-prefix qqh/transient/prev ()
-  "Transient map for going to the previous thing"
+  "Transient map for going to the previous thing."
   [["Previous"
     ("d" "todo" hl-todo-previous)
-    ("e" "error" flycheck-previous-error)
+    ("e" "error" flymake-goto-prev-error)
     ("t" "tab" tab-previous)
     ("p" "perspective" persp-prev)]])
 
@@ -1151,6 +1081,8 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
    ;; Since special modes usually use n to move down, we only overwrite e here.
    '("e" . meow-prev)
    '(":" . meow-keypad)
+   '("[" . qqh/transient/prev)
+   '("]" . qqh/transient/next)
    '("SPC" . qqh/transient/leader)
    '("<escape>" . ignore))
 
