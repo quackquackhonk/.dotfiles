@@ -33,6 +33,9 @@
     )
   ];
 
+  # manage removeable media
+  services.udisks2.enable = true;
+
   fonts.packages = with pkgs; [
     nerd-fonts.iosevka
   ];

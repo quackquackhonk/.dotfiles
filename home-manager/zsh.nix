@@ -32,10 +32,6 @@ function qqh_flake_template() {
     nix-direnv.enable = true;
     enableZshIntegration = true;
   };
-  programs.mise = {
-    enable = true;
-    enableZshIntegration = true;
-  };
   programs.starship = {
     enable = true;
     enableZshIntegration = true;
