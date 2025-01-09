@@ -60,39 +60,8 @@ starship init fish | source
 fzf --fish | source
 
 zoxide init fish | source
-# /Users/i34866/.local/bin/mise activate fish | source
 
-# Spack
-if [ "$hostname" = "LVV3TW207K" ]
-
-    function pythoncert
-        export CERT_PATH=$(python -c 'import site; print(site.getsitepackages()[0] + "/certifi/cacert.pem")')
-        cat ~/cert/ZscalerRootCertificate-2048-SHA256.crt >> $CERT_PATH
-    end
-
-    # Okta AWS utils
-    ## Nonprod login / cli wrapper
-    # authenticate
-    alias nonprod-login='okta-aws-cli web --profile nonprod  --expiry-aws-variables --cache-access-token --write-aws-credentials'
-    alias production-login='okta-aws-cli web --profile production --expiry-aws-variables --cache-access-token --write-aws-credentials'
-
-    alias awsnp='aws --profile nonprod'
-    alias awsprod='aws --profile production'
-
-    function nonprod
-        # set the profile variable
-        eval "$(aws configure export-credentials --profile nonprod --format env)"
-        aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 589310964831.dkr.ecr.us-west-2.amazonaws.com
-        export AWS_PROFILE="nonprod"
-    end
-
-    function production
-        eval "$(aws configure export-credentials --profile production --format env)"
-        export AWS_PROFILE="production"
-    end
-end
-
-# >>> conda initialize >>>
+ >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
 if test -f /opt/homebrew/Caskroom/miniconda/base/bin/conda
     eval /opt/homebrew/Caskroom/miniconda/base/bin/conda "shell.fish" "hook" $argv | source
@@ -104,4 +73,3 @@ else
     end
 end
 # <<< conda initialize <<<
-
