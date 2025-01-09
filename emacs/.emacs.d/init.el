@@ -928,14 +928,16 @@
          ("M-'"   . popper-cycle)
          ("C-M-'" . popper-toggle-type))
   :init
-  (setq popper-reference-buffers '("\\*Messages\\*"
-                                   "Output\\*$"
-                                   "\\*Async Shell Command\\*"
-                                   "^\\*.*eat.*\\*$" eat-mode
-                                   help-mode
-                                   compilation-mode)
-        popper-group-function #'popper-group-by-perspective
-        popper-echo-dispatch-keys '(?1 ?2 ?3 ?4 ?5 ?6 ?7 ?8 ?9 ?0))
+  (setq
+   popper-mode-line nil
+   popper-reference-buffers '("\\*Messages\\*"
+                              "Output\\*$"
+                              "\\*Async Shell Command\\*"
+                              "^\\*.*eat.*\\*$" eat-mode
+                              help-mode
+                              compilation-mode)
+   popper-group-function #'popper-group-by-perspective
+   popper-echo-dispatch-keys '(?1 ?2 ?3 ?4 ?5 ?6 ?7 ?8 ?9 ?0))
 
   (popper-mode +1)
   ;; echo area hints
@@ -1217,10 +1219,10 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
    '("[" . qqh/transient/prev)
    '("]" . qqh/transient/next)
 
-   '("C-." . embark-act)        ;; pick some comfortable binding
-   '("C-;" . embark-dwim)       ;; good alternative: M-.
-   '("C-h B" . embark-bindings) ;; alternative for `describe-bindings'
-   ))
+   '("C-." . embark-act)         ;; pick some comfortable binding
+   '("C-;" . embark-dwim)        ;; good alternative: M-.
+   '("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
+   )
 
 (require 'meow)
 (meow-setup)
