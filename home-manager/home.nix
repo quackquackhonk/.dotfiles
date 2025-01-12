@@ -95,7 +95,9 @@
 
     # apps
     firefox
-    dolphin
+    kdePackages.dolphin
+    kdePackages.qtwayland
+    kdePackages.qtsvg
     prismlauncher
   ];
 
@@ -112,8 +114,8 @@
     ".config/wlogout" = {
       source = ../wlogout;
       recursive = true;
-
     };
+    ".config/dunst/dunstrc".source = ../dunst/dunstrc;
     ".config/waybar" = {
       source = ../waybar;
       recursive = true;

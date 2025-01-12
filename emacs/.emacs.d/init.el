@@ -139,6 +139,8 @@
 ;;;; Dired
 (use-package dired
   :straight nil
+  :bind (:map dired-mode-map
+              ("-" . dired-create-empty-file))
   :config
   (setq dired-kill-when-opening-new-dired-buffer t))
 
@@ -565,6 +567,10 @@
   :straight nil
   :custom
   (flymake-mode-line-format '(" " flymake-mode-line-counters flymake-mode-line-exception))
+  :custom-face
+  (flymake-note ((t :underline ,(catppuccin-color 'green))))
+  (flymake-warning ((t :underline ,(catppuccin-color 'yellow))))
+  (flymake-error ((t :underline ,(catppuccin-color 'red))))
   :hook (prog-mode . flymake-mode))
 
 ;;;; Eglot
@@ -931,9 +937,10 @@
   (setq
    popper-mode-line nil
    popper-reference-buffers '("\\*Messages\\*"
+                              "\\*eldoc\\*"
                               "Output\\*$"
                               "\\*Async Shell Command\\*"
-                              "^\\*.*eat.*\\*$" eat-mode
+                              "^\\*eat.*\\*$"
                               help-mode
                               compilation-mode)
    popper-group-function #'popper-group-by-perspective
@@ -1003,10 +1010,12 @@
 These bindings are preferred over `meow-leader-define-key', since I have less restrictions here!"
   [["leader bindings..."
     ("<escape>" "quit" transient-quit-one)
-    ("g" "magit" magit)
     ("SPC" "buffers" consult-buffer)
     ("," "last buffer" meow-last-buffer)
     (":" "eval expression" eval-expression)]
+   ["(g)it..."
+    ("gg" "git status" magit)
+    ("gb" "git branch" magit-branch)]
    ["(c)ode..."
     ("cc" "compile" compile)]
    ["(f)ind..."
@@ -1020,11 +1029,10 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
    ["(o)pen..."
     ("od" "open diagnostics panel" consult-flymake)
     ("oi" "open imenu" consult-imenu)
-    ("ot" "open terminal" eat)
-    ("oT" "open project terminal" eat-project)]
+    ("ot" "open terminal" eat)]
    ["(p)rojects..."
-    ("p;" "open project.org" qqh/open-project-org-file)
     ("pp" "switch to project" projectile-persp-switch-project)
+    ("pd" "project dired" projectile-dired)
     ("pt" "open project terminal" eat-project)]
    ["(;) configuration files.."
     (";r" "reload config" qqh/emacs/reload)
