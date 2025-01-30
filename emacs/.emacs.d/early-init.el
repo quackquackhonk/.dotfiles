@@ -37,7 +37,6 @@
   (add-to-list 'exec-path (format "%s/.local/bin" (getenv "HOME")))
   (add-to-list 'exec-path (format "%s/.cargo/bin" (getenv "HOME")))
 
-  (setq explicit-shell-file-name "/bin/zsh")
   (setenv "LIBRARY_PATH"
           "/opt/homebrew/opt/gcc/lib/gcc/14:/opt/homebrew/opt/libgccjit/lib/gcc/14:/opt/homebrew/opt/gcc/lib/gcc/14/gcc/aarch64-apple-darwin23/14")
   (setenv "XDG_CONFIG_HOME" "/Users/i34866/.config")

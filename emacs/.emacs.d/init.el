@@ -51,6 +51,10 @@
 ;; always load the newest bytecode
 (setq load-prefer-newer t)
 
+(use-package exec-path-from-shell
+  :config
+  (when (memq window-system '(mac ns x))
+    (exec-path-from-shell-initialize)))
 ;;; Some initial packages
 ;; Load diminish for :diminish constructs in use-package
 (use-package diminish
@@ -679,6 +683,12 @@
   ;; Remove guess indent python message
   (setq python-indent-guess-indent-offset-verbose nil))
 
+(use-package blacken
+  :defer t
+  :hook ((python-mode python-ts-mode) . blacken-mode)
+  :custom
+  (blacken-allow-py36 t))
+
 (use-package pyvenv
   :config
   (setenv "WORKON_HOME" "/opt/homebrew/Caskroom/miniconda/base/envs/")
@@ -946,6 +956,12 @@
    popper-group-function #'popper-group-by-perspective
    popper-echo-dispatch-keys '(?1 ?2 ?3 ?4 ?5 ?6 ?7 ?8 ?9 ?0))
 
+  (setq popper-window-height (lambda (win)
+                               (fit-window-to-buffer
+                                win
+                                (floor (frame-height) 3)
+                                (floor (frame-height) 3))))
+
   (popper-mode +1)
   ;; echo area hints
   (popper-echo-mode +1))
@@ -956,7 +972,7 @@
 	       (allow-no-window t)))
 
 (add-to-list 'display-buffer-alist
-	     '("\\*\\(Ibuffer\\|vc-dir\\|compilation\\|vc-diff\\|vc-change-log\\|Async Shell Command\\)\\*"
+	     '("\\*\\(Ibuffer\\|vc-dir\\|vc-diff\\|vc-change-log\\|Async Shell Command\\)\\*"
 	       (display-buffer-full-frame)))
 
 ;; Show magit in a full window
@@ -967,7 +983,7 @@
 
 ;;;; Definitions
 (defun qqh/kill-buffer ()
-  "Kill the current buffer using the persp-kill-buffer* command."
+  "Kill the current buffer using the `persp-kill-buffer*' command."
   (interactive)
   (persp-kill-buffer* (current-buffer)))
 
@@ -1018,9 +1034,13 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
     ("gb" "git branch" magit-branch)]
    ["(c)ode..."
     ("cc" "compile" compile)]
-   ["(f)ind..."
-    ("ff" "find file" qqh/fuzzy-find-file)
-    ("fn" "find note" org-roam-node-find)]
+   ["(s)earch..."
+    ("sf" "search files" qqh/fuzzy-find-file)
+    ("sn" "search notes" org-roam-node-find)
+    ("so" "search outline" consult-outline)
+    ("si" "search imenu" consult-imenu)
+    ("sl" "search all lines" consult-line-multi)
+    ("sp" "search perspectives" persp-switch)]
    ["(n)otes..."
     ("nc" "capture note" org-roam-capture)
     ("ni" "insert note" org-roam-node-insert)
@@ -1028,7 +1048,6 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
     ("nli" "insert link" org-insert-link-global)]
    ["(o)pen..."
     ("od" "open diagnostics panel" consult-flymake)
-    ("oi" "open imenu" consult-imenu)
     ("ot" "open terminal" eat)]
    ["(p)rojects..."
     ("pp" "switch to project" projectile-persp-switch-project)

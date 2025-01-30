@@ -28,9 +28,6 @@ function brewlink() {
     ln -s /opt/homebrew/bin/${1} ~/.local/bin/${1}
 }
 
-export CERT_PATH=$(python3 -c 'import site; print(site.getsitepackages()[0] + "/certifi/cacert.pem")')
-export SSL_CERT_FILE=$CERT_PATH
-
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
 
@@ -110,6 +107,7 @@ alias awsnp='aws --profile nonprod'
 alias awsprod='aws --profile production'
 
 alias nonprod='eval "$(aws configure export-credentials --profile nonprod --format env)" && aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 589310964831.dkr.ecr.us-west-2.amazonaws.com && export AWS_PROFILE="nonprod"'
+alias nonprod-east='eval "$(aws configure export-credentials --profile nonprod --format env)" && aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 589310964831.dkr.ecr.us-east-1.amazonaws.com && export AWS_PROFILE="nonprod"'
 
 alias spackon='spack env activate -d spack_env/.'
 alias spackoff='spack env deactivate'
@@ -118,6 +116,7 @@ alias miseon='eval "$(~/.local/bin/mise activate zsh)"'
 function spackcert () {
     SPACK_CERT_PATH=$(python -c 'import site; print(site.getsitepackages()[0] + "/certifi/cacert.pem")')
     cat ~/cert/ZscalerRootCertificate-2048-SHA256.crt >> $SPACK_CERT_PATH
+    export SSL_CERT_FILE=$SPACK_CERT_PATH
 }
 
 
@@ -156,4 +155,3 @@ else
 fi
 unset __conda_setup
 # <<< conda initialize <<<
-
