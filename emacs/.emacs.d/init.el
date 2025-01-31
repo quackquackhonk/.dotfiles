@@ -1255,7 +1255,7 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
 
 (require 'meow)
 (meow-setup)
-(add-to-list 'meow-mode-state-list '(eat-mode . meow-normal-mode))
+(add-to-list 'meow-mode-state-list '(eat-mode . normal))
 (meow-global-mode 1)
 (meow-esc-mode 1)               ;; enable esc mode for terminal use
 
@@ -1269,3 +1269,4 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
 
 
 ;;; init.el ends here
+(put 'downcase-region 'disabled nil)

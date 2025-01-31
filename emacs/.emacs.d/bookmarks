@@ -7,8 +7,9 @@
  (rear-context-string . "ighlight color\n\n") (position . 3264)
  (last-modified 26430 19793 390068 0))
 ("org-capture-last-stored"
- (filename . "~/org/roam/work/meeting/swm-tornado-handoff.org")
- (front-context-string . "\nSevere Weather ")
- (rear-context-string . " :work-meeting:\n") (position . 124)
- (last-modified 26449 65213 537200 0))
+ (filename
+  . "~/org/roam/main/historical_runner_against_local_radar.org")
+ (front-context-string . "\n* Tasks [0/3]\n*")
+ (rear-context-string . "nst_local_radar\n") (position . 115)
+ (last-modified 26523 47928 27338 0))
 )

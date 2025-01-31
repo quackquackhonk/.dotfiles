@@ -38,9 +38,10 @@ Hyde kind of defeats the point of not going with a DE, I should rip out the guts
 ** TODO Waybar configuration without hyde
 ** TODO See if we can bind the thumb button to LGUI
 ** TODO delay before key repeat should be less
-* Emacs [2/5]
+* Emacs [1/3]
 ** TODO remove things that I don't know what they do
-** TODO split up linux / maco / terminal settings
+** TODO Projectile switch action should let me choose between a few options
+I want to choose between fuzzy finding, opening the project term, opening project dired, or magit-status
 ** Bugs / Behavior I don't like [0/2]
 *** TODO non-included documents aren't being added unless eglot is restarted
 *** TODO ~n~ and ~e~ open files in compilation-mode instead of scrolling output
@@ -73,7 +74,9 @@ PRIMARILY need lldb support
 *** TODO custom meow "things"
 **** DONE angled brackets <>
 - State "DONE"       from "WAITING"    [2024-11-07 Thu 18:26]
-**** TODO single quotes ''
+**** OBSOLETE single quotes ''
+- State "OBSOLETE"   from "TODO"       [2025-01-31 Fri 15:31] \\
+  handled by the string thing bound to `""
 **** TODO backticks ``
 *** TODO Change keybindings for split management
 Ideally, I want something more like vim's ~C-w <key>~ as opposed to the ~C-x <digit>~ convention.

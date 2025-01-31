@@ -19,7 +19,7 @@ export CMAKE_OSX_SYSROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk
 
 unsetopt PROMPT_SP
 
-export EDITOR="emacsclient -nw -a=''"
+export EDITOR="emacsclient -c -a=''"
 
 # homebrew stuff
 # source ~/.zprofile
