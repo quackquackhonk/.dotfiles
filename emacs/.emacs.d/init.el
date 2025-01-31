@@ -1019,10 +1019,6 @@
 ;;;; transient: so many leader keys
 (use-package transient)
 
-(use-package transient-posframe
-  :config
-  (transient-posframe-mode))
-
 ;; Set up some transient maps for additional leaders
 (transient-define-prefix qqh/transient/leader ()
   "Transient map for my leader bindings.
