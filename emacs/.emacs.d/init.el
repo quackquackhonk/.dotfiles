@@ -1019,6 +1019,10 @@
 ;;;; transient: so many leader keys
 (use-package transient)
 
+(use-package transient-posframe
+  :config
+  (transient-posframe-mode))
+
 ;; Set up some transient maps for additional leaders
 (transient-define-prefix qqh/transient/leader ()
   "Transient map for my leader bindings.
@@ -1035,7 +1039,7 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
    ["(c)ode..."
     ("cc" "compile" compile)]
    ["(s)earch..."
-    ("sf" "search files" qqh/fuzzy-find-file)
+    ("ss" "search files" qqh/fuzzy-find-file)
     ("sn" "search notes" org-roam-node-find)
     ("so" "search outline" consult-outline)
     ("si" "search imenu" consult-imenu)
@@ -1231,6 +1235,8 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
    '("y" . meow-save)
    '("z" . meow-pop-selection)
    '("'" . repeat)
+   '("<" . meow-pop-to-global-mark)
+   '(">" . meow-unpop-to-mark)
    '("<escape>" . keyboard-quit)
    '("RET" . ignore)
    '("SPC" . qqh/transient/leader)
@@ -1253,6 +1259,7 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
 
 (require 'meow)
 (meow-setup)
+(add-to-list 'meow-mode-state-list '(eat-mode . meow-normal-mode))
 (meow-global-mode 1)
 (meow-esc-mode 1)               ;; enable esc mode for terminal use
 
