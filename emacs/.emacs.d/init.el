@@ -474,11 +474,8 @@
 
 ;;;; Project Management
 ;;;;; direnv integration
-;; (use-package envrc
-;;   :hook (after-init . envrc-global-mode))
-(use-package direnv
- :config
- (direnv-mode))
+(use-package envrc
+  :hook (after-init . envrc-global-mode))
 ;;;;; Projectile
 (use-package project)
 (use-package projectile
@@ -492,8 +489,8 @@
   (setq projectile-enable-caching t
         projectile-auto-discover nil
         projectile-project-search-path '(("~/code/" . 2)
-					                     "~/sources/")
-        projectile-switch-project-action 'qqh/fuzzy-find-file))
+					                     "~/sources/")))
+        ;; projectile-switch-project-action 'qqh/fuzzy-find-file))
 
 (defun qqh/open-project-org-file ()
   "Open the project.org file at the root of the current project. If no project.org file is found, create a new one from a template."
@@ -1042,8 +1039,8 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
     (":" "eval expression" eval-expression)]
    ["(c)ode..."
     ("cc" "compile" compile)
-    ("c SPC" "code action" eglot-code-actions :if (lambda () eglot--managed-mode))
-    ("cr" "rename symbol" eglot-rename :if (lambda () eglot--managed-mode))
+    ("c SPC" "code action" eglot-code-actions :if (lambda () (and (featurep 'eglot) eglot--managed-mode)))
+    ("cr" "rename symbol" eglot-rename :if (lambda () (and (featurep 'eglot) eglot--managed-mode)))
     ("cf" "format" format-all-region-or-buffer)]
    ["(g)it..."
     ("gg" "git status" magit)
@@ -1087,7 +1084,6 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
     ("l" "line" meow-goto-line)
     ("RET" "2 chars" avy-goto-char-2)]])
 
-
 (transient-define-prefix qqh/transient/next ()
   "Transient map for going to the next thing."
   [["Next"
@@ -1103,6 +1099,16 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
     ("e" "error" flymake-goto-prev-error)
     ("t" "tab" tab-previous)
     ("p" "perspective" persp-prev)]])
+
+(transient-define-prefix qqh/transient/projectile-action ()
+  "Transient map for executing various commands after switching to a project"
+  [("d" "project dired" projectile-dired)
+   ("f" "project files" qqh/fuzzy-find-file)
+   ("g" "projectile magit" projectile-vc)
+   ("t" "project terminal" eat-project)])
+
+(setq projectile-switch-project-action 'qqh/transient/projectile-action)
+
 
 
 ;;;; Global bindings
