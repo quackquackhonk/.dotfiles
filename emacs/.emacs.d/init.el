@@ -53,7 +53,7 @@
 
 (use-package exec-path-from-shell
   :config
-  (when (memq window-system '(mac ns x))
+  (when (memq window-system '(mac ns))
     (exec-path-from-shell-initialize)))
 ;;; Some initial packages
 ;; Load diminish for :diminish constructs in use-package
@@ -280,6 +280,7 @@
   :bind (("C-." . embark-act)         ;; pick some comfortable binding
          ("C-;" . embark-dwim)        ;; good alternative: M-.
          ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
+  :hook (embark-collect-mode . consult-preview-at-point-mode)
   :init
   ;; Optionally replace the key help with a completing-read interface
   (setq prefix-help-command #'embark-prefix-help-command)
@@ -458,6 +459,7 @@
   :custom
   (eat-term-name "xterm")
   :config
+  (unbind-key (kbd "M-'") 'eat-semi-char-mode-map)
   (eat-eshell-mode)                     ; use Eat to handle term codes in program output
   (eat-eshell-visual-command-mode))     ; commands like less will be handled by Eat
 
@@ -472,8 +474,11 @@
 
 ;;;; Project Management
 ;;;;; direnv integration
-(use-package envrc
-  :hook (after-init . envrc-global-mode))
+;; (use-package envrc
+;;   :hook (after-init . envrc-global-mode))
+(use-package direnv
+ :config
+ (direnv-mode))
 ;;;;; Projectile
 (use-package project)
 (use-package projectile
@@ -550,7 +555,9 @@
 
 ;;;;; Eldoc
 (use-package eldoc
-  :diminish eldoc-mode)
+  :diminish eldoc-mode
+  :config
+  (setq eldoc-documentation-strategy #'eldoc-documentation-compose))
 
 ;;;;; documentation comment generation
 (use-package docstr
@@ -560,11 +567,10 @@
 ;;;;; Devdocs.io integration
 (use-package devdocs
   :bind (("C-h D" . devdocs-lookup))
-  :config
-  (add-hook 'python-mode-hook (lambda () (setq-local devdocs-current-docs '("python~11"))))
-  (add-hook 'python-ts-mode-hook (lambda () (setq-local devdocs-current-docs '("python~11"))))
-  (add-hook 'c-mode-hook (lambda () (setq-local devdocs-current-docs '("c"))))
-  (add-hook 'c++-mode-hook (lambda () (setq-local devdocs-current-docs-hook '("cpp")))))
+  :hook ((tuareg-mode . (lambda () (setq-local devdocs-current-docs '("ocaml~5.0"))))
+         ((python-mode python-ts-mode) . (lambda () (setq-local devdocs-current-docs '("python~11"))))
+         (c-mode . (lambda () (setq-local devdocs-current-docs '("c"))))
+         (c++-mode . (lambda () (setq-local devdocs-current-docs '("cpp"))))))
 
 ;;;;; Flymake
 (use-package flymake
@@ -583,10 +589,6 @@
   (eglot-send-changes-idle-time 0.1)
   (eglot-extend-to-xref t) ; activate Eglot in referenced non-project files
   :hook ((tuareg-mode python-mode python-ts-mode c-mode c++-mode) . eglot-ensure)
-  :bind (:map eglot-mode-map
-              ("C-c l r" . eglot-rename)
-              ("C-c l f" . eglot-format)
-              ("C-c l F" . eglot-format-buffer))
   :config
   ;; Disable inlay hints globally
   (add-to-list 'eglot-ignored-server-capabilities :inlayHintProvider)
@@ -615,9 +617,7 @@
                                                                     :lineLength 100)
                                                     :pydocstyle (:enabled :json-false)
                                                     :yapf (:enabled :json-false)
-                                                    :autopep8 (:enabled :json-false)
-                                                    :black (:enabled t
-                                                                     :cache_config t)))))))
+                                                    :autopep8 (:enabled :json-false)))))))
 
 (use-package eglot-booster
   :init
@@ -627,6 +627,8 @@
   :after eglot
   :config (eglot-booster-mode))
 
+;;;; Code formatting...
+(use-package format-all)
 ;;;; Dape: DAP support for eglot
 (use-package dape
   :preface
@@ -673,6 +675,16 @@
 
 ;; Major mode for editing Dune project files
 (use-package dune)
+
+(use-package utop
+  :hook ((tuareg-mode . utop-minor-mode)
+         (tuareg-mode . (lambda ()
+                          (let* ((p-root (projectile-project-root))
+                                 (p-root-str (if p-root p-root ""))
+                                 (fname (format "%s." p-root-str))
+                                 (rel-dir (file-relative-name fname default-directory))
+                                 (cmd (format "dune utop %s -- -emacs" rel-dir)))
+                            (setq utop-command cmd))))))
 
 ;;;;; PYTHON
 ;; Built-in Python utilities
@@ -945,7 +957,6 @@
          ("C-M-'" . popper-toggle-type))
   :init
   (setq
-   popper-mode-line nil
    popper-reference-buffers '("\\*Messages\\*"
                               "\\*eldoc\\*"
                               "Output\\*$"
@@ -1029,18 +1040,15 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
     ("SPC" "buffers" consult-buffer)
     ("," "last buffer" meow-last-buffer)
     (":" "eval expression" eval-expression)]
+   ["(c)ode..."
+    ("cc" "compile" compile)
+    ("c SPC" "code action" eglot-code-actions :if (lambda () eglot--managed-mode))
+    ("cr" "rename symbol" eglot-rename :if (lambda () eglot--managed-mode))
+    ("cf" "format" format-all-region-or-buffer)]
    ["(g)it..."
     ("gg" "git status" magit)
-    ("gb" "git branch" magit-branch)]
-   ["(c)ode..."
-    ("cc" "compile" compile)]
-   ["(s)earch..."
-    ("ss" "search files" qqh/fuzzy-find-file)
-    ("sn" "search notes" org-roam-node-find)
-    ("so" "search outline" consult-outline)
-    ("si" "search imenu" consult-imenu)
-    ("sl" "search all lines" consult-line-multi)
-    ("sp" "search perspectives" persp-switch)]
+    ("gb" "git branch" magit-branch)
+    ("gB" "git blame" magit-blame)]
    ["(n)otes..."
     ("nc" "capture note" org-roam-capture)
     ("ni" "insert note" org-roam-node-insert)
@@ -1053,6 +1061,13 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
     ("pp" "switch to project" projectile-persp-switch-project)
     ("pd" "project dired" projectile-dired)
     ("pt" "open project terminal" eat-project)]
+   ["(s)earch..."
+    ("ss" "search files" qqh/fuzzy-find-file)
+    ("sn" "search notes" org-roam-node-find)
+    ("so" "search outline" consult-outline)
+    ("si" "search imenu" consult-imenu)
+    ("sl" "search all lines" consult-line-multi)
+    ("sp" "search perspectives" persp-switch)]
    ["(;) configuration files.."
     (";r" "reload config" qqh/emacs/reload)
     (";f" "open flake.nix" qqh/config/open-nix-flake)

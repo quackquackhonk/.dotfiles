@@ -14,7 +14,6 @@
     ./zsh.nix
     ./emacs.nix
   ];
-
   services.gpg-agent = {
     enable = true;
     defaultCacheTtl = 1800;
@@ -95,6 +94,7 @@
 
     # apps
     firefox
+    thunderbird
     kdePackages.dolphin
     kdePackages.qtwayland
     kdePackages.qtsvg
