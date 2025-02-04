@@ -489,8 +489,8 @@
   (setq projectile-enable-caching t
         projectile-auto-discover nil
         projectile-project-search-path '(("~/code/" . 2)
-					                     "~/sources/")))
-        ;; projectile-switch-project-action 'qqh/fuzzy-find-file))
+					                     "~/sources/")
+        projectile-switch-project-action 'qqh/fuzzy-find-file))
 
 (defun qqh/open-project-org-file ()
   "Open the project.org file at the root of the current project. If no project.org file is found, create a new one from a template."
@@ -1099,16 +1099,6 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
     ("e" "error" flymake-goto-prev-error)
     ("t" "tab" tab-previous)
     ("p" "perspective" persp-prev)]])
-
-(transient-define-prefix qqh/transient/projectile-action ()
-  "Transient map for executing various commands after switching to a project"
-  [("d" "project dired" projectile-dired)
-   ("f" "project files" qqh/fuzzy-find-file)
-   ("g" "projectile magit" projectile-vc)
-   ("t" "project terminal" eat-project)])
-
-(setq projectile-switch-project-action 'qqh/transient/projectile-action)
-
 
 
 ;;;; Global bindings
