@@ -454,14 +454,8 @@
   ;; FIXME: This shouldn't be necessary
   (setq track-changes-record-errors nil))
 
-;;;; Eat: Terminal Emulation
-(use-package eat
-  :custom
-  (eat-term-name "xterm")
-  :config
-  (unbind-key (kbd "M-'") 'eat-semi-char-mode-map)
-  (eat-eshell-mode)                     ; use Eat to handle term codes in program output
-  (eat-eshell-visual-command-mode))     ; commands like less will be handled by Eat
+;;;; Vterm: Terminal Emulation
+(use-package vterm)
 
 
 ;;;; Magit: best Git client to ever exist
@@ -958,7 +952,8 @@
                               "\\*eldoc\\*"
                               "Output\\*$"
                               "\\*Async Shell Command\\*"
-                              "^\\*eat.*\\*$"
+                              "^\\*vterm.*\\*$"
+                              vterm-mode
                               help-mode
                               compilation-mode)
    popper-group-function #'popper-group-by-perspective
@@ -1053,11 +1048,11 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
     ("nli" "insert link" org-insert-link-global)]
    ["(o)pen..."
     ("od" "open diagnostics panel" consult-flymake)
-    ("ot" "open terminal" eat)]
+    ("ot" "open terminal" vterm)]
    ["(p)rojects..."
     ("pp" "switch to project" projectile-persp-switch-project)
     ("pd" "project dired" projectile-dired)
-    ("pt" "open project terminal" eat-project)]
+    ("pt" "open project terminal" projectile-run-vterm)]
    ["(s)earch..."
     ("ss" "search files" qqh/fuzzy-find-file)
     ("sn" "search notes" org-roam-node-find)
