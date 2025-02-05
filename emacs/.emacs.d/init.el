@@ -445,6 +445,7 @@
         '((yaml-mode . yaml-ts-mode)
           (json-mode . json-ts-mode)
           (python-mode . python-ts-mode)))
+  (global-goto-address-mode 1)
   :hook
   ;; Auto parenthesis matching
   ((prog-mode . electric-pair-mode)))
@@ -673,9 +674,11 @@
 ;; Major mode for editing Dune project files
 (use-package dune)
 
+;; Utop integration in emacs
 (use-package utop
   :hook ((tuareg-mode . utop-minor-mode)
          (tuareg-mode . (lambda ()
+                          "Run utop in the project root instead of in the directory of the current buffer."
                           (let* ((p-root (projectile-project-root))
                                  (p-root-str (if p-root p-root ""))
                                  (fname (format "%s." p-root-str))
@@ -691,12 +694,6 @@
 
   ;; Remove guess indent python message
   (setq python-indent-guess-indent-offset-verbose nil))
-
-(use-package blacken
-  :defer t
-  :hook ((python-mode python-ts-mode) . blacken-mode)
-  :custom
-  (blacken-allow-py36 t))
 
 (use-package pyvenv
   :config
