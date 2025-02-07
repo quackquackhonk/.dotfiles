@@ -8,7 +8,8 @@
     ocamlPackages.merlin
 
     # vterm
-    bintools
+    cmake
+    libtool
     libvterm
   ];
 }

@@ -456,8 +456,9 @@
   (setq track-changes-record-errors nil))
 
 ;;;; Vterm: Terminal Emulation
-(use-package vterm)
-
+(use-package vterm
+  :config
+  (unbind-key (kbd "M-'") 'vterm-mode-map))
 
 ;;;; Magit: best Git client to ever exist
 (use-package magit)
@@ -938,6 +939,29 @@
   (put construct 'risky-local-variable t))
 
 ;;;; Buffer display configuration
+;;;;; display-buffer-alist customization
+;; reuse as much as possible
+(setq display-buffer-base-action
+  '((display-buffer-reuse-window display-buffer-same-window)
+    (reusable-frames . t)))
+
+(setq even-window-sizes nil)     ; avoid resizing
+
+(add-to-list 'display-buffer-alist
+	     '("\\*\\(Compile-Log\\|Async-native-compile-log\\|Warnings\\)\\*"
+	       (display-buffer-no-window)
+	       (allow-no-window t)))
+
+(add-to-list 'display-buffer-alist
+	     '("\\*\\(Ibuffer\\|vc-dir\\|vc-diff\\|vc-change-log\\|Async Shell Command\\)\\*"
+	       (display-buffer-full-frame)))
+
+;; Show magit in a full window
+(add-to-list 'display-buffer-alist
+	     '("\\(magit: .+\\|magit-log.+\\|magit-revision.+\\)"
+	       (display-buffer-full-frame)))
+
+;; pop up management
 (use-package popper
   :straight t
   :bind (("C-'"   . popper-toggle)
@@ -966,19 +990,6 @@
   ;; echo area hints
   (popper-echo-mode +1))
 
-(add-to-list 'display-buffer-alist
-	     '("\\*\\(Compile-Log\\|Async-native-compile-log\\|Warnings\\)\\*"
-	       (display-buffer-no-window)
-	       (allow-no-window t)))
-
-(add-to-list 'display-buffer-alist
-	     '("\\*\\(Ibuffer\\|vc-dir\\|vc-diff\\|vc-change-log\\|Async Shell Command\\)\\*"
-	       (display-buffer-full-frame)))
-
-;; Show magit in a full window
-(add-to-list 'display-buffer-alist
-	     '("\\(magit: .+\\|magit-log.+\\|magit-revision.+\\)"
-	       (display-buffer-full-frame)))
 ;;; Keybindings
 
 ;;;; Definitions
