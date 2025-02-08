@@ -962,6 +962,10 @@
 (add-to-list 'display-buffer-alist
 	     '("\\(magit: .+\\|magit-log.+\\|magit-revision.+\\)"
 	       (display-buffer-full-frame)))
+;; except for certain buffers
+(add-to-list 'display-buffer-alist
+	     '("\\(magit-diff:.*\\)"
+	       (display-buffer-at-bottom)))
 
 ;; pop up management
 (use-package popper
