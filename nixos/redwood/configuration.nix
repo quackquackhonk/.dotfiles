@@ -1,22 +1,29 @@
-
 # Edit this configuration file to define what should be installed on
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 {
-  imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-      ../common.nix
-    ];
+  imports = [
+    # Include the results of the hardware scan.
+    ./hardware-configuration.nix
+    ../common.nix
+  ];
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  nix.settings.experimental-features = ["nix-command" "flakes"];
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+  ];
 
   networking.hostName = "redwood"; # Define your hostname.
 
@@ -39,7 +46,7 @@
   nixpkgs.config.allowUnfree = true;
 
   # NVIDIA settings
-  services.xserver.videoDrivers = ["nvidia"];
+  services.xserver.videoDrivers = [ "nvidia" ];
   environment.systemPackages = with pkgs; [
     xwayland
     wayland-utils
@@ -80,7 +87,12 @@
   users.defaultUserShell = pkgs.zsh;
   users.users.sahana = {
     isNormalUser = true;
-    extraGroups = ["wheel" "networkmanager" "docker" "video"];
+    extraGroups = [
+      "wheel"
+      "networkmanager"
+      "docker"
+      "video"
+    ];
   };
 
   # Steam

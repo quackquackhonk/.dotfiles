@@ -6,7 +6,8 @@
   config,
   pkgs,
   ...
-}: {
+}:
+{
   # you can import other home-manager modules here
   imports = [
     # If you want to use home-manager modules from other flakes (such as nix-colors):
@@ -66,7 +67,7 @@
     gnupg
     btop # replacement of htop/nmon
     lsof # list open files
-   # networking tools
+    # networking tools
     mtr
     dnsutils
     nmap
@@ -121,20 +122,20 @@
       recursive = true;
     };
     ".config/tofi/config".text = ''
-# Catppuccin Mocha
-width = 100%
-height = 100%
-border-width = 0
-outline-width = 0
-padding-left = 35%
-padding-top = 35%
-result-spacing = 25
-num-results = 5
-font = Iosevka Nerd Font
-text-color = #cdd6f4
-prompt-color = #f38ba8
-selection-color = #f9e2af
-background-color = #000A
-'';
+      # Catppuccin Mocha
+      width = 100%
+      height = 100%
+      border-width = 0
+      outline-width = 0
+      padding-left = 35%
+      padding-top = 35%
+      result-spacing = 25
+      num-results = 5
+      font = Iosevka Nerd Font
+      text-color = #cdd6f4
+      prompt-color = #f38ba8
+      selection-color = #f9e2af
+      background-color = #000A
+    '';
   };
 }

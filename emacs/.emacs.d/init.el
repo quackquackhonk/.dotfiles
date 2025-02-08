@@ -460,6 +460,8 @@
   :config
   (unbind-key (kbd "M-'") 'vterm-mode-map))
 
+(use-package multi-vterm)
+
 ;;;; Magit: best Git client to ever exist
 (use-package magit)
 
@@ -973,7 +975,7 @@
                               "\\*eldoc\\*"
                               "Output\\*$"
                               "\\*Async Shell Command\\*"
-                              "^\\*vterm.*\\*$"
+                              "^\\*vterminal*\\*$"
                               vterm-mode
                               help-mode
                               compilation-mode)
@@ -1056,11 +1058,11 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
     ("nli" "insert link" org-insert-link-global)]
    ["(o)pen..."
     ("od" "open diagnostics panel" consult-flymake)
-    ("ot" "open terminal" vterm)]
+    ("ot" "open terminal" multi-vterm)]
    ["(p)rojects..."
     ("pp" "switch to project" projectile-persp-switch-project)
     ("pd" "project dired" projectile-dired)
-    ("pt" "open project terminal" projectile-run-vterm)]
+    ("pt" "open project terminal" multi-vterm-project)]
    ["(s)earch..."
     ("ss" "search files" qqh/fuzzy-find-file)
     ("sn" "search notes" org-roam-node-find)
