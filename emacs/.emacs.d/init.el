@@ -173,17 +173,6 @@
   :hook (emacs-lisp-mode . outline-minor-mode))
 
 
-;;;; Eshell
-(use-package eshell
-  :straight nil
-  :init
-  (defun qqh/setup-eshell ()
-    ;; Something funny is going on with how Eshell sets up its keymaps; this is
-    ;; a work-around to make C-r bound in the keymap
-    (keymap-set eshell-mode-map "C-r" 'consult-history))
-  :hook ((eshell-mode . qqh/setup-eshell)))
-
-
 ;;; Misc. editing enhancements
 (use-package avy
   :demand t
