@@ -256,8 +256,6 @@
                   consult--source-buffer
                   consult--source-recent-file
                   consult--source-file-register
-                  ;; Don't show bookmarks in consult-buffer
-                  ;; consult--source-bookmark
                   consult--source-project-buffer-hidden
                   consult--source-project-recent-file-hidden))
   ;; Narrowing lets you restrict results to certain groups of candidates
@@ -452,7 +450,16 @@
 (use-package multi-vterm)
 
 ;;;; Magit: best Git client to ever exist
-(use-package magit)
+(use-package magit
+  :config
+  ;; Show magit in a full window
+  (add-to-list 'display-buffer-alist
+	           '("\\(magit: .+\\|magit-log.+\\|magit-revision.+\\)"
+	             (display-buffer-full-frame)))
+  ;; except for certain buffers
+  (add-to-list 'display-buffer-alist
+	           '("\\(magit-diff:.*\\)"
+	             (display-buffer-at-bottom))))
 
 (use-package forge
   :config
@@ -561,6 +568,9 @@
   :straight nil
   :custom
   (flymake-mode-line-format '(" " flymake-mode-line-counters flymake-mode-line-exception))
+  (flymake-margin-indicators-string '((error "X" compilation-error)
+                                      (warning "!" compilation-warning)
+                                      (note "?" compilation-info)))
   :custom-face
   (flymake-note ((t :underline ,(catppuccin-color 'green))))
   (flymake-warning ((t :underline ,(catppuccin-color 'yellow))))
@@ -947,14 +957,11 @@
 	     '("\\*\\(Ibuffer\\|vc-dir\\|vc-diff\\|vc-change-log\\|Async Shell Command\\)\\*"
 	       (display-buffer-full-frame)))
 
-;; Show magit in a full window
 (add-to-list 'display-buffer-alist
-	     '("\\(magit: .+\\|magit-log.+\\|magit-revision.+\\)"
-	       (display-buffer-full-frame)))
-;; except for certain buffers
+               '("\\*vterminal<.*>\\*" (display-buffer-at-bottom)))
 (add-to-list 'display-buffer-alist
-	     '("\\(magit-diff:.*\\)"
-	       (display-buffer-at-bottom)))
+               '("\\*vterminal.*\\*" (display-buffer-at-bottom)))
+
 
 ;; pop up management
 (use-package popper
@@ -963,29 +970,29 @@
          ("M-'"   . popper-cycle)
          ("C-M-'" . popper-toggle-type))
   :init
-  (setq
-   popper-reference-buffers '("\\*Messages\\*"
-                              "\\*eldoc\\*"
-                              "Output\\*$"
-                              "\\*Async Shell Command\\*"
-                              "^\\*vterminal*\\*$"
-                              vterm-mode
-                              help-mode
-                              compilation-mode)
+  (setq popper-reference-buffers '("\\*Messages\\*"
+                                   "\\*eldoc\\*"
+                                   "Output\\*$"
+                                   "\\*Async Shell Command\\*"
+                                   "\\*vterm.*\\*"
+                                   vterm-mode
+                                   help-mode
+                                   compilation-mode)
    popper-group-function #'popper-group-by-perspective
    popper-echo-dispatch-keys '(?1 ?2 ?3 ?4 ?5 ?6 ?7 ?8 ?9 ?0))
 
   (setq popper-window-height (lambda (win)
                                (fit-window-to-buffer
                                 win
-                                (floor (frame-height) 3)
-                                (floor (frame-height) 3))))
+                                (floor (frame-height) 2)
+                                (floor (frame-height) 2))))
 
   (popper-mode +1)
   ;; echo area hints
   (popper-echo-mode +1))
 
 ;;; Keybindings
+
 
 ;;;; Definitions
 (defun qqh/kill-buffer ()
@@ -997,6 +1004,15 @@
   "Fuzzy find a file in the current directory."
   (interactive)
   (consult-fd))
+
+(defun qqh/multi-vterm ()
+  "Create new vterm buffer, using `display-buffer' instaed of `switch-to-buffer'."
+  (interactive)
+  (let* ((vterm-buffer (multi-vterm-get-buffer)))
+    (setq multi-vterm-buffer-list (nconc multi-vterm-buffer-list (list vterm-buffer)))
+    (set-buffer vterm-buffer)
+    (multi-vterm-internal)
+    (display-buffer vterm-buffer)))
 
 (defun qqh/emacs/reload ()
   "Load my Emacs configuration."
@@ -1018,6 +1034,10 @@
   (interactive)
   (find-file "~/dotfiles/home-manager/home.nix"))
 
+(defun qqh/config/hyprland ()
+  "Open my hyprland config."
+  (interactive)
+  (find-file "~/dotfiles/hypr/hyprland.conf"))
 
 ;;;; surround: surround selections with custom delimiters
 (use-package surround)
@@ -1051,7 +1071,7 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
     ("nli" "insert link" org-insert-link-global)]
    ["(o)pen..."
     ("od" "open diagnostics panel" consult-flymake)
-    ("ot" "open terminal" multi-vterm)]
+    ("ot" "open terminal" qqh/multi-vterm)]
    ["(p)rojects..."
     ("pp" "switch to project" projectile-persp-switch-project)
     ("pd" "project dired" projectile-dired)
@@ -1064,10 +1084,11 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
     ("sl" "search all lines" consult-line-multi)
     ("sp" "search perspectives" persp-switch)]
    ["(;) configuration files.."
-    (";r" "reload config" qqh/emacs/reload)
+    (";c" "edit config" qqh/emacs/open-config)
     (";f" "open flake.nix" qqh/config/open-nix-flake)
+    (";h" "open hyprland.conf" qqh/config/hyprland)
     (";n" "open home.nix" qqh/config/open-nix-home)
-    (";c" "edit config" qqh/emacs/open-config)]])
+    (";r" "reload config" qqh/emacs/reload)]])
 
 (transient-define-prefix qqh/transient/g ()
   "Transient map for emulating vim's g- leader keybinding."

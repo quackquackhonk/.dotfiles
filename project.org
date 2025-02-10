@@ -37,6 +37,7 @@ Hyde kind of defeats the point of not going with a DE, I should rip out the guts
 
 ** TODO Waybar configuration without hyde
 ** TODO See if we can bind the thumb button to LGUI
+** TODO mouse sens is odd, double scrolling as well
 ** TODO delay before key repeat should be less
 * Emacs [1/3]
 ** TODO remove things that I don't know what they do
@@ -85,17 +86,22 @@ I think theres a snippet in the meow FAQs about doing this exactly...
 *** OBSOLETE can we set up use-package integration?
 - State "OBSOLETE"   from "TODO"       [2024-11-04 Mon 17:22] \\
   already can be implemented using :bind (:map meow-STATE-state-map (...))
-** Theming / UI [0/3]
-*** TODO display-buffer customization
-- [ ] compilation buffer always in a new tab, switch back on "close"
-- [ ] ~eat-project~ as full horizontal split
-- [ ] ~eat~ in a new tab (auto close tab)
-- [ ] magit buffer in new tab (auto close tab)
-*** STARTED Modeline configuration [1/4]
+** Theming / UI [2/3]
+*** DONE display-buffer customization
+- State "DONE"       from "TODO"       [2025-02-09 Sun 12:22]
+- [X] compilation buffer always in a new tab, switch back on "close"
+- [X] ~eat-project~ as full horizontal split
+- --- ~eat~ in a new tab (auto close tab)
+- --- magit buffer in new tab (auto close tab)
+*** DONE Modeline configuration [4/4]
+- State "DONE"       from "STARTED"    [2025-02-09 Sun 12:21]
 - State "STARTED"    from "TODO"       [2024-11-13 Wed 18:07]
-**** TODO Colors on the modeline!!!
-**** TODO truncate git branch length
-**** TODO extract flycheck from mode-line-modes, remove mode-line-modes from modeline
+**** DONE Colors on the modeline!!!
+- State "DONE"       from "TODO"       [2025-02-09 Sun 12:21]
+**** DONE truncate git branch length
+- State "DONE"       from "TODO"       [2025-02-09 Sun 12:21]
+**** DONE extract flycheck from mode-line-modes, remove mode-line-modes from modeline
+- State "DONE"       from "TODO"       [2025-02-09 Sun 12:21]
 **** DONE extract projectile from mode-line-modes
 - State "DONE"       from "TODO"       [2024-11-20 Wed 16:02]
 *** TODO hl-todo customizations

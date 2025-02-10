@@ -77,6 +77,8 @@
   services.blueman.enable = true;
 
   services.libinput.enable = true;
+  services.solaar.enable = true;
+
   services.openssh.enable = true;
 
   # install flatpak
