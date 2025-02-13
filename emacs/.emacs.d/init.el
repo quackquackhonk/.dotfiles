@@ -188,13 +188,9 @@
   :config
   (setq wgrep-auto-save-buffer t))
 
-
 ;;; Minibuffer & Completion
-(use-package embark-consult)
-
 ;;;; Embark and Consult
 (use-package consult
-  :after embark-consult
   ;; Enable automatic preview at point in the *Completions* buffer. This is
   ;; relevant when you use the default completion UI.
   :hook (completion-list-mode . consult-preview-at-point-mode)
@@ -263,7 +259,7 @@
 
 (use-package embark
   :demand t
-  :after '(avy embark-consult)
+  :after '(avy)
   :bind (("C-." . embark-act)         ;; pick some comfortable binding
          ("C-;" . embark-dwim)        ;; good alternative: M-.
          ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
@@ -285,6 +281,12 @@
   ;; After invoking avy-goto-char-timer, hit "." to run embark at the next
   ;; candidate you select
   (setf (alist-get ?. avy-dispatch-alist) 'qqh/avy-action-embark))
+
+(use-package embark-consult
+  :after (embark consult)
+  :bind (:map minibuffer-mode-map
+              ("C-." . embark-act)))
+
 
 ;; Vertico: better vertical completion for minibuffer commands
 ;;;; Vertico
@@ -496,23 +498,47 @@
       (copy-file template file))
     (find-file file)))
 
-;;;;; Perspective
-(use-package perspective
-  :after consult
+;;;;; Tabspaces: tab-bar-mode for workspaces
+(use-package tabspaces
+  ;; use this next line only if you also use straight, otherwise ignore it.
+  :straight (:type git :host github :repo "mclear-tools/tabspaces")
+  :hook (after-init . tabspaces-mode) ;; use this only if you want the minor-mode loaded at startup.
+  :commands (tabspaces-switch-or-create-workspace
+             tabspaces-open-or-create-project-and-workspace)
   :custom
-  (persp-mode-prefix-key (kbd "C-M-p"))
-  :init
-  (require 'consult)
-  (persp-mode)
-
-  ;; Add perspective mode source to buffer switcher
-  (consult-customize consult--source-buffer :hidden t :default nil)
-  (add-to-list 'consult-buffer-sources persp-consult-source))
-
-;;;;; make them play nice
-(use-package persp-projectile
+  (tabspaces-use-filtered-buffers-as-default t)
+  (tabspaces-default-tab "Default")
+  (tabspaces-remove-to-default t)
+  (tabspaces-include-buffers '("*scratch*"))
+  (tabspaces-initialize-project-with-todo t)
+  (tabspaces-todo-file-name "project.org")
+  ;; sessions
+  (tabspaces-session t)
+  (tabspaces-session-auto-restore nil)
+  (tab-bar-new-tab-choice "*scratch*")
+  ;; key
+  (tabspaces-keymap-prefix "C-c t")
   :config
-  (define-key projectile-command-map (kbd "P") 'projectile-persp-switch-project))
+  ;; Filter Buffers for Consult-Buffer
+
+  (with-eval-after-load 'consult
+    ;; hide full buffer list (still available with "b" prefix)
+    (consult-customize consult--source-buffer :hidden t :default nil)
+    ;; set consult-workspace buffer list
+    (defvar consult--source-workspace
+      (list :name     "Workspace Buffers"
+            :narrow   ?w
+            :history  'buffer-name-history
+            :category 'buffer
+            :state    #'consult--buffer-state
+            :default  t
+            :items    (lambda () (consult--buffer-query
+                                  :predicate #'tabspaces--local-buffer-p
+                                  :sort 'visibility
+                                  :as #'buffer-name)))
+
+      "Set workspace buffer list for consult-buffer.")
+    (add-to-list 'consult-buffer-sources 'consult--source-workspace)))
 
 ;;;;; Consult-todo: Search project todos
 (use-package consult-todo)
@@ -523,14 +549,6 @@
   :hook ((markdown-mode . visual-line-mode))
   :config
   (setq markdown-list-indent-width 2))
-
-(use-package grip-mode
-  :after markdown-mode
-  :config
-  (setq grip-use-mdopen t
-        grip-mdopen-path "/Users/i34866/.cargo/bin/mdopen"
-        grip-preview-use-webkit nil
-        grip-update-after-change nil))
 
 (use-package yaml-mode)
 (use-package json-mode)
@@ -865,79 +883,32 @@
   (fancy-compilation-mode))
 
 ;;;; Modeline configurtaion
+(use-package mood-line
+  :config
+  (mood-line-mode)
+  (setq
+   mood-line-glyph-alist mood-line-glyphs-fira-code
 
-;;;;; Common
-(defgroup qqh/modeline nil
-  "User options for my modeline configuration."
-  :group 'qqh)
+   mood-line-segment-modal-meow-state-alist '((normal " NORMAL " . meow-normal-indicator)
+                                              (insert " INSERT " . meow-insert-indicator)
+                                              (keypad " KEYPAD " . meow-keypad-indicator)
+                                              (beacon " BEACON " . meow-beacon-indicator)
+                                              (motion " MOTION " . meow-motion-indicator))
 
-(defgroup qqh/modeline/faces nil
-  "Faces for my modeline configuration."
-  :group 'qqh/modeline)
-
-(defcustom qqh/modeline/truncation-length 12
-  "Length to truncate mode-line strings to in small windows."
-  :type 'natnum
-  :group 'qqh/modeline)
-
-;;;;; Buffer ID
-
-(defun qqh/modeline/major-mode-name ()
-  "Return the major mode of the current buffer with a colon after it."
-  (concat (symbol-name major-mode) ":"))
-
-(defface qqh/modeline/faces/bold-yellow
-  `((t . (:bold t :foreground ,(catppuccin-color 'yellow))))
-  "The face to use for the names of modified buffers on the mode line."
-  :group 'qqh/modeline/faces)
-
-(defun qqh/modeline/buffer-name ()
-  "Return the name of the current buffer."
-  (let ((text " %b")
-        (face (if (and (buffer-modified-p)
-                       (mode-line-window-selected-p))
-                  'qqh/modeline/faces/bold-yellow
-                nil)))
-    (if face
-        (propertize text 'face face)
-      text)))
-
-(defvar-local qqh/modeline/flymake
-    `(:eval (when (mode-line-window-selected-p)
-              flymake-mode-line-format)))
-
-;;;;; Eglot
-(defvar-local qqh/modeline/eglot
-    `(:eval
-      (when (and (featurep 'eglot) (mode-line-window-selected-p))
-        '(eglot--managed-mode (" [" eglot--mode-line-format "]"))))
-  "Mode line construct for reporting eglot status of the current buffer.")
-
-(setq-default mode-line-format
-              '("%e%n"
-                "  "
-                (:eval (meow-indicator))
-                " "
-                (:eval (qqh/modeline/major-mode-name))
-                (:eval (qqh/modeline/buffer-name))
-                " "
-                mode-line-process
-
-                ;; emacs 30: right align the rest of the modeline
-                mode-line-format-right-align         ;; emacs 30
-                " "
-                (vc-mode vc-mode)
-                ;; flymake-mode-line-format
-                qqh/modeline/flymake
-                qqh/modeline/eglot
-                " "
-                (:eval (when (mode-line-window-selected-p)
-                         mode-line-misc-info))
-                "  "))
-
-(dolist (construct '(qqh/modeline/eglot
-                     qqh/modeline/flymake))
-  (put construct 'risky-local-variable t))
+   mood-line-format (mood-line-defformat
+                     :left
+                     (((mood-line-segment-modal) . " ")
+                      ((mood-line-segment-buffer-status) . " ")
+                      ((mood-line-segment-buffer-name)   . " : ")
+                      (mood-line-segment-major-mode))
+                     :right
+                     (((mood-line-segment-project) . " ")
+                      ((when (mood-line-segment-vc) "on") . " ")
+                      ((mood-line-segment-vc) . " ")
+                      ((when (mood-line-segment-checker) "|") . "  ")
+                      ((mood-line-segment-checker)            . "  ")
+                      ((when (mood-line-segment-misc-info) "|") . " ")
+                      ((mood-line-segment-misc-info) . " ")))))
 
 ;;;; Buffer display configuration
 ;;;;; display-buffer-alist customization
@@ -975,13 +946,17 @@
                                    "Output\\*$"
                                    "\\*Async Shell Command\\*"
                                    "\\*vterm.*\\*"
+                                   "\\*OCaml\\*"
                                    vterm-mode
                                    help-mode
-                                   compilation-mode)
-   popper-group-function #'popper-group-by-perspective
+                                   compilation-mode
+                                   comint-mode)
+   popper-group-function #'popper-group-by-projectile
    popper-echo-dispatch-keys '(?1 ?2 ?3 ?4 ?5 ?6 ?7 ?8 ?9 ?0))
 
-  (setq popper-window-height (lambda (win)
+  (setq
+   popper-mode-line nil
+   popper-window-height (lambda (win)
                                (fit-window-to-buffer
                                 win
                                 (floor (frame-height) 2)
@@ -996,9 +971,9 @@
 
 ;;;; Definitions
 (defun qqh/kill-buffer ()
-  "Kill the current buffer using the `persp-kill-buffer*' command."
+  "Kill the current buffer."
   (interactive)
-  (persp-kill-buffer* (current-buffer)))
+  (kill-buffer (current-buffer)))
 
 (defun qqh/fuzzy-find-file ()
   "Fuzzy find a file in the current directory."
@@ -1073,7 +1048,7 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
     ("od" "open diagnostics panel" consult-flymake)
     ("ot" "open terminal" qqh/multi-vterm)]
    ["(p)rojects..."
-    ("pp" "switch to project" projectile-persp-switch-project)
+    ("pp" "switch to project" tabspaces-open-or-create-project-and-workspace)
     ("pd" "project dired" projectile-dired)
     ("pt" "open project terminal" multi-vterm-project)]
    ["(s)earch..."
@@ -1081,8 +1056,7 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
     ("sn" "search notes" org-roam-node-find)
     ("so" "search outline" consult-outline)
     ("si" "search imenu" consult-imenu)
-    ("sl" "search all lines" consult-line-multi)
-    ("sp" "search perspectives" persp-switch)]
+    ("sl" "search all lines" consult-line-multi)]
    ["(;) configuration files.."
     (";c" "edit config" qqh/emacs/open-config)
     (";f" "open flake.nix" qqh/config/open-nix-flake)
@@ -1108,16 +1082,14 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
   [["Next"
     ("d" "todo" hl-todo-next)
     ("e" "error" flymake-goto-next-error)
-    ("t" "tab" tab-next)
-    ("p" "perspective" persp-next)]])
+    ("t" "tab" tab-next)]])
 
 (transient-define-prefix qqh/transient/prev ()
   "Transient map for going to the previous thing."
   [["Previous"
     ("d" "todo" hl-todo-previous)
     ("e" "error" flymake-goto-prev-error)
-    ("t" "tab" tab-previous)
-    ("p" "perspective" persp-prev)]])
+    ("t" "tab" tab-previous)]])
 
 
 ;;;; Global bindings
