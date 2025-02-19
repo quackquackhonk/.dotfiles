@@ -886,6 +886,8 @@
 (use-package mood-line
   :config
   (mood-line-mode)
+  (defun mood-line-segment-separator ()
+    (propertize "|" 'face 'mood-line-status-unimportant))
   (setq
    mood-line-glyph-alist mood-line-glyphs-fira-code
 
@@ -902,13 +904,13 @@
                       ((mood-line-segment-buffer-name)   . " : ")
                       (mood-line-segment-major-mode))
                      :right
-                     (((mood-line-segment-project) . " ")
+                     (((mood-line-segment-misc-info) . " ")
+                      ((when (mood-line-segment-checker) (mood-line-segment-separator)) . " ")
+                      ((mood-line-segment-checker) . " ")
+                      ((when (mood-line-segment-project) (mood-line-segment-separator)) . " ")
+                      ((mood-line-segment-project) . " ")
                       ((when (mood-line-segment-vc) "on") . " ")
-                      ((mood-line-segment-vc) . " ")
-                      ((when (mood-line-segment-checker) "|") . "  ")
-                      ((mood-line-segment-checker)            . "  ")
-                      ((when (mood-line-segment-misc-info) "|") . " ")
-                      ((mood-line-segment-misc-info) . " ")))))
+                      ((mood-line-segment-vc) . "")))))
 
 ;;;; Buffer display configuration
 ;;;;; display-buffer-alist customization
