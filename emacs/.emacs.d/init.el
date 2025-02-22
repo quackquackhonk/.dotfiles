@@ -515,10 +515,16 @@
   ;; sessions
   (tabspaces-session t)
   (tabspaces-session-auto-restore nil)
-  (tab-bar-new-tab-choice "*scratch*")
   ;; key
   (tabspaces-keymap-prefix "C-c t")
+  ;; switch project map
+
   :config
+  (setq tabspaces-project-switch-commands '((project-find-file "find file" "f")
+                                            (project-vc "project git" "g")
+                                            (multi-vterm-project "open vterm" "t")
+                                            (project-dired "project dir" "d")))
+
   ;; Filter Buffers for Consult-Buffer
 
   (with-eval-after-load 'consult
@@ -614,8 +620,8 @@
   (fset #'jsonrpc--log-event #'ignore)
 
   ;; Remove the eglot indicator from the mode-line-misc-info variable
-  (setq mode-line-misc-info
-        (delete '(eglot--managed-mode (" [" eglot--mode-line-format "] ")) mode-line-misc-info))
+  ;; (setq mode-line-misc-info
+  ;;       (delete '(eglot--managed-mode (" [" eglot--mode-line-format "] ")) mode-line-misc-info))
 
   ;; server configurations
   (setq-default eglot-workspace-configuration
@@ -884,6 +890,9 @@
 
 ;;;; Modeline configurtaion
 (use-package mood-line
+  :custom-face
+  (mood-line-status-neutral ((t (:inherit success))))
+  (mood-line-unimportant ((t (:inherit shadow))))
   :config
   (mood-line-mode)
   (defun mood-line-segment-separator ()
@@ -905,9 +914,9 @@
                       (mood-line-segment-major-mode))
                      :right
                      (((mood-line-segment-misc-info) . " ")
-                      ((when (mood-line-segment-checker) (mood-line-segment-separator)) . " ")
+                      ((when (mood-line-segment-misc-info) (mood-line-segment-separator)) . " ")
                       ((mood-line-segment-checker) . " ")
-                      ((when (mood-line-segment-project) (mood-line-segment-separator)) . " ")
+                      ((when (mood-line-segment-checker) (mood-line-segment-separator)) . " ")
                       ((mood-line-segment-project) . " ")
                       ((when (mood-line-segment-vc) "on") . " ")
                       ((mood-line-segment-vc) . "")))))
@@ -970,17 +979,11 @@
 
 ;;; Keybindings
 
-
 ;;;; Definitions
 (defun qqh/kill-buffer ()
   "Kill the current buffer."
   (interactive)
   (kill-buffer (current-buffer)))
-
-(defun qqh/fuzzy-find-file ()
-  "Fuzzy find a file in the current directory."
-  (interactive)
-  (consult-fd))
 
 (defun qqh/multi-vterm ()
   "Create new vterm buffer, using `display-buffer' instaed of `switch-to-buffer'."
@@ -990,6 +993,26 @@
     (set-buffer vterm-buffer)
     (multi-vterm-internal)
     (display-buffer vterm-buffer)))
+
+(defun qqh/project/open-flake ()
+  "Open the project flake file, if it exists."
+  (interactive)
+  (let ((f (projectile-expand-root "flake.nix")))
+    (if (file-exists-p f)
+        (find-file f)
+      (message (format "%s does not exist!" f)))))
+
+(defun qqh/spack-python ()
+  "Activate the spack environment in the current project, if there is one."
+  (interactive)
+  (let* ((root-dir (if (projectile-project-root)
+                      (projectile-project-root)
+                    default-directory))
+         (env-dir (expand-file-name "spack_env/.spack-env/view" root-dir)))
+    (if (file-exists-p env-dir)
+        (pyvenv-activate env-dir)
+      (message (format "The spack environment at %s does not exist!" env-dir)))))
+
 
 (defun qqh/emacs/reload ()
   "Load my Emacs configuration."
@@ -1033,10 +1056,9 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
     ("," "last buffer" meow-last-buffer)
     (":" "eval expression" eval-expression)]
    ["(c)ode..."
-    ("cc" "compile" compile)
-    ("c SPC" "code action" eglot-code-actions :if (lambda () (and (featurep 'eglot) eglot--managed-mode)))
-    ("cr" "rename symbol" eglot-rename :if (lambda () (and (featurep 'eglot) eglot--managed-mode)))
-    ("cf" "format" format-all-region-or-buffer)]
+    ("cc" "compile" projectile-compile-project)
+    ("cf" "format" format-all-region-or-buffer)
+    ("cv" "activate environment" pyvenv-workon)]
    ["(g)it..."
     ("gg" "git status" magit)
     ("gb" "git branch" magit-branch)
@@ -1050,11 +1072,12 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
     ("od" "open diagnostics panel" consult-flymake)
     ("ot" "open terminal" qqh/multi-vterm)]
    ["(p)rojects..."
-    ("pp" "switch to project" tabspaces-open-or-create-project-and-workspace)
     ("pd" "project dired" projectile-dired)
+    ("pf" "project flake" qqh/project/open-flake)
+    ("pp" "switch to project" tabspaces-open-or-create-project-and-workspace)
     ("pt" "open project terminal" multi-vterm-project)]
    ["(s)earch..."
-    ("ss" "search files" qqh/fuzzy-find-file)
+    ("ss" "search files" consult-fd)
     ("sn" "search notes" org-roam-node-find)
     ("so" "search outline" consult-outline)
     ("si" "search imenu" consult-imenu)
@@ -1069,6 +1092,8 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
 (transient-define-prefix qqh/transient/g ()
   "Transient map for emulating vim's g- leader keybinding."
   [["Edit"
+    ("SPC" "code action" eglot-code-actions :if (lambda () (and (featurep 'eglot) eglot--managed-mode)))
+    ("R" "rename symbol" eglot-rename :if (lambda () (and (featurep 'eglot) eglot--managed-mode)))
     ("c" "comment" comment-dwim)]
    ["Find"
     ("d" "definition" xref-find-definitions)
@@ -1119,7 +1144,7 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
   (meow-beacon-indicator ((t (:bold t :foreground ,(catppuccin-color 'base) :background ,(catppuccin-color 'sapphire))))))
 
 
-(defun meow-setup ()
+:(defun meow-setup ()
   "Function for setting up meow keybindings."
   ;; colemak-dh cheatsheet
   (setq meow-cheatsheet-layout meow-cheatsheet-layout-colemak-dh)
