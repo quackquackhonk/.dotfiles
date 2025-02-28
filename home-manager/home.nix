@@ -13,7 +13,7 @@
     # If you want to use home-manager modules from other flakes (such as nix-colors):
     # inputs.nix-colors.homeManagerModule
     ./zsh.nix
-    ./emacs.nix
+    ./dev.nix
   ];
   services.gpg-agent = {
     enable = true;
@@ -68,6 +68,7 @@
     gnupg
     btop # replacement of htop/nmon
     lsof # list open files
+
     # networking tools
     mtr
     dnsutils
@@ -95,8 +96,6 @@
     udiskie
 
     # apps
-    firefox
-    thunderbird
     kdePackages.dolphin
     kdePackages.qtwayland
     kdePackages.qtsvg

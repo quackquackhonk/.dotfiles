@@ -9,12 +9,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # logitech mouse config
-    solaar = {
-      url = "https://flakehub.com/f/Svenum/Solaar-Flake/*.tar.gz"; # For latest stable version
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     systems.url = "github:nix-systems/default";
     flake-utils = {
       url = "github:numtide/flake-utils";
@@ -25,7 +19,6 @@
   outputs =
     {
       self,
-      solaar,
       nixpkgs,
       home-manager,
       ...
@@ -54,10 +47,7 @@
           system = "x86_64-linux";
           specialArgs = { inherit inputs outputs; };
           modules = [
-            solaar.nixosModules.default
             ./nixos/redwood/configuration.nix
-            { environment.systemPackages = [ ]; }
-
             home-manager.nixosModules.home-manager
             {
               home-manager.backupFileExtension = "backup";
