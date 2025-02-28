@@ -483,8 +483,8 @@
     (setq projectile-fd-executable "/opt/homebrew/bin/fd"))
 
   (setq projectile-enable-caching t
-        projectile-auto-discover nil
-        projectile-project-search-path '(("~/code/" . 2)
+        projectile-auto-discover t
+        projectile-project-search-path '(("~/code/" . 3)
 					                     "~/sources/")
         projectile-switch-project-action 'qqh/fuzzy-find-file))
 
