@@ -47,6 +47,7 @@
   # environment.
   home.packages = with pkgs; [
     # utils
+    lshw
     eza
     bat
     fd
