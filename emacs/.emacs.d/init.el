@@ -479,14 +479,16 @@
   :init
   (projectile-mode +1)
 
+  ;; integration with project.el, some packages work better with it
+  (add-hook 'project-find-functions #'project-projectile)
+
   (when (qqh/macos-p)
     (setq projectile-fd-executable "/opt/homebrew/bin/fd"))
 
   (setq projectile-enable-caching t
         projectile-auto-discover t
         projectile-project-search-path '(("~/code/" . 3)
-					                     "~/sources/")
-        projectile-switch-project-action 'qqh/fuzzy-find-file))
+					                     "~/sources/")))
 
 (defun qqh/open-project-org-file ()
   "Open the project.org file at the root of the current project. If no project.org file is found, create a new one from a template."
