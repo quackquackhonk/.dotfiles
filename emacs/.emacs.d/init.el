@@ -76,7 +76,7 @@
 (use-package catppuccin-theme
   :config
   (setq catppuccin-flavor 'mocha
-	    catppuccin-italic-comments t
+	    catppuccin-italic-comments nil
 	    catppuccin-highlight-matches t)
 
   (add-hook 'server-after-make-frame-hook #'catppuccin-reload)
@@ -136,6 +136,7 @@
             (delete-trailing-whitespace)))
 
 ;;; Built-Ins.
+
 ;;;; Repeat Mode
 (use-package repeat
   :config (repeat-mode))
@@ -1144,7 +1145,7 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
   (meow-beacon-indicator ((t (:bold t :foreground ,(catppuccin-color 'base) :background ,(catppuccin-color 'sapphire))))))
 
 
-:(defun meow-setup ()
+(defun meow-setup ()
   "Function for setting up meow keybindings."
   ;; colemak-dh cheatsheet
   (setq meow-cheatsheet-layout meow-cheatsheet-layout-colemak-dh)
@@ -1256,11 +1257,11 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
    '("w" . meow-next-word)
    '("W" . meow-next-symbol)
    '("x" . meow-delete)
-   '("X" . ignore)
+   '("X" . meow-backward-delete)
    '("y" . meow-save)
    '("z" . meow-pop-selection)
    '("'" . repeat)
-   '("<" . meow-pop-to-global-mark)
+   '("<" . meow-pop-to-mark)
    '(">" . meow-unpop-to-mark)
    '("<escape>" . keyboard-quit)
    '("RET" . ignore)
@@ -1284,9 +1285,7 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
 
 (require 'meow)
 (meow-setup)
-(add-to-list 'meow-mode-state-list '(eat-mode . normal))
 (meow-global-mode 1)
-(meow-esc-mode 1)               ;; enable esc mode for terminal use
 
 ;;; Customization file
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))

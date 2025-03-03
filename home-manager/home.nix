@@ -96,6 +96,7 @@
     udiskie
 
     # apps
+    floorp
     kdePackages.dolphin
     kdePackages.qtwayland
     kdePackages.qtsvg
