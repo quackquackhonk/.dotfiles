@@ -20,6 +20,7 @@
     gnupg
     networkmanagerapplet
     nixfmt-rfc-style
+    ghostty
     kitty
     wget
     (
