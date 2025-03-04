@@ -1138,6 +1138,7 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
   (meow-position-highlight-reverse-number-1 ((t (:background ,(catppuccin-lighten (catppuccin-color 'pink) 25)))))
   (meow-position-highlight-reverse-number-2 ((t (:background ,(catppuccin-color 'pink)))))
   (meow-position-highlight-reverse-number-3 ((t (:background ,(catppuccin-darken (catppuccin-color 'pink) 25)))))
+
   ;; mode line faces
   (meow-normal-indicator ((t (:bold t :foreground ,(catppuccin-color 'base) :background ,(catppuccin-color 'mauve)))))
   (meow-motion-indicator ((t (:bold t :foreground ,(catppuccin-color 'base) :background ,(catppuccin-color 'red)))))
@@ -1145,8 +1146,9 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
   (meow-insert-indicator ((t (:bold t :foreground ,(catppuccin-color 'base) :background ,(catppuccin-color 'green)))))
   (meow-beacon-indicator ((t (:bold t :foreground ,(catppuccin-color 'base) :background ,(catppuccin-color 'sapphire))))))
 
+(use-package meow-tree-sitter)
 
-:(defun meow-setup ()
+(defun meow-setup ()
   "Function for setting up meow keybindings."
   ;; colemak-dh cheatsheet
   (setq meow-cheatsheet-layout meow-cheatsheet-layout-colemak-dh)
@@ -1288,7 +1290,7 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
 (meow-setup)
 (add-to-list 'meow-mode-state-list '(eat-mode . normal))
 (meow-global-mode 1)
-(meow-esc-mode 1)               ;; enable esc mode for terminal use
+(meow-tree-sitter-register-defaults)
 
 ;;; Customization file
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
