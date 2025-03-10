@@ -23,16 +23,6 @@
 
   services.mpris-proxy.enable = true;
 
-  nixpkgs = {
-    # Configure your nixpkgs instance
-    config = {
-      # Disable if you don't want unfree packages
-      allowUnfree = true;
-      # Workaround for https://github.com/nix-community/home-manager/issues/2942
-      allowUnfreePredicate = _: true;
-    };
-  };
-
   home.username = "sahana";
   home.homeDirectory = "/home/sahana";
   home.stateVersion = "24.11"; # Please read the comment before changing.
@@ -96,7 +86,6 @@
     udiskie
 
     # apps
-    floorp
     kdePackages.dolphin
     kdePackages.qtwayland
     kdePackages.qtsvg
@@ -118,6 +107,10 @@
       recursive = true;
     };
     ".config/dunst/dunstrc".source = ../dunst/dunstrc;
+    ".config/ghostty" = {
+      source = ../ghostty;
+      recursive = true;
+    };
     ".config/waybar" = {
       source = ../waybar;
       recursive = true;
