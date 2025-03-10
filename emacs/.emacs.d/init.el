@@ -1132,27 +1132,37 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
   :straight t
   :demand t
   :custom-face
-  (meow-position-highlight-number-1 ((t (:background ,(catppuccin-lighten (catppuccin-color 'mauve) 25)))))
-  (meow-position-highlight-number-2 ((t (:background ,(catppuccin-color 'mauve)))))
-  (meow-position-highlight-number-3 ((t (:background ,(catppuccin-darken (catppuccin-color 'mauve) 25)))))
+  ;; (meow-position-highlight-number-1 ((t (:background ,(catppuccin-lighten (catppuccin-color 'mauve) 25)))))
+  ;; (meow-position-highlight-number-2 ((t (:background ,(catppuccin-color 'mauve)))))
+  ;; (meow-position-highlight-number-3 ((t (:background ,(catppuccin-darken (catppuccin-color 'mauve) 25)))))
 
-  (meow-position-highlight-reverse-number-1 ((t (:background ,(catppuccin-lighten (catppuccin-color 'pink) 25)))))
-  (meow-position-highlight-reverse-number-2 ((t (:background ,(catppuccin-color 'pink)))))
-  (meow-position-highlight-reverse-number-3 ((t (:background ,(catppuccin-darken (catppuccin-color 'pink) 25)))))
+  ;; (meow-position-highlight-reverse-number-1 ((t (:background ,(catppuccin-lighten (catppuccin-color 'pink) 25)))))
+  ;; (meow-position-highlight-reverse-number-2 ((t (:background ,(catppuccin-color 'pink)))))
+  ;; (meow-position-highlight-reverse-number-3 ((t (:background ,(catppuccin-darken (catppuccin-color 'pink) 25)))))
 
   ;; mode line faces
   (meow-normal-indicator ((t (:bold t :foreground ,(catppuccin-color 'base) :background ,(catppuccin-color 'mauve)))))
+  (meow-normal-cursor ((t :inherit meow-normal-indicator)))
   (meow-motion-indicator ((t (:bold t :foreground ,(catppuccin-color 'base) :background ,(catppuccin-color 'red)))))
+  (meow-motion-cursor ((t :inherit meow-motion-indicator)))
   (meow-keypad-indicator ((t (:bold t :foreground ,(catppuccin-color 'base) :background ,(catppuccin-color 'peach)))))
+  (meow-keypad-cursor ((t :inherit meow-keypad-indicator)))
   (meow-insert-indicator ((t (:bold t :foreground ,(catppuccin-color 'base) :background ,(catppuccin-color 'green)))))
-  (meow-beacon-indicator ((t (:bold t :foreground ,(catppuccin-color 'base) :background ,(catppuccin-color 'sapphire))))))
-
-(use-package meow-tree-sitter)
+  (meow-insert-cursor ((t :inherit meow-insert-indicator)))
+  (meow-beacon-indicator ((t (:bold t :foreground ,(catppuccin-color 'base) :background ,(catppuccin-color 'sapphire)))))
+  (meow-beacon-cursor ((t :inherit meow-normal-indicator))))
 
 (defun meow-setup ()
   "Function for setting up meow keybindings."
   ;; colemak-dh cheatsheet
   (setq meow-cheatsheet-layout meow-cheatsheet-layout-colemak-dh)
+
+  ;; all modes use a box cursor
+  (setq meow-cursor-type-default 'box)
+  (setq meow-cursor-type-normal 'box)
+  (setq meow-cursor-type-motion 'box)
+  (setq meow-cursor-type-insert 'box)
+  (setq meow-cursor-type-keypad 'hollow)
 
   ;; register some things
   (meow-thing-register 'angle
@@ -1282,15 +1292,15 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
    '("[" . qqh/transient/prev)
    '("]" . qqh/transient/next)
 
+   ;; embark keybindings
    '("C-." . embark-act)         ;; pick some comfortable binding
    '("C-;" . embark-dwim)        ;; good alternative: M-.
    '("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
-   )
+  )
 
 (require 'meow)
 (meow-setup)
 (meow-global-mode 1)
-(meow-tree-sitter-register-defaults)
 
 ;;; Customization file
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
