@@ -37,6 +37,7 @@
   # environment.
   home.packages = with pkgs; [
     # utils
+    pkg-config
     lshw
     eza
     bat
@@ -84,6 +85,7 @@
     hyprlock
     wlogout
     udiskie
+    pavucontrol
 
     # apps
     kdePackages.dolphin

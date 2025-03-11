@@ -1,4 +1,4 @@
-;;; init.el --- Entry point for my emacs config -*- lexical-binding: t; -*-
+;;; init.el --- My emacs configurtion -*- lexical-binding: t -*-
 
 ;;; Commentary:
 
@@ -255,6 +255,7 @@
                   consult--source-file-register
                   consult--source-project-buffer-hidden
                   consult--source-project-recent-file-hidden))
+
   ;; Narrowing lets you restrict results to certain groups of candidates
   (setq consult-narrow-key "<"))
 
@@ -501,53 +502,56 @@
       (copy-file template file))
     (find-file file)))
 
-;;;;; Tabspaces: tab-bar-mode for workspaces
-(use-package tabspaces
-  ;; use this next line only if you also use straight, otherwise ignore it.
-  :straight (:type git :host github :repo "mclear-tools/tabspaces")
-  :hook (after-init . tabspaces-mode) ;; use this only if you want the minor-mode loaded at startup.
-  :commands (tabspaces-switch-or-create-workspace
-             tabspaces-open-or-create-project-and-workspace)
+
+;;;;; Perspectives
+(use-package persp-mode
+  :init
+  (unbind-key (kbd "C-M-p") 'emacs-lisp-mode-map)
+
   :custom
-  (tabspaces-use-filtered-buffers-as-default t)
-  (tabspaces-default-tab "Default")
-  (tabspaces-remove-to-default t)
-  (tabspaces-include-buffers '("*scratch*"))
-  (tabspaces-initialize-project-with-todo t)
-  (tabspaces-todo-file-name "project.org")
-  ;; sessions
-  (tabspaces-session t)
-  (tabspaces-session-auto-restore nil)
-  ;; key
-  (tabspaces-keymap-prefix "C-c t")
-  ;; switch project map
-
+  (persp-keymap-prefix (kbd "C-M-p"))
   :config
-  (setq tabspaces-project-switch-commands '((project-find-file "find file" "f")
-                                            (project-vc "project git" "g")
-                                            (multi-vterm-project "open vterm" "t")
-                                            (project-dired "project dir" "d")))
+  (persp-mode 1)
 
-  ;; Filter Buffers for Consult-Buffer
 
-  (with-eval-after-load 'consult
-    ;; hide full buffer list (still available with "b" prefix)
-    (consult-customize consult--source-buffer :hidden t :default nil)
-    ;; set consult-workspace buffer list
-    (defvar consult--source-workspace
-      (list :name     "Workspace Buffers"
-            :narrow   ?w
-            :history  'buffer-name-history
-            :category 'buffer
-            :state    #'consult--buffer-state
-            :default  t
-            :items    (lambda () (consult--buffer-query
-                                  :predicate #'tabspaces--local-buffer-p
-                                  :sort 'visibility
-                                  :as #'buffer-name)))
+  ;; Perspective-exclusive tabs, ala tmux windows
+  (add-hook 'persp-before-deactivate-functions
+            (defun qqh/persp/save-tab-bar-data (_)
+              (when (get-current-persp)
+                (set-persp-parameter
+                 'tab-bar-tabs (tab-bar-tabs)))))
 
-      "Set workspace buffer list for consult-buffer.")
-    (add-to-list 'consult-buffer-sources 'consult--source-workspace)))
+  (add-hook 'persp-activated-functions
+            (defun qqh/persp/load-tab-bar-data (_)
+              (tab-bar-tabs-set (persp-parameter 'tab-bar-tabs))
+              (tab-bar--update-tab-bar-lines t))))
+
+;; consult integration
+(with-eval-after-load "consult"
+  (require 'consult)
+  (defvar persp-consult-source
+    (list :name     "Perspective"
+          :narrow   ?s
+          :category 'buffer
+          :state    #'consult--buffer-state
+          :history  'buffer-name-history
+          :default  t
+          :items
+          #'(lambda ()
+              (mapcar #'buffer-name
+                      (persp-filter-out-bad-buffers)))))
+
+  (consult-customize consult--source-buffer :hidden t :default nil)
+  (add-to-list 'consult-buffer-sources persp-consult-source))
+
+(use-package persp-mode-projectile-bridge
+  :hook (after-init-hook . persp-mode-projectile-bridge-mode)
+  :config
+  (add-hook 'persp-mode-projectile-bridge-mode-hook
+            #'(lambda ()
+                (if persp-mode-projectile-bridge-mode
+                    (persp-mode-projectile-bridge-find-perspectives-for-all-buffers)
+                  (persp-mode-projectile-bridge-kill-perspectives)))))
 
 ;;;;; Consult-todo: Search project todos
 (use-package consult-todo)
@@ -899,7 +903,18 @@
   :config
   (mood-line-mode)
   (defun mood-line-segment-separator ()
-    (propertize "|" 'face 'mood-line-status-unimportant))
+    (propertize "|" 'face 'mood-line-unimportant))
+
+  (defun mood-line-segment-misc-info ()
+    "Return the current value of `mode-line-misc-info', without the unimportant face."
+    (let ((misc-info (format-mode-line mode-line-misc-info)))
+      (unless (string-blank-p misc-info)
+        (string-trim misc-info))))
+
+  (defun mood-line-segment-persp ()
+    "Return the current perspective name."
+    (format "%s" (safe-persp-name (get-current-persp))))
+
   (setq
    mood-line-glyph-alist mood-line-glyphs-fira-code
 
@@ -917,12 +932,16 @@
                       (mood-line-segment-major-mode))
                      :right
                      (((mood-line-segment-misc-info) . " ")
+                      ;; ((:eval persp-lighter) . " ")
                       ((when (mood-line-segment-misc-info) (mood-line-segment-separator)) . " ")
                       ((mood-line-segment-checker) . " ")
                       ((when (mood-line-segment-checker) (mood-line-segment-separator)) . " ")
                       ((mood-line-segment-project) . " ")
                       ((when (mood-line-segment-vc) "on") . " ")
-                      ((mood-line-segment-vc) . "")))))
+                      ((mood-line-segment-vc) . " ")
+                      ((mood-line-segment-separator) . " ")
+                      ((mood-line-segment-persp) . "")
+                      ))))
 
 ;;;; Buffer display configuration
 ;;;;; display-buffer-alist customization
@@ -940,12 +959,10 @@
 
 (add-to-list 'display-buffer-alist
 	     '("\\*\\(Ibuffer\\|vc-dir\\|vc-diff\\|vc-change-log\\|Async Shell Command\\)\\*"
-	       (display-buffer-full-frame)))
+	       (display-buffer-in-tab)))
 
 (add-to-list 'display-buffer-alist
-               '("\\*vterminal<.*>\\*" (display-buffer-at-bottom)))
-(add-to-list 'display-buffer-alist
-               '("\\*vterminal.*\\*" (display-buffer-at-bottom)))
+               '("\\*vterminal.*\\*" (display-buffer-full-frame)))
 
 
 ;; pop up management
@@ -1077,14 +1094,15 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
    ["(p)rojects..."
     ("pd" "project dired" projectile-dired)
     ("pf" "project flake" qqh/project/open-flake)
-    ("pp" "switch to project" tabspaces-open-or-create-project-and-workspace)
+    ("pp" "switch to project" projectile-switch-project)
     ("pt" "open project terminal" multi-vterm-project)]
    ["(s)earch..."
     ("ss" "search files" consult-fd)
     ("sn" "search notes" org-roam-node-find)
     ("so" "search outline" consult-outline)
     ("si" "search imenu" consult-imenu)
-    ("sl" "search all lines" consult-line-multi)]
+    ("sl" "search all lines" consult-line-multi)
+    ("sp" "search perspectives" persp-switch)]
    ["(;) configuration files.."
     (";c" "edit config" qqh/emacs/open-config)
     (";f" "open flake.nix" qqh/config/open-nix-flake)
@@ -1112,6 +1130,7 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
   [["Next"
     ("d" "todo" hl-todo-next)
     ("e" "error" flymake-goto-next-error)
+    ("p" "perspective" persp-next)
     ("t" "tab" tab-next)]])
 
 (transient-define-prefix qqh/transient/prev ()
@@ -1119,12 +1138,15 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
   [["Previous"
     ("d" "todo" hl-todo-previous)
     ("e" "error" flymake-goto-prev-error)
+    ("p" "perspective" persp-prev)
     ("t" "tab" tab-previous)]])
 
 
 ;;;; Global bindings
 (global-set-key (kbd "<home>") 'beginning-of-line)
 (global-set-key (kbd "<end>") 'end-of-line)
+(global-set-key (kbd "M-[") 'tab-previous)
+(global-set-key (kbd "M-]") 'tab-next)
 
 ;;;; Meow
 

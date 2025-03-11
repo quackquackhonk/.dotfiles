@@ -2,14 +2,22 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("org-refile-last-stored" (filename . "~/.dotfiles/project.org")
+(("Activity: camel8"
+ (activities-name . "camel8")
+ (handler . activities-bookmark-handler))
+("Activity: configuration"
+ (activities-name . "configuration")
+ (handler . activities-bookmark-handler))
+("org-refile-last-stored"
+ (filename . "~/.dotfiles/project.org")
  (front-context-string . "** TODO non-incl")
- (rear-context-string . "ighlight color\n\n") (position . 3264)
+ (rear-context-string . "ighlight color\n\n")
+ (position . 3264)
  (last-modified 26430 19793 390068 0))
 ("org-capture-last-stored"
- (filename
-  . "~/org/roam/main/historical_runner_against_local_radar.org")
+ (filename . "~/org/roam/main/historical_runner_against_local_radar.org")
  (front-context-string . "\n* Tasks [0/3]\n*")
- (rear-context-string . "nst_local_radar\n") (position . 115)
+ (rear-context-string . "nst_local_radar\n")
+ (position . 115)
  (last-modified 26523 47928 27338 0))
 )

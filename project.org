@@ -21,13 +21,14 @@
 
 * Links
 * Tasks
-* NixOS [2/4]
-** TODO login manager (SDDM)
+* NixOS [3/4]
+** DONE login manager (SDDM)
+- State "DONE"       from "TODO"       [2025-03-10 Mon 13:26]
 ** TODO wlogout theming + waybar integration
 ** DONE waybar
 - State "DONE"       from              [2024-12-12 Thu 16:41]
 ** DONE steam
-* Hyprland [1/4]
+* Hyprland [2/5]
 ** DONE TARTED Get off HyDE
 - State "DONE"       from              [2024-12-12 Thu 16:40]
 - State "STARTED"    from "TODO"       [2024-11-07 Thu 18:27]
@@ -35,7 +36,8 @@
 
 Hyde kind of defeats the point of not going with a DE, I should rip out the guts and keep what i need
 
-** TODO Waybar configuration without hyde
+** DONE Waybar configuration without hyde
+- State "DONE"       from "TODO"       [2025-03-10 Mon 13:26]
 ** TODO See if we can bind the thumb button to LGUI
 ** TODO mouse sens is odd, double scrolling as well
 ** TODO delay before key repeat should be less
@@ -50,23 +52,30 @@ I think this is probably becuse of some underlying binding that binds ~C-n~ and 
 ** Org [0/1]
 *** change the colors of the todo labels
 *** TODO Get started with org-roam
-** Development Settings [0/3]
-*** TODO eshell configuration
+** Development Settings [3/3]
+*** OBSOLETE eshell configuration
+- State "OBSOLETE"   from "TODO"       [2025-03-10 Mon 13:26] \\
+  not using eshell anymore
 - [ ] I want C-d exit
-*** TODO I need a snippet system, yasnippet or tempel
-*** TODO C / C++ [0/3]
-**** TODO track-changes-mode is logging errors on document change
+*** DONE I need a snippet system, yasnippet or tempel
+- State "DONE"       from "TODO"       [2025-03-10 Mon 13:26]
+*** DONE C / C++ [2/2]
+- State "DONE"       from "TODO"       [2025-03-10 Mon 13:26]
+**** DONE track-changes-mode is logging errors on document change
+- State "DONE"       from "TODO"       [2025-03-10 Mon 13:26]
 #+begin_src
 Warning (emacs): Missing/incorrect calls to ‘before/after-change-functions’!!
 Details logged to ‘track-changes--error-log’
 #+end_src
 
 This also causes corfu to crash, complaining about the problems with track changes
-**** TODO Debugging
+**** DONE Debugging
+- State "DONE"       from "TODO"       [2025-03-10 Mon 13:26]
 PRIMARILY need lldb support
 ** DONE flatten the config
 - State "DONE"       from "TODO"       [2024-11-04 Mon 17:31]
-** Keybindings [3/5]
+** Keybindings [3/6]
+*** TODO I want to use meow keypad as my leader
 *** DONE surround integration
 - State "DONE"       from "TODO"       [2024-11-07 Thu 18:26]
 *** DONE prefix maps in meow normal mode
