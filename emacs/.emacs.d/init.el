@@ -256,6 +256,26 @@
                   consult--source-project-buffer-hidden
                   consult--source-project-recent-file-hidden))
 
+  ;; perspective integration
+  ;; consult integration
+  (with-eval-after-load "persp-mode"
+    (require 'persp-mode)
+    (defvar persp-consult-source
+      (list :name     "Perspective"
+            :narrow   ?s
+            :category 'buffer
+            :state    #'consult--buffer-state
+            :history  'buffer-name-history
+            :default  t
+            :items
+            #'(lambda ()
+                (mapcar #'buffer-name
+                        (persp-filter-out-bad-buffers)))))
+
+    (consult-customize consult--source-buffer :hidden t :default nil)
+    (add-to-list 'consult-buffer-sources persp-consult-source))
+
+
   ;; Narrowing lets you restrict results to certain groups of candidates
   (setq consult-narrow-key "<"))
 
@@ -507,11 +527,32 @@
 (use-package persp-mode
   :init
   (unbind-key (kbd "C-M-p") 'emacs-lisp-mode-map)
-
   :custom
+  (persp-auto-resume-time -1.0)
+  (persp-auto-save-opt 1)
   (persp-keymap-prefix (kbd "C-M-p"))
   :config
   (persp-mode 1)
+
+  ;; Override persp-switch to make it exclude the nil perspective
+  (cl-defun persp-frame-switch (name &optional (frame (selected-frame)))
+    (interactive "i")
+    (unless name
+      (setq name (persp-read-persp "to switch(in frame)" nil nil nil t t)))
+    (unless (memq frame persp-inhibit-switch-for)
+      (run-hook-with-args 'persp-before-switch-functions name frame)
+      (let ((persp-inhibit-switch-for (cons frame persp-inhibit-switch-for)))
+        (persp-activate (persp-add-new name) frame)))
+    name)
+  (cl-defun persp-window-switch (name &optional (window (selected-window)))
+    (interactive "i")
+    (unless name
+      (setq name (persp-read-persp "to switch(in window)" nil nil nil t t)))
+    (unless (memq window persp-inhibit-switch-for)
+      (run-hook-with-args 'persp-before-switch-functions name window)
+      (let ((persp-inhibit-switch-for (cons window persp-inhibit-switch-for)))
+        (persp-activate (persp-add-new name) window)))
+    name)
 
 
   ;; Perspective-exclusive tabs, ala tmux windows
@@ -526,23 +567,6 @@
               (tab-bar-tabs-set (persp-parameter 'tab-bar-tabs))
               (tab-bar--update-tab-bar-lines t))))
 
-;; consult integration
-(with-eval-after-load "consult"
-  (require 'consult)
-  (defvar persp-consult-source
-    (list :name     "Perspective"
-          :narrow   ?s
-          :category 'buffer
-          :state    #'consult--buffer-state
-          :history  'buffer-name-history
-          :default  t
-          :items
-          #'(lambda ()
-              (mapcar #'buffer-name
-                      (persp-filter-out-bad-buffers)))))
-
-  (consult-customize consult--source-buffer :hidden t :default nil)
-  (add-to-list 'consult-buffer-sources persp-consult-source))
 
 (use-package persp-mode-projectile-bridge
   :hook (after-init-hook . persp-mode-projectile-bridge-mode)
@@ -905,15 +929,13 @@
   (defun mood-line-segment-separator ()
     (propertize "|" 'face 'mood-line-unimportant))
 
-  (defun mood-line-segment-misc-info ()
-    "Return the current value of `mode-line-misc-info', without the unimportant face."
-    (let ((misc-info (format-mode-line mode-line-misc-info)))
-      (unless (string-blank-p misc-info)
-        (string-trim misc-info))))
-
   (defun mood-line-segment-persp ()
     "Return the current perspective name."
-    (format "%s" (safe-persp-name (get-current-persp))))
+    (let* ((p (safe-persp-name (get-current-persp)))
+           (persp-face (if (string= p "none")
+                           'mood-line-status-unimportant
+                         'mood-line-status-neutral)))
+      (propertize p 'face persp-face)))
 
   (setq
    mood-line-glyph-alist mood-line-glyphs-fira-code
@@ -940,11 +962,12 @@
                       ((when (mood-line-segment-vc) "on") . " ")
                       ((mood-line-segment-vc) . " ")
                       ((mood-line-segment-separator) . " ")
-                      ((mood-line-segment-persp) . "")
+                      ((mood-line-segment-persp) . " ")
                       ))))
 
 ;;;; Buffer display configuration
 ;;;;; display-buffer-alist customization
+
 ;; reuse as much as possible
 (setq display-buffer-base-action
   '((display-buffer-reuse-window display-buffer-same-window)
@@ -958,8 +981,8 @@
 	       (allow-no-window t)))
 
 (add-to-list 'display-buffer-alist
-	     '("\\*\\(Ibuffer\\|vc-dir\\|vc-diff\\|vc-change-log\\|Async Shell Command\\)\\*"
-	       (display-buffer-in-tab)))
+	     '("\\*\\(Ibuffer\\|magit.*\\|vc-dir\\|vc-diff\\|vc-change-log\\|Async Shell Command\\)\\*"
+	       (display-buffer-in-new-tab)))
 
 (add-to-list 'display-buffer-alist
                '("\\*vterminal.*\\*" (display-buffer-full-frame)))
