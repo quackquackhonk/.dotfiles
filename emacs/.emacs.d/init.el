@@ -981,12 +981,15 @@
 	       (allow-no-window t)))
 
 (add-to-list 'display-buffer-alist
-	     '("\\*\\(Ibuffer\\|magit.*\\|vc-dir\\|vc-diff\\|vc-change-log\\|Async Shell Command\\)\\*"
-	       (display-buffer-in-new-tab)))
+	     '("\\*\\(Ibuffer\\|vc-dir\\|vc-diff\\|vc-change-log\\|Async Shell Command\\)\\*"
+	       (display-buffer-full-frame)))
+
+;; magit in a new tab
+(add-to-list 'display-buffer-alist
+	     '("magit:.*" (display-buffer-in-tab)))
 
 (add-to-list 'display-buffer-alist
                '("\\*vterminal.*\\*" (display-buffer-full-frame)))
-
 
 ;; pop up management
 (use-package popper
@@ -999,9 +1002,7 @@
                                    "\\*eldoc\\*"
                                    "Output\\*$"
                                    "\\*Async Shell Command\\*"
-                                   "\\*vterm.*\\*"
                                    "\\*OCaml\\*"
-                                   vterm-mode
                                    help-mode
                                    compilation-mode
                                    comint-mode)
@@ -1086,52 +1087,71 @@
 (use-package surround)
 
 ;;;; transient: so many leader keys
-(use-package transient)
+(use-package transient
+  :bind (:map transient-base-map
+              ("C-g" . transient-quit-all)))
+(use-package transient-showcase
+  :straight '(transient-showcase
+              :type git :host github
+              :repo "positron-solutions/transient-showcase"))
 
 ;; Set up some transient maps for additional leaders
+(transient-define-prefix qqh/transient/code ()
+  ["code..."
+   ("c" "compile" projectile-compile-project)
+   ("f" "format" format-all-region-or-buffer)
+   ("v" "activate environment" pyvenv-workon)])
+
+(transient-define-prefix qqh/transient/git ()
+  [:class transient-row "git..."
+   ("g" "status" magit)
+   ("b" "branch" magit-branch)
+   ("B" "blame" magit-blame)])
+
+(transient-define-prefix qqh/transient/open ()
+  ["open..."
+   ("d" "diagnostics panel" consult-flymake)
+   ("t" "terminal" qqh/multi-vterm)])
+
+(transient-define-prefix qqh/transient/projects ()
+  [:class transient-row "projects..."
+   ("d" "project dired" projectile-dired)
+   ("f" "project flake" qqh/project/open-flake)
+   ("p" "switch to project" projectile-switch-project)
+   ("t" "open project terminal" multi-vterm-project)])
+
+(transient-define-prefix qqh/transient/search ()
+  [:class transient-row "search..."
+   ("l" "all lines" consult-line-multi)
+   ("i" "imenu" consult-imenu)
+   ("n" "notes" org-roam-node-find)
+   ("o" "outline" consult-outline)
+   ("p" "perspectives" persp-switch)
+   ("s" "files" consult-fd)])
+
+(transient-define-prefix qqh/transient/config ()
+  [("r" "reload emacs config" qqh/emacs/reload)]
+  [:class transient-row "edit config for..."
+   ("c" "emacs" qqh/emacs/open-config)
+   ("f" "flake" qqh/config/open-nix-flake :if (lambda () (not (qqh/macos-p))))
+   ("h" "hyprland" qqh/config/hyprland :if (lambda () (not (qqh/macos-p))))
+   ("n" "home-manager" qqh/config/open-nix-home :if (lambda () (not (qqh/macos-p))))])
+
 (transient-define-prefix qqh/transient/leader ()
-  "Transient map for my leader bindings.
+ "Transient map for my leader bindings.
 
 These bindings are preferred over `meow-leader-define-key', since I have less restrictions here!"
-  [["leader bindings..."
-    ("<escape>" "quit" transient-quit-one)
-    ("SPC" "buffers" consult-buffer)
-    ("," "last buffer" meow-last-buffer)
-    (":" "eval expression" eval-expression)]
-   ["(c)ode..."
-    ("cc" "compile" projectile-compile-project)
-    ("cf" "format" format-all-region-or-buffer)
-    ("cv" "activate environment" pyvenv-workon)]
-   ["(g)it..."
-    ("gg" "git status" magit)
-    ("gb" "git branch" magit-branch)
-    ("gB" "git blame" magit-blame)]
-   ["(n)otes..."
-    ("nc" "capture note" org-roam-capture)
-    ("ni" "insert note" org-roam-node-insert)
-    ("nls" "store link" org-store-link)
-    ("nli" "insert link" org-insert-link-global)]
-   ["(o)pen..."
-    ("od" "open diagnostics panel" consult-flymake)
-    ("ot" "open terminal" qqh/multi-vterm)]
-   ["(p)rojects..."
-    ("pd" "project dired" projectile-dired)
-    ("pf" "project flake" qqh/project/open-flake)
-    ("pp" "switch to project" projectile-switch-project)
-    ("pt" "open project terminal" multi-vterm-project)]
-   ["(s)earch..."
-    ("ss" "search files" consult-fd)
-    ("sn" "search notes" org-roam-node-find)
-    ("so" "search outline" consult-outline)
-    ("si" "search imenu" consult-imenu)
-    ("sl" "search all lines" consult-line-multi)
-    ("sp" "search perspectives" persp-switch)]
-   ["(;) configuration files.."
-    (";c" "edit config" qqh/emacs/open-config)
-    (";f" "open flake.nix" qqh/config/open-nix-flake)
-    (";h" "open hyprland.conf" qqh/config/hyprland)
-    (";n" "open home.nix" qqh/config/open-nix-home)
-    (";r" "reload config" qqh/emacs/reload)]])
+ ["leader bindings..."
+   ("SPC" "buffers" consult-buffer)
+   ("," "last buffer" meow-last-buffer)
+   (":" "eval expression" eval-expression)]
+  [:class transient-row
+   ("c" "+code" qqh/transient/code)
+   ("g" "+git" qqh/transient/git)
+   ("o" "+open" qqh/transient/open)
+   ("s" "+search" qqh/transient/search)
+   ("p" "+projects" qqh/transient/projects)
+   (";" "+config" qqh/transient/config)])
 
 (transient-define-prefix qqh/transient/g ()
   "Transient map for emulating vim's g- leader keybinding."
@@ -1153,16 +1173,14 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
   [["Next"
     ("d" "todo" hl-todo-next)
     ("e" "error" flymake-goto-next-error)
-    ("p" "perspective" persp-next)
-    ("t" "tab" tab-next)]])
+    ("p" "perspective" persp-next)]])
 
 (transient-define-prefix qqh/transient/prev ()
   "Transient map for going to the previous thing."
   [["Previous"
     ("d" "todo" hl-todo-previous)
     ("e" "error" flymake-goto-prev-error)
-    ("p" "perspective" persp-prev)
-    ("t" "tab" tab-previous)]])
+    ("p" "perspective" persp-prev)]])
 
 
 ;;;; Global bindings
@@ -1177,14 +1195,6 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
   :straight t
   :demand t
   :custom-face
-  ;; (meow-position-highlight-number-1 ((t (:background ,(catppuccin-lighten (catppuccin-color 'mauve) 25)))))
-  ;; (meow-position-highlight-number-2 ((t (:background ,(catppuccin-color 'mauve)))))
-  ;; (meow-position-highlight-number-3 ((t (:background ,(catppuccin-darken (catppuccin-color 'mauve) 25)))))
-
-  ;; (meow-position-highlight-reverse-number-1 ((t (:background ,(catppuccin-lighten (catppuccin-color 'pink) 25)))))
-  ;; (meow-position-highlight-reverse-number-2 ((t (:background ,(catppuccin-color 'pink)))))
-  ;; (meow-position-highlight-reverse-number-3 ((t (:background ,(catppuccin-darken (catppuccin-color 'pink) 25)))))
-
   ;; mode line faces
   (meow-normal-indicator ((t (:bold t :foreground ,(catppuccin-color 'base) :background ,(catppuccin-color 'mauve)))))
   (meow-normal-cursor ((t :inherit meow-normal-indicator)))
