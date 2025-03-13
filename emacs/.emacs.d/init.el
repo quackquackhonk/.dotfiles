@@ -469,9 +469,17 @@
 ;;;; Vterm: Terminal Emulation
 (use-package vterm
   :config
-  (unbind-key (kbd "M-'") 'vterm-mode-map))
+  (unbind-key (kbd "M-'") 'vterm-mode-map)
+  (unbind-key (kbd "M-]") 'vterm-mode-map))
 
-(use-package multi-vterm)
+(use-package multi-vterm
+  :config
+  (defun multi-vterm-format-buffer-name (name)
+    "Format vterm buffer NAME."
+    (let* ((dirs (file-name-split name))
+           (dirs (cl-remove-if-not (lambda (s) (not (string= s ""))) dirs))
+           (name (car (last dirs))))
+      (format "*%s: %s*" multi-vterm-buffer-name (file-name-nondirectory name)))))
 
 ;;;; Magit: best Git client to ever exist
 (use-package magit
@@ -981,10 +989,6 @@
 	         '("\\*\\(Ibuffer\\|vc-dir\\|vc-diff\\|vc-change-log\\|Async Shell Command\\)\\*"
 	           (display-buffer-full-frame)))
 
-;; magit in a new tab
-(add-to-list 'display-buffer-alist
-	         '("magit:.*" (display-buffer-in-tab)))
-
 (add-to-list 'display-buffer-alist
              '("\\*vterminal.*\\*" (display-buffer-full-frame)))
 
@@ -1000,6 +1004,8 @@
                                    "Output\\*$"
                                    "\\*Async Shell Command\\*"
                                    "\\*OCaml\\*"
+                                   "magit.*"
+                                   magit-mode
                                    help-mode
                                    compilation-mode
                                    comint-mode)
