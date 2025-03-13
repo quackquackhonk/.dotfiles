@@ -32,7 +32,7 @@
       (bootstrap-version 7))
   (unless (file-exists-p bootstrap-file)
     (with-current-buffer
-       (url-retrieve-synchronously
+        (url-retrieve-synchronously
          "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
          'silent 'inhibit-cookies)
       (goto-char (point-max))
@@ -525,12 +525,10 @@
 
 ;;;;; Perspectives
 (use-package persp-mode
-  :init
-  (unbind-key (kbd "C-M-p") 'emacs-lisp-mode-map)
   :custom
   (persp-auto-resume-time -1.0)
   (persp-auto-save-opt 1)
-  (persp-keymap-prefix (kbd "C-M-p"))
+  (persp-keymap-prefix (kbd "M-p"))
   :config
   (persp-mode 1)
 
@@ -553,7 +551,6 @@
       (let ((persp-inhibit-switch-for (cons window persp-inhibit-switch-for)))
         (persp-activate (persp-add-new name) window)))
     name)
-
 
   ;; Perspective-exclusive tabs, ala tmux windows
   (add-hook 'persp-before-deactivate-functions
@@ -717,6 +714,7 @@
 ;;;;; Nix
 (use-package nix-mode
   :mode "\\.nix\\'")
+
 ;;;;; OCaml
 ;; Major-Mode mode for OCaml programming
 (use-package tuareg
@@ -922,7 +920,6 @@
 ;;;; Modeline configurtaion
 (use-package mood-line
   :custom-face
-  (mood-line-status-neutral ((t (:inherit success))))
   (mood-line-unimportant ((t (:inherit shadow))))
   :config
   (mood-line-mode)
@@ -934,7 +931,7 @@
     (let* ((p (safe-persp-name (get-current-persp)))
            (persp-face (if (string= p "none")
                            'mood-line-status-unimportant
-                         'mood-line-status-neutral)))
+                         'mood-line-status-info)))
       (propertize p 'face persp-face)))
 
   (setq
@@ -970,26 +967,26 @@
 
 ;; reuse as much as possible
 (setq display-buffer-base-action
-  '((display-buffer-reuse-window display-buffer-same-window)
-    (reusable-frames . t)))
+      '((display-buffer-reuse-window display-buffer-same-window)
+        (reusable-frames . t)))
 
 (setq even-window-sizes nil)     ; avoid resizing
 
 (add-to-list 'display-buffer-alist
-	     '("\\*\\(Compile-Log\\|Async-native-compile-log\\|Warnings\\)\\*"
-	       (display-buffer-no-window)
-	       (allow-no-window t)))
+	         '("\\*\\(Compile-Log\\|Async-native-compile-log\\|Warnings\\)\\*"
+	           (display-buffer-no-window)
+	           (allow-no-window t)))
 
 (add-to-list 'display-buffer-alist
-	     '("\\*\\(Ibuffer\\|vc-dir\\|vc-diff\\|vc-change-log\\|Async Shell Command\\)\\*"
-	       (display-buffer-full-frame)))
+	         '("\\*\\(Ibuffer\\|vc-dir\\|vc-diff\\|vc-change-log\\|Async Shell Command\\)\\*"
+	           (display-buffer-full-frame)))
 
 ;; magit in a new tab
 (add-to-list 'display-buffer-alist
-	     '("magit:.*" (display-buffer-in-tab)))
+	         '("magit:.*" (display-buffer-in-tab)))
 
 (add-to-list 'display-buffer-alist
-               '("\\*vterminal.*\\*" (display-buffer-full-frame)))
+             '("\\*vterminal.*\\*" (display-buffer-full-frame)))
 
 ;; pop up management
 (use-package popper
@@ -1006,16 +1003,16 @@
                                    help-mode
                                    compilation-mode
                                    comint-mode)
-   popper-group-function #'popper-group-by-projectile
-   popper-echo-dispatch-keys '(?1 ?2 ?3 ?4 ?5 ?6 ?7 ?8 ?9 ?0))
+        popper-group-function #'popper-group-by-projectile
+        popper-echo-dispatch-keys '(?1 ?2 ?3 ?4 ?5 ?6 ?7 ?8 ?9 ?0))
 
   (setq
    popper-mode-line nil
    popper-window-height (lambda (win)
-                               (fit-window-to-buffer
-                                win
-                                (floor (frame-height) 2)
-                                (floor (frame-height) 2))))
+                          (fit-window-to-buffer
+                           win
+                           (floor (frame-height) 2)
+                           (floor (frame-height) 2))))
 
   (popper-mode +1)
   ;; echo area hints
@@ -1038,6 +1035,13 @@
     (multi-vterm-internal)
     (display-buffer vterm-buffer)))
 
+(defun qqh/fuzzy-find-file ()
+  "Fuzzy find a file in a current directory."
+  (interactive)
+  (if (projectile-project-p)
+      (projectile-find-file-dwim)
+    (consult-fd)))
+
 (defun qqh/project/open-flake ()
   "Open the project flake file, if it exists."
   (interactive)
@@ -1050,13 +1054,12 @@
   "Activate the spack environment in the current project, if there is one."
   (interactive)
   (let* ((root-dir (if (projectile-project-root)
-                      (projectile-project-root)
-                    default-directory))
+                       (projectile-project-root)
+                     default-directory))
          (env-dir (expand-file-name "spack_env/.spack-env/view" root-dir)))
     (if (file-exists-p env-dir)
         (pyvenv-activate env-dir)
       (message (format "The spack environment at %s does not exist!" env-dir)))))
-
 
 (defun qqh/emacs/reload ()
   "Load my Emacs configuration."
@@ -1088,8 +1091,14 @@
 
 ;;;; transient: so many leader keys
 (use-package transient
-  :bind (:map transient-base-map
-              ("C-g" . transient-quit-all)))
+  :config
+  (transient-bind-q-to-quit)
+  :bind
+  (:map transient-base-map
+        ("C-g" . transient-quit-all)
+        :map transient-sticky-map
+        ("C-g" . transient-quit-all)))
+
 (use-package transient-showcase
   :straight '(transient-showcase
               :type git :host github
@@ -1104,9 +1113,9 @@
 
 (transient-define-prefix qqh/transient/git ()
   [:class transient-row "git..."
-   ("g" "status" magit)
-   ("b" "branch" magit-branch)
-   ("B" "blame" magit-blame)])
+          ("g" "status" magit)
+          ("b" "branch" magit-branch)
+          ("B" "blame" magit-blame)])
 
 (transient-define-prefix qqh/transient/open ()
   ["open..."
@@ -1115,43 +1124,44 @@
 
 (transient-define-prefix qqh/transient/projects ()
   [:class transient-row "projects..."
-   ("d" "project dired" projectile-dired)
-   ("f" "project flake" qqh/project/open-flake)
-   ("p" "switch to project" projectile-switch-project)
-   ("t" "open project terminal" multi-vterm-project)])
+          ("d" "project dired" projectile-dired)
+          ("f" "project flake" qqh/project/open-flake)
+          ("p" "switch to project" projectile-switch-project)
+          ("t" "open project terminal" multi-vterm-project)
+          ("C-c" "invalidate cache" projectile-invalidate-cache)])
 
 (transient-define-prefix qqh/transient/search ()
   [:class transient-row "search..."
-   ("l" "all lines" consult-line-multi)
-   ("i" "imenu" consult-imenu)
-   ("n" "notes" org-roam-node-find)
-   ("o" "outline" consult-outline)
-   ("p" "perspectives" persp-switch)
-   ("s" "files" consult-fd)])
+          ("l" "all lines" consult-line-multi)
+          ("i" "imenu" consult-imenu)
+          ("n" "notes" org-roam-node-find)
+          ("o" "outline" consult-outline)
+          ("p" "perspectives" persp-switch)
+          ("s" "files" qqh/fuzzy-find-file)])
 
 (transient-define-prefix qqh/transient/config ()
   [("r" "reload emacs config" qqh/emacs/reload)]
   [:class transient-row "edit config for..."
-   ("c" "emacs" qqh/emacs/open-config)
-   ("f" "flake" qqh/config/open-nix-flake :if (lambda () (not (qqh/macos-p))))
-   ("h" "hyprland" qqh/config/hyprland :if (lambda () (not (qqh/macos-p))))
-   ("n" "home-manager" qqh/config/open-nix-home :if (lambda () (not (qqh/macos-p))))])
+          ("c" "emacs" qqh/emacs/open-config)
+          ("f" "flake" qqh/config/open-nix-flake :if (lambda () (not (qqh/macos-p))))
+          ("h" "hyprland" qqh/config/hyprland :if (lambda () (not (qqh/macos-p))))
+          ("n" "home-manager" qqh/config/open-nix-home :if (lambda () (not (qqh/macos-p))))])
 
 (transient-define-prefix qqh/transient/leader ()
- "Transient map for my leader bindings.
+  "Transient map for my leader bindings.
 
 These bindings are preferred over `meow-leader-define-key', since I have less restrictions here!"
- ["leader bindings..."
+  ["leader bindings..."
    ("SPC" "buffers" consult-buffer)
    ("," "last buffer" meow-last-buffer)
    (":" "eval expression" eval-expression)]
   [:class transient-row
-   ("c" "+code" qqh/transient/code)
-   ("g" "+git" qqh/transient/git)
-   ("o" "+open" qqh/transient/open)
-   ("s" "+search" qqh/transient/search)
-   ("p" "+projects" qqh/transient/projects)
-   (";" "+config" qqh/transient/config)])
+          ("c" "+code" qqh/transient/code)
+          ("g" "+git" qqh/transient/git)
+          ("o" "+open" qqh/transient/open)
+          ("s" "+search" qqh/transient/search)
+          ("p" "+projects" qqh/transient/projects)
+          (";" "+config" qqh/transient/config)])
 
 (transient-define-prefix qqh/transient/g ()
   "Transient map for emulating vim's g- leader keybinding."
