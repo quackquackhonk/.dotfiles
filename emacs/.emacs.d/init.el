@@ -134,6 +134,7 @@
 (add-hook 'before-save-hook
           (lambda ()
             (delete-trailing-whitespace)))
+(recentf-mode t)
 
 ;;; Built-Ins.
 
@@ -306,8 +307,8 @@
 
 (use-package embark-consult
   :after (embark consult)
-  :bind (:map minibuffer-mode-map
-              ("C-." . embark-act)))
+  :config
+  (bind-key (kbd "C-.") 'embark-act 'minibuffer-mode-map))
 
 
 ;; Vertico: better vertical completion for minibuffer commands
@@ -344,31 +345,20 @@
 ;;;; Corfu: Popup completion-at-point
 (use-package corfu
   :custom
-  (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
-  (corfu-auto t)                 ;; auto completion
-  (corfu-quit-no-match t)        ;; Quit when no matches
-  :init
-  ;; Recommended: Enable Corfu globally.  This is recommended since Dabbrev can
-  ;; be used globally (M-/).  See also the customization variable
-  ;; `global-corfu-modes' to exclude certain modes.
-  (global-corfu-mode)
-  :config
-  )
-
-(use-package corfu
-  ;; TAB-and-Go customizations
-  :custom
   (corfu-cycle t)           ;; Enable cycling for `corfu-next/previous'
+  (corfu-auto t)            ;; auto completion
+  (corfu-quit-no-match t)   ;; Quit when no matches
   (corfu-preselect 'prompt) ;; Always preselect the prompt
-
   :bind (:map corfu-map
               ;; Use TAB for cycling, default is `corfu-complete'.
               ("TAB" . corfu-next)
               ([tab] . corfu-next)
               ("S-TAB" . corfu-previous)
               ([backtab] . corfu-previous))
-
   :init
+  ;; Recommended: Enable Corfu globally.  This is recommended since Dabbrev can
+  ;; be used globally (M-/).  See also the customization variable
+  ;; `global-corfu-modes' to exclude certain modes.
   (global-corfu-mode))
 
 ;;;;; Corfu popupinfo
@@ -483,6 +473,9 @@
 
 ;;;; Magit: best Git client to ever exist
 (use-package magit
+  :custom
+  (magit-commit-show-diff nil)
+  (magit-commit-diff-inhibit-same-window nil)
   :config
   ;; Show magit in a full window
   (add-to-list 'display-buffer-alist
@@ -1041,13 +1034,6 @@
     (multi-vterm-internal)
     (display-buffer vterm-buffer)))
 
-(defun qqh/fuzzy-find-file ()
-  "Fuzzy find a file in a current directory."
-  (interactive)
-  (if (projectile-project-p)
-      (projectile-find-file-dwim)
-    (consult-fd)))
-
 (defun qqh/project/open-flake ()
   "Open the project flake file, if it exists."
   (interactive)
@@ -1133,8 +1119,7 @@
           ("d" "project dired" projectile-dired)
           ("f" "project flake" qqh/project/open-flake)
           ("p" "switch to project" projectile-switch-project)
-          ("t" "open project terminal" multi-vterm-project)
-          ("C-c" "invalidate cache" projectile-invalidate-cache)])
+          ("t" "open project terminal" multi-vterm-project)])
 
 (transient-define-prefix qqh/transient/search ()
   [:class transient-row "search..."
@@ -1143,7 +1128,7 @@
           ("n" "notes" org-roam-node-find)
           ("o" "outline" consult-outline)
           ("p" "perspectives" persp-switch)
-          ("s" "files" qqh/fuzzy-find-file)])
+          ("s" "files" consult-fd)])
 
 (transient-define-prefix qqh/transient/config ()
   [("r" "reload emacs config" qqh/emacs/reload)]
@@ -1166,7 +1151,7 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
           ("g" "+git" qqh/transient/git)
           ("o" "+open" qqh/transient/open)
           ("s" "+search" qqh/transient/search)
-          ("p" "+projects" qqh/transient/projects)
+          ;; ("p" "+projects" qqh/transient/projects)
           (";" "+config" qqh/transient/config)])
 
 (transient-define-prefix qqh/transient/g ()
@@ -1297,19 +1282,12 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
    '("7" . meow-expand-7)
    '("8" . meow-expand-8)
    '("9" . meow-expand-9)
-   '("-" . negative-argument)
-   '(";" . meow-reverse)
-   '("," . meow-inner-of-thing)
-   '("." . meow-bounds-of-thing)
-   '("(" . meow-beginning-of-thing)
-   '(")" . meow-end-of-thing)
-   '("/" . meow-visit)
    '("a" . meow-append)
    '("A" . ignore)
    '("b" . meow-back-word)
    '("B" . meow-back-symbol)
    '("c" . meow-change)
-   '("C" . ignore)
+   '("C" . "C-c")
    '("d" . meow-kill)
    '("e" . meow-prev)
    '("E" . meow-prev-expand)
@@ -1330,6 +1308,7 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
    '("N" . meow-next-expand)
    '("o" . meow-open-below)
    '("O" . meow-open-above)
+   (cons "P" projectile-command-map)
    '("p" . meow-yank)
    '("q" . meow-quit)
    '("r" . meow-replace)
@@ -1342,9 +1321,17 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
    '("w" . meow-next-word)
    '("W" . meow-next-symbol)
    '("x" . meow-delete)
-   '("X" . meow-backward-delete)
+   '("X" . "C-x")
    '("y" . meow-save)
    '("z" . meow-pop-selection)
+   '("-" . negative-argument)
+   '(";" . meow-reverse)
+   '("," . meow-inner-of-thing)
+   '("." . meow-bounds-of-thing)
+   '("?" . "C-h")
+   '("(" . meow-beginning-of-thing)
+   '(")" . meow-end-of-thing)
+   '("/" . meow-visit)
    '("'" . repeat)
    '("<" . meow-pop-to-mark)
    '(">" . meow-unpop-to-mark)
@@ -1356,6 +1343,7 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
    '("g" . qqh/transient/g)
    '(":" . meow-keypad)
    '("="   . meow-indent)
+   ;; TODO: $ for end of line
    '("C-q" . delete-window)
    '("M-q" . qqh/kill-buffer)
 
