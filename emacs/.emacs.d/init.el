@@ -924,6 +924,13 @@
   (set-face-attribute 'fancy-compilation-default-face nil
                       :background (catppuccin-color 'base))
   (fancy-compilation-mode))
+(use-package vim-tab-bar
+  :ensure t
+  :custom-face
+  :config
+  (set-face-attribute 'tab-bar nil :box nil :background (catppuccin-color 'mantle))
+  (set-face-attribute 'tab-bar-tab nil :foreground (catppuccin-color 'base) :background (catppuccin-color 'mauve))
+  (vim-tab-bar-mode 1))
 
 ;;;; Modeline configurtaion
 (use-package mood-line
