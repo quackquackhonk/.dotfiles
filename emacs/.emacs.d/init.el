@@ -499,6 +499,8 @@
 (use-package project)
 (use-package projectile
   :diminish projectile-mode
+  :bind (:map projectile-command-map
+              ("t" . multi-vterm-project))
   :init
   (projectile-mode +1)
 
@@ -529,6 +531,7 @@
   :custom
   (persp-auto-resume-time -1.0)
   (persp-auto-save-opt 1)
+  (persp-add-buffer-on-after-change-major-mode 'free)
   (persp-keymap-prefix (kbd "M-p"))
   :config
   (persp-mode 1)
@@ -917,13 +920,13 @@
   (set-face-attribute 'fancy-compilation-default-face nil
                       :background (catppuccin-color 'base))
   (fancy-compilation-mode))
+
 (use-package vim-tab-bar
   :ensure t
-  :custom-face
-  :config
-  (set-face-attribute 'tab-bar nil :box nil :background (catppuccin-color 'mantle))
-  (set-face-attribute 'tab-bar-tab nil :foreground (catppuccin-color 'base) :background (catppuccin-color 'mauve))
   (vim-tab-bar-mode 1))
+
+(set-face-attribute 'tab-bar nil :box nil :background (catppuccin-color 'mantle))
+(set-face-attribute 'tab-bar-tab nil :foreground (catppuccin-color 'mauve) :background (catppuccin-color 'base))
 
 ;;;; Modeline configurtaion
 (use-package mood-line
@@ -963,11 +966,9 @@
                       ((when (mood-line-segment-misc-info) (mood-line-segment-separator)) . " ")
                       ((mood-line-segment-checker) . " ")
                       ((when (mood-line-segment-checker) (mood-line-segment-separator)) . " ")
-                      ((mood-line-segment-project) . " ")
+                      ((mood-line-segment-persp) . " ")
                       ((when (mood-line-segment-vc) "on") . " ")
                       ((mood-line-segment-vc) . " ")
-                      ((mood-line-segment-separator) . " ")
-                      ((mood-line-segment-persp) . " ")
                       ))))
 
 ;;;; Buffer display configuration
@@ -1066,7 +1067,7 @@
   (load-file user-init-file))
 
 (defun qqh/emacs/open-config ()
-  "Load my Emacs configuration."
+  "Open my Emacs configuration."
   (interactive)
   (find-file user-init-file))
 
