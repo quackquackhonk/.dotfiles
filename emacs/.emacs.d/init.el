@@ -991,7 +991,8 @@
 	           (display-buffer-full-frame)))
 
 (add-to-list 'display-buffer-alist
-             '("\\*vterminal.*\\*" (display-buffer-full-frame)))
+             '("\\*vterminal.*\\*"
+               (display-buffer-same-window)))
 
 ;; pop up management
 (use-package popper
