@@ -471,6 +471,32 @@
            (name (car (last dirs))))
       (format "*%s: %s*" multi-vterm-buffer-name (file-name-nondirectory name)))))
 
+(defun multi-vterm ()
+  "Create new vterm buffer, using `display-buffer' instaed of `switch-to-buffer'."
+  (interactive)
+  (let* ((vterm-buffer (multi-vterm-get-buffer)))
+    (setq multi-vterm-buffer-list (nconc multi-vterm-buffer-list (list vterm-buffer)))
+    (set-buffer vterm-buffer)
+    (multi-vterm-internal)
+    (display-buffer vterm-buffer)))
+
+(defun multi-vterm-project ()
+  "Create new vterm buffer, using `display-buffer' instead of `switch-to-buffer'."
+  (interactive)
+  (if (multi-vterm-project-root)
+      (if (buffer-live-p (get-buffer (multi-vterm-project-get-buffer-name)))
+          (if (string-equal (buffer-name (current-buffer)) (multi-vterm-project-get-buffer-name))
+              (delete-window (selected-window))
+            (display-buffer (multi-vterm-project-get-buffer-name)))
+        (let* ((vterm-buffer (multi-vterm-get-buffer 'project))
+               (multi-vterm-buffer-list (nconc multi-vterm-buffer-list (list vterm-buffer))))
+          (set-buffer vterm-buffer)
+          (multi-vterm-internal)
+          (display-buffer vterm-buffer)))
+    (message "This file is not in a project")))
+
+
+
 ;;;; Magit: best Git client to ever exist
 (use-package magit
   :custom
@@ -992,7 +1018,7 @@
 
 (add-to-list 'display-buffer-alist
              '("\\*vterminal.*\\*"
-               (display-buffer-same-window)))
+               (display-buffer-reuse-window)))
 
 ;; pop up management
 (use-package popper
@@ -1034,14 +1060,6 @@
   (interactive)
   (kill-buffer (current-buffer)))
 
-(defun qqh/multi-vterm ()
-  "Create new vterm buffer, using `display-buffer' instaed of `switch-to-buffer'."
-  (interactive)
-  (let* ((vterm-buffer (multi-vterm-get-buffer)))
-    (setq multi-vterm-buffer-list (nconc multi-vterm-buffer-list (list vterm-buffer)))
-    (set-buffer vterm-buffer)
-    (multi-vterm-internal)
-    (display-buffer vterm-buffer)))
 
 (defun qqh/project/open-flake ()
   "Open the project flake file, if it exists."
@@ -1121,7 +1139,7 @@
 (transient-define-prefix qqh/transient/open ()
   ["open..."
    ("d" "diagnostics panel" consult-flymake)
-   ("t" "terminal" qqh/multi-vterm)])
+   ("t" "terminal" multi-vterm)])
 
 (transient-define-prefix qqh/transient/projects ()
   [:class transient-row "projects..."
