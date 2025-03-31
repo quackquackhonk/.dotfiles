@@ -754,16 +754,16 @@
 (use-package dune)
 
 ;; Utop integration in emacs
-(use-package utop
-  :hook ((tuareg-mode . utop-minor-mode)
-         (tuareg-mode . (lambda ()
-                          "Run utop in the project root instead of in the directory of the current buffer."
-                          (let* ((p-root (projectile-project-root))
-                                 (p-root-str (if p-root p-root ""))
-                                 (fname (format "%s." p-root-str))
-                                 (rel-dir (file-relative-name fname default-directory))
-                                 (cmd (format "dune utop %s -- -emacs" rel-dir)))
-                            (setq utop-command cmd))))))
+;; (use-package utop
+;;   :hook ((tuareg-mode . utop-minor-mode)
+;;          (tuareg-mode . (lambda ()
+;;                           "Run utop in the project root instead of in the directory of the current buffer."
+;;                           (let* ((p-root (projectile-project-root))
+;;                                  (p-root-str (if p-root p-root ""))
+;;                                  (fname (format "%s." p-root-str))
+;;                                  (rel-dir (file-relative-name fname default-directory))
+;;                                  (cmd (format "dune utop %s -- -emacs" rel-dir)))
+;;                             (setq utop-command cmd))))))
 
 ;;;;; PYTHON
 ;; Built-in Python utilities
