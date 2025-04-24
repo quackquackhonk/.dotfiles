@@ -446,7 +446,6 @@
         '((yaml-mode . yaml-ts-mode)
           (json-mode . json-ts-mode)
           (python-mode . python-ts-mode)))
-  (global-goto-address-mode 1)
   :hook
   ;; Auto parenthesis matching
   ((prog-mode . electric-pair-mode)))
@@ -463,6 +462,8 @@
   (unbind-key (kbd "M-]") 'vterm-mode-map))
 
 (use-package multi-vterm
+  :custom
+  (multi-vterm-buffer-name "vterm")
   :config
   (defun multi-vterm-format-buffer-name (name)
     "Format vterm buffer NAME."
@@ -635,7 +636,13 @@
 ;;;;; documentation comment generation
 (use-package docstr
   :diminish docstr-mode
-  :config (global-docstr-mode 1))
+  :custom
+  (docstr-python-style 'google)
+  (docstr-python-modes '(python-mode python-ts-mode))
+  :config
+  (add-to-list 'docstr-writers-alist '(python-ts-mode . docstr-writers-python))
+
+  (global-docstr-mode 1))
 
 ;;;;; Devdocs.io integration
 (use-package devdocs
@@ -704,7 +711,9 @@
   :config (eglot-booster-mode))
 
 ;;;; Code formatting...
-(use-package format-all)
+(use-package format-all
+  :config
+  )
 ;;;; Dape: DAP support for eglot
 (use-package dape
   :preface
@@ -974,11 +983,11 @@
   (setq
    mood-line-glyph-alist mood-line-glyphs-fira-code
 
-   mood-line-segment-modal-meow-state-alist '((normal " NORMAL " . meow-normal-indicator)
-                                              (insert " INSERT " . meow-insert-indicator)
-                                              (keypad " KEYPAD " . meow-keypad-indicator)
-                                              (beacon " BEACON " . meow-beacon-indicator)
-                                              (motion " MOTION " . meow-motion-indicator))
+   mood-line-segment-modal-meow-state-alist '((normal " N " . meow-normal-indicator)
+                                              (insert " I " . meow-insert-indicator)
+                                              (keypad " K " . meow-keypad-indicator)
+                                              (beacon " B " . meow-beacon-indicator)
+                                              (motion " M " . meow-motion-indicator))
 
    mood-line-format (mood-line-defformat
                      :left
@@ -1216,6 +1225,8 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
 (global-set-key (kbd "<end>") 'end-of-line)
 (global-set-key (kbd "M-[") 'tab-previous)
 (global-set-key (kbd "M-]") 'tab-next)
+
+(global-set-key (kbd "M-<mouse-1>") 'goto-address-at-mouse)
 
 ;;;; Meow
 
