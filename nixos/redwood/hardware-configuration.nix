@@ -24,13 +24,20 @@
       options = [ "fmask=0077" "dmask=0077" ];
     };
 
-  fileSystems."/mnt/m2drive" = {
+  fileSystems."/home/sahana" = {
     device = "/dev/disk/by-uuid/ef134591-f581-42c6-96e7-fae15fb975db";
     fsType = "auto";
   };
 
+  fileSystems."/nix" = {
+     device = "/dev/disk/by-uuid/74560067-9fee-466b-8456-fadcdccb0f64";
+     fsType = "ext4";
+     neededForBoot = true;
+     options = [ "noatime" ];
+   };
+
   fileSystems."/mnt/mass_storage" = {
-    device = "/dev/disk/by-uuid/a2ac135c-ce7f-40d0-a7ab-31bbdb15a835";
+    device = "/dev/disk/by-uuid/d125079e-d47a-485a-bda6-f3a03b70b803";
     fsType = "auto";
   };
 
@@ -52,6 +59,10 @@
   # NVIDIA
   hardware.graphics = {
     enable = true;
+    enable32Bit = true;
+    extraPackages = with pkgs; [
+      rocmPackages.clr
+    ];
   };
   hardware.nvidia = {
     modesetting.enable = true;
@@ -59,6 +70,6 @@
     powerManagement.finegrained = false;
     open = false;
     nvidiaSettings = true;
-    package = config.boot.kernelPackages.nvidiaPackages.beta;
+    package = config.boot.kernelPackages.nvidiaPackages.stable;
   };
 }

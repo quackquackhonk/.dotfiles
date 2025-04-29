@@ -19,6 +19,7 @@
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+  boot.loader.grub.configurationLimit = 50;
 
   nix.settings = {
     trusted-users = ["root" "sahana"];
@@ -27,6 +28,14 @@
       "flakes"
     ];
   };
+
+  # auto cleanup every week, keep last 2 weeks of generations
+  nix.gc = {
+    automatic = true;
+    dates = "weekly";
+    options = "--delete-older-than 14d";
+  };
+
 
   networking.hostName = "redwood"; # Define your hostname.
 
@@ -56,7 +65,10 @@
   ];
 
   # hyprland + SDDM
-  programs.hyprland.enable = true;
+  programs.hyprland = {
+    enable = true;
+    xwayland.enable = true;
+  };
   services.xserver.enable = true;
   services.displayManager.sddm = {
     enable = true;

@@ -16,7 +16,8 @@
 (defvar qqh/modules-dir (expand-file-name "qqh" user-emacs-directory)
   "The directory containing my module files.")
 
-(defvar qqh/trunc-len 16)
+(defvar qqh/trunc-len 16
+  "The length to truncate strings to.")
 
 (defun qqh/macos-p ()
   "Check if the current frame is an OSX gui frame."
@@ -985,7 +986,7 @@
   (defun mood-line-segment-vc ()
     "Return color-coded version control information."
     (if (> (length mood-line-segment-vc--text) qqh/trunc-len)
-        (substring mood-line-segment-vc--text 0 qqh/trunc-len)
+        (concat (substring mood-line-segment-vc--text 0 qqh/trunc-len) "...")
       mood-line-segment-vc--text))
 
   (setq

@@ -14,6 +14,9 @@
       url = "github:numtide/flake-utils";
       inputs.systems.follows = "systems";
     };
+
+    # AGS bar for hyprland
+    # hyprpanel.url = "github:Jas-SinghFSU/HyprPanel";
   };
 
   outputs =
@@ -25,6 +28,11 @@
     }@inputs:
     let
       system = "x86_64-linux";
+      # pkgs = import nixpkgs {
+      #   inherit system;
+      #   overlays = [ inputs.hyprpanel.overlay ];
+      # };
+      # pkgs = nixpkgs.legacyPackages.${system}.extend inputs.hyprpanel.overlay;
       pkgs = nixpkgs.legacyPackages.${system};
       inherit (self) outputs;
     in

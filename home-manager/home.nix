@@ -78,6 +78,7 @@
     xdg-desktop-portal-hyprland
     hyprpolkitagent
     waybar
+    # hyprpanel
     tofi
     dunst
     hyprpaper
@@ -91,6 +92,7 @@
     kdePackages.dolphin
     kdePackages.qtwayland
     kdePackages.qtsvg
+    kdePackages.ark
     prismlauncher
   ];
 
