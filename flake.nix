@@ -14,6 +14,10 @@
       url = "github:numtide/flake-utils";
       inputs.systems.follows = "systems";
     };
+
+    # AGS bar for hyprland
+    hyprpanel.url = "github:Jas-SinghFSU/HyprPanel";
+    hyprpanel.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs =
@@ -47,6 +51,7 @@
           system = "x86_64-linux";
           specialArgs = { inherit inputs outputs; };
           modules = [
+            { nixpkgs.overlays = [inputs.hyprpanel.overlay]; }
             ./nixos/redwood/configuration.nix
             home-manager.nixosModules.home-manager
             {
