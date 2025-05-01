@@ -10,8 +10,6 @@
 {
   # you can import other home-manager modules here
   imports = [
-    # If you want to use home-manager modules from other flakes (such as nix-colors):
-    # inputs.nix-colors.homeManagerModule
     ./zsh.nix
     ./dev.nix
   ];
@@ -77,10 +75,8 @@
     nwg-look
     xdg-desktop-portal-hyprland
     hyprpolkitagent
-    waybar
-    # hyprpanel
+    hyprpanel
     tofi
-    dunst
     hyprpaper
     hyprcursor
     hyprlock

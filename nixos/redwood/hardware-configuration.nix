@@ -29,15 +29,16 @@
     fsType = "auto";
   };
 
-  fileSystems."/nix" = {
-     device = "/dev/disk/by-uuid/74560067-9fee-466b-8456-fadcdccb0f64";
-     fsType = "ext4";
-     neededForBoot = true;
-     options = [ "noatime" ];
-   };
+  # TODO: find a faster drive for /nix
+  # fileSystems."/nix" = {
+  #    device = "/dev/disk/by-uuid/TODO";
+  #    fsType = "ext4";
+  #    neededForBoot = true;
+  #    options = [ "noatime" ];
+  #  };
 
   fileSystems."/mnt/mass_storage" = {
-    device = "/dev/disk/by-uuid/d125079e-d47a-485a-bda6-f3a03b70b803";
+    device = "/dev/disk/by-uuid/93ffce64-d0ab-42e3-86df-3aeda540e5c8";
     fsType = "auto";
   };
 

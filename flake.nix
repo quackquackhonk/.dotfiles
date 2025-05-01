@@ -16,7 +16,8 @@
     };
 
     # AGS bar for hyprland
-    # hyprpanel.url = "github:Jas-SinghFSU/HyprPanel";
+    hyprpanel.url = "github:Jas-SinghFSU/HyprPanel";
+    hyprpanel.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs =
@@ -28,11 +29,6 @@
     }@inputs:
     let
       system = "x86_64-linux";
-      # pkgs = import nixpkgs {
-      #   inherit system;
-      #   overlays = [ inputs.hyprpanel.overlay ];
-      # };
-      # pkgs = nixpkgs.legacyPackages.${system}.extend inputs.hyprpanel.overlay;
       pkgs = nixpkgs.legacyPackages.${system};
       inherit (self) outputs;
     in
@@ -55,6 +51,7 @@
           system = "x86_64-linux";
           specialArgs = { inherit inputs outputs; };
           modules = [
+            { nixpkgs.overlays = [inputs.hyprpanel.overlay]; }
             ./nixos/redwood/configuration.nix
             home-manager.nixosModules.home-manager
             {
