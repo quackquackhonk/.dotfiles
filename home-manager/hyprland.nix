@@ -24,38 +24,10 @@
   ];
 
   home.file = {
-    ".config/hypr/hyprpaper.conf".source = ../hypr/hyprpaper.conf;
+    # ".config/hypr/hyprpaper.conf".source = ../hypr/hyprpaper.conf;
     ".config/wlogout" = {
       source = ../wlogout;
       recursive = true;
-    };
-  };
-
-  # GTK Theming and Pointers
-  home.pointerCursor = {
-    gtk.enable = true;
-    # x11.enable = true;
-    package = pkgs.catppuccin-cursors.mochaLight;
-    name = "Catppuccin Mocha Light";
-    size = 24;
-  };
-
-  gtk = {
-    enable = true;
-
-    theme = {
-      package = pkgs.flat-remix-gtk;
-      name = "catppuccin-mocha-mauve-standard+default";
-    };
-
-    iconTheme = {
-      package = pkgs.adwaita-icon-theme;
-      name = "Adwaita";
-    };
-
-    font = {
-      name = "Cantarell";
-      size = 11;
     };
   };
 
@@ -136,19 +108,9 @@
         gaps_out = 10;
         border_size = 2;
 
-        "col.active_border" = "rgba(ca9ee6ff) rgba(f2d5cfff) 45deg";
-        "col.inactive_border" = "rgba(b4befecc) rgba(6c7086cc) 45deg";
-
         resize_on_border = true;
         allow_tearing = false;
         layout = "dwindle";
-      };
-
-      group = {
-        "col.border_active" = "rgba(ca9ee6ff) rgba(f2d5cfff) 45deg";
-        "col.border_inactive" = "rgba(b4befecc) rgba(6c7086cc) 45deg";
-        "col.border_locked_active" = "rgba(ca9ee6ff) rgba(f2d5cfff) 45deg";
-        "col.border_locked_inactive" = "rgba(b4befecc) rgba(6c7086cc) 45deg";
       };
 
       animations = {
@@ -200,7 +162,6 @@
 
       misc = {
         force_default_wallpaper = 0; # Set to 0 to disable anime wallpapers
-        disable_hyprland_logo = false;
       };
 
       input = {
@@ -277,6 +238,15 @@
         "$mod, mouse:273, resizewindow"
       ];
 
+      bindel = [
+        ",XF86AudioRaiseVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+"
+        ",XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
+        ",XF86AudioMute, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
+        ",XF86AudioMicMute, exec, wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"
+        ",XF86MonBrightnessUp, exec, brightnessctl s 10%+"
+        ",XF86MonBrightnessDown, exec, brightnessctl s 10%-"
+      ];
+
       bindl = [
         ", XF86AudioNext, exec, playerctl next"
         ", XF86AudioPause, exec, playerctl play-pause"
@@ -288,20 +258,6 @@
     };
 
     extraConfig = ''
-monitor=DP-1,preferred,0x0,auto
-monitor=DP-2,preferred,-1920x0,auto
-
-workspace = 1, monitor:DP-1, persistent:true
-workspace = 2, monitor:DP-1, persistent:true
-workspace = 3, monitor:DP-1, persistent:true
-workspace = 4, monitor:DP-1, persistent:true
-workspace = 5, monitor:DP-1, persistent:true
-workspace = 6, monitor:DP-2, persistent:true
-workspace = 7, monitor:DP-2, persistent:true
-workspace = 8, monitor:DP-2, persistent:true
-workspace = 9, monitor:DP-2, persistent:true
-workspace = 10, monitor:DP-2, persistent:true
-
 cursor:no_hardware_cursors = true
 render:explicit_sync = 0
 

@@ -19,8 +19,15 @@
     hyprpanel.url = "github:Jas-SinghFSU/HyprPanel";
     hyprpanel.inputs.nixpkgs.follows = "nixpkgs";
 
-    # theming
-    stylix.url = "github:danth/stylix";
+    # stylix for theming
+    stylix = {
+      url = "github:danth/stylix";
+
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        home-manager.follows = "home-manager";
+      };
+    };
   };
 
   outputs =
@@ -56,7 +63,6 @@
             specialArgs = { inherit inputs outputs; };
             modules = [
               { nixpkgs.overlays = [inputs.hyprpanel.overlay]; }
-              stylix.nixosModules.stylix
               ./nixos/redwood/configuration.nix
               home-manager.nixosModules.home-manager
               {
