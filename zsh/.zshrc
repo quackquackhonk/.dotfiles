@@ -130,12 +130,9 @@ export FZF_DEFAULT_OPTS=" \
 
 # integration
 eval "$(zoxide init zsh)"
-
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
 eval "$(starship init zsh)"
-
-
+eval "$(direnv hook zsh)"
 
 if [[ $HOST == "LVV3TW207K" ]]; then
     . /Users/i34866/opt/git/spack/share/spack/setup-env.sh

@@ -562,7 +562,7 @@
   (persp-auto-resume-time -1.0)
   (persp-auto-save-opt 1)
   (persp-add-buffer-on-after-change-major-mode 'free)
-  (persp-keymap-prefix (kbd "M-p"))
+  (persp-keymap-prefix (kbd "<f5>"))
   :config
   (persp-mode 1)
 
@@ -844,6 +844,7 @@
   (setf (cdr (assoc 'file org-link-frame-setup)) 'find-file)
 
   (setq org-export-with-smart-quotes t                ; Make exporting quotes better
+        org-hide-emphasis-markers t                   ; hide formatting stuff
         org-return-follows-link t)                    ; RET follows links
 
   ;; Instead of just two states (TODO, DONE) we set up a few different states
@@ -1156,9 +1157,14 @@
           ("B" "blame" magit-blame)])
 
 (transient-define-prefix qqh/transient/open ()
-  ["open..."
+  [:class transient-row "open..."
    ("d" "diagnostics panel" consult-flymake)
    ("t" "terminal" multi-vterm)])
+
+(transient-define-prefix qqh/transient/notes ()
+  [:class transient-row "notes..."
+          ("c" "capture" org-roam-capture)
+          ("s" "search" org-roam-node-find)])
 
 (transient-define-prefix qqh/transient/projects ()
   [:class transient-row "projects..."
@@ -1196,8 +1202,8 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
           ("c" "+code" qqh/transient/code)
           ("g" "+git" qqh/transient/git)
           ("o" "+open" qqh/transient/open)
+          ("n" "+notes" qqh/transient/notes)
           ("s" "+search" qqh/transient/search)
-          ;; ("p" "+projects" qqh/transient/projects)
           (";" "+config" qqh/transient/config)])
 
 (transient-define-prefix qqh/transient/g ()
