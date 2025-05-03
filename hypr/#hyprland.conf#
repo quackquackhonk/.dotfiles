@@ -178,7 +178,6 @@ misc {
 #############
 ### INPUT ###
 #############
-
 # https://wiki.hyprland.org/Configuring/Variables/#input
 input {
     kb_layout = us

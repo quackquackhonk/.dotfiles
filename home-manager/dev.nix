@@ -9,6 +9,7 @@
 
     # nix
     nixfmt-rfc-style
+    nil
 
     # vterm
     cmake

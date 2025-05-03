@@ -1,9 +1,6 @@
 # This is your home-manager configuration file
 # Use this to configure your home environment (it replaces ~/.config/nixpkgs/home.nix)
 {
-  inputs,
-  lib,
-  config,
   pkgs,
   ...
 }:
@@ -12,7 +9,9 @@
   imports = [
     ./zsh.nix
     ./dev.nix
+    ./hyprland.nix
   ];
+
   services.gpg-agent = {
     enable = true;
     defaultCacheTtl = 1800;
@@ -71,24 +70,9 @@
     pciutils # lspci
     usbutils # lsusb
 
-    # hyprland utils
-    nwg-look
-    xdg-desktop-portal-hyprland
-    hyprpolkitagent
-    hyprpanel
-    tofi
-    hyprpaper
-    hyprcursor
-    hyprlock
-    wlogout
-    udiskie
-    pavucontrol
-
     # apps
-    kdePackages.dolphin
-    kdePackages.qtwayland
-    kdePackages.qtsvg
-    kdePackages.ark
+    feh
+    zathura
     prismlauncher
   ];
 
@@ -98,21 +82,8 @@
   # Let home-manager manage my dotfiles
   home.file = {
     ".config/starship".source = ../starship/.config/starship.toml;
-    ".config/hypr" = {
-      source = ../hypr;
-      recursive = true;
-    };
-    ".config/wlogout" = {
-      source = ../wlogout;
-      recursive = true;
-    };
-    ".config/dunst/dunstrc".source = ../dunst/dunstrc;
     ".config/ghostty" = {
       source = ../ghostty;
-      recursive = true;
-    };
-    ".config/waybar" = {
-      source = ../waybar;
       recursive = true;
     };
     ".config/tofi/config".text = ''
