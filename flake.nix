@@ -70,6 +70,7 @@
                 home-manager.useGlobalPkgs = true;
                 home-manager.useUserPackages = true;
                 home-manager.users.sahana.imports = [
+                  inputs.hyprpanel.homeManagerModules.hyprpanel
                   ./home-manager/home.nix
                 ];
               }

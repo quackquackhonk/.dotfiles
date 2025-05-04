@@ -5,7 +5,6 @@
 }:
 
 let
-  opacity = 1.0;
   fontSize = 12;
 in
 {
@@ -41,11 +40,6 @@ in
         base0E = "cba6f7"; # mauve
         base0F = "f2cdcd"; # flamingo
       };
-    };
-
-    opacity = {
-      terminal = opacity;
-      popups = opacity;
     };
 
     cursor = {

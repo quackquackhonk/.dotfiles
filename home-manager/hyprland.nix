@@ -8,7 +8,6 @@
     xdg-desktop-portal-hyprland
     hyprpolkitagent
     hyprcursor
-    hyprpanel
     hyprpaper
     hyprlock
     wlogout
