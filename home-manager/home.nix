@@ -2,12 +2,14 @@
 # Use this to configure your home environment (it replaces ~/.config/nixpkgs/home.nix)
 {
   inputs,
+  system,
   pkgs,
   ...
 }:
 {
   # you can import other home-manager modules here
   imports = [
+    inputs.zen-browser.homeModules.beta
     ./zsh.nix
     ./dev.nix
     ./hyprland.nix
@@ -30,6 +32,12 @@
     enable = true;
     userName = "Sahana Tankala";
     userEmail = "sahanatankala@gmail.com";
+  };
+
+  programs.zen-browser = {
+    enable = true;
+    policies.DisableTelemetry = true;
+    nativeMessagingHosts = [pkgs.firefoxpwa];
   };
 
   # The home.packages option allows you to install Nix packages into your

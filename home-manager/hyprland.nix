@@ -42,7 +42,7 @@
       # some global variables
       "$mod" = "SUPER";
       "$terminal" = "ghostty";
-      "$browser" = "app.zen_browser.zen";
+      "$browser" = "zen";
       "$files" = "dolphin";
       "$menu" = "tofi-run | zsh";
 

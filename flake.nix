@@ -19,6 +19,10 @@
     hyprpanel.url = "github:Jas-SinghFSU/HyprPanel";
     hyprpanel.inputs.nixpkgs.follows = "nixpkgs";
 
+
+    # zen-browser
+    zen-browser.url = "github:0xc000022070/zen-browser-flake";
+
     # stylix for theming
     stylix = {
       url = "github:danth/stylix";
@@ -35,6 +39,7 @@
       self,
       nixpkgs,
       stylix,
+      zen-browser,
       home-manager,
       ...
     }@inputs:
@@ -69,6 +74,7 @@
                 home-manager.backupFileExtension = "hm-backup";
                 home-manager.useGlobalPkgs = true;
                 home-manager.useUserPackages = true;
+                home-manager.extraSpecialArgs = { inherit inputs system; };
                 home-manager.users.sahana.imports = [
                   inputs.hyprpanel.homeManagerModules.hyprpanel
                   ./home-manager/home.nix
