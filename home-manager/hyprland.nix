@@ -23,7 +23,6 @@
   ];
 
   home.file = {
-    # ".config/hypr/hyprpaper.conf".source = ../hypr/hyprpaper.conf;
     ".config/wlogout" = {
       source = ../wlogout;
       recursive = true;
@@ -42,7 +41,7 @@
       # some global variables
       "$mod" = "SUPER";
       "$terminal" = "ghostty";
-      "$browser" = "zen";
+      "$browser" = "zen-beta";
       "$files" = "dolphin";
       "$menu" = "tofi-run | zsh";
 
