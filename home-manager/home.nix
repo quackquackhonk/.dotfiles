@@ -81,6 +81,13 @@
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 
+  xdg = {
+    enable = true;
+    portal = {
+      enable = true;
+    };
+  };
+
   # Let home-manager manage my dotfiles
   home.file = {
     ".config/starship".source = ../starship/.config/starship.toml;
