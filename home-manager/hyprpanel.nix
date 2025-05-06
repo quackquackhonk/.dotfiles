@@ -1,6 +1,4 @@
 {
-  inputs,
-  pkgs,
   ...
 }:
 {
@@ -24,7 +22,6 @@
             "right" = [
               "systray"
               "clock"
-              "power"
             ];
           };
         };
@@ -66,9 +63,7 @@
           name = "Iosevka Nerd Font Mono";
           size = "14px";
         };
-
       };
-
     };
   };
 }

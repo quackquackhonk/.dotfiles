@@ -7,10 +7,9 @@
     grimblast
     xdg-desktop-portal-hyprland
     hyprpolkitagent
-    hyprcursor
     hyprpaper
-    hyprlock
-    wlogout
+    hyprcursor
+    catppuccin-cursors.mochaLight
     tofi
     udiskie
     pavucontrol
@@ -21,13 +20,6 @@
     kdePackages.qtsvg
     kdePackages.ark
   ];
-
-  home.file = {
-    ".config/wlogout" = {
-      source = ../wlogout;
-      recursive = true;
-    };
-  };
 
   # Optional, hint Electron apps to use Wayland:
   home.sessionVariables.NIXOS_OZONE_WL = "1";
@@ -52,8 +44,10 @@
         "XDG_SESSION_TYPE,wayland"
         "XDG_SESSION_DESKTOP,Hyprland"
         "GDK_SCALE,1"
-
-        # KDE / QT theming
+        "HYPRCURSOR_NAME,'Catppuccin Mocha Dark'"
+        "HYPRCURSOR_SIZE,16"
+        "XCURSOR_NAME,'Catppuccin Mocha Dark'"
+        "XCURSOR_SIZE,16"
 
         # for nvidia
         "LIBVA_DRIVER_NAME,nvidia"
@@ -68,7 +62,6 @@
         "dbus-update-activation-environment --systemd --all"                                # for XDPH
         "systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"           # for XDPH
         "hyprpaper"                                                                         # wallpapers
-        "hyprctl setcursor 'Catppuccin Mocha Light' 24"                                            # Mouse cursor
         "hyprpanel"                                                                         # bar and notis
         "systemctl --user start hyprpolkitagent"                                            # application authentication agent
         "blueman-applet"                                                                    # bluetooth manager applet
@@ -83,7 +76,7 @@
       # monitors
       monitor = [
         "DP-1,preffered,0x0,auto"
-        "DP-2,preffered,-1920x0,auto"
+        "DP-2,preffered,2560x0,auto"
       ];
 
       # some workspace rules

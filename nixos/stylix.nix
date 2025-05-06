@@ -12,7 +12,7 @@ in
 
   stylix = {
     enable = true;
-    autoEnable = true;
+    autoEnable = false;
     image = ../wallpapers/space.png;
     polarity = "dark";
 
@@ -42,12 +42,6 @@ in
       };
     };
 
-    cursor = {
-      package = pkgs.catppuccin-cursors.mochaLight;
-      name = "Catppuccin Mocha Light";
-      size = 24;
-    };
-
     fonts = {
       serif = {
         package = pkgs.aleo-fonts;
@@ -75,7 +69,6 @@ in
         popups = fontSize;
         terminal = fontSize;
       };
-
     };
   };
 }

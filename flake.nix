@@ -3,13 +3,14 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    systems.url = "github:nix-systems/default";
 
+    # Home manager for managing the home dir
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    systems.url = "github:nix-systems/default";
     flake-utils = {
       url = "github:numtide/flake-utils";
       inputs.systems.follows = "systems";
@@ -18,7 +19,6 @@
     # AGS bar for hyprland
     hyprpanel.url = "github:Jas-SinghFSU/HyprPanel";
     hyprpanel.inputs.nixpkgs.follows = "nixpkgs";
-
 
     # zen-browser
     zen-browser.url = "github:0xc000022070/zen-browser-flake";

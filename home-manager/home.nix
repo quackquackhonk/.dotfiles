@@ -12,6 +12,7 @@
     inputs.zen-browser.homeModules.beta
     ./zsh.nix
     ./dev.nix
+    ./stylix.nix
     ./hyprland.nix
     ./hyprpanel.nix
   ];
@@ -113,7 +114,6 @@
       padding-top = 35%
       result-spacing = 25
       num-results = 5
-      font = Iosevka Nerd Font
       text-color = #cdd6f4
       prompt-color = #f38ba8
       selection-color = #f9e2af

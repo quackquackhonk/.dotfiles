@@ -839,7 +839,7 @@
   :hook ((org-mode . visual-line-mode))  ; wrap lines at word breaks
 
   :config
-
+  (unbind-key (kbd "C-'") 'org-mode-map)
   ;; Make org-open-at-point follow file links in the same window
   (setf (cdr (assoc 'file org-link-frame-setup)) 'find-file)
 
