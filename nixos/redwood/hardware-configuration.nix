@@ -14,37 +14,28 @@
   boot.extraModulePackages = [ ];
 
   fileSystems."/" =
-    { device = "/dev/disk/by-uuid/2c7414b3-c68d-4002-9a91-273675d148b8";
+    { device = "/dev/disk/by-uuid/de723074-9122-4bc5-996f-fccc26c3e2ea";
       fsType = "ext4";
     };
 
   fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/122A-61B0";
+    { device = "/dev/disk/by-uuid/E3B7-054E";
       fsType = "vfat";
       options = [ "fmask=0077" "dmask=0077" ];
     };
 
-  fileSystems."/home/sahana" = {
+  fileSystems."/home/sahana/drives/games" = {
     device = "/dev/disk/by-uuid/ef134591-f581-42c6-96e7-fae15fb975db";
     fsType = "auto";
   };
 
-  # TODO: find a faster drive for /nix
-  # fileSystems."/nix" = {
-  #    device = "/dev/disk/by-uuid/TODO";
-  #    fsType = "ext4";
-  #    neededForBoot = true;
-  #    options = [ "noatime" ];
-  #  };
-
-  fileSystems."/mnt/mass_storage" = {
-    device = "/dev/disk/by-uuid/93ffce64-d0ab-42e3-86df-3aeda540e5c8";
-    fsType = "auto";
-  };
+ fileSystems."/home/sahana/drives/mass_storage" = {
+   device = "/dev/disk/by-uuid/93ffce64-d0ab-42e3-86df-3aeda540e5c8";
+   fsType = "auto";
+ };
 
   swapDevices =
-    [ { device = "/dev/disk/by-uuid/063b0a4e-7158-4538-96e0-384326800e8f"; }
-    ];
+    [ { device = "/dev/disk/by-uuid/0167e6e1-eef0-483d-9c6f-79dc95581b2f"; } ];
 
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
   # (the default) this is the recommended approach. When using systemd-networkd it's

@@ -715,13 +715,14 @@
   :custom
   (eglot-send-changes-idle-time 0.1)
   (eglot-extend-to-xref t) ; activate Eglot in referenced non-project files
-  :hook ((tuareg-mode python-mode python-ts-mode c-mode c++-mode) . eglot-ensure)
+  :hook ((tuareg-mode python-mode python-ts-mode c-mode c++-mode nix-mode) . eglot-ensure)
   :config
   ;; Disable inlay hints globally
   (add-to-list 'eglot-ignored-server-capabilities :inlayHintProvider)
 
   ;; extra server binaries
   (add-to-list 'eglot-server-programs '((c++-mode c-mode) "clangd"))
+  (add-to-list 'eglot-server-programs '(nix-mode . ("nil")))
   (advice-add 'eglot-completion-at-point :around #'cape-wrap-buster)
   (advice-add 'eglot-completion-at-point :around #'cape-wrap-noninterruptible)
 
@@ -879,7 +880,7 @@
   :hook ((org-mode . visual-line-mode))  ; wrap lines at word breaks
 
   :config
-
+  (unbind-key (kbd "C-'") 'org-mode-map)
   ;; Make org-open-at-point follow file links in the same window
   (setf (cdr (assoc 'file org-link-frame-setup)) 'find-file)
 
@@ -1105,8 +1106,8 @@
    popper-window-height (lambda (win)
                           (fit-window-to-buffer
                            win
-                           (floor (frame-height) 2)
-                           (floor (frame-height) 2))))
+                           (floor (frame-height) 2.5)
+                           (floor (frame-height) 3))))
 
   (popper-mode +1)
   ;; echo area hints
@@ -1163,7 +1164,7 @@
 (defun qqh/config/hyprland ()
   "Open my hyprland config."
   (interactive)
-  (find-file "~/dotfiles/hypr/hyprland.conf"))
+  (find-file "~/dotfiles/home-manager/hyprland.nix"))
 
 ;;;; surround: surround selections with custom delimiters
 (use-package surround)

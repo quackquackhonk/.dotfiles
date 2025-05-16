@@ -21,14 +21,22 @@
 
 * Links
 * Tasks
-* NixOS [3/4]
+* NixOS [3/3]
 ** DONE login manager (SDDM)
 - State "DONE"       from "TODO"       [2025-03-10 Mon 13:26]
-** TODO wlogout theming + waybar integration
-** DONE waybar
+** OBSOLETE wlogout theming
+
+- State "OBSOLETE"   from "TODO"       [2025-05-05 Mon 18:53] \\
+  Im just gonna use tofi
+** Hyprland [0/1]
+*** TODO Better workspace management
+Ideally, I want one workspace per app (roughly)
+- so pressing ~S-e~ should not only open emacs, it should also switch to the "emacs" workspace
+- This should NOT double open programs, if its already running, just switch
+** Done waybar
 - State "DONE"       from              [2024-12-12 Thu 16:41]
 ** DONE steam
-* Hyprland [2/5]
+* Hyprland [4/5]
 ** DONE TARTED Get off HyDE
 - State "DONE"       from              [2024-12-12 Thu 16:40]
 - State "STARTED"    from "TODO"       [2024-11-07 Thu 18:27]
@@ -38,11 +46,15 @@ Hyde kind of defeats the point of not going with a DE, I should rip out the guts
 
 ** DONE Waybar configuration without hyde
 - State "DONE"       from "TODO"       [2025-03-10 Mon 13:26]
-** TODO See if we can bind the thumb button to LGUI
-** TODO mouse sens is odd, double scrolling as well
+** OBSOLETE See if we can bind the thumb button to LGUI
+- State "OBSOLETE"   from "TODO"       [2025-05-05 Mon 18:30] \\
+  I got this with the logitech app,
+** DONE mouse sens is odd, double scrolling as well
+- State "DONE"       from "TODO"       [2025-05-05 Mon 18:31]
 ** TODO delay before key repeat should be less
-* Emacs [1/3]
-** TODO remove things that I don't know what they do
+* Emacs [2/3]
+** DONE remove things that I don't know what they do
+- State "DONE"       from "TODO"       [2025-05-05 Mon 18:31]
 ** TODO Projectile switch action should let me choose between a few options
 I want to choose between fuzzy finding, opening the project term, opening project dired, or magit-status
 ** Bugs / Behavior I don't like [0/2]
@@ -75,14 +87,16 @@ This also causes corfu to crash, complaining about the problems with track chang
 PRIMARILY need lldb support
 ** DONE flatten the config
 - State "DONE"       from "TODO"       [2024-11-04 Mon 17:31]
-** Keybindings [3/6]
-*** TODO I want to use meow keypad as my leader
+** Keybindings [4/6]
+*** OBSOLETE I want to use meow keypad as my leader
+- State "OBSOLETE"   from "TODO"       [2025-05-05 Mon 18:32] \\
+  the transient is so much less restrictive in bindings
 *** DONE surround integration
 - State "DONE"       from "TODO"       [2024-11-07 Thu 18:26]
 *** DONE prefix maps in meow normal mode
 - State "DONE"       from "TODO"       [2024-11-08 Fri 13:45]
 ~g~ and ~z~ prefix maps?
-*** TODO custom meow "things"
+*** TODO custom meow "things" [2/3]
 **** DONE angled brackets <>
 - State "DONE"       from "WAITING"    [2024-11-07 Thu 18:26]
 **** OBSOLETE single quotes ''

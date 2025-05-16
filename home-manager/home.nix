@@ -2,17 +2,21 @@
 # Use this to configure your home environment (it replaces ~/.config/nixpkgs/home.nix)
 {
   inputs,
-  lib,
-  config,
+  system,
   pkgs,
   ...
 }:
 {
   # you can import other home-manager modules here
   imports = [
+    inputs.zen-browser.homeModules.beta
     ./zsh.nix
     ./dev.nix
+    ./stylix.nix
+    ./hyprland.nix
+    ./hyprpanel.nix
   ];
+
   services.gpg-agent = {
     enable = true;
     defaultCacheTtl = 1800;
@@ -29,6 +33,12 @@
     enable = true;
     userName = "Sahana Tankala";
     userEmail = "sahanatankala@gmail.com";
+  };
+
+  programs.zen-browser = {
+    enable = true;
+    policies.DisableTelemetry = true;
+    nativeMessagingHosts = [pkgs.firefoxpwa];
   };
 
   # The home.packages option allows you to install Nix packages into your
@@ -71,48 +81,27 @@
     pciutils # lspci
     usbutils # lsusb
 
-    # hyprland utils
-    nwg-look
-    xdg-desktop-portal-hyprland
-    hyprpolkitagent
-    hyprpanel
-    tofi
-    hyprpaper
-    hyprcursor
-    hyprlock
-    wlogout
-    udiskie
-    pavucontrol
-
     # apps
-    kdePackages.dolphin
-    kdePackages.qtwayland
-    kdePackages.qtsvg
-    kdePackages.ark
+    feh
+    zathura
     prismlauncher
   ];
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 
+  xdg = {
+    enable = true;
+    portal = {
+      enable = true;
+    };
+  };
+
   # Let home-manager manage my dotfiles
   home.file = {
     ".config/starship".source = ../starship/.config/starship.toml;
-    ".config/hypr" = {
-      source = ../hypr;
-      recursive = true;
-    };
-    ".config/wlogout" = {
-      source = ../wlogout;
-      recursive = true;
-    };
-    ".config/dunst/dunstrc".source = ../dunst/dunstrc;
     ".config/ghostty" = {
       source = ../ghostty;
-      recursive = true;
-    };
-    ".config/waybar" = {
-      source = ../waybar;
       recursive = true;
     };
     ".config/tofi/config".text = ''
@@ -125,7 +114,6 @@
       padding-top = 35%
       result-spacing = 25
       num-results = 5
-      font = Iosevka Nerd Font
       text-color = #cdd6f4
       prompt-color = #f38ba8
       selection-color = #f9e2af
