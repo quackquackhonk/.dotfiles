@@ -16,7 +16,7 @@
 (defvar qqh/modules-dir (expand-file-name "qqh" user-emacs-directory)
   "The directory containing my module files.")
 
-(defvar qqh/trunc-len 16
+(defvar qqh/trunc-len 24
   "The length to truncate strings to.")
 
 (defun qqh/macos-p ()
@@ -562,6 +562,9 @@
   (persp-auto-resume-time -1.0)
   (persp-auto-save-opt 1)
   (persp-add-buffer-on-after-change-major-mode 'free)
+
+  (persp-kill-foreign-buffer-behaviour 'kill)
+
   (persp-keymap-prefix (kbd "<f5>"))
   :config
   (persp-mode 1)
@@ -601,6 +604,9 @@
 
 (use-package persp-mode-projectile-bridge
   :hook (after-init-hook . persp-mode-projectile-bridge-mode)
+  :custom
+  (persp-mode-projectile-bridge-persp-name-prefix "")
+
   :config
   (add-hook 'persp-mode-projectile-bridge-mode-hook
             #'(lambda ()
@@ -634,6 +640,41 @@
 (use-package eldoc
   :diminish eldoc-mode
   :config
+  (defvar rb--eldoc-html-patterns
+    '(("&nbsp;" " ")
+      ("&lt;" "<")
+      ("&gt;" ">")
+      ("&amp;" "&")
+      ("&quot;" "\"")
+      ("&apos;" "'"))
+    "List of (PATTERN . REPLACEMENT) to replace in eldoc output.")
+
+  (defun rb--string-replace-all (patterns in-string)
+    "Replace all cars from PATTERNS in IN-STRING with their pair."
+    (mapc (lambda (pattern-pair)
+            (setq in-string
+                  (string-replace (car pattern-pair) (cadr pattern-pair) in-string)))
+          patterns)
+    in-string)
+
+  (defun rb--eldoc-preprocess (orig-fun &rest args)
+    "Preprocess the docs to be displayed by eldoc to replace HTML escapes."
+    (let ((doc (car args)))
+      ;; The first argument is a list of (STRING :KEY VALUE ...) entries
+      ;; we replace the text in each such string
+      ;; see docstring of `eldoc-display-functions'
+      (when (listp doc)
+        (setq doc (mapcar
+                   (lambda (doc) (cons
+                                  (rb--string-replace-all rb--eldoc-html-patterns (car doc))
+                                  (cdr doc)))
+                   doc
+                   ))
+        )
+      (apply orig-fun (cons doc (cdr args)))))
+
+  (advice-add 'eldoc-display-in-buffer :around #'rb--eldoc-preprocess)
+
   (setq eldoc-documentation-strategy #'eldoc-documentation-compose))
 
 ;;;;; documentation comment generation
@@ -1157,8 +1198,8 @@
 
 (transient-define-prefix qqh/transient/open ()
   [:class transient-row "open..."
-   ("d" "diagnostics panel" consult-flymake)
-   ("t" "terminal" multi-vterm)])
+          ("d" "diagnostics panel" consult-flymake)
+          ("t" "terminal" multi-vterm)])
 
 (transient-define-prefix qqh/transient/notes ()
   [:class transient-row "notes..."

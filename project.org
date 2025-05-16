@@ -52,7 +52,8 @@ I think this is probably becuse of some underlying binding that binds ~C-n~ and 
 ** Org [0/1]
 *** change the colors of the todo labels
 *** TODO Get started with org-roam
-** Development Settings [3/3]
+** Development Settings [3/4]
+*** TODO auto activate / deactivate python spack environments on persp-switch
 *** OBSOLETE eshell configuration
 - State "OBSOLETE"   from "TODO"       [2025-03-10 Mon 13:26] \\
   not using eshell anymore
