@@ -527,9 +527,11 @@
   :hook (after-init . envrc-global-mode))
 ;;;;; Projectile
 (use-package project)
+
 (use-package projectile
   :diminish projectile-mode
   :bind (:map projectile-command-map
+              (";" . qqh/project/open-org-file)
               ("t" . multi-vterm-project))
   :init
   (projectile-mode +1)
@@ -545,7 +547,7 @@
         projectile-project-search-path '(("~/code/" . 3)
 					                     "~/sources/")))
 
-(defun qqh/open-project-org-file ()
+(defun qqh/project/open-org-file ()
   "Open the project.org file at the root of the current project. If no project.org file is found, create a new one from a template."
   (interactive)
   (let ((file     (projectile-expand-root "project.org"))

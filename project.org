@@ -53,6 +53,10 @@ Hyde kind of defeats the point of not going with a DE, I should rip out the guts
 - State "DONE"       from "TODO"       [2025-05-05 Mon 18:31]
 ** TODO delay before key repeat should be less
 * Emacs [2/3]
+** Figure out persistent tabs with perspective-mode
+I don't like persp-mode and its projcetile integration, I want to move back to perspective
+
+I should be able to just fork the main perspective mode and adjust the persp struct to add tabs
 ** DONE remove things that I don't know what they do
 - State "DONE"       from "TODO"       [2025-05-05 Mon 18:31]
 ** TODO Projectile switch action should let me choose between a few options
