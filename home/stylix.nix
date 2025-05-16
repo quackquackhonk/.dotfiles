@@ -8,6 +8,7 @@
   ];
 
   stylix.targets = {
-    gtk.enable = false;
+    hyprland.enable = true;
+    hyprland.hyprpaper.enable = true;
   };
 }

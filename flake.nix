@@ -77,7 +77,7 @@
                 home-manager.extraSpecialArgs = { inherit inputs system; };
                 home-manager.users.sahana.imports = [
                   inputs.hyprpanel.homeManagerModules.hyprpanel
-                  ./home-manager/home.nix
+                  ./home/home.nix
                 ];
               }
             ];

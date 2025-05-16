@@ -12,7 +12,7 @@ in
 
   stylix = {
     enable = true;
-    autoEnable = false;
+    autoEnable = true;
     image = ../wallpapers/space.png;
     polarity = "dark";
 
