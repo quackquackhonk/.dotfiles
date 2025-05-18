@@ -49,6 +49,7 @@
   :custom
   ;; add project and flymake to the pseudo-packages variable so straight.el doesn't download a separate version than what eglot downloads.
   (straight-built-in-pseudo-packages '(emacs nadvice python image-mode project flymake xref))
+  (straight-vc-git-default-protocol 'ssh)
   (straight-use-package-by-default t))
 
 ;; always load the newest bytecode
@@ -261,21 +262,7 @@
                   consult--source-project-recent-file-hidden))
 
   ;; perspective integration
-  ;; consult integration
-  (with-eval-after-load "persp-mode"
-    (require 'persp-mode)
-    (defvar persp-consult-source
-      (list :name     "Perspective"
-            :narrow   ?s
-            :category 'buffer
-            :state    #'consult--buffer-state
-            :history  'buffer-name-history
-            :default  t
-            :items
-            #'(lambda ()
-                (mapcar #'buffer-name
-                        (persp-filter-out-bad-buffers)))))
-
+  (with-eval-after-load "perspective"
     (consult-customize consult--source-buffer :hidden t :default nil)
     (add-to-list 'consult-buffer-sources persp-consult-source))
 
@@ -559,62 +546,33 @@
 
 
 ;;;;; Perspectives
-(use-package persp-mode
+(use-package perspective
   :custom
-  (persp-auto-resume-time -1.0)
-  (persp-auto-save-opt 1)
-  (persp-add-buffer-on-after-change-major-mode 'free)
-
-  (persp-kill-foreign-buffer-behaviour 'kill)
-
-  (persp-keymap-prefix (kbd "<f5>"))
+  (persp-modestring-short t)
+  (persp-mode-prefix-key (kbd "<f5>"))
+  :init (persp-mode)
   :config
-  (persp-mode 1)
+  (defun qqh/persp/init-tabs ()
+    "Initialize a perspective local variable for the perspective tabs to nil."
+    (persp-set-local-variables '((persp-tabs . nil))))
+  (add-hook persp-created-hook qqh/persp/init-tabs)
 
-  ;; Override persp-switch to make it exclude the nil perspective
-  (cl-defun persp-frame-switch (name &optional (frame (selected-frame)))
-    (interactive "i")
-    (unless name
-      (setq name (persp-read-persp "to switch(in frame)" nil nil nil t t)))
-    (unless (memq frame persp-inhibit-switch-for)
-      (run-hook-with-args 'persp-before-switch-functions name frame)
-      (let ((persp-inhibit-switch-for (cons frame persp-inhibit-switch-for)))
-        (persp-activate (persp-add-new name) frame)))
-    name)
-  (cl-defun persp-window-switch (name &optional (window (selected-window)))
-    (interactive "i")
-    (unless name
-      (setq name (persp-read-persp "to switch(in window)" nil nil nil t t)))
-    (unless (memq window persp-inhibit-switch-for)
-      (run-hook-with-args 'persp-before-switch-functions name window)
-      (let ((persp-inhibit-switch-for (cons window persp-inhibit-switch-for)))
-        (persp-activate (persp-add-new name) window)))
-    name)
+  (defun qqh/persp/save-tabs ()
+    "Save the current perspective tabs to a local variable before switching"
+    (persp-set-local-variables `((presp-tabs . ,(tab-bar-tabs)))))
+  (add-hook persp-before-switch-hook qqh/persp/save-tabs)
 
-  ;; Perspective-exclusive tabs, ala tmux windows
-  (add-hook 'persp-before-deactivate-functions
-            (defun qqh/persp/save-tab-bar-data (_)
-              (when (get-current-persp)
-                (set-persp-parameter
-                 'tab-bar-tabs (tab-bar-tabs)))))
+  (defun qqh/persp/restore-tabs ()
+    "Restore tabs from the current perspective, if there are any."
+    (let-alist (persp-local-variables (persp-curr))
+      (if \.persp-tabs
+          (tab-bar-tabs-set \.persp-tabs)
+        (tab-bar-close-other-tabs))))
+  (add-hook persp-switch-hook qqh/persp/restore-tabs))
 
-  (add-hook 'persp-activated-functions
-            (defun qqh/persp/load-tab-bar-data (_)
-              (tab-bar-tabs-set (persp-parameter 'tab-bar-tabs))
-              (tab-bar--update-tab-bar-lines t))))
-
-
-(use-package persp-mode-projectile-bridge
-  :hook (after-init-hook . persp-mode-projectile-bridge-mode)
-  :custom
-  (persp-mode-projectile-bridge-persp-name-prefix "")
-
-  :config
-  (add-hook 'persp-mode-projectile-bridge-mode-hook
-            #'(lambda ()
-                (if persp-mode-projectile-bridge-mode
-                    (persp-mode-projectile-bridge-find-perspectives-for-all-buffers)
-                  (persp-mode-projectile-bridge-kill-perspectives)))))
+(use-package persp-projectile
+  :bind (:map projectile-command-map
+              ("p" . projectile-persp-switch-project)))
 
 ;;;;; Consult-todo: Search project todos
 (use-package consult-todo)
@@ -1020,13 +978,6 @@
   (defun mood-line-segment-separator ()
     (propertize "|" 'face 'mood-line-unimportant))
 
-  (defun mood-line-segment-persp ()
-    "Return the current perspective name."
-    (let* ((p (safe-persp-name (get-current-persp)))
-           (persp-face (if (string= p "none")
-                           'mood-line-status-unimportant
-                         'mood-line-status-info)))
-      (propertize p 'face persp-face)))
 
   (defun mood-line-segment-vc ()
     "Return color-coded version control information."
@@ -1055,10 +1006,9 @@
                       ((when (mood-line-segment-misc-info) (mood-line-segment-separator)) . " ")
                       ((mood-line-segment-checker) . " ")
                       ((when (mood-line-segment-checker) (mood-line-segment-separator)) . " ")
-                      ((mood-line-segment-persp) . " ")
+                      ((mood-line-segment-project) . " ")
                       ((when (mood-line-segment-vc) "on") . " ")
-                      ((mood-line-segment-vc) . " ")
-                      ))))
+                      ((mood-line-segment-vc) . " ")))))
 
 ;;;; Buffer display configuration
 ;;;;; display-buffer-alist customization
