@@ -121,7 +121,7 @@ function spackcert () {
     export SSL_CERT_FILE=$SPACK_CERT_PATH
 }
 
-export CERT_PATH=$(python -c 'import site; print(site.getsitepackages()[0] + "/certifi/cacert.pem")')
+export CERT_PATH=$(python3 -c 'import site; print(site.getsitepackages()[0] + "/certifi/cacert.pem")')
 export SSL_CERT_FILE=$CERT_PATH
 
 export BAT_THEME="Catppuccin Mocha"

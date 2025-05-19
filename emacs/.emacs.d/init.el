@@ -1,4 +1,4 @@
-;;; init.el --- My emacs configurtion -*- lexical-binding: t -*-
+:;;; init.el --- My emacs configurtion -*- lexical-binding: t -*-
 
 ;;; Commentary:
 
@@ -261,11 +261,6 @@
                   consult--source-project-buffer-hidden
                   consult--source-project-recent-file-hidden))
 
-  ;; perspective integration
-  (with-eval-after-load "perspective"
-    (consult-customize consult--source-buffer :hidden t :default nil)
-    (add-to-list 'consult-buffer-sources persp-consult-source))
-
 
   ;; Narrowing lets you restrict results to certain groups of candidates
   (setq consult-narrow-key "<"))
@@ -526,19 +521,6 @@
   :init
   (projectile-mode +1)
 
-  (defun qqh/spack-python ()
-    "Activate the spack environment in the current project, if there is one."
-    (interactive)
-    (let* ((root-dir (if (projectile-project-root)
-                         (projectile-project-root)
-                       default-directory))
-           (env-dir (expand-file-name "spack_env/.spack-env/view" root-dir)))
-      (if (file-exists-p env-dir)
-          (pyvenv-activate env-dir)
-        (ignore))))
-  ;; Try to activate the spack environment on project switch
-  (add-hook 'projectile-after-switch-project-hook qqh/spack-python)
-
   ;; integration with project.el, some packages work better with it
   (add-hook 'project-find-functions #'project-projectile)
 
@@ -563,28 +545,15 @@
 
 ;;;;; Perspectives
 (use-package perspective
+  :straight (:host github :fork "quackquackhonk/perspective-el")
   :custom
   (persp-modestring-short t)
   (persp-mode-prefix-key (kbd "<f5>"))
   :init (persp-mode)
   :config
-  (defun qqh/persp/init-tabs ()
-    "Initialize a perspective local variable for the perspective tabs to nil."
-    (persp-set-local-variables '((persp-tabs . nil))))
-  (add-hook persp-created-hook qqh/persp/init-tabs)
-
-  (defun qqh/persp/save-tabs ()
-    "Save the current perspective tabs to a local variable before switching"
-    (persp-set-local-variables `((presp-tabs . ,(tab-bar-tabs)))))
-  (add-hook persp-before-switch-hook qqh/persp/save-tabs)
-
-  (defun qqh/persp/restore-tabs ()
-    "Restore tabs from the current perspective, if there are any."
-    (let-alist (persp-local-variables (persp-curr))
-      (if \.persp-tabs
-          (tab-bar-tabs-set \.persp-tabs)
-        (tab-bar-close-other-tabs))))
-  (add-hook persp-switch-hook qqh/persp/restore-tabs))
+  ;; perspective integration
+  (consult-customize consult--source-buffer :hidden t :default nil)
+  (add-to-list 'consult-buffer-sources persp-consult-source))
 
 (use-package persp-projectile
   :bind (:map projectile-command-map
@@ -803,7 +772,19 @@
   ;; Remove guess indent python message
   (setq python-indent-guess-indent-offset-verbose nil))
 
+(defun qqh/spack-python ()
+  "Activate the spack environment in the current project, if there is one."
+  (interactive)
+  (let* ((root-dir (if (projectile-project-root)
+                       (projectile-project-root)
+                     default-directory))
+         (env-dir (expand-file-name "spack_env/.spack-env/view" root-dir)))
+    (if (file-exists-p env-dir)
+        (pyvenv-activate env-dir)
+      (ignore))))
+
 (use-package pyvenv
+  :hook ((python-mode . qqh/spack-python))
   :config
   (setenv "WORKON_HOME" "/opt/homebrew/Caskroom/miniconda/base/envs/")
   (pyvenv-mode 1))
@@ -978,8 +959,8 @@
   (fancy-compilation-mode))
 
 (use-package vim-tab-bar
-  :ensure t
-  (vim-tab-bar-mode 1))
+ :init
+ (vim-tab-bar-mode 1))
 
 (set-face-attribute 'tab-bar nil :box nil :background (catppuccin-color 'mantle))
 (set-face-attribute 'tab-bar-tab nil :foreground (catppuccin-color 'mauve) :background (catppuccin-color 'base))
