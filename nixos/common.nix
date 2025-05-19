@@ -10,6 +10,7 @@
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     curl
+    vim
     emacs30
     git
     gcc

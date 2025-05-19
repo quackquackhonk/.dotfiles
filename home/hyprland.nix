@@ -9,6 +9,7 @@
     hyprpolkitagent
     hyprpaper
     hyprcursor
+    catppuccin-cursors.mochaDark
     catppuccin-cursors.mochaLight
     tofi
     udiskie

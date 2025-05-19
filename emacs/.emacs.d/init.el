@@ -447,6 +447,8 @@
 
 ;;;; Vterm: Terminal Emulation
 (use-package vterm
+  :bind (:map vterm-mode-map
+              ("C-c C-x" . vterm--self-insert))
   :config
   (unbind-key (kbd "M-'") 'vterm-mode-map)
   (unbind-key (kbd "M-]") 'vterm-mode-map))
@@ -516,12 +518,26 @@
 (use-package project)
 
 (use-package projectile
+
   :diminish projectile-mode
   :bind (:map projectile-command-map
               (";" . qqh/project/open-org-file)
               ("t" . multi-vterm-project))
   :init
   (projectile-mode +1)
+
+  (defun qqh/spack-python ()
+    "Activate the spack environment in the current project, if there is one."
+    (interactive)
+    (let* ((root-dir (if (projectile-project-root)
+                         (projectile-project-root)
+                       default-directory))
+           (env-dir (expand-file-name "spack_env/.spack-env/view" root-dir)))
+      (if (file-exists-p env-dir)
+          (pyvenv-activate env-dir)
+        (ignore))))
+  ;; Try to activate the spack environment on project switch
+  (add-hook 'projectile-after-switch-project-hook qqh/spack-python)
 
   ;; integration with project.el, some packages work better with it
   (add-hook 'project-find-functions #'project-projectile)
@@ -675,6 +691,7 @@
   :custom
   (eglot-send-changes-idle-time 0.1)
   (eglot-extend-to-xref t) ; activate Eglot in referenced non-project files
+  (eglot-autoshutdown t)
   :hook ((tuareg-mode python-mode python-ts-mode c-mode c++-mode nix-mode) . eglot-ensure)
   :config
   ;; Disable inlay hints globally
@@ -715,10 +732,8 @@
   :after eglot
   :config (eglot-booster-mode))
 
-;;;; Code formatting...
-(use-package format-all
-  :config
-  )
+;;;; Code formatting
+(use-package format-all)
 ;;;; Dape: DAP support for eglot
 (use-package dape
   :preface
@@ -1082,16 +1097,7 @@
         (find-file f)
       (message (format "%s does not exist!" f)))))
 
-(defun qqh/spack-python ()
-  "Activate the spack environment in the current project, if there is one."
-  (interactive)
-  (let* ((root-dir (if (projectile-project-root)
-                       (projectile-project-root)
-                     default-directory))
-         (env-dir (expand-file-name "spack_env/.spack-env/view" root-dir)))
-    (if (file-exists-p env-dir)
-        (pyvenv-activate env-dir)
-      (message (format "The spack environment at %s does not exist!" env-dir)))))
+
 
 (defun qqh/emacs/reload ()
   "Load my Emacs configuration."
@@ -1111,12 +1117,12 @@
 (defun qqh/config/open-nix-home ()
   "Open my nix home-manager home.nix."
   (interactive)
-  (find-file "~/dotfiles/home-manager/home.nix"))
+  (find-file "~/dotfiles/home/home.nix"))
 
 (defun qqh/config/hyprland ()
   "Open my hyprland config."
   (interactive)
-  (find-file "~/dotfiles/home-manager/hyprland.nix"))
+  (find-file "~/dotfiles/home/hyprland.nix"))
 
 ;;;; surround: surround selections with custom delimiters
 (use-package surround)
@@ -1158,13 +1164,6 @@
   [:class transient-row "notes..."
           ("c" "capture" org-roam-capture)
           ("s" "search" org-roam-node-find)])
-
-(transient-define-prefix qqh/transient/projects ()
-  [:class transient-row "projects..."
-          ("d" "project dired" projectile-dired)
-          ("f" "project flake" qqh/project/open-flake)
-          ("p" "switch to project" projectile-switch-project)
-          ("t" "open project terminal" multi-vterm-project)])
 
 (transient-define-prefix qqh/transient/search ()
   [:class transient-row "search..."
@@ -1219,7 +1218,8 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
   [["Next"
     ("d" "todo" hl-todo-next)
     ("e" "error" flymake-goto-next-error)
-    ("p" "perspective" persp-next)]])
+    ("p" "perspective" persp-next)
+    ("x" "conflict" smerge-vc-next-conflict)]])
 
 (transient-define-prefix qqh/transient/prev ()
   "Transient map for going to the previous thing."

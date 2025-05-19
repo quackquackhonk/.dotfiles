@@ -9,6 +9,8 @@
   home.packages = with pkgs; [
     # LSP servers
     emacs-lsp-booster
+    python3
+    renpy
 
     # nix
     nixfmt-rfc-style
