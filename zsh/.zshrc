@@ -106,8 +106,9 @@ alias production-login='okta-aws-cli web --profile production --expiry-aws-varia
 alias awsnp='aws --profile nonprod'
 alias awsprod='aws --profile production'
 
-alias nonprod='eval "$(aws configure export-credentials --profile nonprod --format env)" && aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 589310964831.dkr.ecr.us-west-2.amazonaws.com && export AWS_PROFILE="nonprod"'
-alias nonprod-east='eval "$(aws configure export-credentials --profile nonprod --format env)" && aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 589310964831.dkr.ecr.us-east-1.amazonaws.com && export AWS_PROFILE="nonprod"'
+alias docker='podman'
+alias nonprod='eval "$(aws configure export-credentials --profile nonprod --format env)" && aws ecr get-login-password --region us-west-2 | podman login --username AWS --password-stdin 589310964831.dkr.ecr.us-west-2.amazonaws.com && export AWS_PROFILE="nonprod"'
+alias nonprod-east='eval "$(aws configure export-credentials --profile nonprod --format env)" && aws ecr get-login-password --region us-east-1 | podman login --username AWS --password-stdin 589310964831.dkr.ecr.us-east-1.amazonaws.com && export AWS_PROFILE="nonprod"'
 
 alias production='eval "$(aws configure export-credentials --profile production --format env)"'
 

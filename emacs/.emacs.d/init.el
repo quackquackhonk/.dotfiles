@@ -1,4 +1,4 @@
-:;;; init.el --- My emacs configurtion -*- lexical-binding: t -*-
+;;; init.el --- My emacs configurtion -*- lexical-binding: t -*-
 
 ;;; Commentary:
 
@@ -545,13 +545,14 @@
 
 ;;;;; Perspectives
 (use-package perspective
+  :after consult
   :straight (:host github :fork "quackquackhonk/perspective-el")
   :custom
   (persp-modestring-short t)
   (persp-mode-prefix-key (kbd "<f5>"))
   :init (persp-mode)
   :config
-  ;; perspective integration
+  ;; consult integration integration
   (consult-customize consult--source-buffer :hidden t :default nil)
   (add-to-list 'consult-buffer-sources persp-consult-source))
 
