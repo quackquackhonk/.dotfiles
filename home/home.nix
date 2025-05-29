@@ -49,6 +49,7 @@
     lshw
     eza
     bat
+    just
     fd
     ripgrep
     jq

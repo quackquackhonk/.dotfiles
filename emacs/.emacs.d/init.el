@@ -530,7 +530,16 @@
   (setq projectile-enable-caching t
         projectile-auto-discover t
         projectile-project-search-path '(("~/code/" . 3)
-					                     "~/sources/")))
+					                     "~/sources/"))
+  :config
+  (projectile-register-project-type 'gleam '("gleam.toml")
+                                    :project-file "gleam.toml"
+				                    :compile "gleam build"
+				                    :test "gleam test"
+				                    :run "gleam run"
+                                    :src-dir "src/"
+                                    :test-dir "test/"
+				                    :test-suffix "_test"))
 
 (defun qqh/project/open-org-file ()
   "Open the project.org file at the root of the current project. If no project.org file is found, create a new one from a template."
@@ -544,21 +553,77 @@
 
 
 ;;;;; Perspectives
-(use-package perspective
+(use-package persp-mode
   :after consult
-  :straight (:host github :fork "quackquackhonk/perspective-el")
   :custom
-  (persp-modestring-short t)
-  (persp-mode-prefix-key (kbd "<f5>"))
-  :init (persp-mode)
+  (persp-auto-resume-time -1.0)
+  (persp-auto-save-opt 1)
+  (persp-add-buffer-on-after-change-major-mode 'free)
+  (persp-kill-foreign-buffer-behaviour 'kill)
+  (persp-keymap-prefix (kbd "<f5>"))
   :config
-  ;; consult integration integration
-  (consult-customize consult--source-buffer :hidden t :default nil)
-  (add-to-list 'consult-buffer-sources persp-consult-source))
+  (persp-mode 1)
 
-(use-package persp-projectile
-  :bind (:map projectile-command-map
-              ("p" . projectile-persp-switch-project)))
+  ;; Override persp-switch to make it exclude the nil perspective
+  (cl-defun persp-frame-switch (name &optional (frame (selected-frame)))
+    (interactive "i")
+    (unless name
+      (setq name (persp-read-persp "to switch(in frame)" nil nil nil t t)))
+    (unless (memq frame persp-inhibit-switch-for)
+      (run-hook-with-args 'persp-before-switch-functions name frame)
+      (let ((persp-inhibit-switch-for (cons frame persp-inhibit-switch-for)))
+        (persp-activate (persp-add-new name) frame)))
+    name)
+  (cl-defun persp-window-switch (name &optional (window (selected-window)))
+    (interactive "i")
+    (unless name
+      (setq name (persp-read-persp "to switch(in window)" nil nil nil t t)))
+    (unless (memq window persp-inhibit-switch-for)
+      (run-hook-with-args 'persp-before-switch-functions name window)
+      (let ((persp-inhibit-switch-for (cons window persp-inhibit-switch-for)))
+        (persp-activate (persp-add-new name) window)))
+    name)
+
+  ;; Perspective-exclusive tabs, ala tmux windows
+  (add-hook 'persp-before-deactivate-functions
+            (defun qqh/persp/save-tab-bar-data (_)
+              (when (get-current-persp)
+                (set-persp-parameter
+                 'tab-bar-tabs (tab-bar-tabs)))))
+
+  (add-hook 'persp-activated-functions
+            (defun qqh/persp/load-tab-bar-data (_)
+              (tab-bar-tabs-set (persp-parameter 'tab-bar-tabs))
+              (tab-bar--update-tab-bar-lines t)))
+
+  (with-eval-after-load "consult"
+    (require 'consult)
+    (defvar persp-consult-source
+      (list :name     "Perspective"
+            :narrow   ?s
+            :category 'buffer
+            :state    #'consult--buffer-state
+            :history  'buffer-name-history
+            :default  t
+            :items
+            #'(lambda ()
+                (mapcar #'buffer-name
+                        (persp-filter-out-bad-buffers)))))
+
+    (consult-customize consult--source-buffer :hidden t :default nil)
+    (add-to-list 'consult-buffer-sources persp-consult-source)))
+
+(use-package persp-mode-projectile-bridge
+  :hook (after-init-hook . persp-mode-projectile-bridge-mode)
+  :custom
+  (persp-mode-projectile-bridge-persp-name-prefix "")
+
+  :config
+  (add-hook 'persp-mode-projectile-bridge-mode-hook
+            #'(lambda ()
+                (if persp-mode-projectile-bridge-mode
+                    (persp-mode-projectile-bridge-find-perspectives-for-all-buffers)
+                  (persp-mode-projectile-bridge-kill-perspectives)))))
 
 ;;;;; Consult-todo: Search project todos
 (use-package consult-todo)
@@ -584,44 +649,7 @@
 
 ;;;;; Eldoc
 (use-package eldoc
-  :diminish eldoc-mode
-  :config
-  (defvar rb--eldoc-html-patterns
-    '(("&nbsp;" " ")
-      ("&lt;" "<")
-      ("&gt;" ">")
-      ("&amp;" "&")
-      ("&quot;" "\"")
-      ("&apos;" "'"))
-    "List of (PATTERN . REPLACEMENT) to replace in eldoc output.")
-
-  (defun rb--string-replace-all (patterns in-string)
-    "Replace all cars from PATTERNS in IN-STRING with their pair."
-    (mapc (lambda (pattern-pair)
-            (setq in-string
-                  (string-replace (car pattern-pair) (cadr pattern-pair) in-string)))
-          patterns)
-    in-string)
-
-  (defun rb--eldoc-preprocess (orig-fun &rest args)
-    "Preprocess the docs to be displayed by eldoc to replace HTML escapes."
-    (let ((doc (car args)))
-      ;; The first argument is a list of (STRING :KEY VALUE ...) entries
-      ;; we replace the text in each such string
-      ;; see docstring of `eldoc-display-functions'
-      (when (listp doc)
-        (setq doc (mapcar
-                   (lambda (doc) (cons
-                                  (rb--string-replace-all rb--eldoc-html-patterns (car doc))
-                                  (cdr doc)))
-                   doc
-                   ))
-        )
-      (apply orig-fun (cons doc (cdr args)))))
-
-  (advice-add 'eldoc-display-in-buffer :around #'rb--eldoc-preprocess)
-
-  (setq eldoc-documentation-strategy #'eldoc-documentation-compose))
+  :diminish eldoc-mode)
 
 ;;;;; documentation comment generation
 (use-package docstr
@@ -670,6 +698,7 @@
   ;; extra server binaries
   (add-to-list 'eglot-server-programs '((c++-mode c-mode) "clangd"))
   (add-to-list 'eglot-server-programs '(nix-mode . ("nil")))
+  (add-to-list 'eglot-server-programs '(gleam-ts-mode . ("gleam" "lsp")))
   (advice-add 'eglot-completion-at-point :around #'cape-wrap-buster)
   (advice-add 'eglot-completion-at-point :around #'cape-wrap-noninterruptible)
 
@@ -740,8 +769,9 @@
 ;;;;; C / C++
 (setq-default c-basic-offset 4)
 
-;;;;; Go
-(use-package go-mode)
+;;;; Gleam
+(use-package gleam-ts-mode
+  :mode (("\\.gleam\\'" . gleam-ts-mode)))
 
 ;;;;; Nix
 (use-package nix-mode
@@ -755,7 +785,7 @@
 ;; Major mode for editing Dune project files
 (use-package dune)
 
-;;;;; PYTHON
+;;;;; Python
 ;; Built-in Python utilities
 (use-package python
   :custom
@@ -781,7 +811,7 @@
   (setenv "WORKON_HOME" "/opt/homebrew/Caskroom/miniconda/base/envs/")
   (pyvenv-mode 1))
 
-;;;;; RUST
+;;;;; Rust
 (use-package rust-mode
   :config
   ;; rustfmt
@@ -951,8 +981,8 @@
   (fancy-compilation-mode))
 
 (use-package vim-tab-bar
- :init
- (vim-tab-bar-mode 1))
+  :init
+  (vim-tab-bar-mode 1))
 
 (set-face-attribute 'tab-bar nil :box nil :background (catppuccin-color 'mantle))
 (set-face-attribute 'tab-bar-tab nil :foreground (catppuccin-color 'mauve) :background (catppuccin-color 'base))

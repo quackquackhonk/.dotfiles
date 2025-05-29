@@ -11,21 +11,23 @@
     emacs-lsp-booster
     python3
     renpy
-
+    # gleam
+    gleam
+    erlang
+    rebar3
     # nix
     nixfmt-rfc-style
     nil
-
-    # vterm
-    cmake
-    libtool
-    libvterm
-
     # ocaml
     ocaml
     dune_3
     ocamlPackages.ocaml-lsp
     ocamlPackages.ocamlformat
+    # vterm
+    cmake
+    libtool
+    libvterm
+
   ];
 
 }
