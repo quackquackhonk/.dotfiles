@@ -442,6 +442,7 @@
 
 ;;;; Vterm: Terminal Emulation
 (use-package vterm
+  :hook (vterm-mode . goto-address-mode)
   :bind (:map vterm-mode-map
               ("C-c C-x" . vterm--self-insert))
   :config
@@ -654,13 +655,12 @@
 ;;;;; documentation comment generation
 (use-package docstr
   :diminish docstr-mode
+  :hook ((python-mode . docstr-mode))
   :custom
   (docstr-python-style 'google)
   (docstr-python-modes '(python-mode python-ts-mode))
   :config
-  (add-to-list 'docstr-writers-alist '(python-ts-mode . docstr-writers-python))
-
-  (global-docstr-mode 1))
+  (add-to-list 'docstr-writers-alist '(python-ts-mode . docstr-writers-python)))
 
 ;;;;; Devdocs.io integration
 (use-package devdocs
@@ -797,6 +797,7 @@
 (defun qqh/spack-python ()
   "Activate the spack environment in the current project, if there is one."
   (interactive)
+  (setenv "WORKON_HOME" "/opt/homebrew/Caskroom/miniconda/base/envs/")
   (let* ((root-dir (if (projectile-project-root)
                        (projectile-project-root)
                      default-directory))
@@ -806,7 +807,7 @@
       (ignore))))
 
 (use-package pyvenv
-  :hook ((python-mode . qqh/spack-python))
+  :hook (((python-mode python-ts-mode) . qqh/spack-python))
   :config
   (setenv "WORKON_HOME" "/opt/homebrew/Caskroom/miniconda/base/envs/")
   (pyvenv-mode 1))
@@ -996,7 +997,6 @@
   (defun mood-line-segment-separator ()
     (propertize "|" 'face 'mood-line-unimportant))
 
-
   (defun mood-line-segment-vc ()
     "Return color-coded version control information."
     (if (> (length mood-line-segment-vc--text) qqh/trunc-len)
@@ -1020,7 +1020,6 @@
                       (mood-line-segment-major-mode))
                      :right
                      (((mood-line-segment-misc-info) . " ")
-                      ;; ((:eval persp-lighter) . " ")
                       ((when (mood-line-segment-misc-info) (mood-line-segment-separator)) . " ")
                       ((mood-line-segment-checker) . " ")
                       ((when (mood-line-segment-checker) (mood-line-segment-separator)) . " ")
@@ -1100,6 +1099,13 @@
         (find-file f)
       (message (format "%s does not exist!" f)))))
 
+(defun qqh/search-files ()
+  "Fuzzy find files with `projectile-find-file', falling
+back to `consult-fd' if we're not in a project."
+  (interactive)
+  (if (projectile-project-p)
+      (projectile-find-file)
+    (consult-fd)))
 
 
 (defun qqh/emacs/reload ()
@@ -1175,7 +1181,7 @@
           ("n" "notes" org-roam-node-find)
           ("o" "outline" consult-outline)
           ("p" "perspectives" persp-switch)
-          ("s" "files" consult-fd)])
+          ("s" "files" qqh/search-files)])
 
 (transient-define-prefix qqh/transient/config ()
   [("r" "reload emacs config" qqh/emacs/reload)]
