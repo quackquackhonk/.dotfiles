@@ -86,6 +86,7 @@
     feh
     zathura
     prismlauncher
+    discord
   ];
 
   # Let Home Manager install and manage itself.

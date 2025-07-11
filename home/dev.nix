@@ -9,8 +9,8 @@
   home.packages = with pkgs; [
     # LSP servers
     emacs-lsp-booster
+    # python
     python3
-    renpy
     # gleam
     gleam
     erlang

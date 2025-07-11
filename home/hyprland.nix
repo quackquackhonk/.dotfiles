@@ -23,7 +23,6 @@
   ];
 
   # Optional, hint Electron apps to use Wayland:
-  home.sessionVariables.NIXOS_OZONE_WL = "1";
 
   # hyprland config settings
   wayland.windowManager.hyprland = {
@@ -37,13 +36,15 @@
       "$browser" = "zen-beta";
       "$files" = "dolphin";
       "$menu" = "tofi-run | zsh";
+      "$discord" = "ELECTRON_OZONE_PLATFORM_HINT= discord";
+      "$emacs" = "emacsclient -c -a=''";
 
       # environment variables
       env = [
         "PATH,$PATH:$scrPath"
         "XDG_CURRENT_DESKTOP,Hyprland"
-        "XDG_SESSION_TYPE,wayland"
-        "XDG_SESSION_DESKTOP,Hyprland"
+        # "XDG_SESSION_TYPE,wayland"
+        # "XDG_SESSION_DESKTOP,Hyprland"
         "GDK_SCALE,1"
         "HYPRCURSOR_NAME,'Catppuccin Mocha Dark'"
         "HYPRCURSOR_SIZE,16"
@@ -70,8 +71,10 @@
         "wl-paste --type text --watch cliphist store"                                       # clipboard store text data
         "wl-paste --type image --watch cliphist store"                                      # clipboard store image data
         "emacs --daemon"                                                                    # emacs server
-        "steam"                                                                             # steam
         "udiskie --automount --smart-tray"                                                  # auto mount USBs
+        # Auto start some apps
+        "[workspace 1 silent] steam"
+        "[workspace 6 silent] $browser"
       ];
 
       # monitors
@@ -184,12 +187,13 @@
           "$mod, T, togglefloating"
           # Quick launch programs
           "$mod, B, exec, $browser"
+          "$mod, D, exec, $discord"
           "$mod, F, exec, $files"
           "$mod, Return, exec, $terminal"
           "$mod, Space, exec, $menu"
           "$mod, Escape, exec, wlogout"
           # emacs
-          "$mod, E, exec, emacsclient -c -a=''"
+          "$mod, E, exec, $emacs"
           "$mod SHIFT, E, exec, emacsclient -e '(kill-emacs)'"
 
           # Move focus with arrow keys
@@ -253,30 +257,46 @@
 cursor:no_hardware_cursors = true
 render:explicit_sync = 0
 
-# See https://wiki.hyprland.org/Configuring/Window-Rules/ for more
+#
+# WORKSPACE RULES
 # See https://wiki.hyprland.org/Configuring/Workspace-Rules/ for workspace rules
+#
+# Set workspace names
+workspace = 1, defaultName:games
+workspace = 2, defaultName:emacs
+workspace = 6, defaultName:browser
+workspace = 7, defaultName:discord
+
+#
+# WINDOW RULES
+# See https://wiki.hyprland.org/Configuring/Window-Rules/ for more
+#
+# Pin certain apps to workspaces
+windowrulev2 = workspace name:games silent, class:(steam), title:(.*)
+windowrulev2 = workspace name:games silent, class:(steam.*), title:(.*)
+windowrulev2 = workspace name:emacs silent, class:(Emacs), title:(.*)
 
 # Auto-float certain windows
-windowrulev2 = float, class:(org.kde.dolphin), title:(.*)                            # File manager
-windowrulev2 = center, class:(org.kde.dolphin), title:(.*)                            # File manager
-# Bluetooth manager
+windowrulev2 = float, class:(org.kde.dolphin), title:(.*)          # File manager
+windowrulev2 = center, class:(org.kde.dolphin), title:(.*)         # File manager
+## Bluetooth manager
 windowrulev2 = float, class:(.blueman-manager-wrapped), title:(.*)
 windowrulev2 = size 800 600, class:(.blueman-manager-wrapped), title:(.*)
 windowrulev2 = center, class:(.blueman-manager-wrapped), title:(.*)
-# audio mixer
+## audio mixer
 windowrulev2 = float, class:(org.pulseaudio.pavucontrol), title:(.*)
 windowrulev2 = size 800 600, class:(org.pulseaudio.pavucontrol), title:(.*)
 windowrulev2 = center, class:(org.pulseaudio.pavucontrol), title:(.*)
-# PIP
+## PIP
 windowrulev2 = float, class:(zen), title:(Picture-in-Picture)
 windowrulev2 = move 1286 716, class:(zen), title:(Picture-in-Picture)
-# gui development start as float
+## GUI development start as floating window
 windowrulev2 = float, class:(main.exe), title:(.*)
 
-# Ignore maximize requests from apps. You'll probably like this.
+## MISC RULES
+### Ignore maximize requests from apps. You'll probably like this.
 windowrulev2 = suppressevent maximize, class:.*
-
-# Fix some dragging issues with XWayland
+### Fix some dragging issues with XWayland
 windowrulev2 = nofocus,class:^$,title:^$,xwayland:1,floating:1,fullscreen:0,pinned:0
 '';
 

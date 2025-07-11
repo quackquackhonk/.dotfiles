@@ -650,13 +650,15 @@
 
 ;;;;; Eldoc
 (use-package eldoc
+  :straight (:type built-in)
   :diminish eldoc-mode)
 
 ;;;;; documentation comment generation
 (use-package docstr
   :diminish docstr-mode
-  :hook ((python-mode . docstr-mode))
+  :hook (((python-mode python-ts-mode) . docstr-mode))
   :custom
+  (docstr-key-enable t)
   (docstr-python-style 'google)
   (docstr-python-modes '(python-mode python-ts-mode))
   :config
@@ -672,7 +674,7 @@
 
 ;;;;; Flymake
 (use-package flymake
-  :straight nil
+  :straight (:type built-in)
   :custom
   (flymake-mode-line-format '(" " flymake-mode-line-counters flymake-mode-line-exception))
   (flymake-margin-indicators-string '((error "X" compilation-error)
@@ -686,11 +688,12 @@
 
 ;;;; Eglot
 (use-package eglot
+  :straight (:type built-in)
   :custom
   (eglot-send-changes-idle-time 0.1)
   (eglot-extend-to-xref t) ; activate Eglot in referenced non-project files
   (eglot-autoshutdown t)
-  :hook ((tuareg-mode python-mode python-ts-mode c-mode c++-mode nix-mode) . eglot-ensure)
+  :hook ((tuareg-mode python-mode python-ts-mode c-mode c++-mode nix-mode go-mode) . eglot-ensure)
   :config
   ;; Disable inlay hints globally
   (add-to-list 'eglot-ignored-server-capabilities :inlayHintProvider)
@@ -733,6 +736,7 @@
 
 ;;;; Code formatting
 (use-package format-all)
+
 ;;;; Dape: DAP support for eglot
 (use-package dape
   :preface
@@ -769,9 +773,15 @@
 ;;;;; C / C++
 (setq-default c-basic-offset 4)
 
-;;;; Gleam
+;;;;; Gleam
 (use-package gleam-ts-mode
   :mode (("\\.gleam\\'" . gleam-ts-mode)))
+
+;;;;; Go
+(use-package go-mode
+  :hook ((go-mode . (lambda ()
+                      "gofmt on save in go buffers"
+                      (add-hook 'before-save-hook 'gofmt-before-save)))))
 
 ;;;;; Nix
 (use-package nix-mode
@@ -950,18 +960,38 @@
   :diminish rainbow-delimiters-mode)
 
 (use-package hl-todo
+  :custom
+  (hl-todo-color-background nil)
+  (hl-todo-require-punctuation t)
   :config
   (defface qqh/hl-todo/todo-face
     `((t . (:bold t :background ,(catppuccin-color 'sky) :foreground ,(catppuccin-color 'base))))
     "The face highlighting TODOs in projects."
     :group 'qqh)
+  (defface qqh/hl-todo/hack-face
+    `((t . (:bold t :background ,(catppuccin-color 'peach) :foreground ,(catppuccin-color 'base))))
+    "The face highlighting TODOs in projects."
+    :group 'qqh)
+  (defface qqh/hl-todo/fixme-face
+    `((t . (:bold t :background ,(catppuccin-color 'red) :foreground ,(catppuccin-color 'base))))
+    "The face highlighting TODOs in projects."
+    :group 'qqh)
+  (defface qqh/hl-todo/note-face
+    `((t . (:bold t :background ,(catppuccin-color 'mauve) :foreground ,(catppuccin-color 'base))))
+    "The face highlighting TODOs in projects."
+    :group 'qqh)
+  (defface qqh/hl-todo/perf-face
+    `((t . (:bold t :background ,(catppuccin-color 'lavender) :foreground ,(catppuccin-color 'base))))
+    "The face highlighting TODOs in projects."
+    :group 'qqh)
 
+  ;; TODO testing this highlight
   (setq hl-todo-keyword-faces
-        `(("TODO" . ,(catppuccin-color 'sky))
-          ("HACK" . ,(catppuccin-color 'peach))
-          ("FIXME" . ,(catppuccin-color 'red))
-          ("NOTE" . ,(catppuccin-color 'mauve))
-          ("PERF" . ,(catppuccin-color 'lavender))))
+        '(("TODO" . qqh/hl-todo/todo-face)
+          ("HACK" . qqh/hl-todo/hack-face)
+          ("FIXME" . qqh/hl-todo/fixme-face)
+          ("NOTE" . qqh/hl-todo/note-face)
+          ("PERF" . qqh/hl-todo/perf-face)))
 
   (global-hl-todo-mode))
 
