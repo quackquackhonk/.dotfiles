@@ -606,7 +606,7 @@
             :state    #'consult--buffer-state
             :history  'buffer-name-history
             :default  t
-            :items
+            items
             #'(lambda ()
                 (mapcar #'buffer-name
                         (persp-filter-out-bad-buffers)))))
@@ -932,186 +932,6 @@
   :config
   (org-roam-db-autosync-mode))
 
-;;; Themes / UI customization
-
-;;;; Face customizations
-(if (qqh/macos-p)
-    (set-face-attribute 'default nil
-                        :family "Iosevka"
-                        :height 130)
-  (set-face-attribute 'default nil
-                      :family "Iosevka Nerd Font"
-                      :height 100))
-
-(set-face-attribute 'window-divider nil
-                    :background (catppuccin-color 'base)
-                    :foreground (catppuccin-color 'base))
-(set-face-attribute 'fringe nil
-                    :background (catppuccin-color 'mantle))
-
-;;;; Packages
-(use-package colorful-mode
-  :diminish colorful-mode)
-
-(use-package nerd-icons)
-
-(use-package rainbow-delimiters
-  :hook (prog-mode . rainbow-delimiters-mode)
-  :diminish rainbow-delimiters-mode)
-
-(use-package hl-todo
-  :custom
-  (hl-todo-color-background nil)
-  (hl-todo-require-punctuation t)
-  :config
-  (defface qqh/hl-todo/todo-face
-    `((t . (:bold t :background ,(catppuccin-color 'sky) :foreground ,(catppuccin-color 'base))))
-    "The face highlighting TODOs in projects."
-    :group 'qqh)
-  (defface qqh/hl-todo/hack-face
-    `((t . (:bold t :background ,(catppuccin-color 'peach) :foreground ,(catppuccin-color 'base))))
-    "The face highlighting TODOs in projects."
-    :group 'qqh)
-  (defface qqh/hl-todo/fixme-face
-    `((t . (:bold t :background ,(catppuccin-color 'red) :foreground ,(catppuccin-color 'base))))
-    "The face highlighting TODOs in projects."
-    :group 'qqh)
-  (defface qqh/hl-todo/note-face
-    `((t . (:bold t :background ,(catppuccin-color 'mauve) :foreground ,(catppuccin-color 'base))))
-    "The face highlighting TODOs in projects."
-    :group 'qqh)
-  (defface qqh/hl-todo/perf-face
-    `((t . (:bold t :background ,(catppuccin-color 'lavender) :foreground ,(catppuccin-color 'base))))
-    "The face highlighting TODOs in projects."
-    :group 'qqh)
-
-  ;; TODO testing this highlight
-  (setq hl-todo-keyword-faces
-        '(("TODO" . qqh/hl-todo/todo-face)
-          ("HACK" . qqh/hl-todo/hack-face)
-          ("FIXME" . qqh/hl-todo/fixme-face)
-          ("NOTE" . qqh/hl-todo/note-face)
-          ("PERF" . qqh/hl-todo/perf-face)))
-
-  (global-hl-todo-mode))
-
-;; dim inactive buffers
-(use-package auto-dim-other-buffers
-  :config
-  (set-face-attribute 'auto-dim-other-buffers-face nil
-                      :background (catppuccin-color 'mantle))
-  (set-face-attribute 'auto-dim-other-buffers-hide-face nil
-                      :background (catppuccin-color 'mantle)
-                      :foreground (catppuccin-color 'mantle))
-  (auto-dim-other-buffers-mode))
-
-(use-package fancy-compilation
-  :config
-  (set-face-attribute 'fancy-compilation-default-face nil
-                      :background (catppuccin-color 'base))
-  (fancy-compilation-mode))
-
-(use-package vim-tab-bar
-  :init
-  (vim-tab-bar-mode 1))
-
-(set-face-attribute 'tab-bar nil :box nil :background (catppuccin-color 'mantle))
-(set-face-attribute 'tab-bar-tab nil :foreground (catppuccin-color 'mauve) :background (catppuccin-color 'base))
-
-;;;; Modeline configurtaion
-(use-package mood-line
-  :custom-face
-  (mood-line-unimportant ((t (:inherit shadow))))
-  :config
-  (mood-line-mode)
-  (defun mood-line-segment-separator ()
-    (propertize "|" 'face 'mood-line-unimportant))
-
-  (defun mood-line-segment-vc ()
-    "Return color-coded version control information."
-    (if (> (length mood-line-segment-vc--text) qqh/trunc-len)
-        (concat (substring mood-line-segment-vc--text 0 qqh/trunc-len) "...")
-      mood-line-segment-vc--text))
-
-  (setq
-   mood-line-glyph-alist mood-line-glyphs-fira-code
-
-   mood-line-segment-modal-meow-state-alist '((normal " N " . meow-normal-indicator)
-                                              (insert " I " . meow-insert-indicator)
-                                              (keypad " K " . meow-keypad-indicator)
-                                              (beacon " B " . meow-beacon-indicator)
-                                              (motion " M " . meow-motion-indicator))
-
-   mood-line-format (mood-line-defformat
-                     :left
-                     (((mood-line-segment-modal) . " ")
-                      ((mood-line-segment-buffer-status) . " ")
-                      ((mood-line-segment-buffer-name)   . " : ")
-                      (mood-line-segment-major-mode))
-                     :right
-                     (((mood-line-segment-misc-info) . " ")
-                      ((when (mood-line-segment-misc-info) (mood-line-segment-separator)) . " ")
-                      ((mood-line-segment-checker) . " ")
-                      ((when (mood-line-segment-checker) (mood-line-segment-separator)) . " ")
-                      ((mood-line-segment-project) . " ")
-                      ((when (mood-line-segment-vc) "on") . " ")
-                      ((mood-line-segment-vc) . " ")))))
-
-;;;; Buffer display configuration
-;;;;; display-buffer-alist customization
-
-;; reuse as much as possible
-(setq display-buffer-base-action
-      '((display-buffer-reuse-window display-buffer-same-window)
-        (reusable-frames . t)))
-
-(setq even-window-sizes nil)     ; avoid resizing
-
-(add-to-list 'display-buffer-alist
-	         '("\\*\\(Compile-Log\\|Async-native-compile-log\\|Warnings\\)\\*"
-	           (display-buffer-no-window)
-	           (allow-no-window t)))
-
-(add-to-list 'display-buffer-alist
-	         '("\\*\\(Ibuffer\\|vc-dir\\|vc-diff\\|vc-change-log\\|Async Shell Command\\)\\*"
-	           (display-buffer-full-frame)))
-
-(add-to-list 'display-buffer-alist
-             '("\\*vterminal.*\\*"
-               (display-buffer-reuse-window)))
-
-;; pop up management
-(use-package popper
-  :straight t
-  :bind (("C-'"   . popper-toggle)
-         ("M-'"   . popper-cycle)
-         ("C-M-'" . popper-toggle-type))
-  :init
-  (setq popper-reference-buffers '("\\*Messages\\*"
-                                   "\\*eldoc\\*"
-                                   "Output\\*$"
-                                   "\\*Async Shell Command\\*"
-                                   "\\*OCaml\\*"
-                                   "magit.*"
-                                   magit-mode
-                                   help-mode
-                                   compilation-mode
-                                   comint-mode)
-        popper-group-function #'popper-group-by-projectile
-        popper-echo-dispatch-keys '(?1 ?2 ?3 ?4 ?5 ?6 ?7 ?8 ?9 ?0))
-
-  (setq
-   popper-mode-line nil
-   popper-window-height (lambda (win)
-                          (fit-window-to-buffer
-                           win
-                           (floor (frame-height) 2.5)
-                           (floor (frame-height) 3))))
-
-  (popper-mode +1)
-  ;; echo area hints
-  (popper-echo-mode +1))
-
 ;;; Keybindings
 
 ;;;; Definitions
@@ -1340,14 +1160,212 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
 ;; C-g quits normal mode
 (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
 
+;;; Themes / UI customization
+
+;;;; Face customizations
+(if (qqh/macos-p)
+    (set-face-attribute 'default nil
+                        :family "Iosevka"
+                        :height 130)
+  (set-face-attribute 'default nil
+                      :family "Iosevka Nerd Font"
+                      :height 100))
+
+(set-face-attribute 'window-divider nil
+                    :background (catppuccin-color 'base)
+                    :foreground (catppuccin-color 'base))
+(set-face-attribute 'fringe nil
+                    :background (catppuccin-color 'mantle))
+
+;;;; Packages
+(use-package colorful-mode
+  :diminish colorful-mode)
+
+(use-package nerd-icons)
+
+(use-package rainbow-delimiters
+  :hook (prog-mode . rainbow-delimiters-mode)
+  :diminish rainbow-delimiters-mode)
+
+(use-package hl-todo
+  :config
+  (defface qqh/hl-todo/todo-face
+    `((t . (:bold t :background ,(catppuccin-color 'sky) :foreground ,(catppuccin-color 'base))))
+    "The face highlighting TODOs in projects."
+    :group 'qqh)
+
+  (setq hl-todo-keyword-faces
+        `(("TODO" . ,(catppuccin-color 'sky))
+          ("HACK" . ,(catppuccin-color 'peach))
+          ("FIXME" . ,(catppuccin-color 'red))
+          ("NOTE" . ,(catppuccin-color 'mauve))
+          ("PERF" . ,(catppuccin-color 'lavender))))
+
+  (global-hl-todo-mode))
+
+;; dim inactive buffers
+(use-package auto-dim-other-buffers
+  :config
+  (set-face-attribute 'auto-dim-other-buffers-face nil
+                      :background (catppuccin-color 'mantle))
+  (set-face-attribute 'auto-dim-other-buffers-hide-face nil
+                      :background (catppuccin-color 'mantle)
+                      :foreground (catppuccin-color 'mantle))
+  (auto-dim-other-buffers-mode))
+
+(use-package fancy-compilation
+  :config
+  (set-face-attribute 'fancy-compilation-default-face nil
+                      :background (catppuccin-color 'base))
+  (fancy-compilation-mode))
+
+(use-package vim-tab-bar
+  :init
+  (vim-tab-bar-mode 1))
+
+(set-face-attribute 'tab-bar nil :box nil :background (catppuccin-color 'mantle))
+(set-face-attribute 'tab-bar-tab nil :foreground (catppuccin-color 'mauve) :background (catppuccin-color 'base))
+
+;;;; Modeline configurtaion
+(use-package mood-line
+  :custom-face
+  (mood-line-unimportant ((t (:inherit shadow))))
+  :config
+  (mood-line-mode)
+  (defun mood-line-segment-separator ()
+    (propertize "|" 'face 'mood-line-unimportant))
+
+  (defun mood-line-segment-vc ()
+    "Return color-coded version control information."
+    (if (> (length mood-line-segment-vc--text) qqh/trunc-len)
+        (concat (substring mood-line-segment-vc--text 0 qqh/trunc-len) "...")
+      mood-line-segment-vc--text))
+
+  (defun mood-line-segment-persp ()
+    "Return the name of the cerrent persp"
+    (let ((p (get-current-persp)))
+      (if p
+          (propertize (persp-name p) 'face 'mood-line-unimportant))))
+
+  (defface qqh/moodline/evil-normal
+    `((t . (:bold t :background ,(catppuccin-color 'mauve) :foreground ,(catppuccin-color 'base))))
+    "evil normal mode mood line face"
+    :group 'qqh)
+  (defface qqh/moodline/evil-insert
+    `((t . (:bold t :background ,(catppuccin-color 'green) :foreground ,(catppuccin-color 'base))))
+    "evil insert mode mood line face"
+    :group 'qqh)
+  (defface qqh/moodline/evil-visual
+    `((t . (:bold t :background ,(catppuccin-color 'sapphire) :foreground ,(catppuccin-color 'base))))
+    "evil visual mode mood line face"
+    :group 'qqh)
+  (defface qqh/moodline/evil-replace
+    `((t . (:bold t :background ,(catppuccin-color 'red) :foreground ,(catppuccin-color 'base))))
+    "evil replace mode mood line face"
+    :group 'qqh)
+  (defface qqh/moodline/evil-motion
+    `((t . (:bold t :background ,(catppuccin-color 'orange) :foreground ,(catppuccin-color 'base))))
+    "evil motion mode mood line face"
+    :group 'qqh)
+  (defface qqh/moodline/evil-operator
+    `((t . (:bold t :background ,(catppuccin-color 'yellow) :foreground ,(catppuccin-color 'base))))
+    "evil operator mode mood line face"
+    :group 'qqh)
+  (defface qqh/moodline/evil-emacs
+    `((t . (:bold t :background ,(catppuccin-color 'base) :foreground ,(catppuccin-color 'text))))
+    "evil emacs mode mood line face"
+    :group 'qqh)
+
+  (setq
+   mood-line-glyph-alist mood-line-glyphs-fira-code
+
+   mood-line-segment-modal-evil-state-alist '((normal . (" N " . qqh/moodline/evil-normal))
+                                              (insert . (" I " . qqh/moodline/evil-insert))
+                                              (visual . (" V " . qqh/moodline/evil-visual))
+                                              (replace . (" R " . qqh/moodline/evil-replace))
+                                              (motion . (" M " . qqh/moodline/evil-motion))
+                                              (operator . (" O " . qqh/moodline/evil-operator))
+                                              (emacs . (" E " . qqh/moodline/evil-emacs)))
+
+   mood-line-format (mood-line-defformat
+                     :left
+                     (((mood-line-segment-modal) . " ")
+                      ((mood-line-segment-buffer-status) . " ")
+                      ((mood-line-segment-buffer-name)   . " : ")
+                      (mood-line-segment-major-mode))
+                     :right
+                     (((mood-line-segment-misc-info) . " ")
+                      ((when (mood-line-segment-misc-info) (mood-line-segment-separator)) . " ")
+                      ((mood-line-segment-checker) . " ")
+                      ((when (mood-line-segment-checker) (mood-line-segment-separator)) . " ")
+                      ((mood-line-segment-project) . " ")
+                      ((when (mood-line-segment-vc) "on") . " ")
+                      ((mood-line-segment-vc) . " ")
+                      ((when (mood-line-segment-persp) (mood-line-segment-separator)) . " ")
+                      ((mood-line-segment-persp) . " ")))))
+
+;;;; Buffer display configuration
+;;;;; display-buffer-alist customization
+  ;; reuse as much as possible
+  (setq display-buffer-base-action
+        '((display-buffer-reuse-window display-buffer-same-window)
+          (reusable-frames . t)))
+
+  (setq even-window-sizes nil)     ; avoid resizing
+
+  (add-to-list 'display-buffer-alist
+	           '("\\*\\(Compile-Log\\|Async-native-compile-log\\|Warnings\\)\\*"
+	             (display-buffer-no-window)
+	             (allow-no-window t)))
+
+  (add-to-list 'display-buffer-alist
+	           '("\\*\\(Ibuffer\\|vc-dir\\|vc-diff\\|vc-change-log\\|Async Shell Command\\)\\*"
+	             (display-buffer-full-frame)))
+
+  (add-to-list 'display-buffer-alist
+               '("\\*vterminal.*\\*"
+                 (display-buffer-reuse-window)))
+
+  ;; pop up management
+  (use-package popper
+    :straight t
+    :bind (("C-'"   . popper-toggle)
+           ("M-'"   . popper-cycle)
+           ("C-M-'" . popper-toggle-type))
+    :init
+    (setq popper-reference-buffers '("\\*Messages\\*"
+                                     "\\*eldoc\\*"
+                                     "Output\\*$"
+                                     "\\*Async Shell Command\\*"
+                                     "\\*OCaml\\*"
+                                     "magit.*"
+                                     magit-mode
+                                     help-mode
+                                     compilation-mode
+                                     comint-mode)
+          popper-group-function #'popper-group-by-projectile
+          popper-echo-dispatch-keys '(?1 ?2 ?3 ?4 ?5 ?6 ?7 ?8 ?9 ?0))
+
+    (setq
+     popper-mode-line nil
+     popper-window-height (lambda (win)
+                            (fit-window-to-buffer
+                             win
+                             (floor (frame-height) 2.5)
+                             (floor (frame-height) 3))))
+
+    (popper-mode +1)
+    ;; echo area hints
+    (popper-echo-mode +1))
+
 ;;; Customization file
-(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
-(load custom-file 'noerror)
+  (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+  (load custom-file 'noerror)
 
 ;;; Cleanup
-(catppuccin-reload)
-(setq gc-cons-threshold (or qqh/initial-gc-threshold 800000))
+  (catppuccin-reload)
+  (setq gc-cons-threshold (or qqh/initial-gc-threshold 800000))
 
 
+  (put 'downcase-region 'disabled nil)
 ;;; init.el ends here
-(put 'downcase-region 'disabled nil)
