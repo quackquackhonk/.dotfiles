@@ -72,6 +72,8 @@
 ;; sequence (e.g. C-x ...)
 (use-package which-key
   :diminish which-key-mode
+  :custom
+  (which-key-show-transient-maps t)
   :config
   (which-key-mode))
 
@@ -183,7 +185,7 @@
 (use-package avy
   :demand t
   :config
-  (setq avy-keys '(?a ?r ?s ?t ?p ?l ?n ?e ?i ?o)
+  (setq avy-keys '(?a ?s ?d ?f ?r ?u ?j ?k ?l ?\;)
         avy-background nil))
 
 ;; faster searching
@@ -514,9 +516,10 @@
 (use-package project)
 
 (use-package projectile
-
   :diminish projectile-mode
-  :bind (:map projectile-command-map
+  :bind (:map projectile-mode-map
+              ("<f6>" . projectile-command-map)
+         :map projectile-command-map
               (";" . qqh/project/open-org-file)
               ("t" . multi-vterm-project))
   :init
@@ -597,22 +600,19 @@
               (tab-bar-tabs-set (persp-parameter 'tab-bar-tabs))
               (tab-bar--update-tab-bar-lines t)))
 
-  (with-eval-after-load "consult"
-    (require 'consult)
-    (defvar persp-consult-source
-      (list :name     "Perspective"
-            :narrow   ?s
-            :category 'buffer
-            :state    #'consult--buffer-state
-            :history  'buffer-name-history
-            :default  t
-            items
-            #'(lambda ()
-                (mapcar #'buffer-name
-                        (persp-filter-out-bad-buffers)))))
-
-    (consult-customize consult--source-buffer :hidden t :default nil)
-    (add-to-list 'consult-buffer-sources persp-consult-source)))
+  (defvar persp-consult-source
+    (list :name     "Persp"
+          :narrow   ?s
+          :category 'buffer
+          :state    #'consult--buffer-state
+          :history  'buffer-name-history
+          :default  t
+          :items
+          #'(lambda ()
+              (mapcar #'buffer-name
+                      (persp-filter-out-bad-buffers)))))
+  (consult-customize consult--source-buffer :hidden t :default nil)
+  (add-to-list 'consult-buffer-sources persp-consult-source))
 
 (use-package persp-mode-projectile-bridge
   :hook (after-init-hook . persp-mode-projectile-bridge-mode)
@@ -940,7 +940,6 @@
   (interactive)
   (kill-buffer (current-buffer)))
 
-
 (defun qqh/project/open-flake ()
   "Open the project flake file, if it exists."
   (interactive)
@@ -956,7 +955,6 @@ back to `consult-fd' if we're not in a project."
   (if (projectile-project-p)
       (projectile-find-file)
     (consult-fd)))
-
 
 (defun qqh/emacs/reload ()
   "Load my Emacs configuration."
@@ -1043,9 +1041,7 @@ back to `consult-fd' if we're not in a project."
           ("n" "home-manager" qqh/config/open-nix-home :if (lambda () (not (qqh/macos-p))))])
 
 (transient-define-prefix qqh/transient/leader ()
-  "Transient map for my leader bindings.
-
-These bindings are preferred over `meow-leader-define-key', since I have less restrictions here!"
+  "Transient map for my leader bindings."
   ["leader bindings..."
    ("SPC" "buffers" consult-buffer)
    ("," "last buffer" evil-switch-to-windows-last-buffer)
@@ -1082,8 +1078,6 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
 
 (global-set-key (kbd "M-<mouse-1>") 'goto-address-at-mouse)
 
-(global-set-key (kbd "M-q") 'qqh/kill-buffer)
-(global-set-key (kbd "C-q") 'evil-window-delete)
 
 ;;;; Evil mode
 (use-package evil
@@ -1094,19 +1088,32 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
   (setq evil-want-keybinding nil
         evil-want-unimpaired-p nil
         evil-want-integration t
-        evil-want-C-i-jump nil
+        evil-want-C-i-jump t
         evil-shift-width 2)
+
+  ;; Set the cursor colors per mode
+  (setq evil-normal-state-cursor `(box ,(catppuccin-color 'mauve))
+        evil-insert-state-cursor `(box ,(catppuccin-color 'green))
+        evil-visual-state-cursor `(box ,(catppuccin-color 'sapphire))
+        evil-replace-state-cursor `(box ,(catppuccin-color 'red))
+        evil-motion-state-cursor `(box ,(catppuccin-color 'peach))
+        evil-operator-state-cursor `(box ,(catppuccin-color 'yellow))
+        evil-emacs-state-cursor `(box ,(catppuccin-color 'rosewater)))
+
   :config
   ;; enable the stuff
   (evil-set-undo-system 'undo-fu)
   (evil-mode 1)
 
   ;; Configuring initial major mode for some modes
+  ;; start in emacs mode
   (evil-set-initial-state 'eat-mode 'emacs)
   (evil-set-initial-state 'vterm-mode 'emacs)
-  (add-hook 'git-commit-setup-hook 'evil-insert-state)
+  (evil-set-initial-state 'inferior-python-mode 'emacs)
+
   (evil-set-initial-state 'messages-buffer-mode 'normal)
-  (evil-set-initial-state 'dashboard-mode 'normal))
+
+  (add-hook 'git-commit-setup-hook 'evil-insert-state))
 
 ;;;;; Evil plugins
 (use-package evil-collection
@@ -1137,45 +1144,48 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
   :after evil)
 
 ;;;; Evil Bindings
+(global-set-key (kbd "M-q") 'qqh/kill-buffer)
+(global-set-key (kbd "C-q") 'evil-window-delete)
+
+(evil-define-key '(normal insert emacs) 'global (kbd "<prior>") 'evil-scroll-up)
+(evil-define-key '(normal insert emacs) 'global (kbd "<next>") 'evil-scroll-down)
 
 ;; Setup my transients and maps
-(define-key evil-normal-state-map (kbd "SPC") 'qqh/transient/leader)
-(define-key evil-normal-state-map (kbd "P") 'projectile-command-map)
-(define-key evil-normal-state-map (kbd "M-q") 'qqh/kill-buffer)
+(evil-define-key 'normal 'global (kbd "SPC") 'qqh/transient/leader)
+(evil-define-key 'normal 'global (kbd "M-q") 'qqh/kill-buffer)
 
-;; Customize the g keymap
-(define-key evil-normal-state-map (kbd "L") 'avy-goto-line)
-(define-key evil-normal-state-map (kbd "g RET") 'avy-goto-char-2)
-;; Eglot bindings
-(add-hook 'eglot-connect-hook
-          (lambda ()
-            (define-key evil-normal-state-map (kbd "g R") 'eglot-rename)
-            (define-key evil-normal-state-map (kbd "g SPC") 'eglot-code-actions)))
+;; Avy bindings
+(evil-define-key '(normal visual) 'global (kbd "L") 'avy-goto-line)
+(evil-define-key '(normal visual) 'global (kbd "g RET") 'avy-goto-char-2)
 
 ;; Add my own bracketed movement options
-(define-key evil-motion-state-map (kbd "[ e") 'flymake-goto-prev-error)
-(define-key evil-motion-state-map (kbd "] e") 'flymake-goto-next-error)
-(define-key evil-motion-state-map (kbd "] x") 'smerge-vc-next-conflict)
+(evil-define-key 'motion 'global (kbd "[ e") 'flymake-goto-prev-error)
+(evil-define-key 'motion 'global (kbd "] e") 'flymake-goto-next-error)
+(evil-define-key 'motion 'global (kbd "] x") 'smerge-vc-next-conflict)
 
 ;; C-g quits normal mode
-(define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
+(evil-define-key 'insert 'global (kbd "C-g") 'evil-normal-state)
+
+;; Eglot bindings
+(evil-define-key 'normal 'eglot-mode-map (kbd "g R") 'eglot-rename)
+(evil-define-key 'normal 'eglot-mode-map (kbd "g SPC") 'eglot-code-actions)
+;; vterm
+(evil-define-key nil vterm-mode-map (kbd "C-SPC") 'qqh/transient/leader)
 
 ;;; Themes / UI customization
 
 ;;;; Face customizations
-(if (qqh/macos-p)
-    (set-face-attribute 'default nil
-                        :family "Iosevka"
-                        :height 130)
-  (set-face-attribute 'default nil
-                      :family "Iosevka Nerd Font"
-                      :height 100))
+(set-face-attribute 'default nil
+                    :family "Comic Code Ligatures"
+                    :weight 'semi-light
+                    :height 120)
 
 (set-face-attribute 'window-divider nil
-                    :background (catppuccin-color 'base)
-                    :foreground (catppuccin-color 'base))
+                    :background (catppuccin-color 'mantle)
+                    :foreground (catppuccin-color 'mantle))
 (set-face-attribute 'fringe nil
                     :background (catppuccin-color 'mantle))
+
 
 ;;;; Packages
 (use-package colorful-mode
@@ -1203,7 +1213,7 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
 
   (global-hl-todo-mode))
 
-;; dim inactive buffers
+;; dim inactive buffrs
 (use-package auto-dim-other-buffers
   :config
   (set-face-attribute 'auto-dim-other-buffers-face nil
@@ -1230,8 +1240,15 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
 (use-package mood-line
   :custom-face
   (mood-line-unimportant ((t (:inherit shadow))))
+  (mood-line-buffer-name ((t (:weight normal))))
+  (mood-line-major-mode ((t (:weight normal))))
   :config
   (mood-line-mode)
+
+  (defun mood-line-segment-cursor-position ()
+    "Return the position of the cursor in the current buffer."
+    (propertize (format-mode-line "(%l:%c)") 'face 'mood-line-unimportant))
+
   (defun mood-line-segment-separator ()
     (propertize "|" 'face 'mood-line-unimportant))
 
@@ -1247,125 +1264,127 @@ These bindings are preferred over `meow-leader-define-key', since I have less re
       (if p
           (propertize (persp-name p) 'face 'mood-line-unimportant))))
 
-  (defface qqh/moodline/evil-normal
+  (defface qqh/evil/normal-face
     `((t . (:bold t :background ,(catppuccin-color 'mauve) :foreground ,(catppuccin-color 'base))))
     "evil normal mode mood line face"
     :group 'qqh)
-  (defface qqh/moodline/evil-insert
+  (defface qqh/evil/insert-face
     `((t . (:bold t :background ,(catppuccin-color 'green) :foreground ,(catppuccin-color 'base))))
     "evil insert mode mood line face"
     :group 'qqh)
-  (defface qqh/moodline/evil-visual
+  (defface qqh/evil/visual-face
     `((t . (:bold t :background ,(catppuccin-color 'sapphire) :foreground ,(catppuccin-color 'base))))
     "evil visual mode mood line face"
     :group 'qqh)
-  (defface qqh/moodline/evil-replace
+  (defface qqh/evil/replace-face
     `((t . (:bold t :background ,(catppuccin-color 'red) :foreground ,(catppuccin-color 'base))))
     "evil replace mode mood line face"
     :group 'qqh)
-  (defface qqh/moodline/evil-motion
-    `((t . (:bold t :background ,(catppuccin-color 'orange) :foreground ,(catppuccin-color 'base))))
+  (defface qqh/evil/motion-face
+    `((t . (:bold t :background ,(catppuccin-color 'peach) :foreground ,(catppuccin-color 'base))))
     "evil motion mode mood line face"
     :group 'qqh)
-  (defface qqh/moodline/evil-operator
+  (defface qqh/evil/operator-face
     `((t . (:bold t :background ,(catppuccin-color 'yellow) :foreground ,(catppuccin-color 'base))))
     "evil operator mode mood line face"
     :group 'qqh)
-  (defface qqh/moodline/evil-emacs
-    `((t . (:bold t :background ,(catppuccin-color 'base) :foreground ,(catppuccin-color 'text))))
+  (defface qqh/evil/emacs-face
+    `((t . (:bold t :background ,(catppuccin-color 'rosewater) :foreground ,(catppuccin-color 'base))))
     "evil emacs mode mood line face"
     :group 'qqh)
 
   (setq
    mood-line-glyph-alist mood-line-glyphs-fira-code
 
-   mood-line-segment-modal-evil-state-alist '((normal . (" N " . qqh/moodline/evil-normal))
-                                              (insert . (" I " . qqh/moodline/evil-insert))
-                                              (visual . (" V " . qqh/moodline/evil-visual))
-                                              (replace . (" R " . qqh/moodline/evil-replace))
-                                              (motion . (" M " . qqh/moodline/evil-motion))
-                                              (operator . (" O " . qqh/moodline/evil-operator))
-                                              (emacs . (" E " . qqh/moodline/evil-emacs)))
+   mood-line-segment-modal-evil-state-alist '((normal . (" N " . qqh/evil/normal-face))
+                                              (insert . (" I " . qqh/evil/insert-face))
+                                              (visual . (" V " . qqh/evil/visual-face))
+                                              (replace . (" R " . qqh/evil/replace-face))
+                                              (motion . (" M " . qqh/evil/motion-face))
+                                              (operator . (" O " . qqh/evil/operator-face))
+                                              (emacs . (" E " . qqh/evil/emacs-face)))
 
    mood-line-format (mood-line-defformat
                      :left
-                     (((mood-line-segment-modal) . " ")
-                      ((mood-line-segment-buffer-status) . " ")
-                      ((mood-line-segment-buffer-name)   . " : ")
+                     (((mood-line-segment-modal)                                          . " ")
+                      ((mood-line-segment-buffer-status)                                  . " ")
+                      ((mood-line-segment-buffer-name)                                    . " ")
+                      ((mood-line-segment-cursor-position)                                . " ")
+                      ((mood-line-segment-separator)                                      . " ")
                       (mood-line-segment-major-mode))
                      :right
-                     (((mood-line-segment-misc-info) . " ")
+                     (((mood-line-segment-misc-info)                                      . " ")
                       ((when (mood-line-segment-misc-info) (mood-line-segment-separator)) . " ")
-                      ((mood-line-segment-checker) . " ")
-                      ((when (mood-line-segment-checker) (mood-line-segment-separator)) . " ")
-                      ((mood-line-segment-project) . " ")
-                      ((when (mood-line-segment-vc) "on") . " ")
-                      ((mood-line-segment-vc) . " ")
-                      ((when (mood-line-segment-persp) (mood-line-segment-separator)) . " ")
-                      ((mood-line-segment-persp) . " ")))))
+                      ((mood-line-segment-checker)                                        . " ")
+                      ((when (mood-line-segment-checker) (mood-line-segment-separator))   . " ")
+                      ((mood-line-segment-project)                                        . " ")
+                      ((when (mood-line-segment-vc) "on")                                 . " ")
+                      ((mood-line-segment-vc)                                             . " ")
+                      ((when (mood-line-segment-persp) (mood-line-segment-separator))     . " ")
+                      ((mood-line-segment-persp)                                          . " ")))))
 
 ;;;; Buffer display configuration
 ;;;;; display-buffer-alist customization
-  ;; reuse as much as possible
-  (setq display-buffer-base-action
-        '((display-buffer-reuse-window display-buffer-same-window)
-          (reusable-frames . t)))
+;; reuse as much as possible
+(setq display-buffer-base-action
+      '((display-buffer-reuse-window display-buffer-same-window)
+        (reusable-frames . t)))
 
-  (setq even-window-sizes nil)     ; avoid resizing
+(setq even-window-sizes nil)     ; avoid resizing
 
-  (add-to-list 'display-buffer-alist
-	           '("\\*\\(Compile-Log\\|Async-native-compile-log\\|Warnings\\)\\*"
-	             (display-buffer-no-window)
-	             (allow-no-window t)))
+(add-to-list 'display-buffer-alist
+	         '("\\*\\(Compile-Log\\|Async-native-compile-log\\|Warnings\\)\\*"
+	           (display-buffer-no-window)
+	           (allow-no-window t)))
 
-  (add-to-list 'display-buffer-alist
-	           '("\\*\\(Ibuffer\\|vc-dir\\|vc-diff\\|vc-change-log\\|Async Shell Command\\)\\*"
-	             (display-buffer-full-frame)))
+(add-to-list 'display-buffer-alist
+	         '("\\*\\(Ibuffer\\|vc-dir\\|vc-diff\\|vc-change-log\\|Async Shell Command\\)\\*"
+	           (display-buffer-full-frame)))
 
-  (add-to-list 'display-buffer-alist
-               '("\\*vterminal.*\\*"
-                 (display-buffer-reuse-window)))
+(add-to-list 'display-buffer-alist
+             '("\\*vterminal.*\\*"
+               (display-buffer-reuse-window)))
 
-  ;; pop up management
-  (use-package popper
-    :straight t
-    :bind (("C-'"   . popper-toggle)
-           ("M-'"   . popper-cycle)
-           ("C-M-'" . popper-toggle-type))
-    :init
-    (setq popper-reference-buffers '("\\*Messages\\*"
-                                     "\\*eldoc\\*"
-                                     "Output\\*$"
-                                     "\\*Async Shell Command\\*"
-                                     "\\*OCaml\\*"
-                                     "magit.*"
-                                     magit-mode
-                                     help-mode
-                                     compilation-mode
-                                     comint-mode)
-          popper-group-function #'popper-group-by-projectile
-          popper-echo-dispatch-keys '(?1 ?2 ?3 ?4 ?5 ?6 ?7 ?8 ?9 ?0))
+;; pop up management
+(use-package popper
+  :straight t
+  :bind (("C-'"   . popper-toggle)
+         ("M-'"   . popper-cycle)
+         ("C-M-'" . popper-toggle-type))
+  :init
+  (setq popper-reference-buffers '("\\*Messages\\*"
+                                   "\\*eldoc\\*"
+                                   "Output\\*$"
+                                   "\\*Async Shell Command\\*"
+                                   "\\*OCaml\\*"
+                                   "magit.*"
+                                   magit-mode
+                                   help-mode
+                                   compilation-mode
+                                   comint-mode)
+        popper-group-function #'popper-group-by-projectile
+        popper-echo-dispatch-keys '(?1 ?2 ?3 ?4 ?5 ?6 ?7 ?8 ?9 ?0))
 
-    (setq
-     popper-mode-line nil
-     popper-window-height (lambda (win)
-                            (fit-window-to-buffer
-                             win
-                             (floor (frame-height) 2.5)
-                             (floor (frame-height) 3))))
+  (setq
+   popper-mode-line nil
+   popper-window-height (lambda (win)
+                          (fit-window-to-buffer
+                           win
+                           (floor (frame-height) 2.5)
+                           (floor (frame-height) 3))))
 
-    (popper-mode +1)
-    ;; echo area hints
-    (popper-echo-mode +1))
+  (popper-mode +1)
+  ;; echo area hints
+  (popper-echo-mode +1))
 
 ;;; Customization file
-  (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
-  (load custom-file 'noerror)
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+(load custom-file 'noerror)
 
 ;;; Cleanup
-  (catppuccin-reload)
-  (setq gc-cons-threshold (or qqh/initial-gc-threshold 800000))
+(catppuccin-reload)
+(setq gc-cons-threshold (or qqh/initial-gc-threshold 800000))
 
 
-  (put 'downcase-region 'disabled nil)
+(put 'downcase-region 'disabled nil)
 ;;; init.el ends here
