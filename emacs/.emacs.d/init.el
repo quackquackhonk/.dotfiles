@@ -515,13 +515,23 @@
 ;;;;; Projectile
 (use-package project)
 
+(defun qqh/project/open-org-file ()
+  "Open the project.org file at the root of the current project. If no project.org file is found, create a new one from a template."
+  (interactive)
+  (let ((file     (projectile-expand-root "project.org"))
+        (template (expand-file-name "templates/project-template.org"
+                                    qqh/modules-dir)))
+    (unless (file-exists-p file)
+      (copy-file template file))
+    (find-file file)))
+
 (use-package projectile
   :diminish projectile-mode
   :bind (:map projectile-mode-map
-              ("<f6>" . projectile-command-map)
+              ("<f8>" . projectile-command-map)
+              ("<f7>" . multi-vterm-project)
          :map projectile-command-map
-              (";" . qqh/project/open-org-file)
-              ("t" . multi-vterm-project))
+              (";" . qqh/project/open-org-file))
   :init
   (projectile-mode +1)
 
@@ -545,17 +555,6 @@
                                     :test-dir "test/"
 				                    :test-suffix "_test"))
 
-(defun qqh/project/open-org-file ()
-  "Open the project.org file at the root of the current project. If no project.org file is found, create a new one from a template."
-  (interactive)
-  (let ((file     (projectile-expand-root "project.org"))
-        (template (expand-file-name "templates/project-template.org"
-                                    qqh/modules-dir)))
-    (unless (file-exists-p file)
-      (copy-file template file))
-    (find-file file)))
-
-
 ;;;;; Perspectives
 (use-package persp-mode
   :after consult
@@ -565,6 +564,8 @@
   (persp-add-buffer-on-after-change-major-mode 'free)
   (persp-kill-foreign-buffer-behaviour 'kill)
   (persp-keymap-prefix (kbd "<f5>"))
+  :bind (:map persp-mode-map
+              ("<f6>" . persp-switch))
   :config
   (persp-mode 1)
 
@@ -1029,7 +1030,6 @@ back to `consult-fd' if we're not in a project."
           ("i" "imenu" consult-imenu)
           ("n" "notes" org-roam-node-find)
           ("o" "outline" consult-outline)
-          ("p" "perspectives" persp-switch)
           ("s" "files" qqh/search-files)])
 
 (transient-define-prefix qqh/transient/config ()
@@ -1069,7 +1069,6 @@ back to `consult-fd' if we're not in a project."
     ("e" "error" flymake-goto-prev-error)
     ("p" "perspective" persp-prev)]])
 
-
 ;;;; Global bindings
 (global-set-key (kbd "<home>") 'beginning-of-line)
 (global-set-key (kbd "<end>") 'end-of-line)
@@ -1077,7 +1076,6 @@ back to `consult-fd' if we're not in a project."
 (global-set-key (kbd "M-]") 'tab-next)
 
 (global-set-key (kbd "M-<mouse-1>") 'goto-address-at-mouse)
-
 
 ;;;; Evil mode
 (use-package evil
@@ -1100,11 +1098,6 @@ back to `consult-fd' if we're not in a project."
         evil-operator-state-cursor `(box ,(catppuccin-color 'yellow))
         evil-emacs-state-cursor `(box ,(catppuccin-color 'rosewater)))
 
-  :config
-  ;; enable the stuff
-  (evil-set-undo-system 'undo-fu)
-  (evil-mode 1)
-
   ;; Configuring initial major mode for some modes
   ;; start in emacs mode
   (evil-set-initial-state 'eat-mode 'emacs)
@@ -1113,7 +1106,11 @@ back to `consult-fd' if we're not in a project."
 
   (evil-set-initial-state 'messages-buffer-mode 'normal)
 
-  (add-hook 'git-commit-setup-hook 'evil-insert-state))
+  (add-hook 'git-commit-setup-hook 'evil-insert-state)
+  :config
+  ;; enable the stuff
+  (evil-set-undo-system 'undo-fu)
+  (evil-mode 1))
 
 ;;;;; Evil plugins
 (use-package evil-collection
@@ -1358,6 +1355,8 @@ back to `consult-fd' if we're not in a project."
                                    "\\*Async Shell Command\\*"
                                    "\\*OCaml\\*"
                                    "magit.*"
+                                   "\\*vterm:.*\\*"
+                                   vterm-mode
                                    magit-mode
                                    help-mode
                                    compilation-mode
