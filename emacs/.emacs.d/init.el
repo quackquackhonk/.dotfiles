@@ -127,6 +127,7 @@
 (setopt ring-bell-function 'ignore)                       ;; disable the bell
 (setopt compilation-scroll-output t)                      ;; follow compilation output by default
 (setq frame-resize-pixelwise t)
+(setq-default line-spacing (if (qqh/macos-p) nil 2))
 
 ;; Nice line wrapping when working with text
 (add-hook 'text-mode-hook 'visual-line-mode)
@@ -1173,9 +1174,10 @@ back to `consult-fd' if we're not in a project."
 
 ;;;; Face customizations
 (set-face-attribute 'default nil
-                    :family "Comic Code Ligatures"
-                    :weight 'semi-light
-                    :height 120)
+                    :family "Comic Code"
+                    :weight 'normal
+                    :height (if (qqh/macos-p) 120 110))
+
 
 (set-face-attribute 'window-divider nil
                     :background (catppuccin-color 'mantle)
