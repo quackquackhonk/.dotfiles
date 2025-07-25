@@ -14,15 +14,7 @@
     tofi
     udiskie
     pavucontrol
-
-    # apps
-    kdePackages.dolphin
-    kdePackages.qtwayland
-    kdePackages.qtsvg
-    kdePackages.ark
   ];
-
-  # Optional, hint Electron apps to use Wayland:
 
   # hyprland config settings
   wayland.windowManager.hyprland = {
@@ -34,7 +26,7 @@
       "$mod" = "SUPER";
       "$terminal" = "ghostty";
       "$browser" = "zen-beta";
-      "$files" = "dolphin";
+      "$files" = "thunar";
       "$menu" = "tofi-run | zsh";
       "$discord" = "ELECTRON_OZONE_PLATFORM_HINT= discord";
       "$emacs" = "emacsclient -c -a=''";
@@ -74,6 +66,7 @@
         "udiskie --automount --smart-tray"                                                  # auto mount USBs
         # Auto start some apps
         "[workspace 1 silent] steam"
+        "[workspace 2 silent] emacsclient -c -a=''"
         "[workspace 6 silent] $browser"
       ];
 
@@ -211,8 +204,8 @@
           "$mainMod+Alt, leftbracket, movetoworkspace, r-1"
 
           # special workspace (scratchpad)
-          "$mod, S, togglespecialworkspace, magic"
-          "$mod SHIFT, S, movetoworkspace, special:magic"
+          "$mod, backslash, togglespecialworkspace, magic"
+          "$mod SHIFT, backslash, movetoworkspace, special:magic"
 
           ", Print, exec, grimblast copy area"
         ]
@@ -274,11 +267,8 @@ workspace = 7, defaultName:discord
 # Pin certain apps to workspaces
 windowrulev2 = workspace name:games silent, class:(steam), title:(.*)
 windowrulev2 = workspace name:games silent, class:(steam.*), title:(.*)
-windowrulev2 = workspace name:emacs silent, class:(Emacs), title:(.*)
+# windowrulev2 = workspace name:emacs silent, class:(Emacs), title:(.*)
 
-# Auto-float certain windows
-windowrulev2 = float, class:(org.kde.dolphin), title:(.*)          # File manager
-windowrulev2 = center, class:(org.kde.dolphin), title:(.*)         # File manager
 ## Bluetooth manager
 windowrulev2 = float, class:(.blueman-manager-wrapped), title:(.*)
 windowrulev2 = size 800 600, class:(.blueman-manager-wrapped), title:(.*)

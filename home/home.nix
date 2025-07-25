@@ -92,10 +92,28 @@
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 
+  # XDG configuration
   xdg = {
     enable = true;
     portal = {
       enable = true;
+    };
+    # Default applications
+    mimeApps = {
+      defaultApplications = {
+        "application/pdf" = "zathura.desktop";
+      };
+    };
+
+    desktopEntries = {
+      poweroff = {
+        name = "poweroff";
+        exec = "poweroff";
+      };
+      zathura = {
+        name = "Zathura";
+        exec = "${pkgs.zathura}/bin/zathura";
+      };
     };
   };
 

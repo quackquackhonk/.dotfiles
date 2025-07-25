@@ -127,6 +127,7 @@
 (setopt ring-bell-function 'ignore)                       ;; disable the bell
 (setopt compilation-scroll-output t)                      ;; follow compilation output by default
 (setq frame-resize-pixelwise t)
+(setq-default line-spacing (if (qqh/macos-p) nil 2))
 
 ;; Nice line wrapping when working with text
 (add-hook 'text-mode-hook 'visual-line-mode)
@@ -1298,13 +1299,13 @@ back to `consult-fd' if we're not in a project."
   (setq
    mood-line-glyph-alist mood-line-glyphs-fira-code
 
-   mood-line-segment-modal-evil-state-alist '((normal . (" N " . qqh/evil/normal-face))
-                                              (insert . (" I " . qqh/evil/insert-face))
-                                              (visual . (" V " . qqh/evil/visual-face))
-                                              (replace . (" R " . qqh/evil/replace-face))
-                                              (motion . (" M " . qqh/evil/motion-face))
+   mood-line-segment-modal-evil-state-alist '((normal   . (" N " . qqh/evil/normal-face))
+                                              (insert   . (" I " . qqh/evil/insert-face))
+                                              (visual   . (" V " . qqh/evil/visual-face))
+                                              (replace  . (" R " . qqh/evil/replace-face))
+                                              (motion   . (" M " . qqh/evil/motion-face))
                                               (operator . (" O " . qqh/evil/operator-face))
-                                              (emacs . (" E " . qqh/evil/emacs-face)))
+                                              (emacs    . (" E " . qqh/evil/emacs-face)))
 
    mood-line-format (mood-line-defformat
                      :left

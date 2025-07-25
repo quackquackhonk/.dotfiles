@@ -1,7 +1,11 @@
 {
   pkgs,
   ...
-}: {
+}:
+let
+  comic-code-font = pkgs.callPackage ./packages/comic-code-font.nix { inherit pkgs; };
+in
+{
   # Enable dynamic libraries
   programs.nix-ld.enable = true;
   programs.nix-ld.libraries = with pkgs; [];
@@ -32,10 +36,29 @@
     )
   ];
 
+  # file manager
+  programs.thunar = {
+    enable = true;
+    plugins = with pkgs.xfce; [
+      thunar-volman
+      thunar-archive-plugin
+    ];
+  };
+  # needed for xfce apps
+  programs.xfconf.enable = true;       # save preferences
+  services.gvfs.enable = true;         # mounting / trash / etc
+  services.tumbler.enable = true;      # thumbnails for images
+
   # manage removeable media
   services.udisks2.enable = true;
 
-  fonts.packages = with pkgs; [
-    nerd-fonts.iosevka
-  ];
+  # Fonts
+  fonts = {
+    fontDir.enable = true;
+    enableGhostscriptFonts = true;
+    packages = with pkgs; [
+      nerd-fonts.iosevka
+      comic-code-font
+    ];
+  };
 }
