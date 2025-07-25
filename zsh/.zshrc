@@ -10,6 +10,8 @@ export PATH=/Library/PostgreSQL/16/bin:$PATH
 export PATH=$HOME/opt/grpc/bin:$PATH
 export PATH=/Library/Frameworks/Python.framework/Versions/3.11/bin:$PATH
 
+export PKG_CONFIG_PATH="/opt/homebrew/lib/pkgconfig"
+
 export DOCKER_DEFAULT_PLATFORM=linux/amd64
 export HOMEBREW_NO_AUTO_UPDATE=1
 

@@ -506,7 +506,12 @@
 (use-package forge
   :config
   ;; Configure auth source
-  (setq auth-sources '("~/.authinfo")))
+  (setq auth-sources '("~/.authinfo"))
+  (push '("gitlab.veriskweather.net"               ; GITHOST
+          "gitlab.veriskweather.net/api/v4"        ; APIHOST
+          "gitlab.veriskweather.net"               ; WEBHOST and INSTANCE-ID
+          forge-gitlab-repository)    ; CLASS
+        forge-alist))
 
 ;;;; Project Management
 ;;;;; direnv integration
@@ -1044,7 +1049,8 @@ back to `consult-fd' if we're not in a project."
   "Transient map for my leader bindings."
   ["leader bindings..."
    ("SPC" "buffers" consult-buffer)
-   ("," "last buffer" evil-switch-to-windows-last-buffer)
+   ("," "prev buffer" previous-buffer)
+   ("." "next buffer" next-buffer)
    (":" "eval expression" eval-expression)]
   [:class transient-row
           ("c" "+code" qqh/transient/code)
@@ -1173,10 +1179,9 @@ back to `consult-fd' if we're not in a project."
 
 ;;;; Face customizations
 (set-face-attribute 'default nil
-                    :family "Comic Code Ligatures"
-                    :weight 'semi-light
+                    :family "Comic Code"
+                    :weight 'regular
                     :height 120)
-
 (set-face-attribute 'window-divider nil
                     :background (catppuccin-color 'mantle)
                     :foreground (catppuccin-color 'mantle))
