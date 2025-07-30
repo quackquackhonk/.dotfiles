@@ -13,6 +13,7 @@ export PATH=/Library/Frameworks/Python.framework/Versions/3.11/bin:$PATH
 export PKG_CONFIG_PATH="/opt/homebrew/lib/pkgconfig"
 
 export DOCKER_DEFAULT_PLATFORM=linux/amd64
+export DOCKER_BUILDKIT=0
 export HOMEBREW_NO_AUTO_UPDATE=1
 
 export CMAKE_COLOR_DIAGNOSTICS=ON

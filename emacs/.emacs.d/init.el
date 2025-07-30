@@ -55,23 +55,10 @@
 ;; always load the newest bytecode
 (setq load-prefer-newer t)
 
-(use-package exec-path-from-shell
-  :config
-  (when (memq window-system '(mac ns))
-    (exec-path-from-shell-initialize)))
 ;;; Some initial packages
-;; Load diminish for :diminish constructs in use-package
-(use-package diminish
-  :init
-  ;; diminish built-in minor modes
-  (diminish 'abbrev-mode)
-  (diminish 'visual-line-mode)
-  (diminish 'smerge-mode))
-
 ;; which-key: shows a popup of available keybindings when typing a long key
 ;; sequence (e.g. C-x ...)
 (use-package which-key
-  :diminish which-key-mode
   :custom
   (which-key-show-transient-maps t)
   :config
@@ -89,6 +76,8 @@
 
   (load-theme 'catppuccin :no-confirm t)
   (catppuccin-reload))
+
+;; TODO: I want a way to refer to colors thats theme independent
 
 ;;; Basic settings
 (setopt inhibit-splash-screen t)
@@ -127,7 +116,7 @@
 (setopt ring-bell-function 'ignore)                       ;; disable the bell
 (setopt compilation-scroll-output t)                      ;; follow compilation output by default
 (setq frame-resize-pixelwise t)
-(setq-default line-spacing (if (qqh/macos-p) nil 2))
+(setq-default line-spacing (if (qqh/macos-p) nil 2))      ;; Add some spacing to lines on OSX
 
 ;; Nice line wrapping when working with text
 (add-hook 'text-mode-hook 'visual-line-mode)
@@ -141,6 +130,8 @@
 (add-hook 'before-save-hook
           (lambda ()
             (delete-trailing-whitespace)))
+
+;; enable the recent files list
 (recentf-mode t)
 
 ;;; Built-Ins.
@@ -160,7 +151,6 @@
 ;;;; Outline-mode
 (use-package outline
   :straight nil
-  :diminish outline-minor-mode
   :config
   (define-key outline-minor-mode-map (kbd "C-c C-c")
               (lookup-key outline-minor-mode-map (kbd "C-c @")))
@@ -168,6 +158,7 @@
   (setq outline-minor-mode-highlight 'append)
   (setq outline-minor-mode-cycle t)
 
+  ;; TODO: make this play nice with repeat-mode
   :bind (:map outline-minor-mode-map
               ("<backtab>" . outline-cycle-buffer)
               ("C-c <tab>" . outline-cycle)
@@ -177,10 +168,44 @@
               ("C-c C-b" . outline-backward-same-level)
               ("C-c C-u" . outline-up-heading)
               ("C-c C-a" . outline-show-all)
-              ("C-c C-c C-a" . outline-show-all)
-              ("<f1>" . outline-toggle-children))
+              ("C-c C-c C-a" . outline-show-all))
   :hook (emacs-lisp-mode . outline-minor-mode))
 
+
+;;; Evil mode
+(use-package evil
+  :ensure t
+  :init
+  (setq evil-respect-visual-line-mode t)
+  ;; settings
+  (setq evil-want-keybinding nil
+        evil-want-unimpaired-p nil
+        evil-want-integration t
+        evil-want-C-i-jump t
+        evil-shift-width 2)
+
+  ;; Set the cursor colors per mode
+  (setq evil-normal-state-cursor `(box ,(catppuccin-color 'mauve))
+        evil-insert-state-cursor `(box ,(catppuccin-color 'green))
+        evil-visual-state-cursor `(box ,(catppuccin-color 'sapphire))
+        evil-replace-state-cursor `(box ,(catppuccin-color 'red))
+        evil-motion-state-cursor `(box ,(catppuccin-color 'peach))
+        evil-operator-state-cursor `(box ,(catppuccin-color 'yellow))
+        evil-emacs-state-cursor `(box ,(catppuccin-color 'rosewater)))
+
+  ;; Configuring initial major mode for some modes
+  ;; start in emacs mode
+  (evil-set-initial-state 'eat-mode 'emacs)
+  (evil-set-initial-state 'vterm-mode 'emacs)
+  (evil-set-initial-state 'inferior-python-mode 'emacs)
+
+  (evil-set-initial-state 'messages-buffer-mode 'normal)
+
+  (add-hook 'git-commit-setup-hook 'evil-insert-state)
+  :config
+  ;; enable the stuff
+  (evil-set-undo-system 'undo-fu)
+  (evil-mode 1))
 
 ;;; Misc. editing enhancements
 (use-package avy
@@ -191,7 +216,6 @@
 
 ;; faster searching
 (use-package ripgrep)
-
 ;; Modify search results en masse
 (use-package wgrep
   :config
@@ -268,12 +292,10 @@
   ;; Narrowing lets you restrict results to certain groups of candidates
   (setq consult-narrow-key "<"))
 
+(use-package consult-todo)
 (use-package embark
   :demand t
   :after '(avy)
-  :bind (("C-." . embark-act)         ;; pick some comfortable binding
-         ("C-;" . embark-dwim)        ;; good alternative: M-.
-         ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
   :hook (embark-collect-mode . consult-preview-at-point-mode)
   :init
   ;; Optionally replace the key help with a completing-read interface
@@ -293,10 +315,17 @@
   ;; candidate you select
   (setf (alist-get ?. avy-dispatch-alist) 'qqh/avy-action-embark))
 
+;; I'm not sure why this needs to be its own thing, :bind doesn't work
+(evil-define-key
+  '(normal visual emacs) 'global
+  (kbd "C-;") 'embark-act
+  (kbd "M-;") 'embark-dwim        ;; good alternative: M-.
+  (kbd "C-h B") 'embark-bindings)  ;; alternative for `describe-bindings'
+
 (use-package embark-consult
   :after (embark consult)
   :config
-  (bind-key (kbd "C-.") 'embark-act 'minibuffer-mode-map))
+  (bind-key (kbd "C-;") 'embark-act 'minibuffer-mode-map))
 
 
 ;; Vertico: better vertical completion for minibuffer commands
@@ -396,6 +425,10 @@
 ;;;; A few more useful configurations...
 (use-package emacs
   :straight nil
+  :hook
+  ;; Auto parenthesis matching
+  ((prog-mode . electric-pair-mode)
+   ("\\Dockerfile\\" . dockerfile-ts-mode))
   :custom
   ;; Hide commands in M-x which do not work in the current mode.
   (read-extended-command-predicate #'command-completion-default-include-p)
@@ -422,25 +455,21 @@
   ;; Do not allow the cursor in the minibuffer prompt
   (setq minibuffer-prompt-properties
         '(read-only t cursor-intangible t face minibuffer-prompt))
-  (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode))
-
-;;; Dev
-
-;;;; Built-in dev config
-(use-package emacs
-  :straight nil
+  (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
   :config
   (setq major-mode-remap-alist
         '((yaml-mode . yaml-ts-mode)
           (json-mode . json-ts-mode)
           (python-mode . python-ts-mode)))
-  :hook
-  ;; Auto parenthesis matching
-  ((prog-mode . electric-pair-mode)))
+  )
 
+;;; Dev
+
+;;;; Built-in dev config
 (use-package track-changes
   :config
   ;; FIXME: This shouldn't be necessary
+  ;;        this was causing some problems with C/C++ lsp
   (setq track-changes-record-errors nil))
 
 ;;;; Vterm: Terminal Emulation
@@ -487,31 +516,21 @@
           (display-buffer vterm-buffer)))
     (message "This file is not in a project")))
 
-
-
 ;;;; Magit: best Git client to ever exist
 (use-package magit
   :custom
   (magit-commit-show-diff nil)
-  (magit-commit-diff-inhibit-same-window nil)
-  :config
-  ;; Show magit in a full window
-  (add-to-list 'display-buffer-alist
-	           '("\\(magit: .+\\|magit-log.+\\|magit-revision.+\\)"
-	             (display-buffer-full-frame)))
-  ;; except for certain buffers
-  (add-to-list 'display-buffer-alist
-	           '("\\(magit-diff:.*\\)"
-	             (display-buffer-at-bottom))))
+  (magit-commit-diff-inhibit-same-window nil))
 
 (use-package forge
   :config
   ;; Configure auth source
   (setq auth-sources '("~/.authinfo"))
+  ;; setup VWS gitlab
   (push '("gitlab.veriskweather.net"               ; GITHOST
           "gitlab.veriskweather.net/api/v4"        ; APIHOST
           "gitlab.veriskweather.net"               ; WEBHOST and INSTANCE-ID
-          forge-gitlab-repository)    ; CLASS
+          forge-gitlab-repository)                 ; CLASS
         forge-alist))
 
 ;;;; Project Management
@@ -522,7 +541,8 @@
 (use-package project)
 
 (defun qqh/project/open-org-file ()
-  "Open the project.org file at the root of the current project. If no project.org file is found, create a new one from a template."
+  "Open the project.org file at the root of the current project.
+ If no project.org file is found, create a new one from a template."
   (interactive)
   (let ((file     (projectile-expand-root "project.org"))
         (template (expand-file-name "templates/project-template.org"
@@ -532,7 +552,6 @@
     (find-file file)))
 
 (use-package projectile
-  :diminish projectile-mode
   :bind (:map projectile-mode-map
               ("<f8>" . projectile-command-map)
               ("<f7>" . multi-vterm-project)
@@ -633,11 +652,7 @@
                     (persp-mode-projectile-bridge-find-perspectives-for-all-buffers)
                   (persp-mode-projectile-bridge-kill-perspectives)))))
 
-;;;;; Consult-todo: Search project todos
-(use-package consult-todo)
-
 ;;;; Miscellaneous file types
-
 (use-package markdown-mode
   :hook ((markdown-mode . visual-line-mode))
   :config
@@ -646,24 +661,19 @@
 (use-package yaml-mode)
 (use-package json-mode)
 (use-package protobuf-mode)
-
 (use-package dts-mode
   :mode "\\.keymap\\'")
-
 (use-package just-mode)
 (use-package cmake-mode)
 
 ;;;; Documentation and Diagnostics
-
 ;;;;; Eldoc
 (use-package eldoc
-  :straight (:type built-in)
-  :diminish eldoc-mode)
+  :straight (:type built-in))
 
 ;;;;; documentation comment generation
 (use-package docstr
-  :diminish docstr-mode
-  :hook (((python-mode python-ts-mode) . docstr-mode))
+  :hook (((python-mode python-ts-mode) . docstr-mode))    ;; this literally only works well for python AFAIK
   :custom
   (docstr-key-enable t)
   (docstr-python-style 'google)
@@ -744,37 +754,6 @@
 ;;;; Code formatting
 (use-package format-all)
 
-;;;; Dape: DAP support for eglot
-(use-package dape
-  :preface
-  ;; By default dape shares the same keybinding prefix as `gud'
-  ;; If you do not want to use any prefix, set it to nil.
-  ;; (setq dape-key-prefix "\C-x\C-a")
-
-  :hook
-  ((kill-emacs . dape-breakpoint-save)  ;; Save breakpoints on quit
-   (after-init . dape-breakpoint-load)) ;; Load breakpoints on startup
-
-  :config
-  ;; Turn on global bindings for setting breakpoints with mouse
-  (dape-breakpoint-global-mode)
-
-  ;; Info buffers to the right
-  ;; (setq dape-buffer-window-arrangement 'right)
-
-  ;; Info buffers like gud (gdb-mi)
-  ;; (setq dape-buffer-window-arrangement 'gud)
-  ;; (setq dape-info-hide-mode-line nil)
-
-  ;; Save buffers on startup, useful for interpreted languages
-  (add-hook 'dape-start-hook (lambda () (save-some-buffers t t)))
-
-  ;; Kill compile buffer on build success
-  (add-hook 'dape-compile-hook 'kill-buffer)
-
-  ;; Projectile users
-  (setq dape-cwd-fn 'projectile-project-root))
-
 ;;;; Language specific configuration
 
 ;;;;; C / C++
@@ -807,9 +786,8 @@
 (use-package python
   :custom
   (python-shell-interpreter "python3")
-
   ;; Remove guess indent python message
-  (setq python-indent-guess-indent-offset-verbose nil))
+  (python-indent-guess-indent-offset-verbose nil))
 
 (defun qqh/spack-python ()
   "Activate the spack environment in the current project, if there is one."
@@ -845,10 +823,8 @@
 ;;;; Settings
 ;; Agenda variables
 (setq org-directory "~/org/")         ; Non-absolute paths for agenda and
-                                        ; capture templates will look here.
-
+                                      ; capture templates will look here.
 (setq org-agenda-files '("inbox.org"))
-
 ;; Default tags
 (setq org-tag-alist '(;; locale
                       (:startgroup)
@@ -956,8 +932,8 @@
       (message (format "%s does not exist!" f)))))
 
 (defun qqh/search-files ()
-  "Fuzzy find files with `projectile-find-file', falling
-back to `consult-fd' if we're not in a project."
+  "Fuzzy find files with `projectile-find-file'.
+This function falls back to `consult-fd' if we're not in a project."
   (interactive)
   (if (projectile-project-p)
       (projectile-find-file)
@@ -1084,42 +1060,7 @@ back to `consult-fd' if we're not in a project."
 
 (global-set-key (kbd "M-<mouse-1>") 'goto-address-at-mouse)
 
-;;;; Evil mode
-(use-package evil
-  :ensure t
-  :init
-  (setq evil-respect-visual-line-mode t)
-  ;; settings
-  (setq evil-want-keybinding nil
-        evil-want-unimpaired-p nil
-        evil-want-integration t
-        evil-want-C-i-jump t
-        evil-shift-width 2)
-
-  ;; Set the cursor colors per mode
-  (setq evil-normal-state-cursor `(box ,(catppuccin-color 'mauve))
-        evil-insert-state-cursor `(box ,(catppuccin-color 'green))
-        evil-visual-state-cursor `(box ,(catppuccin-color 'sapphire))
-        evil-replace-state-cursor `(box ,(catppuccin-color 'red))
-        evil-motion-state-cursor `(box ,(catppuccin-color 'peach))
-        evil-operator-state-cursor `(box ,(catppuccin-color 'yellow))
-        evil-emacs-state-cursor `(box ,(catppuccin-color 'rosewater)))
-
-  ;; Configuring initial major mode for some modes
-  ;; start in emacs mode
-  (evil-set-initial-state 'eat-mode 'emacs)
-  (evil-set-initial-state 'vterm-mode 'emacs)
-  (evil-set-initial-state 'inferior-python-mode 'emacs)
-
-  (evil-set-initial-state 'messages-buffer-mode 'normal)
-
-  (add-hook 'git-commit-setup-hook 'evil-insert-state)
-  :config
-  ;; enable the stuff
-  (evil-set-undo-system 'undo-fu)
-  (evil-mode 1))
-
-;;;;; Evil plugins
+;;;; Evil plugins
 (use-package evil-collection
   :after evil
   :custom
@@ -1151,30 +1092,39 @@ back to `consult-fd' if we're not in a project."
 (global-set-key (kbd "M-q") 'qqh/kill-buffer)
 (global-set-key (kbd "C-q") 'evil-window-delete)
 
-(evil-define-key '(normal insert emacs) 'global (kbd "<prior>") 'evil-scroll-up)
-(evil-define-key '(normal insert emacs) 'global (kbd "<next>") 'evil-scroll-down)
+(evil-define-key '(normal insert emacs) 'global
+  (kbd "<prior>") 'evil-scroll-up
+  (kbd "<next>") 'evil-scroll-down)
 
 ;; Setup my transients and maps
-(evil-define-key 'normal 'global (kbd "SPC") 'qqh/transient/leader)
-(evil-define-key 'normal 'global (kbd "M-q") 'qqh/kill-buffer)
+(evil-define-key 'normal 'global
+  (kbd "SPC") 'qqh/transient/leader
+  (kbd "M-q") 'qqh/kill-buffer)
 
 ;; Avy bindings
-(evil-define-key '(normal visual) 'global (kbd "L") 'avy-goto-line)
-(evil-define-key '(normal visual) 'global (kbd "g RET") 'avy-goto-char-2)
+(evil-define-key '(normal visual) 'global
+  (kbd "L") 'avy-goto-line
+  (kbd "g RET") 'avy-goto-char-2)
 
 ;; Add my own bracketed movement options
-(evil-define-key 'motion 'global (kbd "[ e") 'flymake-goto-prev-error)
-(evil-define-key 'motion 'global (kbd "] e") 'flymake-goto-next-error)
-(evil-define-key 'motion 'global (kbd "] x") 'smerge-vc-next-conflict)
+(evil-define-key 'motion 'global
+  (kbd "[ e") 'flymake-goto-prev-error
+  (kbd "[ d") 'hl-todo-previous)
+(evil-define-key 'motion 'global
+  (kbd "] d") 'hl-todo-next
+  (kbd "] e") 'flymake-goto-next-error
+  (kbd "] x") 'smerge-vc-next-conflict)
 
 ;; C-g quits normal mode
 (evil-define-key 'insert 'global (kbd "C-g") 'evil-normal-state)
 
 ;; Eglot bindings
-(evil-define-key 'normal 'eglot-mode-map (kbd "g R") 'eglot-rename)
-(evil-define-key 'normal 'eglot-mode-map (kbd "g SPC") 'eglot-code-actions)
+(evil-define-key 'normal 'eglot-mode-map
+  (kbd "g R") 'eglot-rename
+  (kbd "g SPC") 'eglot-code-actions)
 ;; vterm
-(evil-define-key nil vterm-mode-map (kbd "C-SPC") 'qqh/transient/leader)
+(evil-define-key nil vterm-mode-map
+  (kbd "C-SPC") 'qqh/transient/leader)
 
 ;;; Themes / UI customization
 
@@ -1191,14 +1141,12 @@ back to `consult-fd' if we're not in a project."
 
 
 ;;;; Packages
-(use-package colorful-mode
-  :diminish colorful-mode)
+(use-package colorful-mode)
 
 (use-package nerd-icons)
 
 (use-package rainbow-delimiters
-  :hook (prog-mode . rainbow-delimiters-mode)
-  :diminish rainbow-delimiters-mode)
+  :hook (prog-mode . rainbow-delimiters-mode))
 
 (use-package hl-todo
   :config
@@ -1299,13 +1247,13 @@ back to `consult-fd' if we're not in a project."
   (setq
    mood-line-glyph-alist mood-line-glyphs-fira-code
 
-   mood-line-segment-modal-evil-state-alist '((normal   . (" N " . qqh/evil/normal-face))
-                                              (insert   . (" I " . qqh/evil/insert-face))
-                                              (visual   . (" V " . qqh/evil/visual-face))
-                                              (replace  . (" R " . qqh/evil/replace-face))
-                                              (motion   . (" M " . qqh/evil/motion-face))
-                                              (operator . (" O " . qqh/evil/operator-face))
-                                              (emacs    . (" E " . qqh/evil/emacs-face)))
+   mood-line-segment-modal-evil-state-alist '((normal   . (" NOR " . qqh/evil/normal-face))
+                                              (insert   . (" INS " . qqh/evil/insert-face))
+                                              (visual   . (" VIS " . qqh/evil/visual-face))
+                                              (replace  . (" REP " . qqh/evil/replace-face))
+                                              (motion   . (" MOT " . qqh/evil/motion-face))
+                                              (operator . (" OPR " . qqh/evil/operator-face))
+                                              (emacs    . (" EMC " . qqh/evil/emacs-face)))
 
    mood-line-format (mood-line-defformat
                      :left
