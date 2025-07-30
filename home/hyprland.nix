@@ -92,8 +92,8 @@
 
 
       general = {
-        gaps_in = 10;
-        gaps_out = 10;
+        gaps_in = 1;
+        gaps_out = 1;
         border_size = 2;
 
         resize_on_border = true;
@@ -122,9 +122,7 @@
       };
 
       decoration = {
-        rounding = 10;
-
-        # Change transparency of focused and unfocused windows
+        rounding = 0;
         active_opacity = 1.0;
         inactive_opacity = 1.0;
 

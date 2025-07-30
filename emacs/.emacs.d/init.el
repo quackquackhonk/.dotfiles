@@ -95,8 +95,6 @@
 (setopt sentence-end-double-space nil)                    ;; Fix archaic defaults
 (defalias 'yes-or-no-p 'y-or-n-p)                         ;; only "y or n" prompts
 (global-set-key (kbd "<escape>") 'keyboard-quit)          ;; Make ESC quit prompts
-(setq find-program "fd"                                   ;; use the faster programs
-      grep-program "rg")
 (savehist-mode)                                           ;; Save history of minibuffer
 (setopt enable-recursive-minibuffers t)                   ;; Use the minibuffer whilst in the minibuffer
 (setopt indent-tabs-mode nil)                             ;; Tabs BTFO
@@ -133,6 +131,12 @@
 
 ;; enable the recent files list
 (recentf-mode t)
+
+;; try to use the faster programs
+(unless (executable-find "fd")
+  (add-to-list 'exec-path "/home/sahana/.local/bin"))
+(setq find-program "fd"                                   ;; use the faster programs
+      grep-program "rg")
 
 ;;; Built-Ins.
 
@@ -176,13 +180,13 @@
 (use-package evil
   :ensure t
   :init
-  (setq evil-respect-visual-line-mode t)
-  ;; settings
+   ;; settings
   (setq evil-want-keybinding nil
         evil-want-unimpaired-p nil
         evil-want-integration t
         evil-want-C-i-jump t
-        evil-shift-width 2)
+        evil-shift-width 2
+        evil-respect-visual-line-mode t)
 
   ;; Set the cursor colors per mode
   (setq evil-normal-state-cursor `(box ,(catppuccin-color 'mauve))
@@ -193,6 +197,10 @@
         evil-operator-state-cursor `(box ,(catppuccin-color 'yellow))
         evil-emacs-state-cursor `(box ,(catppuccin-color 'rosewater)))
 
+  :config
+  ;; enable the stuff
+  (evil-set-undo-system 'undo-fu)
+  (evil-mode 1)
   ;; Configuring initial major mode for some modes
   ;; start in emacs mode
   (evil-set-initial-state 'eat-mode 'emacs)
@@ -201,11 +209,7 @@
 
   (evil-set-initial-state 'messages-buffer-mode 'normal)
 
-  (add-hook 'git-commit-setup-hook 'evil-insert-state)
-  :config
-  ;; enable the stuff
-  (evil-set-undo-system 'undo-fu)
-  (evil-mode 1))
+  (add-hook 'git-commit-setup-hook 'evil-insert-state))
 
 ;;; Misc. editing enhancements
 (use-package avy
@@ -260,22 +264,21 @@
                           "--exclude build"))
 
 
-  :bind (
-         ;; Drop-in replacements
-         ("M-y"   . consult-yank-pop)   ; orig. yank-pop
-         ;; Searching
-         ("M-s r" . consult-ripgrep)
-         ("C-s" . consult-line)         ; Alternative: rebind C-s to use
-         ("M-s s" . isearch)            ; consult-line instead of isearch, bind
-         ("M-s L" . consult-line-multi)
-         ("M-s o" . consult-outline)
-         ;; Isearch integration
-         :map isearch-mode-map
-         ("M-e" . consult-isearch-history)   ; orig. isearch-edit-string
-         ("M-s e" . consult-isearch-history) ; orig. isearch-edit-string
-         ("M-s l" . consult-line)            ; needed by consult-line to detect isearch
-         ("M-s L" . consult-line-multi)      ; needed by consult-line to detect isearch
-         )
+  :bind
+                                       ;; Drop-in replacements
+  (("M-y"   . consult-yank-pop)        ; yank-pop
+   ("C-s"   . consult-line)            ; isearch
+                                       ;; Searching
+   ("M-s r" . consult-ripgrep)
+   ("M-s s" . isearch)
+   ("M-s L" . consult-line-multi)
+   ("M-s o" . consult-outline)
+
+   :map isearch-mode-map               ;; Isearch integration
+   ("M-e"   . consult-isearch-history) ; orig. isearch-edit-string
+   ("M-s e" . consult-isearch-history) ; orig. isearch-edit-string
+   ("M-s l" . consult-line)            ; needed by consult-line to detect isearch
+   ("M-s L" . consult-line-multi))     ; needed by consult-line to detect isearch
 
   :config
   (consult-customize consult--source-bookmark :hidden t :default :nil)
@@ -341,8 +344,9 @@
 (use-package vertico-directory
   :straight nil
   :after vertico
-  :bind (:map vertico-map
-              ("M-DEL" . vertico-directory-delete-word)))
+  :bind
+  (:map vertico-map
+        ("M-DEL" . vertico-directory-delete-word)))
 
 ;;;; Marginalia: annotations for minibuffer
 (use-package marginalia
@@ -744,9 +748,6 @@
                                                     :autopep8 (:enabled :json-false)))))))
 
 (use-package eglot-booster
-  :init
-  (unless (executable-find "emacs-lsp-booster")
-    (add-to-list 'exec-path "/home/sahana/.local/bin"))
   :straight (eglot-booster :type git :host github :repo "jdtsmith/eglot-booster")
   :after eglot
   :config (eglot-booster-mode))
@@ -1132,7 +1133,7 @@ This function falls back to `consult-fd' if we're not in a project."
 (set-face-attribute 'default nil
                     :family "Comic Code"
                     :weight 'regular
-                    :height 120)
+                    :height (if (qqh/macos-p) 120 100))
 (set-face-attribute 'window-divider nil
                     :background (catppuccin-color 'mantle)
                     :foreground (catppuccin-color 'mantle))
@@ -1141,10 +1142,6 @@ This function falls back to `consult-fd' if we're not in a project."
 
 
 ;;;; Packages
-(use-package colorful-mode)
-
-(use-package nerd-icons)
-
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
 
@@ -1214,35 +1211,6 @@ This function falls back to `consult-fd' if we're not in a project."
     (let ((p (get-current-persp)))
       (if p
           (propertize (persp-name p) 'face 'mood-line-unimportant))))
-
-  (defface qqh/evil/normal-face
-    `((t . (:bold t :background ,(catppuccin-color 'mauve) :foreground ,(catppuccin-color 'base))))
-    "evil normal mode mood line face"
-    :group 'qqh)
-  (defface qqh/evil/insert-face
-    `((t . (:bold t :background ,(catppuccin-color 'green) :foreground ,(catppuccin-color 'base))))
-    "evil insert mode mood line face"
-    :group 'qqh)
-  (defface qqh/evil/visual-face
-    `((t . (:bold t :background ,(catppuccin-color 'sapphire) :foreground ,(catppuccin-color 'base))))
-    "evil visual mode mood line face"
-    :group 'qqh)
-  (defface qqh/evil/replace-face
-    `((t . (:bold t :background ,(catppuccin-color 'red) :foreground ,(catppuccin-color 'base))))
-    "evil replace mode mood line face"
-    :group 'qqh)
-  (defface qqh/evil/motion-face
-    `((t . (:bold t :background ,(catppuccin-color 'peach) :foreground ,(catppuccin-color 'base))))
-    "evil motion mode mood line face"
-    :group 'qqh)
-  (defface qqh/evil/operator-face
-    `((t . (:bold t :background ,(catppuccin-color 'yellow) :foreground ,(catppuccin-color 'base))))
-    "evil operator mode mood line face"
-    :group 'qqh)
-  (defface qqh/evil/emacs-face
-    `((t . (:bold t :background ,(catppuccin-color 'rosewater) :foreground ,(catppuccin-color 'base))))
-    "evil emacs mode mood line face"
-    :group 'qqh)
 
   (setq
    mood-line-glyph-alist mood-line-glyphs-fira-code
