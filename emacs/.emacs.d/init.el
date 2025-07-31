@@ -196,10 +196,7 @@
   (evil-mode 1)
   ;; Configuring initial major mode for some modes
   ;; start in emacs mode
-  (evil-set-initial-state 'eat-mode 'emacs)
-  (evil-set-initial-state 'vterm-mode 'emacs)
   (evil-set-initial-state 'inferior-python-mode 'emacs)
-
   (evil-set-initial-state 'messages-buffer-mode 'normal)
 
   (add-hook 'git-commit-setup-hook 'evil-insert-state))
@@ -469,7 +466,8 @@
 
 ;;;; Vterm: Terminal Emulation
 (use-package vterm
-  :hook (vterm-mode . goto-address-mode)
+  :hook ((vterm-mode . goto-address-mode)
+         (vterm-mode . evil-emacs-state))
   :bind (:map vterm-mode-map
               ("C-c C-x" . vterm--self-insert))
   :config
