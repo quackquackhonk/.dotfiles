@@ -13,13 +13,13 @@
   "User options for my Emacs configuration."
   :group 'file)
 
-(defvar qqh/modules-dir (expand-file-name "qqh" user-emacs-directory)
+(defvar qqh--modules-dir (expand-file-name "qqh" user-emacs-directory)
   "The directory containing my module files.")
 
-(defvar qqh/trunc-len 24
+(defvar qqh--trunc-len 24
   "The length to truncate strings to.")
 
-(defun qqh/macos-p ()
+(defun qqh--macos-p ()
   "Check if the current frame is an OSX gui frame."
   (eq system-type 'darwin))
 
@@ -114,7 +114,7 @@
 (setopt ring-bell-function 'ignore)                       ;; disable the bell
 (setopt compilation-scroll-output t)                      ;; follow compilation output by default
 (setq frame-resize-pixelwise t)
-(setq-default line-spacing (if (qqh/macos-p) nil 2))      ;; Add some spacing to lines on OSX
+(setq-default line-spacing (if (qqh--macos-p) nil 2))      ;; Add some spacing to lines on OSX
 
 ;; Nice line wrapping when working with text
 (add-hook 'text-mode-hook 'visual-line-mode)
@@ -177,6 +177,8 @@
 
 
 ;;; Evil mode
+(use-package undo-fu
+  :straight (undo-fu :type git :host github :repo "emacsmirror/undo-fu"))
 (use-package evil
   :ensure t
   :init
@@ -187,15 +189,6 @@
         evil-want-C-i-jump t
         evil-shift-width 2
         evil-respect-visual-line-mode t)
-
-  ;; Set the cursor colors per mode
-  (setq evil-normal-state-cursor `(box ,(catppuccin-color 'mauve))
-        evil-insert-state-cursor `(box ,(catppuccin-color 'green))
-        evil-visual-state-cursor `(box ,(catppuccin-color 'sapphire))
-        evil-replace-state-cursor `(box ,(catppuccin-color 'red))
-        evil-motion-state-cursor `(box ,(catppuccin-color 'peach))
-        evil-operator-state-cursor `(box ,(catppuccin-color 'yellow))
-        evil-emacs-state-cursor `(box ,(catppuccin-color 'rosewater)))
 
   :config
   ;; enable the stuff
@@ -305,7 +298,7 @@
   (setq prefix-help-command #'embark-prefix-help-command)
 
   ;; Add the option to run embark when using avy
-  (defun qqh/avy-action-embark (pt)
+  (defun qqh--avy-action-embark (pt)
     (unwind-protect
         (save-excursion
           (goto-char pt)
@@ -316,7 +309,7 @@
 
   ;; After invoking avy-goto-char-timer, hit "." to run embark at the next
   ;; candidate you select
-  (setf (alist-get ?. avy-dispatch-alist) 'qqh/avy-action-embark))
+  (setf (alist-get ?. avy-dispatch-alist) 'qqh--avy-action-embark))
 
 ;; I'm not sure why this needs to be its own thing, :bind doesn't work
 (evil-define-key
@@ -544,13 +537,13 @@
 ;;;;; Projectile
 (use-package project)
 
-(defun qqh/project/open-org-file ()
+(defun qqh-project--open-org-file ()
   "Open the project.org file at the root of the current project.
  If no project.org file is found, create a new one from a template."
   (interactive)
   (let ((file     (projectile-expand-root "project.org"))
         (template (expand-file-name "templates/project-template.org"
-                                    qqh/modules-dir)))
+                                    qqh--modules-dir)))
     (unless (file-exists-p file)
       (copy-file template file))
     (find-file file)))
@@ -560,14 +553,14 @@
               ("<f8>" . projectile-command-map)
               ("<f7>" . multi-vterm-project)
          :map projectile-command-map
-              (";" . qqh/project/open-org-file))
+              (";" . qqh-project--open-org-file))
   :init
   (projectile-mode +1)
 
   ;; integration with project.el, some packages work better with it
   (add-hook 'project-find-functions #'project-projectile)
 
-  (when (qqh/macos-p)
+  (when (qqh--macos-p)
     (setq projectile-fd-executable "/opt/homebrew/bin/fd"))
 
   (setq projectile-enable-caching t
@@ -620,13 +613,13 @@
 
   ;; Perspective-exclusive tabs, ala tmux windows
   (add-hook 'persp-before-deactivate-functions
-            (defun qqh/persp/save-tab-bar-data (_)
+            (defun qqh-persp--save-tab-bar-data (_)
               (when (get-current-persp)
                 (set-persp-parameter
                  'tab-bar-tabs (tab-bar-tabs)))))
 
   (add-hook 'persp-activated-functions
-            (defun qqh/persp/load-tab-bar-data (_)
+            (defun qqh-persp--load-tab-bar-data (_)
               (tab-bar-tabs-set (persp-parameter 'tab-bar-tabs))
               (tab-bar--update-tab-bar-lines t)))
 
@@ -790,7 +783,7 @@
   ;; Remove guess indent python message
   (python-indent-guess-indent-offset-verbose nil))
 
-(defun qqh/spack-python ()
+(defun qqh--spack-python ()
   "Activate the spack environment in the current project, if there is one."
   (interactive)
   (setenv "WORKON_HOME" "/opt/homebrew/Caskroom/miniconda/base/envs/")
@@ -803,7 +796,7 @@
       (ignore))))
 
 (use-package pyvenv
-  :hook (((python-mode python-ts-mode) . qqh/spack-python))
+  :hook (((python-mode python-ts-mode) . qqh--spack-python))
   :config
   (setenv "WORKON_HOME" "/opt/homebrew/Caskroom/miniconda/base/envs/")
   (pyvenv-mode 1))
@@ -919,12 +912,12 @@
 ;;; Keybindings
 
 ;;;; Definitions
-(defun qqh/kill-buffer ()
+(defun qqh--kill-buffer ()
   "Kill the current buffer."
   (interactive)
   (kill-buffer (current-buffer)))
 
-(defun qqh/project/open-flake ()
+(defun qqh-project--open-flake ()
   "Open the project flake file, if it exists."
   (interactive)
   (let ((f (projectile-expand-root "flake.nix")))
@@ -932,7 +925,7 @@
         (find-file f)
       (message (format "%s does not exist!" f)))))
 
-(defun qqh/search-files ()
+(defun qqh--search-files ()
   "Fuzzy find files with `projectile-find-file'.
 This function falls back to `consult-fd' if we're not in a project."
   (interactive)
@@ -940,34 +933,35 @@ This function falls back to `consult-fd' if we're not in a project."
       (projectile-find-file)
     (consult-fd)))
 
-(defun qqh/emacs/reload ()
+(defun qqh-emacs--reload ()
   "Load my Emacs configuration."
   (interactive)
   (load-file user-init-file))
 
-(defun qqh/emacs/open-config ()
+(defun qqh-nix--rebuild ()
+  (interactive)
+  (exe)
+
+(defun qqh-emacs--open-config ()
   "Open my Emacs configuration."
   (interactive)
   (find-file user-init-file))
 
-(defun qqh/config/open-nix-flake ()
+(defun qqh-config--open-nix-flake ()
   "Open my nix flake."
   (interactive)
   (find-file "~/dotfiles/flake.nix"))
 
-(defun qqh/config/open-nix-home ()
+(defun qqh-config--open-nix-home ()
   "Open my nix home-manager home.nix."
   (interactive)
   (find-file "~/dotfiles/home/home.nix"))
 
-(defun qqh/config/hyprland ()
+(defun qqh-config--hyprland ()
   "Open my hyprland config."
   (interactive)
   (find-file "~/dotfiles/home/hyprland.nix"))
 
-;;;; Undo-fu
-(use-package undo-fu
-  :straight (undo-fu :type git :host github :repo "emacsmirror/undo-fu"))
 
 ;;;; transient: so many leader keys
 (use-package transient
@@ -985,45 +979,47 @@ This function falls back to `consult-fd' if we're not in a project."
               :repo "positron-solutions/transient-showcase"))
 
 ;; Set up some transient maps for additional leaders
-(transient-define-prefix qqh/transient/code ()
+(transient-define-prefix qqh-transient--code ()
   ["code..."
    ("c" "compile" projectile-compile-project)
    ("f" "format" format-all-region-or-buffer)
    ("v" "activate environment" pyvenv-workon)])
 
-(transient-define-prefix qqh/transient/git ()
+(transient-define-prefix qqh-transient--git ()
   [:class transient-row "git..."
           ("g" "status" magit)
           ("b" "branch" magit-branch)
           ("B" "blame" magit-blame)])
 
-(transient-define-prefix qqh/transient/open ()
+(transient-define-prefix qqh-transient--open ()
   [:class transient-row "open..."
           ("d" "diagnostics panel" consult-flymake)
           ("t" "terminal" multi-vterm)])
 
-(transient-define-prefix qqh/transient/notes ()
+(transient-define-prefix qqh-transient--notes ()
   [:class transient-row "notes..."
           ("c" "capture" org-roam-capture)
           ("s" "search" org-roam-node-find)])
 
-(transient-define-prefix qqh/transient/search ()
+(transient-define-prefix qqh-transient--search ()
   [:class transient-row "search..."
           ("l" "all lines" consult-line-multi)
           ("i" "imenu" consult-imenu)
           ("n" "notes" org-roam-node-find)
           ("o" "outline" consult-outline)
-          ("s" "files" qqh/search-files)])
+          ("s" "files" qqh--search-files)])
 
-(transient-define-prefix qqh/transient/config ()
-  [("r" "reload emacs config" qqh/emacs/reload)]
+(transient-define-prefix qqh-transient--config ()
+  [:class transient-row
+          ("r" "reload emacs config" qqh-emacs--reload)
+          (";" "reload nix system" qqh-nix--rebuild)]
   [:class transient-row "edit config for..."
-          ("c" "emacs" qqh/emacs/open-config)
-          ("f" "flake" qqh/config/open-nix-flake :if (lambda () (not (qqh/macos-p))))
-          ("h" "hyprland" qqh/config/hyprland :if (lambda () (not (qqh/macos-p))))
-          ("n" "home-manager" qqh/config/open-nix-home :if (lambda () (not (qqh/macos-p))))])
+          ("c" "emacs" qqh-emacs--open-config)
+          ("f" "flake" qqh-config--open-nix-flake :if (lambda () (not (qqh--macos-p))))
+          ("h" "hyprland" qqh-config--hyprland :if (lambda () (not (qqh--macos-p))))
+          ("n" "home-manager" qqh-config--open-nix-home :if (lambda () (not (qqh--macos-p))))])
 
-(transient-define-prefix qqh/transient/leader ()
+(transient-define-prefix qqh-transient--leader ()
   "Transient map for my leader bindings."
   ["leader bindings..."
    ("SPC" "buffers" consult-buffer)
@@ -1031,27 +1027,12 @@ This function falls back to `consult-fd' if we're not in a project."
    ("." "next buffer" next-buffer)
    (":" "eval expression" eval-expression)]
   [:class transient-row
-          ("c" "+code" qqh/transient/code)
-          ("g" "+git" qqh/transient/git)
-          ("o" "+open" qqh/transient/open)
-          ("n" "+notes" qqh/transient/notes)
-          ("s" "+search" qqh/transient/search)
-          (";" "+config" qqh/transient/config)])
-
-(transient-define-prefix qqh/transient/next ()
-  "Transient map for going to the next thing."
-  [["Next"
-    ("d" "todo" hl-todo-next)
-    ("e" "error" flymake-goto-next-error)
-    ("p" "perspective" persp-next)
-    ("x" "conflict" smerge-vc-next-conflict)]])
-
-(transient-define-prefix qqh/transient/prev ()
-  "Transient map for going to the previous thing."
-  [["Previous"
-    ("d" "todo" hl-todo-previous)
-    ("e" "error" flymake-goto-prev-error)
-    ("p" "perspective" persp-prev)]])
+          ("c" "+code" qqh-transient--code)
+          ("g" "+git" qqh-transient--git)
+          ("o" "+open" qqh-transient--open)
+          ("n" "+notes" qqh-transient--notes)
+          ("s" "+search" qqh-transient--search)
+          (";" "+config" qqh-transient--config)])
 
 ;;;; Global bindings
 (global-set-key (kbd "<home>") 'beginning-of-line)
@@ -1090,7 +1071,7 @@ This function falls back to `consult-fd' if we're not in a project."
   :after evil)
 
 ;;;; Evil Bindings
-(global-set-key (kbd "M-q") 'qqh/kill-buffer)
+(global-set-key (kbd "M-q") 'qqh--kill-buffer)
 (global-set-key (kbd "C-q") 'evil-window-delete)
 
 (evil-define-key '(normal insert emacs) 'global
@@ -1099,8 +1080,8 @@ This function falls back to `consult-fd' if we're not in a project."
 
 ;; Setup my transients and maps
 (evil-define-key 'normal 'global
-  (kbd "SPC") 'qqh/transient/leader
-  (kbd "M-q") 'qqh/kill-buffer)
+  (kbd "SPC") 'qqh-transient--leader
+  (kbd "M-q") 'qqh--kill-buffer)
 
 ;; Avy bindings
 (evil-define-key '(normal visual) 'global
@@ -1125,7 +1106,7 @@ This function falls back to `consult-fd' if we're not in a project."
   (kbd "g SPC") 'eglot-code-actions)
 ;; vterm
 (evil-define-key nil vterm-mode-map
-  (kbd "C-SPC") 'qqh/transient/leader)
+  (kbd "C-SPC") 'qqh-transient--leader)
 
 ;;; Themes / UI customization
 
@@ -1133,7 +1114,7 @@ This function falls back to `consult-fd' if we're not in a project."
 (set-face-attribute 'default nil
                     :family "Comic Code"
                     :weight 'regular
-                    :height (if (qqh/macos-p) 120 100))
+                    :height (if (qqh--macos-p) 120 100))
 (set-face-attribute 'window-divider nil
                     :background (catppuccin-color 'mantle)
                     :foreground (catppuccin-color 'mantle))
@@ -1147,7 +1128,7 @@ This function falls back to `consult-fd' if we're not in a project."
 
 (use-package hl-todo
   :config
-  (defface qqh/hl-todo/todo-face
+  (defface qqh-hl-todo--todo-face
     `((t . (:bold t :background ,(catppuccin-color 'sky) :foreground ,(catppuccin-color 'base))))
     "The face highlighting TODOs in projects."
     :group 'qqh)
@@ -1186,61 +1167,8 @@ This function falls back to `consult-fd' if we're not in a project."
 
 ;;;; Modeline configurtaion
 (use-package mood-line
-  :custom-face
-  (mood-line-unimportant ((t (:inherit shadow))))
-  (mood-line-buffer-name ((t (:weight normal))))
-  (mood-line-major-mode ((t (:weight normal))))
   :config
-  (mood-line-mode)
-
-  (defun mood-line-segment-cursor-position ()
-    "Return the position of the cursor in the current buffer."
-    (propertize (format-mode-line "(%l:%c)") 'face 'mood-line-unimportant))
-
-  (defun mood-line-segment-separator ()
-    (propertize "|" 'face 'mood-line-unimportant))
-
-  (defun mood-line-segment-vc ()
-    "Return color-coded version control information."
-    (if (> (length mood-line-segment-vc--text) qqh/trunc-len)
-        (concat (substring mood-line-segment-vc--text 0 qqh/trunc-len) "...")
-      mood-line-segment-vc--text))
-
-  (defun mood-line-segment-persp ()
-    "Return the name of the cerrent persp"
-    (let ((p (get-current-persp)))
-      (if p
-          (propertize (persp-name p) 'face 'mood-line-unimportant))))
-
-  (setq
-   mood-line-glyph-alist mood-line-glyphs-fira-code
-
-   mood-line-segment-modal-evil-state-alist '((normal   . (" NOR " . qqh/evil/normal-face))
-                                              (insert   . (" INS " . qqh/evil/insert-face))
-                                              (visual   . (" VIS " . qqh/evil/visual-face))
-                                              (replace  . (" REP " . qqh/evil/replace-face))
-                                              (motion   . (" MOT " . qqh/evil/motion-face))
-                                              (operator . (" OPR " . qqh/evil/operator-face))
-                                              (emacs    . (" EMC " . qqh/evil/emacs-face)))
-
-   mood-line-format (mood-line-defformat
-                     :left
-                     (((mood-line-segment-modal)                                          . " ")
-                      ((mood-line-segment-buffer-status)                                  . " ")
-                      ((mood-line-segment-buffer-name)                                    . " ")
-                      ((mood-line-segment-cursor-position)                                . " ")
-                      ((mood-line-segment-separator)                                      . " ")
-                      (mood-line-segment-major-mode))
-                     :right
-                     (((mood-line-segment-misc-info)                                      . " ")
-                      ((when (mood-line-segment-misc-info) (mood-line-segment-separator)) . " ")
-                      ((mood-line-segment-checker)                                        . " ")
-                      ((when (mood-line-segment-checker) (mood-line-segment-separator))   . " ")
-                      ((mood-line-segment-project)                                        . " ")
-                      ((when (mood-line-segment-vc) "on")                                 . " ")
-                      ((mood-line-segment-vc)                                             . " ")
-                      ((when (mood-line-segment-persp) (mood-line-segment-separator))     . " ")
-                      ((mood-line-segment-persp)                                          . " ")))))
+  (mood-line-mode))
 
 ;;;; Buffer display configuration
 ;;;;; display-buffer-alist customization
@@ -1304,7 +1232,7 @@ This function falls back to `consult-fd' if we're not in a project."
 
 ;;; Cleanup
 (catppuccin-reload)
-(setq gc-cons-threshold (or qqh/initial-gc-threshold 800000))
+(setq gc-cons-threshold (or qqh--initial-gc-threshold 800000))
 
 
 (put 'downcase-region 'disabled nil)
