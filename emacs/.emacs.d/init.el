@@ -69,7 +69,7 @@
 (use-package catppuccin-theme
   :config
   (setq catppuccin-flavor 'mocha
-	    catppuccin-italic-comments nil
+	    catppuccin-italic-comments t
 	    catppuccin-highlight-matches t)
 
   (add-hook 'server-after-make-frame-hook #'catppuccin-reload)
@@ -114,7 +114,13 @@
 (setopt ring-bell-function 'ignore)                       ;; disable the bell
 (setopt compilation-scroll-output t)                      ;; follow compilation output by default
 (setq frame-resize-pixelwise t)
-(setq-default line-spacing (if (qqh--macos-p) nil 2))      ;; Add some spacing to lines on OSX
+
+;; font settings
+(set-face-attribute 'default nil
+                    :family "Iosevka"
+                    :width 'expanded
+                    :height 120)
+
 
 ;; Nice line wrapping when working with text
 (add-hook 'text-mode-hook 'visual-line-mode)
@@ -1003,8 +1009,7 @@ This function falls back to `consult-fd' if we're not in a project."
 
 (transient-define-prefix qqh-transient--config ()
   [:class transient-row
-          ("r" "reload emacs config" qqh-emacs--reload)
-          (";" "reload nix system" qqh-nix--rebuild)]
+          ("r" "reload emacs config" qqh-emacs--reload)]
   [:class transient-row "edit config for..."
           ("c" "emacs" qqh-emacs--open-config)
           ("f" "flake" qqh-config--open-nix-flake :if (lambda () (not (qqh--macos-p))))
@@ -1103,10 +1108,6 @@ This function falls back to `consult-fd' if we're not in a project."
 ;;; Themes / UI customization
 
 ;;;; Face customizations
-(set-face-attribute 'default nil
-                    :family "Comic Code"
-                    :weight 'regular
-                    :height (if (qqh--macos-p) 120 100))
 (set-face-attribute 'window-divider nil
                     :background (catppuccin-color 'mantle)
                     :foreground (catppuccin-color 'mantle))
@@ -1159,6 +1160,8 @@ This function falls back to `consult-fd' if we're not in a project."
 
 ;;;; Modeline configurtaion
 (use-package mood-line
+  :custom
+  (mood-line-glyph-alist mood-line-glyphs-fira-code)
   :config
   (mood-line-mode))
 
@@ -1225,7 +1228,6 @@ This function falls back to `consult-fd' if we're not in a project."
 ;;; Cleanup
 (catppuccin-reload)
 (setq gc-cons-threshold (or qqh--initial-gc-threshold 800000))
-
 
 (put 'downcase-region 'disabled nil)
 ;;; init.el ends here
