@@ -43,7 +43,12 @@
   (add-to-list 'exec-path "/Library/Frameworks/Python.framework/Versions/3.11/bin")
   (add-to-list 'exec-path "/opt/homebrew/bin")
   (add-to-list 'exec-path "/opt/homebrew/opt/llvm/bin")
-  (add-to-list 'exec-path "/opt/homebrew/Caskroom/miniconda/base/bin"))
+  (add-to-list 'exec-path "/opt/homebrew/Caskroom/miniconda/base/bin")
+  )
+
+(when (not (eq system-type 'darwin))
+  (add-to-list 'exec-path "/etc/profiles/per-user/sahana/bin"))
+
 
 (setenv "TERM" "xterm-256color")
 

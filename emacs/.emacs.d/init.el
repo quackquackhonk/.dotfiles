@@ -424,8 +424,7 @@
   :straight nil
   :hook
   ;; Auto parenthesis matching
-  ((prog-mode . electric-pair-mode)
-   ("\\Dockerfile\\" . dockerfile-ts-mode))
+  ((prog-mode . electric-pair-mode))
   :custom
   ;; Hide commands in M-x which do not work in the current mode.
   (read-extended-command-predicate #'command-completion-default-include-p)
@@ -457,8 +456,7 @@
   (setq major-mode-remap-alist
         '((yaml-mode . yaml-ts-mode)
           (json-mode . json-ts-mode)
-          (python-mode . python-ts-mode)))
-  )
+          (python-mode . python-ts-mode))))
 
 ;;; Dev
 
@@ -937,10 +935,6 @@ This function falls back to `consult-fd' if we're not in a project."
   "Load my Emacs configuration."
   (interactive)
   (load-file user-init-file))
-
-(defun qqh-nix--rebuild ()
-  (interactive)
-  (exe)
 
 (defun qqh-emacs--open-config ()
   "Open my Emacs configuration."

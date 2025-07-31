@@ -42,6 +42,7 @@
         "HYPRCURSOR_SIZE,16"
         "XCURSOR_NAME,'Catppuccin Mocha Dark'"
         "XCURSOR_SIZE,16"
+        "SUDO_ASKPASS,hyprpolkitagent"
 
         # for nvidia
         "LIBVA_DRIVER_NAME,nvidia"
@@ -92,8 +93,8 @@
 
 
       general = {
-        gaps_in = 1;
-        gaps_out = 1;
+        gaps_in = 4;
+        gaps_out = 4;
         border_size = 2;
 
         resize_on_border = true;
