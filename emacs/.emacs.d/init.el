@@ -57,11 +57,14 @@
 
 ;;; Some initial packages
 ;; diminish for hiding minor mode
-(use-package diminish)
+(use-package diminish
+  :config
+  (diminish outline-minor-mode))
 
 ;; which-key: shows a popup of available keybindings when typing a long key
 ;; sequence (e.g. C-x ...)
 (use-package which-key
+  :diminish which-key-mode
   :custom
   (which-key-show-transient-maps t)
   :config
@@ -190,6 +193,26 @@
   :straight (undo-fu :type git :host github :repo "emacsmirror/undo-fu"))
 (use-package evil
   :ensure t
+  :custom
+  ;; mode line icons
+  (evil-emacs-state-tag    " EMC ")
+  (evil-normal-state-tag   " NOR ")
+  (evil-insert-state-tag   " INS ")
+  (evil-visual-state-tag   " VIS ")
+  (evil-visual-line-tag    " V L ")
+  (evil-visual-block-tag   " V B ")
+  (evil-replace-state-tag  " REP ")
+  (evil-operator-state-tag " OPR ")
+  (evil-motion-state-tag   " MOT ")
+  (evil-user-state-tag     " USR ")
+  ;; remove echo area messages
+  (evil-emacs-state-message "")
+  (evil-visual-char-message "")
+  (evil-visual-line-message "")
+  (evil-visual-block-message "")
+  (evil-insert-state-message "")
+  (evil-replace-state-message "")
+  (evil-visual-screen-line-message "")
   :init
    ;; settings
   (setq evil-want-keybinding nil
@@ -198,7 +221,6 @@
         evil-want-C-i-jump t
         evil-shift-width 2
         evil-respect-visual-line-mode t)
-
   :config
   ;; enable the stuff
   (evil-set-undo-system 'undo-fu)
@@ -235,11 +257,11 @@
   ;; Optionally configure the register formatting. This improves the register
   ;; preview for `consult-register', `consult-register-load',
   ;; `consult-register-store' and the Emacs built-ins.
-  (setq register-preview-delay 0.2
+  (setq register-preview-delay 0 . 2
         register-preview-function #'consult-register-format)
 
-  ;; Optionally tweak the register preview window.
-  ;; This adds thin lines, sorting and hides the mode line of the window.
+  ;; Optionally tweak the register preview window                        .
+  ;; This adds thin lines, sorting and hides the mode line of the window .
   (advice-add #'register-preview :override #'consult-register-window)
 
   ;; Use Consult to select xref locations with preview
@@ -247,7 +269,7 @@
         xref-show-definitions-function #'consult-xref)
 
   ;; Optionally configure preview. The default value
-  ;; is 'any, such that any key triggers the preview.
+  ;; is 'any, such that any key triggers the preview .
   (setq consult-preview-key 'any)
 
   ;; set find args
@@ -255,10 +277,10 @@
                               "fdfind" "fd")
                           "--hidden --full-path --color=never"
                           ;; ignores
-                          "--exclude .git"
-                          "--exclude .spack_env"
-                          "--exclude .cache"
-                          "--exclude .mypy_cache"
+                          "--exclude . git"
+                          "--exclude . spack_env"
+                          "--exclude . cache"
+                          "--exclude . mypy_cache"
                           "--exclude devdocs"
                           "--exclude build"))
 
@@ -315,13 +337,13 @@
 
   ;; After invoking avy-goto-char-timer, hit "." to run embark at the next
   ;; candidate you select
-  (setf (alist-get ?. avy-dispatch-alist) 'qqh--avy-action-embark))
+  (setf (alist-get ? . avy-dispatch-alist) 'qqh--avy-action-embark))
 
 ;; I'm not sure why this needs to be its own thing, :bind doesn't work
 (evil-define-key
   '(normal visual emacs) 'global
   (kbd "C-;") 'embark-act
-  (kbd "M-;") 'embark-dwim        ;; good alternative: M-.
+  (kbd "M-;") 'embark-dwim        ;; good alternative: M- .
   (kbd "C-h B") 'embark-bindings)  ;; alternative for `describe-bindings'
 
 (use-package embark-consult
@@ -337,7 +359,7 @@
   (vertico-count 30)
   (vertico-resize t)
   :init
-  ;; You'll want to make sure that e.g. fido-mode isn't enabled
+  ;; You'll want to make sure that e . g. fido-mode isn't enabled
   (vertico-mode))
 
 (use-package vertico-directory
@@ -370,14 +392,14 @@
   (corfu-quit-no-match t)   ;; Quit when no matches
   (corfu-preselect 'prompt) ;; Always preselect the prompt
   :bind (:map corfu-map
-              ;; Use TAB for cycling, default is `corfu-complete'.
-              ("TAB" . corfu-next)
-              ([tab] . corfu-next)
-              ("S-TAB" . corfu-previous)
+              ;; Use TAB for cycling, default is `corfu-complete' .
+              ("TAB"                                              . corfu-next)
+              ([tab]                                              . corfu-next)
+              ("S-TAB"                                            . corfu-previous)
               ([backtab] . corfu-previous))
   :init
-  ;; Recommended: Enable Corfu globally.  This is recommended since Dabbrev can
-  ;; be used globally (M-/).  See also the customization variable
+  ;; Recommended: Enable Corfu globally                           . This is recommended since Dabbrev can
+  ;; be used globally (M-/)                                       . See also the customization variable
   ;; `global-corfu-modes' to exclude certain modes.
   (global-corfu-mode))
 
@@ -425,30 +447,30 @@
 
 (use-package yasnippet-snippets)
 
-;;;; A few more useful configurations...
+;;;; A few more useful configurations                           . ..
 (use-package emacs
   :straight nil
   :hook
   ;; Auto parenthesis matching
   ((prog-mode . electric-pair-mode))
   :custom
-  ;; Hide commands in M-x which do not work in the current mode.
+  ;; Hide commands in M-x which do not work in the current mode .
   (read-extended-command-predicate #'command-completion-default-include-p)
 
   ;; Corfu settings
   (tab-always-indent 'complete)
 
-  ;; Emacs 30 and newer: Disable Ispell completion function.
-  ;; Try `cape-dict' as an alternative.
+  ;; Emacs 30 and newer: Disable Ispell completion function .
+  ;; Try `cape-dict' as an alternative                      .
   (text-mode-ispell-word-completion nil)
 
   :init
-  ;; Add prompt indicator to `completing-read-multiple'.
-  ;; We display [CRM<separator>], e.g., [CRM,] if the separator is a comma.
+  ;; Add prompt indicator to `completing-read-multiple' .
+  ;; We display [CRM<separator>], e                     . g., [CRM,] if the separator is a comma.
   (defun crm-indicator (args)
     (cons (format "[CRM%s] %s"
                   (replace-regexp-in-string
-                   "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
+                   "\\`\\[                              . *?]\\*\\|\\[.*?]\\*\\'" ""
                    crm-separator)
                   (car args))
           (cdr args)))
@@ -460,8 +482,8 @@
   (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
   :config
   (setq major-mode-remap-alist
-        '((yaml-mode . yaml-ts-mode)
-          (json-mode . json-ts-mode)
+        '((yaml-mode   . yaml-ts-mode)
+          (json-mode   . json-ts-mode)
           (python-mode . python-ts-mode))))
 
 ;;; Dev
@@ -475,7 +497,7 @@
 
 ;;;; Vterm: Terminal Emulation
 (use-package vterm
-  :hook ((vterm-mode . goto-address-mode)
+  :hook ((vterm-mode     . goto-address-mode)
          (vterm-mode . evil-emacs-state))
   :bind (:map vterm-mode-map
               ("C-c C-x" . vterm--self-insert))
@@ -488,7 +510,7 @@
   (multi-vterm-buffer-name "vterm")
   :config
   (defun multi-vterm-format-buffer-name (name)
-    "Format vterm buffer NAME."
+    "Format vterm buffer NAME . "
     (let* ((dirs (file-name-split name))
            (dirs (cl-remove-if-not (lambda (s) (not (string= s ""))) dirs))
            (name (car (last dirs))))
@@ -504,7 +526,7 @@
     (display-buffer vterm-buffer)))
 
 (defun multi-vterm-project ()
-  "Create new vterm buffer, using `display-buffer' instead of `switch-to-buffer'."
+  "Create new vterm buffer, using `display-buffer' instead of `switch-to-buffer' . "
   (interactive)
   (if (multi-vterm-project-root)
       (if (buffer-live-p (get-buffer (multi-vterm-project-get-buffer-name)))
@@ -529,9 +551,9 @@
   ;; Configure auth source
   (setq auth-sources '("~/.authinfo"))
   ;; setup VWS gitlab
-  (push '("gitlab.veriskweather.net"               ; GITHOST
-          "gitlab.veriskweather.net/api/v4"        ; APIHOST
-          "gitlab.veriskweather.net"               ; WEBHOST and INSTANCE-ID
+  (push '("gitlab . veriskweather.net"               ; GITHOST
+          "gitlab . veriskweather.net/api/v4"        ; APIHOST
+          "gitlab . veriskweather.net"               ; WEBHOST and INSTANCE-ID
           forge-gitlab-repository)                 ; CLASS
         forge-alist))
 
@@ -543,10 +565,10 @@
 (use-package project)
 
 (defun qqh-project--open-org-file ()
-  "Open the project.org file at the root of the current project.
- If no project.org file is found, create a new one from a template."
+  "Open the project                                . org file at the root of the current project.
+ If no project                                     . org file is found, create a new one from a template."
   (interactive)
-  (let ((file     (projectile-expand-root "project.org"))
+  (let ((file     (projectile-expand-root "project . org"))
         (template (expand-file-name "templates/project-template.org"
                                     qqh--modules-dir)))
     (unless (file-exists-p file)
@@ -558,11 +580,11 @@
               ("<f8>" . projectile-command-map)
               ("<f7>" . multi-vterm-project)
          :map projectile-command-map
-              (";" . qqh-project--open-org-file))
+              (";"    . qqh-project--open-org-file))
   :init
   (projectile-mode +1)
 
-  ;; integration with project.el, some packages work better with it
+  ;; integration with project . el, some packages work better with it
   (add-hook 'project-find-functions #'project-projectile)
 
   (when (qqh--macos-p)
@@ -570,11 +592,11 @@
 
   (setq projectile-enable-caching t
         projectile-auto-discover t
-        projectile-project-search-path '(("~/code/" . 3)
+        projectile-project-search-path '(("~/code/"      . 3)
 					                     "~/sources/"))
   :config
-  (projectile-register-project-type 'gleam '("gleam.toml")
-                                    :project-file "gleam.toml"
+  (projectile-register-project-type 'gleam '("gleam      . toml")
+                                    :project-file "gleam . toml"
 				                    :compile "gleam build"
 				                    :test "gleam test"
 				                    :run "gleam run"
@@ -586,13 +608,13 @@
 (use-package persp-mode
   :after consult
   :custom
-  (persp-auto-resume-time -1.0)
+  (persp-auto-resume-time -1 . 0)
   (persp-auto-save-opt 1)
   (persp-add-buffer-on-after-change-major-mode 'free)
   (persp-kill-foreign-buffer-behaviour 'kill)
   (persp-keymap-prefix (kbd "<f5>"))
   :bind (:map persp-mode-map
-              ("<f6>" . persp-switch))
+              ("<f6>"        . persp-switch))
   :config
   (persp-mode 1)
 
@@ -664,7 +686,7 @@
 (use-package json-mode)
 (use-package protobuf-mode)
 (use-package dts-mode
-  :mode "\\.keymap\\'")
+  :mode "\\ . keymap\\'")
 (use-package just-mode)
 (use-package cmake-mode)
 
@@ -683,13 +705,13 @@
   :config
   (add-to-list 'docstr-writers-alist '(python-ts-mode . docstr-writers-python)))
 
-;;;;; Devdocs.io integration
+;;;;; Devdocs                          . io integration
 (use-package devdocs
-  :bind (("C-h D" . devdocs-lookup))
-  :hook ((tuareg-mode . (lambda () (setq-local devdocs-current-docs '("ocaml~5.0"))))
+  :bind (("C-h D"                      . devdocs-lookup))
+  :hook ((tuareg-mode                  . (lambda () (setq-local devdocs-current-docs '("ocaml~5.0"))))
          ((python-mode python-ts-mode) . (lambda () (setq-local devdocs-current-docs '("python~11"))))
-         (c-mode . (lambda () (setq-local devdocs-current-docs '("c"))))
-         (c++-mode . (lambda () (setq-local devdocs-current-docs '("cpp"))))))
+         (c-mode                       . (lambda () (setq-local devdocs-current-docs '("c"))))
+         (c++-mode                     . (lambda () (setq-local devdocs-current-docs '("cpp"))))))
 
 ;;;;; Flymake
 (use-package flymake
@@ -709,7 +731,7 @@
 (use-package eglot
   :straight (:type built-in)
   :custom
-  (eglot-send-changes-idle-time 0.1)
+  (eglot-send-changes-idle-time 0                                                  . 1)
   (eglot-extend-to-xref t) ; activate Eglot in referenced non-project files
   (eglot-autoshutdown t)
   :hook ((tuareg-mode python-mode python-ts-mode c-mode c++-mode nix-mode go-mode) . eglot-ensure)
@@ -719,7 +741,7 @@
 
   ;; extra server binaries
   (add-to-list 'eglot-server-programs '((c++-mode c-mode) "clangd"))
-  (add-to-list 'eglot-server-programs '(nix-mode . ("nil")))
+  (add-to-list 'eglot-server-programs '(nix-mode      . ("nil")))
   (add-to-list 'eglot-server-programs '(gleam-ts-mode . ("gleam" "lsp")))
   (advice-add 'eglot-completion-at-point :around #'cape-wrap-buster)
   (advice-add 'eglot-completion-at-point :around #'cape-wrap-noninterruptible)
@@ -760,7 +782,7 @@
 
 ;;;;; Gleam
 (use-package gleam-ts-mode
-  :mode (("\\.gleam\\'" . gleam-ts-mode)))
+  :mode (("\\ . gleam\\'" . gleam-ts-mode)))
 
 ;;;;; Go
 (use-package go-mode
@@ -770,12 +792,12 @@
 
 ;;;;; Nix
 (use-package nix-mode
-  :mode "\\.nix\\'")
+  :mode "\\ . nix\\'")
 
 ;;;;; OCaml
 ;; Major-Mode mode for OCaml programming
 (use-package tuareg
-  :mode (("\\.ocamlinit\\'" . tuareg-mode)))
+  :mode (("\\ . ocamlinit\\'" . tuareg-mode)))
 
 ;; Major mode for editing Dune project files
 (use-package dune)
@@ -789,13 +811,13 @@
   (python-indent-guess-indent-offset-verbose nil))
 
 (defun qqh--spack-python ()
-  "Activate the spack environment in the current project, if there is one."
+  "Activate the spack environment in the current project, if there is one . "
   (interactive)
   (setenv "WORKON_HOME" "/opt/homebrew/Caskroom/miniconda/base/envs/")
   (let* ((root-dir (if (projectile-project-root)
                        (projectile-project-root)
                      default-directory))
-         (env-dir (expand-file-name "spack_env/.spack-env/view" root-dir)))
+         (env-dir (expand-file-name "spack_env/                           . spack-env/view" root-dir)))
     (if (file-exists-p env-dir)
         (pyvenv-activate env-dir)
       (ignore))))
@@ -823,19 +845,19 @@
 ;; Agenda variables
 (setq org-directory "~/org/")         ; Non-absolute paths for agenda and
                                       ; capture templates will look here.
-(setq org-agenda-files '("inbox.org"))
+(setq org-agenda-files '("inbox   . org"))
 ;; Default tags
 (setq org-tag-alist '(;; locale
                       (:startgroup)
                       ("personal" . ?p)
-                      ("work" . ?w)
+                      ("work"     . ?w)
                       (:endgroup)
                       (:newline)
                       ;; scale
                       (:startgroup)
                       ("one-shot" . ?o)
-                      ("project" . ?j)
-                      ("tiny" . ?t)
+                      ("project"  . ?j)
+                      ("tiny"     . ?t)
                       (:endgroup)
                       ;; misc
                       ("meta")
@@ -862,7 +884,7 @@
   ;; Instead of just two states (TODO, DONE) we set up a few different states
   ;; that a task can be in. Run
   ;;     M-x describe-variable RET org-todo-keywords RET
-  ;; for documentation on how these keywords work.
+  ;; for documentation on how these keywords work .
   (setq org-todo-keywords
         '((sequence "TODO(t)" "WAITING(w@/!)" "STARTED(s!)" "|" "DONE(d!)" "OBSOLETE(o@)")))
 
@@ -871,7 +893,7 @@
   (setq org-refile-use-outline-path 'file)
 
   ;; An agenda view lets you see your TODO items filtered and
-  ;; formatted in different ways. You can have multiple agenda views;
+  ;; formatted in different ways . You can have multiple agenda views;
   ;; please see the org-mode documentation for more information.
   (setq org-agenda-custom-commands
         '(("n" "Agenda and All Todos"
@@ -891,24 +913,24 @@
   :init
   ;; Org-roam variables
   (setq org-roam-directory "~/org/roam/")
-  (setq org-roam-index-file "~/org/roam/index.org")
+  (setq org-roam-index-file "~/org/roam/index . org")
 
   (setq org-roam-completion-everywhere nil)
   (setq org-roam-capture-templates
         '(("n" "note" plain
            "%?"
-           :if-new (file+head "main/${slug}.org"
+           :if-new (file+head "main/${slug}  . org"
                               "#+title: ${title}\n")
            :immediate-finish t
            :unnarrowed t)
           ("r" "reference" plain "%?"
            :if-new
-           (file+head "reference/${title}.org" "#+title: ${title}\n")
+           (file+head "reference/${title}    . org" "#+title: ${title}\n")
            :immediate-finish t
            :unnarrowed t)
           ("m" "meeting" plain "%?"
            :if-new
-           (file+head "work/meeting/${title}.org" "#+title: ${title}\n#+filetags: :work-meeting:\n")
+           (file+head "work/meeting/${title} . org" "#+title: ${title}\n#+filetags: :work-meeting:\n")
            :immediate-finish t
            :unnarrowed t)))
   :config
@@ -923,15 +945,15 @@
   (kill-buffer (current-buffer)))
 
 (defun qqh-project--open-flake ()
-  "Open the project flake file, if it exists."
+  "Open the project flake file, if it exists . "
   (interactive)
-  (let ((f (projectile-expand-root "flake.nix")))
+  (let ((f (projectile-expand-root "flake    . nix")))
     (if (file-exists-p f)
         (find-file f)
       (message (format "%s does not exist!" f)))))
 
 (defun qqh--search-files ()
-  "Fuzzy find files with `projectile-find-file'.
+  "Fuzzy find files with `projectile-find-file' .
 This function falls back to `consult-fd' if we're not in a project."
   (interactive)
   (if (projectile-project-p)
@@ -939,12 +961,12 @@ This function falls back to `consult-fd' if we're not in a project."
     (consult-fd)))
 
 (defun qqh-emacs--reload ()
-  "Load my Emacs configuration."
+  "Load my Emacs configuration . "
   (interactive)
   (load-file user-init-file))
 
 (defun qqh-emacs--open-config ()
-  "Open my Emacs configuration."
+  "Open my Emacs configuration . "
   (interactive)
   (find-file user-init-file))
 
@@ -954,14 +976,14 @@ This function falls back to `consult-fd' if we're not in a project."
   (find-file "~/dotfiles/flake.nix"))
 
 (defun qqh-config--open-nix-home ()
-  "Open my nix home-manager home.nix."
+  "Open my nix home-manager home.nix . "
   (interactive)
-  (find-file "~/dotfiles/home/home.nix"))
+  (find-file "~/dotfiles/home/home   . nix"))
 
 (defun qqh-config--hyprland ()
-  "Open my hyprland config."
+  "Open my hyprland config             . "
   (interactive)
-  (find-file "~/dotfiles/home/hyprland.nix"))
+  (find-file "~/dotfiles/home/hyprland . nix"))
 
 
 ;;;; transient: so many leader keys
@@ -981,13 +1003,13 @@ This function falls back to `consult-fd' if we're not in a project."
 
 ;; Set up some transient maps for additional leaders
 (transient-define-prefix qqh-transient--code ()
-  ["code..."
+  ["code . .."
    ("c" "compile" projectile-compile-project)
    ("f" "format" format-all-region-or-buffer)
    ("v" "activate environment" pyvenv-workon)])
 
 (transient-define-prefix qqh-transient--git ()
-  [:class transient-row "git..."
+  [:class transient-row "git . .."
           ("g" "status" magit)
           ("b" "branch" magit-branch)
           ("B" "blame" magit-blame)])
@@ -998,12 +1020,12 @@ This function falls back to `consult-fd' if we're not in a project."
           ("t" "terminal" multi-vterm)])
 
 (transient-define-prefix qqh-transient--notes ()
-  [:class transient-row "notes..."
+  [:class transient-row "notes . .."
           ("c" "capture" org-roam-capture)
           ("s" "search" org-roam-node-find)])
 
 (transient-define-prefix qqh-transient--search ()
-  [:class transient-row "search..."
+  [:class transient-row "search . .."
           ("l" "all lines" consult-line-multi)
           ("i" "imenu" consult-imenu)
           ("n" "notes" org-roam-node-find)
@@ -1013,7 +1035,7 @@ This function falls back to `consult-fd' if we're not in a project."
 (transient-define-prefix qqh-transient--config ()
   [:class transient-row
           ("r" "reload emacs config" qqh-emacs--reload)]
-  [:class transient-row "edit config for..."
+  [:class transient-row "edit config for . .."
           ("c" "emacs" qqh-emacs--open-config)
           ("f" "flake" qqh-config--open-nix-flake :if (lambda () (not (qqh--macos-p))))
           ("h" "hyprland" qqh-config--hyprland :if (lambda () (not (qqh--macos-p))))
@@ -1021,10 +1043,10 @@ This function falls back to `consult-fd' if we're not in a project."
 
 (transient-define-prefix qqh-transient--leader ()
   "Transient map for my leader bindings."
-  ["leader bindings..."
+  ["leader bindings . .."
    ("SPC" "buffers" consult-buffer)
    ("," "prev buffer" previous-buffer)
-   ("." "next buffer" next-buffer)
+   ("               . " "next buffer" next-buffer)
    (":" "eval expression" eval-expression)]
   [:class transient-row
           ("c" "+code" qqh-transient--code)
@@ -1063,6 +1085,7 @@ This function falls back to `consult-fd' if we're not in a project."
 
 (use-package evil-snipe
   :after evil
+  :diminish evil-snipe-mode
   :config
   (evil-snipe-mode +1)
   (evil-snipe-override-mode +1))
@@ -1125,16 +1148,16 @@ This function falls back to `consult-fd' if we're not in a project."
 (use-package hl-todo
   :config
   (defface qqh-hl-todo--todo-face
-    `((t . (:bold t :background ,(catppuccin-color 'sky) :foreground ,(catppuccin-color 'base))))
-    "The face highlighting TODOs in projects."
+    `((t                                     . (:bold t :background ,(catppuccin-color 'sky) :foreground ,(catppuccin-color 'base))))
+    "The face highlighting TODOs in projects . "
     :group 'qqh)
 
   (setq hl-todo-keyword-faces
-        `(("TODO" . ,(catppuccin-color 'sky))
-          ("HACK" . ,(catppuccin-color 'peach))
+        `(("TODO"  . ,(catppuccin-color 'sky))
+          ("HACK"  . ,(catppuccin-color 'peach))
           ("FIXME" . ,(catppuccin-color 'red))
-          ("NOTE" . ,(catppuccin-color 'mauve))
-          ("PERF" . ,(catppuccin-color 'lavender))))
+          ("NOTE"  . ,(catppuccin-color 'mauve))
+          ("PERF"  . ,(catppuccin-color 'lavender))))
 
   (global-hl-todo-mode))
 
@@ -1155,18 +1178,28 @@ This function falls back to `consult-fd' if we're not in a project."
   (fancy-compilation-mode))
 
 (use-package vim-tab-bar
+  :diminish vim-tab-bar-mode
   :init
   (vim-tab-bar-mode 1))
 
 (set-face-attribute 'tab-bar nil :box nil :background (catppuccin-color 'mantle))
 (set-face-attribute 'tab-bar-tab nil :foreground (catppuccin-color 'mauve) :background (catppuccin-color 'base))
 
-;;;; Modeline configurtaion
-(use-package mood-line
+;;;
+(use-package doom-modeline
   :custom
-  (mood-line-glyph-alist mood-line-glyphs-fira-code)
+  (doom-modeline-icons nil)
+  :custom-face
+  (doom-modeline-evil-emacs-state ((t :bold t :background ,(catppuccin-color 'rosewater) :foreground ,(catppuccin-color 'base))))
+  (doom-modeline-evil-normal-state ((t :bold t :background ,(catppuccin-color 'mauve) :foreground ,(catppuccin-color 'base))))
+  (doom-modeline-evil-insert-state ((t :bold t :background ,(catppuccin-color 'green) :foreground ,(catppuccin-color 'base))))
+  (doom-modeline-evil-visual-state ((t :bold t :background ,(catppuccin-color 'yellow) :foreground ,(catppuccin-color 'base))))
+  (doom-modeline-evil-replace-state ((t :bold t :background ,(catppuccin-color 'red) :foreground ,(catppuccin-color 'base))))
+  (doom-modeline-evil-motion-state ((t :bold t :background ,(catppuccin-color 'peach) :foreground ,(catppuccin-color 'base))))
+  (doom-modeline-evil-operator-state ((t :bold t :background ,(catppuccin-color 'mantle) :foreground ,(catppuccin-color 'text))))
+  (doom-modeline-evil-user-state ((t :bold t :background ,(catppuccin-color 'yellow) :foreground ,(catppuccin-color 'base))))
   :config
-  (mood-line-mode))
+  (doom-modeline-mode 1))
 
 ;;;; Buffer display configuration
 ;;;;; display-buffer-alist customization
