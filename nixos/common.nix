@@ -28,8 +28,8 @@ in
     (
       pkgs.catppuccin-sddm.override {
         flavor = "mocha";
-        font  = "Noto Sans";
-        fontSize = "9";
+        font  = "Iosevka";
+        fontSize = "12";
         background = "${../wallpapers/space.png}";
         loginBackground = true;
       }

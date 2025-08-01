@@ -67,7 +67,6 @@
         "udiskie --automount --smart-tray"                                                  # auto mount USBs
         # Auto start some apps
         "[workspace 1 silent] steam"
-        "[workspace 2 silent] emacsclient -c -a=''"
         "[workspace 6 silent] $browser"
       ];
 

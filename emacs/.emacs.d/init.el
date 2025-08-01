@@ -56,6 +56,9 @@
 (setq load-prefer-newer t)
 
 ;;; Some initial packages
+;; diminish for hiding minor mode
+(use-package diminish)
+
 ;; which-key: shows a popup of available keybindings when typing a long key
 ;; sequence (e.g. C-x ...)
 (use-package which-key
@@ -119,7 +122,7 @@
 (set-face-attribute 'default nil
                     :family "Iosevka"
                     :width 'expanded
-                    :height 120)
+                    :height (if (qqh--macos-p) 120 100))
 
 
 ;; Nice line wrapping when working with text
