@@ -190,6 +190,26 @@
   :straight (undo-fu :type git :host github :repo "emacsmirror/undo-fu"))
 (use-package evil
   :ensure t
+  :custom
+  ;; mode line icons
+  (evil-emacs-state-tag    " EMC ")
+  (evil-normal-state-tag   " NOR ")
+  (evil-insert-state-tag   " INS ")
+  (evil-visual-state-tag   " VIS ")
+  (evil-visual-line-tag    " V L ")
+  (evil-visual-block-tag   " V B ")
+  (evil-replace-state-tag  " REP ")
+  (evil-operator-state-tag " OPR ")
+  (evil-motion-state-tag   " MOT ")
+  (evil-user-state-tag     " USR ")
+  ;; remove echo area messages
+  (evil-emacs-state-message "")
+  (evil-visual-char-message "")
+  (evil-visual-line-message "")
+  (evil-visual-block-message "")
+  (evil-insert-state-message "")
+  (evil-replace-state-message "")
+  (evil-visual-screen-line-message "")
   :init
    ;; settings
   (setq evil-want-keybinding nil
@@ -1162,11 +1182,21 @@ This function falls back to `consult-fd' if we're not in a project."
 (set-face-attribute 'tab-bar-tab nil :foreground (catppuccin-color 'mauve) :background (catppuccin-color 'base))
 
 ;;;; Modeline configurtaion
-(use-package mood-line
+(use-package doom-modeline
+  :hook (after-init . doom-modeline-mode)
   :custom
-  (mood-line-glyph-alist mood-line-glyphs-fira-code)
-  :config
-  (mood-line-mode))
+  (doom-modeline-icons nil)
+  (doom-modeline-vcs-max-length qqh--trunc-len)
+  (doom-modeline-check-simple-format t)
+  :custom-face
+  (doom-modeline-evil-emacs-state ((t :bold t :background ,(catppuccin-color 'rosewater) :foreground ,(catppuccin-color 'base))))
+  (doom-modeline-evil-normal-state ((t :bold t :background ,(catppuccin-color 'mauve) :foreground ,(catppuccin-color 'base))))
+  (doom-modeline-evil-insert-state ((t :bold t :background ,(catppuccin-color 'green) :foreground ,(catppuccin-color 'base))))
+  (doom-modeline-evil-visual-state ((t :bold t :background ,(catppuccin-color 'yellow) :foreground ,(catppuccin-color 'base))))
+  (doom-modeline-evil-replace-state ((t :bold t :background ,(catppuccin-color 'red) :foreground ,(catppuccin-color 'base))))
+  (doom-modeline-evil-motion-state ((t :bold t :background ,(catppuccin-color 'peach) :foreground ,(catppuccin-color 'base))))
+  (doom-modeline-evil-operator-state ((t :bold t :background ,(catppuccin-color 'mantle) :foreground ,(catppuccin-color 'text))))
+  (doom-modeline-evil-user-state ((t :bold t :background ,(catppuccin-color 'yellow) :foreground ,(catppuccin-color 'base)))))
 
 ;;;; Buffer display configuration
 ;;;;; display-buffer-alist customization
@@ -1230,7 +1260,7 @@ This function falls back to `consult-fd' if we're not in a project."
 
 ;;; Cleanup
 (catppuccin-reload)
-(setq gc-cons-threshold (or qqh--initial-gc-threshold 800000))
+(setq gc-cons-threshold 800000)
 
 (put 'downcase-region 'disabled nil)
 ;;; init.el ends here
