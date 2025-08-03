@@ -120,7 +120,7 @@
 
 ;; font settings
 (set-face-attribute 'default nil
-                    :family "Iosevka"
+                    :family "Aporetic"
                     :width 'expanded
                     :height (if (qqh--macos-p) 120 100))
 
@@ -196,8 +196,8 @@
   (evil-normal-state-tag   " NOR ")
   (evil-insert-state-tag   " INS ")
   (evil-visual-state-tag   " VIS ")
-  (evil-visual-line-tag    " V L ")
-  (evil-visual-block-tag   " V B ")
+  (evil-visual-line-tag    " ViL ")
+  (evil-visual-block-tag   " ViB ")
   (evil-replace-state-tag  " REP ")
   (evil-operator-state-tag " OPR ")
   (evil-motion-state-tag   " MOT ")
@@ -1185,7 +1185,7 @@ This function falls back to `consult-fd' if we're not in a project."
 (use-package doom-modeline
   :hook (after-init . doom-modeline-mode)
   :custom
-  (doom-modeline-icons nil)
+  (doom-modeline-icon nil)
   (doom-modeline-vcs-max-length qqh--trunc-len)
   (doom-modeline-check-simple-format t)
   :custom-face
@@ -1196,7 +1196,10 @@ This function falls back to `consult-fd' if we're not in a project."
   (doom-modeline-evil-replace-state ((t :bold t :background ,(catppuccin-color 'red) :foreground ,(catppuccin-color 'base))))
   (doom-modeline-evil-motion-state ((t :bold t :background ,(catppuccin-color 'peach) :foreground ,(catppuccin-color 'base))))
   (doom-modeline-evil-operator-state ((t :bold t :background ,(catppuccin-color 'mantle) :foreground ,(catppuccin-color 'text))))
-  (doom-modeline-evil-user-state ((t :bold t :background ,(catppuccin-color 'yellow) :foreground ,(catppuccin-color 'base)))))
+  (doom-modeline-evil-user-state ((t :bold t :background ,(catppuccin-color 'yellow) :foreground ,(catppuccin-color 'base))))
+  ;; :config
+  ;; (doom-modeline-def-modeline 'qqh-modeline)
+  )
 
 ;;;; Buffer display configuration
 ;;;;; display-buffer-alist customization

@@ -57,7 +57,7 @@ in
     fontDir.enable = true;
     enableGhostscriptFonts = true;
     packages = with pkgs; [
-      nerd-fonts.iosevka
+      aporetic
       comic-code-font
     ];
   };
