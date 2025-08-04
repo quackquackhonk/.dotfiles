@@ -49,13 +49,19 @@
   :custom
   ;; add project and flymake to the pseudo-packages variable so straight.el doesn't download a separate version than what eglot downloads.
   (straight-built-in-pseudo-packages '(emacs nadvice python image-mode project flymake xref))
-  (straight-vc-git-default-protocol 'ssh)
-  (straight-use-package-by-default t))
+  (straight-use-package-by-default t)
+  :config
+  (setq straight-vc-git-default-protocol (if (qqh--macos-p) 'https 'ssh)))
 
 ;; always load the newest bytecode
 (setq load-prefer-newer t)
 
 ;;; Some initial packages
+;; exec-path-from-shell for macos
+(use-package exec-path-from-shell
+  :config
+  (when (qqh--macos-p)
+    (exec-path-from-shell-initialize)))
 ;; diminish for hiding minor mode
 (use-package diminish)
 
@@ -120,9 +126,9 @@
 
 ;; font settings
 (set-face-attribute 'default nil
-                    :family "Aporetic"
+                    :family "Maple Mono"
                     :width 'expanded
-                    :height (if (qqh--macos-p) 120 100))
+                    :height 120)
 
 
 ;; Nice line wrapping when working with text
