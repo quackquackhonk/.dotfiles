@@ -123,6 +123,7 @@
 (setopt ring-bell-function 'ignore)                       ;; disable the bell
 (setopt compilation-scroll-output t)                      ;; follow compilation output by default
 (setq frame-resize-pixelwise t)
+(column-number-mode +1)
 
 ;; font settings
 (set-face-attribute 'default nil
@@ -235,6 +236,20 @@
   (evil-set-initial-state 'messages-buffer-mode 'normal)
 
   (add-hook 'git-commit-setup-hook 'evil-insert-state))
+
+;;; Casual: Transient interfaces for emacs modes
+(use-package casual
+  :bind
+  (:map dired-mode-map
+        ("C-o" . casual-dired-tmenu)
+        ("s" . casual-dired-sort-by-tmenu)
+        ("/" . casual-dired-search-replace-tmenu)
+        :map compilation-mode-map
+        ("C-o" . casual-compile-tmenu)
+        :map grep-mode-map
+        ("C-o" . casual-compile-tmenu)
+        :map emacs-lisp-mode-map
+        ("M-m" . casual-elisp-tmenu)))
 
 ;;; Misc. editing enhancements
 (use-package avy
@@ -1193,7 +1208,8 @@ This function falls back to `consult-fd' if we're not in a project."
   :custom
   (doom-modeline-icon nil)
   (doom-modeline-vcs-max-length qqh--trunc-len)
-  (doom-modeline-check-simple-format t)
+  (doom-modeline-check-simple-format nil)
+  (doom-modeline-percent-position "")               ;; remove percent position
   :custom-face
   (doom-modeline-evil-emacs-state ((t :bold t :background ,(catppuccin-color 'rosewater) :foreground ,(catppuccin-color 'base))))
   (doom-modeline-evil-normal-state ((t :bold t :background ,(catppuccin-color 'mauve) :foreground ,(catppuccin-color 'base))))
@@ -1203,9 +1219,11 @@ This function falls back to `consult-fd' if we're not in a project."
   (doom-modeline-evil-motion-state ((t :bold t :background ,(catppuccin-color 'peach) :foreground ,(catppuccin-color 'base))))
   (doom-modeline-evil-operator-state ((t :bold t :background ,(catppuccin-color 'mantle) :foreground ,(catppuccin-color 'text))))
   (doom-modeline-evil-user-state ((t :bold t :background ,(catppuccin-color 'yellow) :foreground ,(catppuccin-color 'base))))
-  ;; :config
-  ;; (doom-modeline-def-modeline 'qqh-modeline)
-  )
+  :config
+  ;; move the majpr mode in the main modeline to the left
+  (doom-modeline-def-modeline 'main
+    '(eldoc bar window-state workspace-name window-number modals matches follow buffer-info remote-host buffer-position major-mode word-count)
+    '(compilation objed-state misc-info project-name persp-name grip github debug repl lsp minor-modes indent-info process vcs check time)))
 
 ;;;; Buffer display configuration
 ;;;;; display-buffer-alist customization
