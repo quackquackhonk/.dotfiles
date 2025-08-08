@@ -54,8 +54,8 @@ in
       };
 
       monospace = {
-        package = pkgs.nerd-fonts.iosevka;
-        name = "Iosevka Nerd Font";
+        package = pkgs.maple-mono.NF-unhinted;
+        name = "Maple Mono NF";
       };
 
       emoji = {

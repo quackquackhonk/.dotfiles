@@ -101,7 +101,8 @@
     # Default applications
     mimeApps = {
       defaultApplications = {
-        "application/pdf" = "zathura.desktop";
+        "applications/pdf" = "zathura.desktop";
+        "applications/x-directory" = "Thunar.desktop";
       };
     };
 

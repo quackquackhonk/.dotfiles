@@ -28,7 +28,7 @@ in
     (
       pkgs.catppuccin-sddm.override {
         flavor = "mocha";
-        font  = "Iosevka";
+        font  = "Maple Mono";
         fontSize = "12";
         background = "${../wallpapers/space.png}";
         loginBackground = true;
@@ -57,7 +57,9 @@ in
     fontDir.enable = true;
     enableGhostscriptFonts = true;
     packages = with pkgs; [
-      aporetic
+      iosevka
+      maple-mono.truetype
+      maple-mono.NF-unhinted
       comic-code-font
     ];
   };
