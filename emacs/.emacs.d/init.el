@@ -128,9 +128,9 @@
 ;; font settings
 (set-face-attribute 'default nil
                     :family "Maple Mono"
-                    :width 'expanded
                     :height 120)
-
+(set-face-attribute 'variable-pitch nil
+                    :family "Maple Mono")
 
 ;; Nice line wrapping when working with text
 (add-hook 'text-mode-hook 'visual-line-mode)
@@ -195,28 +195,9 @@
 ;;; Evil mode
 (use-package undo-fu
   :straight (undo-fu :type git :host github :repo "emacsmirror/undo-fu"))
+
 (use-package evil
   :ensure t
-  :custom
-  ;; mode line icons
-  (evil-emacs-state-tag    " EMC ")
-  (evil-normal-state-tag   " NOR ")
-  (evil-insert-state-tag   " INS ")
-  (evil-visual-state-tag   " VIS ")
-  (evil-visual-line-tag    " ViL ")
-  (evil-visual-block-tag   " ViB ")
-  (evil-replace-state-tag  " REP ")
-  (evil-operator-state-tag " OPR ")
-  (evil-motion-state-tag   " MOT ")
-  (evil-user-state-tag     " USR ")
-  ;; remove echo area messages
-  (evil-emacs-state-message "")
-  (evil-visual-char-message "")
-  (evil-visual-line-message "")
-  (evil-visual-block-message "")
-  (evil-insert-state-message "")
-  (evil-replace-state-message "")
-  (evil-visual-screen-line-message "")
   :init
    ;; settings
   (setq evil-want-keybinding nil
@@ -472,6 +453,9 @@
   :hook
   ;; Auto parenthesis matching
   ((prog-mode . electric-pair-mode))
+  :custom-face
+  (window-divider ((t :background ,(catppuccin-color 'mantle) :foreground ,(catppuccin-color 'mantle))))
+  (fringe ((t :background ,(catppuccin-color 'mantle))))
   :custom
   ;; Hide commands in M-x which do not work in the current mode.
   (read-extended-command-predicate #'command-completion-default-include-p)
@@ -504,7 +488,6 @@
         '((yaml-mode . yaml-ts-mode)
           (json-mode . json-ts-mode)
           (python-mode . python-ts-mode))))
-
 ;;; Dev
 
 ;;;; Built-in dev config
@@ -728,7 +711,7 @@
 (use-package devdocs
   :bind (("C-h D" . devdocs-lookup))
   :hook ((tuareg-mode . (lambda () (setq-local devdocs-current-docs '("ocaml~5.0"))))
-         ((python-mode python-ts-mode) . (lambda () (setq-local devdocs-current-docs '("python~11"))))
+         ((python-mode python-ts-mode) . (lambda () (setq-local devdocs-current-docs '("python~3.11"))))
          (c-mode . (lambda () (setq-local devdocs-current-docs '("c"))))
          (c++-mode . (lambda () (setq-local devdocs-current-docs '("cpp"))))))
 
@@ -1090,6 +1073,7 @@ This function falls back to `consult-fd' if we're not in a project."
   (evil-collection-want-unimpaired-p nil)
   (evil-collection-magit-setup t)
   (evil-collection-forge-setup t)
+  (forge-add-default-bindings t)
   :config
   (evil-collection-init))
 
@@ -1110,6 +1094,19 @@ This function falls back to `consult-fd' if we're not in a project."
 
 (use-package goto-chg
   :after evil)
+
+(use-package evil-textobj-tree-sitter
+  :after evil
+  :straight (evil-textobj-tree-sitter :type git
+                      :host github
+                      :repo "meain/evil-textobj-tree-sitter"
+                      :files (:defaults "queries" "treesit-queries")
+                      :branch "treesit")
+  :config
+  ;; bind `function.outer`(entire function block) to `f` for use in things like `vaf`, `yaf`
+  (define-key evil-outer-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.outer"))
+  ;; bind `function.inner`(function block without name and args) to `f` for use in things like `vif`, `yif`
+  (define-key evil-inner-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.inner")))
 
 ;;;; Evil Bindings
 (global-set-key (kbd "M-q") 'qqh--kill-buffer)
@@ -1152,12 +1149,25 @@ This function falls back to `consult-fd' if we're not in a project."
 ;;; Themes / UI customization
 
 ;;;; Face customizations
-(set-face-attribute 'window-divider nil
-                    :background (catppuccin-color 'mantle)
-                    :foreground (catppuccin-color 'mantle))
-(set-face-attribute 'fringe nil
-                    :background (catppuccin-color 'mantle))
-
+;;;; Variable customizations
+(setq evil-emacs-state-tag    " EMC "
+      evil-normal-state-tag   " NOR "
+      evil-insert-state-tag   " INS "
+      evil-visual-state-tag   " VIS "
+      evil-visual-line-tag    " ViL "
+      evil-visual-block-tag   " ViB "
+      evil-replace-state-tag  " REP "
+      evil-operator-state-tag " OPR "
+      evil-motion-state-tag   " MOT "
+      evil-user-state-tag     " USR "
+      ;; remove echo area messages
+      evil-emacs-state-message ""
+      evil-visual-char-message ""
+      evil-visual-line-message ""
+      evil-visual-block-message ""
+      evil-insert-state-message ""
+      evil-replace-state-message ""
+      evil-visual-screen-line-message "")
 
 ;;;; Packages
 (use-package rainbow-delimiters
