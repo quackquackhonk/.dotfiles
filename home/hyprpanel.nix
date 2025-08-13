@@ -60,7 +60,7 @@
         };
 
         font = {
-          name = "Iosevka Nerd Font Mono";
+          name = "Maple Mono NF";
           size = "14px";
         };
       };

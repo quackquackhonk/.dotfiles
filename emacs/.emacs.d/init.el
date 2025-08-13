@@ -1112,6 +1112,9 @@ This function falls back to `consult-fd' if we're not in a project."
 (global-set-key (kbd "M-q") 'qqh--kill-buffer)
 (global-set-key (kbd "C-q") 'evil-window-delete)
 
+(evil-define-key nil 'global
+  (kbd "C-l") 'evil-scroll-up)
+
 (evil-define-key '(normal insert emacs) 'global
   (kbd "<prior>") 'evil-scroll-up
   (kbd "<next>") 'evil-scroll-down)
