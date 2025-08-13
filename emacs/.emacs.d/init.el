@@ -128,9 +128,10 @@
 ;; font settings
 (set-face-attribute 'default nil
                     :family "Maple Mono"
-                    :height 120)
+                    :height (if (qqh--macos-p) 140 120))
 (set-face-attribute 'variable-pitch nil
                     :family "Maple Mono")
+
 
 ;; Nice line wrapping when working with text
 (add-hook 'text-mode-hook 'visual-line-mode)
@@ -1047,8 +1048,7 @@ This function falls back to `consult-fd' if we're not in a project."
   "Transient map for my leader bindings."
   ["leader bindings..."
    ("SPC" "buffers" consult-buffer)
-   ("," "prev buffer" previous-buffer)
-   ("." "next buffer" next-buffer)
+   ("," "prev buffer" evil-switch-to-windows-last-buffer)
    (":" "eval expression" eval-expression)]
   [:class transient-row
           ("c" "+code" qqh-transient--code)
@@ -1128,9 +1128,11 @@ This function falls back to `consult-fd' if we're not in a project."
 
 ;; Add my own bracketed movement options
 (evil-define-key 'motion 'global
+  (kbd "[ b") 'previous-buffer
   (kbd "[ e") 'flymake-goto-prev-error
   (kbd "[ d") 'hl-todo-previous)
 (evil-define-key 'motion 'global
+  (kbd "] b") 'next-buffer
   (kbd "] d") 'hl-todo-next
   (kbd "] e") 'flymake-goto-next-error
   (kbd "] x") 'smerge-vc-next-conflict)
@@ -1219,7 +1221,6 @@ This function falls back to `consult-fd' if we're not in a project."
   (doom-modeline-icon nil)
   (doom-modeline-vcs-max-length qqh--trunc-len)
   (doom-modeline-check-simple-format nil)
-  (doom-modeline-percent-position "")               ;; remove percent position
   :custom-face
   (doom-modeline-evil-emacs-state ((t :bold t :background ,(catppuccin-color 'rosewater) :foreground ,(catppuccin-color 'base))))
   (doom-modeline-evil-normal-state ((t :bold t :background ,(catppuccin-color 'mauve) :foreground ,(catppuccin-color 'base))))
@@ -1229,11 +1230,25 @@ This function falls back to `consult-fd' if we're not in a project."
   (doom-modeline-evil-motion-state ((t :bold t :background ,(catppuccin-color 'peach) :foreground ,(catppuccin-color 'base))))
   (doom-modeline-evil-operator-state ((t :bold t :background ,(catppuccin-color 'mantle) :foreground ,(catppuccin-color 'text))))
   (doom-modeline-evil-user-state ((t :bold t :background ,(catppuccin-color 'yellow) :foreground ,(catppuccin-color 'base))))
+
+  (doom-modeline-bar ((t :inherit nil :foreground ,(catppuccin-color 'rosewater) :background ,(catppuccin-color 'rosewater))))
   :config
+
+  (doom-modeline-def-segment qqh-dm--sep
+    (propertize " |" 'face '(:inherit (doom-modeline font-lock-comment-face))))
+
+  (doom-modeline-def-segment qqh-dm--misc
+    "Mode line construct for miscellaneous information.
+By default, this shows the information specified by `global-mode-string'."
+    (when (or doom-modeline-display-misc-in-all-mode-lines
+              (doom-modeline--segment-visible 'misc-info))
+      (propertize (format-mode-line mode-line-misc-info)
+                  'face '(:inherit (doom-modeline font-lock-comment-face)))))
+
   ;; move the majpr mode in the main modeline to the left
   (doom-modeline-def-modeline 'main
-    '(eldoc bar window-state workspace-name window-number modals matches follow buffer-info remote-host buffer-position major-mode word-count)
-    '(compilation objed-state misc-info project-name persp-name grip github debug repl lsp minor-modes indent-info process vcs check time)))
+    '(eldoc bar window-state workspace-name window-number modals matches follow buffer-info remote-host qqh-dm--sep major-mode word-count)
+    '(compilation objed-state qqh-dm--misc project-name persp-name grip github debug repl lsp minor-modes indent-info process vcs check time bar)))
 
 ;;;; Buffer display configuration
 ;;;;; display-buffer-alist customization
