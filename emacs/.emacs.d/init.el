@@ -120,9 +120,11 @@
 (scroll-bar-mode -1)                                      ;; no scrollbars
 (blink-cursor-mode -1)                                    ;; Steady cursor
 (pixel-scroll-precision-mode)                             ;; Smooth scrolling
+(setq-default scroll-conservatively 5)                    ;; Pad the buffer with 5 lines when scrolling
 (setopt ring-bell-function 'ignore)                       ;; disable the bell
 (setopt compilation-scroll-output t)                      ;; follow compilation output by default
 (setq frame-resize-pixelwise t)
+(setq-default tab-bar-show nil)                           ;; disable the tab bar
 (column-number-mode +1)
 
 ;; font settings
@@ -212,12 +214,26 @@
   ;; enable the stuff
   (evil-set-undo-system 'undo-fu)
   (evil-mode 1)
+
+  ;; setup leader key
+  (evil-set-leader 'normal (kbd "SPC"))     ;; SPC everywhere
+  (evil-set-leader 'emacs (kbd "C-SPC")     ;; C-space in emacs
+  (evil-set-leader 'nil (kbd "<f2>") t)     ;; F2 is always localleader
+
   ;; Configuring initial major mode for some modes
   ;; start in emacs mode
   (evil-set-initial-state 'inferior-python-mode 'emacs)
   (evil-set-initial-state 'messages-buffer-mode 'normal)
 
-  (add-hook 'git-commit-setup-hook 'evil-insert-state))
+  (add-hook 'git-commit-setup-hook 'evil-insert-state)))
+
+(defun qqh--leader-define (bindings)
+  "Add BINDINGS to the leader keymap for all states."
+  (let ((make-bind (lambda (bind)
+                     (evil-define-key nil 'global
+                       (kbd (concat "<leader> " (car bind)))
+                       (cdr bind)))))
+    (mapc make-bind bindings)))
 
 ;;; Casual: Transient interfaces for emacs modes
 (use-package casual
@@ -1013,14 +1029,19 @@ This function falls back to `consult-fd' if we're not in a project."
 
 (transient-define-prefix qqh-transient--git ()
   [:class transient-row "git..."
-          ("g" "status" magit)
           ("b" "branch" magit-branch)
+          ("c" "commit" magit-commit)
+          ("g" "status" magit)
+          ("s" "stage file" (lambda () (interactive)
+                         (magit-stage-file (magit-current-file))))
+          ("P" "push" magit-push)
+          ("p" "pull" magit-pull)
           ("B" "blame" magit-blame)])
 
 (transient-define-prefix qqh-transient--open ()
   [:class transient-row "open..."
           ("d" "diagnostics panel" consult-flymake)
-          ("t" "terminal" multi-vterm)])
+          ("t" "todos" consult-todo)])
 
 (transient-define-prefix qqh-transient--notes ()
   [:class transient-row "notes..."
@@ -1044,21 +1065,23 @@ This function falls back to `consult-fd' if we're not in a project."
           ("h" "hyprland" qqh-config--hyprland :if (lambda () (not (qqh--macos-p))))
           ("n" "home-manager" qqh-config--open-nix-home :if (lambda () (not (qqh--macos-p))))])
 
-(transient-define-prefix qqh-transient--leader ()
-  "Transient map for my leader bindings."
-  ["leader bindings..."
-   ("SPC" "buffers" consult-buffer)
-   ("," "prev buffer" evil-switch-to-windows-last-buffer)
-   (":" "eval expression" eval-expression)]
-  [:class transient-row
-          ("c" "+code" qqh-transient--code)
-          ("g" "+git" qqh-transient--git)
-          ("o" "+open" qqh-transient--open)
-          ("n" "+notes" qqh-transient--notes)
-          ("s" "+search" qqh-transient--search)
-          (";" "+config" qqh-transient--config)])
+
+(qqh--leader-define '(("SPC" . consult-buffer)
+                      ("," . evil-switch-to-windows-last-buffer)
+                      (":" . eval-expression)
+                      ;; menus
+                      ("c" . ("+code" . qqh-transient--code))
+                      ("g" . ("+git" . qqh-transient--git))
+                      ("o" . ("+open" . qqh-transient--open))
+                      ("n" . ("+notes" . qqh-transient--notes))
+                      ("s" . ("+search" . qqh-transient--search))
+                      (";" . ("+config" . qqh-transient--config))))
 
 ;;;; Global bindings
+
+;; i hate this key man
+(global-unset-key (kbd "<f2>"))
+
 (global-set-key (kbd "<home>") 'beginning-of-line)
 (global-set-key (kbd "<end>") 'end-of-line)
 (global-set-key (kbd "M-[") 'tab-previous)
@@ -1121,13 +1144,12 @@ This function falls back to `consult-fd' if we're not in a project."
 
 ;; Setup my transients and maps
 (evil-define-key 'normal 'global
-  (kbd "SPC") 'qqh-transient--leader
   (kbd "M-q") 'qqh--kill-buffer)
 
 ;; Avy bindings
 (evil-define-key '(normal visual) 'global
   (kbd "L") 'avy-goto-line
-  (kbd "g RET") 'avy-goto-char-2)
+  (kbd "RET") 'avy-goto-char-2)
 
 ;; Add my own bracketed movement options
 (evil-define-key 'motion 'global
@@ -1147,9 +1169,6 @@ This function falls back to `consult-fd' if we're not in a project."
 (evil-define-key 'normal 'eglot-mode-map
   (kbd "g R") 'eglot-rename
   (kbd "g SPC") 'eglot-code-actions)
-;; vterm
-(evil-define-key nil vterm-mode-map
-  (kbd "C-SPC") 'qqh-transient--leader)
 
 ;;; Themes / UI customization
 
@@ -1210,9 +1229,8 @@ This function falls back to `consult-fd' if we're not in a project."
                       :background (catppuccin-color 'base))
   (fancy-compilation-mode))
 
-(use-package vim-tab-bar
-  :init
-  (vim-tab-bar-mode 1))
+;; disable the tab bar
+(tab-bar-mode -1)
 
 (set-face-attribute 'tab-bar nil :box nil :background (catppuccin-color 'mantle))
 (set-face-attribute 'tab-bar-tab nil :foreground (catppuccin-color 'mauve) :background (catppuccin-color 'base))
@@ -1302,8 +1320,8 @@ By default, this shows the information specified by `global-mode-string'."
    popper-window-height (lambda (win)
                           (fit-window-to-buffer
                            win
-                           (floor (frame-height) 2.5)
-                           (floor (frame-height) 3))))
+                           (floor (frame-height) 2)
+                           (floor (frame-height) 2))))
 
   (popper-mode +1)
   ;; echo area hints
