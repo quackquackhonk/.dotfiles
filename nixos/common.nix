@@ -23,7 +23,6 @@ in
     networkmanagerapplet
     nixfmt-rfc-style
     ghostty
-    kitty
     wget
     (
       pkgs.catppuccin-sddm.override {

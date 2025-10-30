@@ -84,9 +84,10 @@
 
     # apps
     feh
-    zathura
     prismlauncher
+    appimage-run
     discord
+    ncspot
   ];
 
   # Let Home Manager install and manage itself.
@@ -98,22 +99,10 @@
     portal = {
       enable = true;
     };
-    # Default applications
-    mimeApps = {
-      defaultApplications = {
-        "applications/pdf" = "zathura.desktop";
-        "applications/x-directory" = "Thunar.desktop";
-      };
-    };
-
     desktopEntries = {
       poweroff = {
         name = "poweroff";
         exec = "poweroff";
-      };
-      zathura = {
-        name = "Zathura";
-        exec = "${pkgs.zathura}/bin/zathura";
       };
     };
   };
