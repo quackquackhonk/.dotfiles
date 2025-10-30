@@ -30,6 +30,9 @@ alias brew=/opt/homebrew/bin/brew
 function brewlink() {
     ln -s /opt/homebrew/bin/${1} ~/.local/bin/${1}
 }
+function brewlinksys() {
+    sudo ln -s /opt/homebrew/bin/${1} /usr/local/bin/${1}
+}
 
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
@@ -104,6 +107,7 @@ alias emkill='emacsclient -e "(kill-emacs)"'
 alias cirrus='ssh -i ~/.ssh/stankala_id.key stankala@cirrus.veriskweather.net -t "zsh"'
 
 alias nonprod-login='okta-aws-cli web --profile nonprod  --expiry-aws-variables --cache-access-token --write-aws-credentials'
+alias nonprod-east-login='okta-aws-cli web --profile nonprod-east  --expiry-aws-variables --cache-access-token --write-aws-credentials'
 alias production-login='okta-aws-cli web --profile production --expiry-aws-variables --cache-access-token --write-aws-credentials'
 
 alias awsnp='aws --profile nonprod'
@@ -111,13 +115,12 @@ alias awsprod='aws --profile production'
 
 alias docker='podman'
 alias nonprod='eval "$(aws configure export-credentials --profile nonprod --format env)" && aws ecr get-login-password --region us-west-2 | podman login --username AWS --password-stdin 589310964831.dkr.ecr.us-west-2.amazonaws.com && export AWS_PROFILE="nonprod"'
-alias nonprod-east='eval "$(aws configure export-credentials --profile nonprod --format env)" && aws ecr get-login-password --region us-east-1 | podman login --username AWS --password-stdin 589310964831.dkr.ecr.us-east-1.amazonaws.com && export AWS_PROFILE="nonprod"'
+alias nonprod-east='eval "$(aws configure export-credentials --profile nonprod-east --format env)" && aws ecr get-login-password --region us-east-1 | podman login --username AWS --password-stdin 589310964831.dkr.ecr.us-east-1.amazonaws.com && export AWS_PROFILE="nonprod-east"'
 
 alias production='eval "$(aws configure export-credentials --profile production --format env)"'
 
 alias spackon='spack env activate -d spack_env/.'
 alias spackoff='spack env deactivate'
-alias miseon='eval "$(~/.local/bin/mise activate zsh)"'
 
 function spackcert () {
     SPACK_CERT_PATH=$(python -c 'import site; print(site.getsitepackages()[0] + "/certifi/cacert.pem")')
@@ -160,3 +163,7 @@ else
 fi
 unset __conda_setup
 # <<< conda initialize <<<
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion

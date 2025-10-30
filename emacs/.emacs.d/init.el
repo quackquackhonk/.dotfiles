@@ -23,6 +23,10 @@
   "Check if the current frame is an OSX gui frame."
   (eq system-type 'darwin))
 
+(defun qqh--is-work ()
+  "Check if the current system is for work."
+  (member (system-name) (list "LVV3TW207K")))
+
 ;;; Straight initialization
 
 ;;;; bootstrap straight
@@ -138,10 +142,6 @@
 ;; Nice line wrapping when working with text
 (add-hook 'text-mode-hook 'visual-line-mode)
 
-;; Modes to highlight the current line with
-(let ((hl-line-hooks '(text-mode-hook prog-mode-hook)))
-  (mapc (lambda (hook) (add-hook hook 'hl-line-mode)) hl-line-hooks))
-
 ;; Don't show trailing whitespace, and delete when saving
 (setopt show-trailing-whitespace nil)
 (add-hook 'before-save-hook
@@ -156,6 +156,7 @@
   (add-to-list 'exec-path "/home/sahana/.local/bin"))
 (setq find-program "fd"                                   ;; use the faster programs
       grep-program "rg")
+(use-package rg)
 
 ;;; Built-Ins.
 
@@ -166,8 +167,6 @@
 ;;;; Dired
 (use-package dired
   :straight nil
-  :bind (:map dired-mode-map
-              ("-" . dired-create-empty-file))
   :config
   (setq dired-kill-when-opening-new-dired-buffer t))
 
@@ -183,15 +182,8 @@
 
   ;; TODO: make this play nice with repeat-mode
   :bind (:map outline-minor-mode-map
-              ("<backtab>" . outline-cycle-buffer)
-              ("C-c <tab>" . outline-cycle)
-              ("C-c C-n" . outline-next-visible-heading)
-              ("C-c C-p" . outline-previous-visible-heading)
-              ("C-c C-f" . outline-forward-same-level)
-              ("C-c C-b" . outline-backward-same-level)
-              ("C-c C-u" . outline-up-heading)
-              ("C-c C-a" . outline-show-all)
-              ("C-c C-c C-a" . outline-show-all))
+              ("<C-backtab>" . outline-cycle-buffer)
+              ("C-<tab>" . outline-cycle))
   :hook (emacs-lisp-mode . outline-minor-mode))
 
 
@@ -202,13 +194,15 @@
 (use-package evil
   :ensure t
   :init
-   ;; settings
+  ;; settings
   (setq evil-want-keybinding nil
         evil-want-unimpaired-p nil
         evil-want-integration t
         evil-want-C-i-jump t
         evil-shift-width 2
-        evil-respect-visual-line-mode t)
+        evil-respect-visual-line-mode t
+        evil-symbol-word-search t            ;; search by symbols for # and *
+        )
 
   :config
   ;; enable the stuff
@@ -217,15 +211,14 @@
 
   ;; setup leader key
   (evil-set-leader 'normal (kbd "SPC"))     ;; SPC everywhere
-  (evil-set-leader 'emacs (kbd "C-SPC")     ;; C-space in emacs
-  (evil-set-leader 'nil (kbd "<f2>") t)     ;; F2 is always localleader
+  (evil-set-leader 'emacs (kbd "C-SPC"))     ;; C-space in emacs
 
   ;; Configuring initial major mode for some modes
   ;; start in emacs mode
   (evil-set-initial-state 'inferior-python-mode 'emacs)
   (evil-set-initial-state 'messages-buffer-mode 'normal)
 
-  (add-hook 'git-commit-setup-hook 'evil-insert-state)))
+  (add-hook 'git-commit-setup-hook 'evil-insert-state))
 
 (defun qqh--leader-define (bindings)
   "Add BINDINGS to the leader keymap for all states."
@@ -303,10 +296,10 @@
 
 
   :bind
-                                       ;; Drop-in replacements
+  ;; Drop-in replacements
   (("M-y"   . consult-yank-pop)        ; yank-pop
    ("C-s"   . consult-line)            ; isearch
-                                       ;; Searching
+   ;; Searching
    ("M-s r" . consult-ripgrep)
    ("M-s s" . isearch)
    ("M-s L" . consult-line-multi)
@@ -333,7 +326,6 @@
   ;; Narrowing lets you restrict results to certain groups of candidates
   (setq consult-narrow-key "<"))
 
-(use-package consult-todo)
 (use-package embark
   :demand t
   :after '(avy)
@@ -598,7 +590,7 @@
   :bind (:map projectile-mode-map
               ("<f8>" . projectile-command-map)
               ("<f7>" . multi-vterm-project)
-         :map projectile-command-map
+              :map projectile-command-map
               (";" . qqh-project--open-org-file))
   :init
   (projectile-mode +1)
@@ -629,14 +621,13 @@
   :custom
   (persp-auto-resume-time -1.0)
   (persp-auto-save-opt 1)
+  (persp-autokill-buffer-on-remove 'kill-weak)
   (persp-add-buffer-on-after-change-major-mode 'free)
   (persp-kill-foreign-buffer-behaviour 'kill)
   (persp-keymap-prefix (kbd "<f5>"))
   :bind (:map persp-mode-map
               ("<f6>" . persp-switch))
   :config
-  (persp-mode 1)
-
   ;; Override persp-switch to make it exclude the nil perspective
   (cl-defun persp-frame-switch (name &optional (frame (selected-frame)))
     (interactive "i")
@@ -670,7 +661,7 @@
               (tab-bar--update-tab-bar-lines t)))
 
   (defvar persp-consult-source
-    (list :name     "Persp"
+    (list :name     "Perspective"
           :narrow   ?s
           :category 'buffer
           :state    #'consult--buffer-state
@@ -684,10 +675,8 @@
   (add-to-list 'consult-buffer-sources persp-consult-source))
 
 (use-package persp-mode-projectile-bridge
-  :hook (after-init-hook . persp-mode-projectile-bridge-mode)
   :custom
   (persp-mode-projectile-bridge-persp-name-prefix "")
-
   :config
   (add-hook 'persp-mode-projectile-bridge-mode-hook
             #'(lambda ()
@@ -713,6 +702,40 @@
 ;;;;; Eldoc
 (use-package eldoc
   :straight (:type built-in))
+;; show the right characters for HTML escapes
+;; https://emacs.stackexchange.com/questions/80740/how-to-correctly-format-nbsp-in-eldoc-using-eglot
+(defvar rb--eldoc-html-patterns
+  '(("&nbsp;" " ")
+    ("&lt;" "<")
+    ("&gt;" ">")
+    ("&amp;" "&")
+    ("&quot;" "\"")
+    ("&apos;" "'"))
+  "List of (PATTERN . REPLACEMENT) to replace in eldoc output.")
+
+(defun rb--string-replace-all (patterns in-string)
+  "Replace all cars from PATTERNS in IN-STRING with their pair."
+  (mapc (lambda (pattern-pair)
+          (setq in-string
+                (string-replace (car pattern-pair) (cadr pattern-pair) in-string)))
+        patterns)
+  in-string)
+
+(defun rb--eldoc-preprocess (orig-fun &rest args)
+  "Preprocess the docs to be displayed by eldoc to replace HTML escapes."
+  (let ((doc (car args)))
+    ;; The first argument is a list of (STRING :KEY VALUE ...) entries
+    ;; we replace the text in each such string
+    ;; see docstring of `eldoc-display-functions'
+    (when (listp doc)
+      (setq doc (mapcar
+                 (lambda (doc) (cons
+                                (rb--string-replace-all rb--eldoc-html-patterns (car doc))
+                                (cdr doc)))
+                 doc)))
+    (apply orig-fun (cons doc (cdr args)))))
+
+(advice-add 'eldoc-display-in-buffer :around #'rb--eldoc-preprocess)
 
 ;;;;; documentation comment generation
 (use-package docstr
@@ -863,7 +886,7 @@
 ;;;; Settings
 ;; Agenda variables
 (setq org-directory "~/org/")         ; Non-absolute paths for agenda and
-                                      ; capture templates will look here.
+                                        ; capture templates will look here.
 (setq org-agenda-files '("inbox.org"))
 ;; Default tags
 (setq org-tag-alist '(;; locale
@@ -1033,7 +1056,7 @@ This function falls back to `consult-fd' if we're not in a project."
           ("c" "commit" magit-commit)
           ("g" "status" magit)
           ("s" "stage file" (lambda () (interactive)
-                         (magit-stage-file (magit-current-file))))
+                              (magit-stage-file (magit-current-file))))
           ("P" "push" magit-push)
           ("p" "pull" magit-pull)
           ("B" "blame" magit-blame)])
@@ -1041,7 +1064,7 @@ This function falls back to `consult-fd' if we're not in a project."
 (transient-define-prefix qqh-transient--open ()
   [:class transient-row "open..."
           ("d" "diagnostics panel" consult-flymake)
-          ("t" "todos" consult-todo)])
+          ("t" "todos" magit-todos-list)])
 
 (transient-define-prefix qqh-transient--notes ()
   [:class transient-row "notes..."
@@ -1052,7 +1075,6 @@ This function falls back to `consult-fd' if we're not in a project."
   [:class transient-row "search..."
           ("l" "all lines" consult-line-multi)
           ("i" "imenu" consult-imenu)
-          ("n" "notes" org-roam-node-find)
           ("o" "outline" consult-outline)
           ("s" "files" qqh--search-files)])
 
@@ -1069,6 +1091,7 @@ This function falls back to `consult-fd' if we're not in a project."
 (qqh--leader-define '(("SPC" . consult-buffer)
                       ("," . evil-switch-to-windows-last-buffer)
                       (":" . eval-expression)
+                      ("q" . quit-window)
                       ;; menus
                       ("c" . ("+code" . qqh-transient--code))
                       ("g" . ("+git" . qqh-transient--git))
@@ -1079,8 +1102,9 @@ This function falls back to `consult-fd' if we're not in a project."
 
 ;;;; Global bindings
 
-;; i hate this key man
+;; i hate this key man, make it the localleader
 (global-unset-key (kbd "<f2>"))
+(evil-set-leader 'nil (kbd "<f2>") t)
 
 (global-set-key (kbd "<home>") 'beginning-of-line)
 (global-set-key (kbd "<end>") 'end-of-line)
@@ -1121,15 +1145,20 @@ This function falls back to `consult-fd' if we're not in a project."
 (use-package evil-textobj-tree-sitter
   :after evil
   :straight (evil-textobj-tree-sitter :type git
-                      :host github
-                      :repo "meain/evil-textobj-tree-sitter"
-                      :files (:defaults "queries" "treesit-queries")
-                      :branch "treesit")
+                                      :host github
+                                      :repo "meain/evil-textobj-tree-sitter"
+                                      :files (:defaults "queries" "treesit-queries")
+                                      :branch "treesit")
   :config
   ;; bind `function.outer`(entire function block) to `f` for use in things like `vaf`, `yaf`
   (define-key evil-outer-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.outer"))
+  (define-key evil-outer-text-objects-map "c" (evil-textobj-tree-sitter-get-textobj "class.outer"))
+  (define-key evil-outer-text-objects-map "/" (evil-textobj-tree-sitter-get-textobj "comment.outer"))
   ;; bind `function.inner`(function block without name and args) to `f` for use in things like `vif`, `yif`
-  (define-key evil-inner-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.inner")))
+  (define-key evil-inner-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.inner"))
+  (define-key evil-inner-text-objects-map "c" (evil-textobj-tree-sitter-get-textobj "class.inner"))
+  (define-key evil-inner-text-objects-map "/" (evil-textobj-tree-sitter-get-textobj "comment.inner")))
+
 
 ;;;; Evil Bindings
 (global-set-key (kbd "M-q") 'qqh--kill-buffer)
@@ -1165,10 +1194,14 @@ This function falls back to `consult-fd' if we're not in a project."
 ;; C-g quits normal mode
 (evil-define-key 'insert 'global (kbd "C-g") 'evil-normal-state)
 
-;; Eglot bindings
+;;; Eglot bindings
 (evil-define-key 'normal 'eglot-mode-map
   (kbd "g R") 'eglot-rename
   (kbd "g SPC") 'eglot-code-actions)
+
+;;; dired bindings
+(evil-define-key '(normal) 'dired-mode-map
+  (kbd "-") 'dired-create-empty-file)
 
 ;;; Themes / UI customization
 
@@ -1194,6 +1227,8 @@ This function falls back to `consult-fd' if we're not in a project."
       evil-visual-screen-line-message "")
 
 ;;;; Packages
+
+;; colorful stuff
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
 
@@ -1212,6 +1247,20 @@ This function falls back to `consult-fd' if we're not in a project."
           ("PERF" . ,(catppuccin-color 'lavender))))
 
   (global-hl-todo-mode))
+
+(use-package magit-todos
+  :after magit
+  :config (magit-todos-mode 1))
+
+;; highlight intendation regions
+(use-package indent-bars
+  :hook (prog-mode . indent-bars-mode)
+  :custom
+  (indent-bars-prefer-character t)
+  (indent-bars-no-stipple-char ?█)
+  (indent-bars-color-by-depth nil)
+  (indent-bars-color '(default :face-bg t))
+  (indent-bars-highlight-current-depth `(:color ,(catppuccin-color 'surface0))))
 
 ;; dim inactive buffrs
 (use-package auto-dim-other-buffers
@@ -1331,7 +1380,26 @@ By default, this shows the information specified by `global-mode-string'."
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (load custom-file 'noerror)
 
+(when (qqh--is-work)
+  (use-package copilot
+    :custom
+    (copilot-idle-delay nil)
+    :straight (:host github :repo "copilot-emacs/copilot.el" :files ("*.el"))
+    :hook (prog-mode . copilot-mode)
+    :ensure t)
+  (evil-define-key '(normal insert) 'copilot-mode (kbd "C-M-S-<tab>") 'copilot-complete)
+  (add-hook 'post-command-hook (lambda ()
+                                 (require 'copilot)
+                                 (copilot-clear-overlay)))
+  (evil-define-key '(normal insert) 'copilot-completion-map (kbd "C-M-<tab>") 'copilot-accept-completion)
+  (evil-define-key '(normal insert) 'copilot-completion-map (kbd "C-M-TAB") 'copilot-accept-completion))
+
 ;;; Cleanup
+(add-hook 'after-init-hook
+          (lambda ()
+            (persp-mode 1)
+            (persp-mode-projectile-bridge-mode 1)))
+
 (catppuccin-reload)
 (setq gc-cons-threshold 800000)
 

@@ -3,11 +3,11 @@
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
 (("org-capture-last-stored"
- (filename . "~/org/roam/main/blobstore_request_responses.org")
- (front-context-string . "\n- [ ] amps-cont")
- (rear-context-string . "quest_responses\n")
- (position . 105)
- (last-modified 26705 34327 484664 0))
+ (filename . "~/org/roam/work/meeting/tornado_2.0_handoff.org")
+ (front-context-string)
+ (rear-context-string . " :work-meeting:\n")
+ (position . 124)
+ (last-modified 26796 47594 958734 0))
 ("Activity: camel8"
  (activities-name . "camel8")
  (handler . activities-bookmark-handler))
