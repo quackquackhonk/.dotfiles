@@ -135,7 +135,7 @@
 ;; font settings
 (set-face-attribute 'default nil
                     :family "Maple Mono"
-                    :height (if (qqh--macos-p) 140 120))
+                    :height (if (qqh--macos-p) 140 110))
 (set-face-attribute 'variable-pitch nil
                     :family "Maple Mono")
 
@@ -1118,6 +1118,8 @@ This function falls back to `consult-fd' if we're not in a project."
 ;;;; Evil plugins
 (use-package evil-collection
   :after evil
+  :init
+  (setq forge-add-default-bindings nil)
   :custom
   :config
   (setq evil-collection-want-unimpaired-p nil

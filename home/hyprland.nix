@@ -1,5 +1,7 @@
 {
   pkgs,
+  config,
+  lib,
   ...
 }:
 {
@@ -38,10 +40,10 @@
         # "XDG_SESSION_TYPE,wayland"
         # "XDG_SESSION_DESKTOP,Hyprland"
         "GDK_SCALE,1"
-        "HYPRCURSOR_NAME,'Catppuccin Mocha Dark'"
-        "HYPRCURSOR_SIZE,16"
-        "XCURSOR_NAME,'Catppuccin Mocha Dark'"
-        "XCURSOR_SIZE,16"
+        "HYPRCURSOR_NAME,'Catppuccin Mocha Light'"
+        "HYPRCURSOR_SIZE,24"
+        "XCURSOR_NAME,'Catppuccin Mocha Light'"
+        "XCURSOR_SIZE,24"
         "SUDO_ASKPASS,hyprpolkitagent"
 
         # for nvidia
@@ -95,6 +97,9 @@
         gaps_in = 4;
         gaps_out = 4;
         border_size = 2;
+
+        "col.active_border" = lib.mkForce "rgb(${config.lib.stylix.colors.base04})";
+        "col.inactive_border" = lib.mkForce "rgb(${config.lib.stylix.colors.base01})";
 
         resize_on_border = true;
         allow_tearing = false;
