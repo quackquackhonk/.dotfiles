@@ -13,6 +13,7 @@
     ./zsh.nix
     ./dev.nix
     ./stylix.nix
+    ./games.nix
     ./hyprland.nix
     ./hyprpanel.nix
   ];
@@ -84,10 +85,9 @@
 
     # apps
     feh
-    prismlauncher
     appimage-run
     discord
-    ncspot
+    spotify
   ];
 
   # Let Home Manager install and manage itself.
