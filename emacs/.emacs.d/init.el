@@ -130,6 +130,7 @@
 (setq frame-resize-pixelwise t)
 (setq-default tab-bar-show nil)                           ;; disable the tab bar
 (column-number-mode +1)
+(global-hl-line-mode +1)
 
 ;; font settings
 (set-face-attribute 'default nil
@@ -217,6 +218,7 @@
   ;; start in emacs mode
   (evil-set-initial-state 'inferior-python-mode 'emacs)
   (evil-set-initial-state 'messages-buffer-mode 'normal)
+  (evil-set-initial-state 'dired-mode 'emacs)
 
   (add-hook 'git-commit-setup-hook 'evil-insert-state))
 
@@ -1117,11 +1119,9 @@ This function falls back to `consult-fd' if we're not in a project."
 (use-package evil-collection
   :after evil
   :custom
-  (evil-collection-want-unimpaired-p nil)
-  (evil-collection-magit-setup t)
-  (evil-collection-forge-setup t)
-  (forge-add-default-bindings t)
   :config
+  (setq evil-collection-want-unimpaired-p nil
+        evil-collection-magit-setup t)
   (evil-collection-init))
 
 (use-package evil-commentary
@@ -1180,15 +1180,16 @@ This function falls back to `consult-fd' if we're not in a project."
   (kbd "L") 'avy-goto-line
   (kbd "RET") 'avy-goto-char-2)
 
-;; Add my own bracketed movement options
 (evil-define-key 'motion 'global
+  ;; remove evil-lookup
+  (kbd "K") 'eldoc
+  ;; Add my own bracketed movement options
   (kbd "[ b") 'previous-buffer
-  (kbd "[ e") 'flymake-goto-prev-error
-  (kbd "[ d") 'hl-todo-previous)
-(evil-define-key 'motion 'global
   (kbd "] b") 'next-buffer
-  (kbd "] d") 'hl-todo-next
+  (kbd "[ e") 'flymake-goto-prev-error
   (kbd "] e") 'flymake-goto-next-error
+  (kbd "[ d") 'hl-todo-previous
+  (kbd "] d") 'hl-todo-next
   (kbd "] x") 'smerge-vc-next-conflict)
 
 ;; C-g quits normal mode
@@ -1255,22 +1256,17 @@ This function falls back to `consult-fd' if we're not in a project."
 ;; highlight intendation regions
 (use-package indent-bars
   :hook (prog-mode . indent-bars-mode)
-  :custom
-  (indent-bars-prefer-character t)
-  (indent-bars-no-stipple-char ?█)
-  (indent-bars-color-by-depth nil)
-  (indent-bars-color '(default :face-bg t))
-  (indent-bars-highlight-current-depth `(:color ,(catppuccin-color 'surface0))))
+  :config
+  (setq indent-bars-prefer-character t
+        indent-bars-no-stipple-char ?|
+        indent-bars-color-by-depth nil
+        indent-bars-color '(default :face-bg t)
+        indent-bars-highlight-current-depth '(:face cursor :face-bg t :blend 1.0)))
 
 ;; dim inactive buffrs
-(use-package auto-dim-other-buffers
+(use-package solaire-mode
   :config
-  (set-face-attribute 'auto-dim-other-buffers-face nil
-                      :background (catppuccin-color 'mantle))
-  (set-face-attribute 'auto-dim-other-buffers-hide-face nil
-                      :background (catppuccin-color 'mantle)
-                      :foreground (catppuccin-color 'mantle))
-  (auto-dim-other-buffers-mode))
+  (solaire-global-mode +1))
 
 (use-package fancy-compilation
   :config

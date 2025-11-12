@@ -121,6 +121,7 @@ alias production='eval "$(aws configure export-credentials --profile production 
 
 alias spackon='spack env activate -d spack_env/.'
 alias spackoff='spack env deactivate'
+alias python='python3.11'
 
 function spackcert () {
     SPACK_CERT_PATH=$(python -c 'import site; print(site.getsitepackages()[0] + "/certifi/cacert.pem")')

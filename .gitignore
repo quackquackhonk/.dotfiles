@@ -33,3 +33,4 @@ emacs/.emacs.d/recentf
 emacs/.emacs.d/eshell/**
 emacs/.emacs.d/org-roam.db
 *.sqlite
+forge-database.sqlite
