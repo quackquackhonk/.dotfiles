@@ -5,6 +5,10 @@
 {
   home.packages = with pkgs; [
     prismlauncher
-    retroarch-full
+    (retroarch.withCores (cores: with cores; [
+      dolphin
+      mupen64plus
+      beetle-psx-hw
+    ]))
   ];
 }

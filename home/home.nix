@@ -87,7 +87,8 @@
     feh
     appimage-run
     discord
-    spotify
+    librespot
+    spotify-player
   ];
 
   # Let Home Manager install and manage itself.
