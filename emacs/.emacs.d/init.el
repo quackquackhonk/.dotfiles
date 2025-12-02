@@ -51,7 +51,8 @@
 ;;;; Setup use-package for straight
 (use-package straight
   :custom
-  ;; add project and flymake to the pseudo-packages variable so straight.el doesn't download a separate version than what eglot downloads.
+  ;; add project and flymake to the pseudo-packages variable so straight.el doesn't download a
+  ;; separate version than what eglot downloads.
   (straight-built-in-pseudo-packages '(emacs nadvice python image-mode project flymake xref))
   (straight-use-package-by-default t)
   :config
@@ -132,10 +133,15 @@
 (column-number-mode +1)
 (global-hl-line-mode +1)
 
+(unless (executable-find "fd")                            ;; try to use the faster programs
+  (add-to-list 'exec-path "/home/sahana/.local/bin"))
+(setq find-program "fd"                                   ;; use the faster programs
+      grep-program "rg")
+(use-package rg)
 ;; font settings
 (set-face-attribute 'default nil
                     :family "Maple Mono"
-                    :height (if (qqh--macos-p) 140 110))
+                    :height (if (qqh--macos-p) 150 110))
 (set-face-attribute 'variable-pitch nil
                     :family "Maple Mono")
 
@@ -143,21 +149,9 @@
 ;; Nice line wrapping when working with text
 (add-hook 'text-mode-hook 'visual-line-mode)
 
-;; Don't show trailing whitespace, and delete when saving
-(setopt show-trailing-whitespace nil)
-(add-hook 'before-save-hook
-          (lambda ()
-            (delete-trailing-whitespace)))
-
 ;; enable the recent files list
 (recentf-mode t)
 
-;; try to use the faster programs
-(unless (executable-find "fd")
-  (add-to-list 'exec-path "/home/sahana/.local/bin"))
-(setq find-program "fd"                                   ;; use the faster programs
-      grep-program "rg")
-(use-package rg)
 
 ;;; Built-Ins.
 
@@ -187,6 +181,20 @@
               ("C-<tab>" . outline-cycle))
   :hook (emacs-lisp-mode . outline-minor-mode))
 
+;;;; whitespace-mode
+(use-package whitespace-mode
+  :straight nil
+  :custom
+  (whitespace-style '(face lines-tail))
+  (whitespace-line-column 100)
+  :init
+  (global-whitespace-mode +1))
+
+;; Don't show trailing whitespace, and delete when saving
+(setopt show-trailing-whitespace nil)
+(add-hook 'before-save-hook
+          (lambda ()
+            (delete-trailing-whitespace)))
 
 ;;; Evil mode
 (use-package undo-fu
@@ -219,6 +227,7 @@
   (evil-set-initial-state 'inferior-python-mode 'emacs)
   (evil-set-initial-state 'messages-buffer-mode 'normal)
   (evil-set-initial-state 'dired-mode 'emacs)
+  (evil-set-initial-state 'compilation-mode 'emacs)
 
   (add-hook 'git-commit-setup-hook 'evil-insert-state))
 
@@ -817,7 +826,14 @@
   :config (eglot-booster-mode))
 
 ;;;; Code formatting
-(use-package format-all)
+(use-package format-all
+  :commands format-all-mode
+  :hook ((python-mode python-ts-mode) . format-all-mode)
+  :custom
+  (format-all-show-errors 'never)
+  :config
+  (setq-default format-all-formatters
+                '(("Python" (black)))))
 
 ;;;; Language specific configuration
 
@@ -1120,7 +1136,6 @@ This function falls back to `consult-fd' if we're not in a project."
   :after evil
   :init
   (setq forge-add-default-bindings nil)
-  :custom
   :config
   (setq evil-collection-want-unimpaired-p nil
         evil-collection-magit-setup t)
@@ -1257,13 +1272,14 @@ This function falls back to `consult-fd' if we're not in a project."
 
 ;; highlight intendation regions
 (use-package indent-bars
-  :hook (prog-mode . indent-bars-mode)
+  :after rainbow-delimiters
+  :hook ((python-mode python-ts-mode c++-mode) . indent-bars-mode)
   :config
-  (setq indent-bars-prefer-character t
-        indent-bars-no-stipple-char ?|
-        indent-bars-color-by-depth nil
-        indent-bars-color '(default :face-bg t)
-        indent-bars-highlight-current-depth '(:face cursor :face-bg t :blend 1.0)))
+  (setq
+   indent-bars-prefer-character t
+   indent-bars-no-stipple-char ?|
+   indent-bars-color '(highlight :face-bg t :blend 0.0)
+   indent-bars-color-by-depth '(:regexp "rainbow-delimiters-depth-\\([0-9]*\\)-face" :blend 1.0)))
 
 ;; dim inactive buffrs
 (use-package solaire-mode
@@ -1363,7 +1379,7 @@ By default, this shows the information specified by `global-mode-string'."
         popper-echo-dispatch-keys '(?1 ?2 ?3 ?4 ?5 ?6 ?7 ?8 ?9 ?0))
 
   (setq
-   popper-mode-line nil
+   popper-mode-line t
    popper-window-height (lambda (win)
                           (fit-window-to-buffer
                            win
@@ -1383,7 +1399,7 @@ By default, this shows the information specified by `global-mode-string'."
     :custom
     (copilot-idle-delay nil)
     :straight (:host github :repo "copilot-emacs/copilot.el" :files ("*.el"))
-    :hook (prog-mode . copilot-mode)
+    :hook (eglot-connected-hook . copilot-mode)
     :ensure t)
   (evil-define-key '(normal insert) 'copilot-mode (kbd "C-M-S-<tab>") 'copilot-complete)
   (add-hook 'post-command-hook (lambda ()
