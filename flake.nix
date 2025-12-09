@@ -45,7 +45,6 @@
     }@inputs:
     let
       system = "x86_64-linux";
-      pkgs = nixpkgs.legacyPackages.${system};
       inherit (self) outputs;
     in
       {
@@ -58,7 +57,7 @@
             modules = [
               inputs.flake-programs-sqlite.nixosModules.programs-sqlite
               ./nixos/monstera/configuration.nix
-              { environment.systemPackages = [ ]; }
+              { environment.systemPackages = []; }
             ];
           };
 
