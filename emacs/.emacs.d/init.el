@@ -141,7 +141,7 @@
 ;; font settings
 (set-face-attribute 'default nil
                     :family "Maple Mono"
-                    :height (if (qqh--macos-p) 150 110))
+                    :height (if (qqh--macos-p) 140 110))
 (set-face-attribute 'variable-pitch nil
                     :family "Maple Mono")
 
@@ -210,8 +210,7 @@
         evil-want-C-i-jump t
         evil-shift-width 2
         evil-respect-visual-line-mode t
-        evil-symbol-word-search t            ;; search by symbols for # and *
-        )
+        evil-symbol-word-search t)           ;; search by symbols for # and *
 
   :config
   ;; enable the stuff
@@ -219,7 +218,7 @@
   (evil-mode 1)
 
   ;; setup leader key
-  (evil-set-leader 'normal (kbd "SPC"))     ;; SPC everywhere
+  (evil-set-leader 'normal (kbd "SPC"))      ;; SPC everywhere
   (evil-set-leader 'emacs (kbd "C-SPC"))     ;; C-space in emacs
 
   ;; Configuring initial major mode for some modes
