@@ -62,11 +62,17 @@
 (setq load-prefer-newer t)
 
 ;;; Some initial packages
+
 ;; exec-path-from-shell for macos
 (use-package exec-path-from-shell
+  :if (qqh--macos-p)
   :config
-  (when (qqh--macos-p)
-    (exec-path-from-shell-initialize)))
+  (exec-path-from-shell-initialize))
+;; direnv integration for everywhere else
+(use-package envrc
+  ;; TODO: disable envrc in magit buffers
+  :hook (after-init . envrc-global-mode))
+
 ;; diminish for hiding minor mode
 (use-package diminish)
 
@@ -439,32 +445,12 @@
   :config
   (corfu-terminal-mode))
 
-;;;;; Pretty icons for corfu
-(use-package kind-icon
-  :if (display-graphic-p)
-  :after corfu
-  :config
-  (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
-
 ;;;; Cape: Fancy completion-at-point functions
 ;; there's too much in the cape package to configure here; dive in when you're comfortable!
 (use-package cape
   :init
   (add-to-list 'completion-at-point-functions #'cape-dabbrev)
   (add-to-list 'completion-at-point-functions #'cape-file))
-
-;;;; yasnippet: Snippets!
-(use-package yasnippet
-  :config
-  (yas-global-mode 1))
-
-;; for completion-at-point-functions integration
-(use-package yasnippet-capf
-  :after cape
-  :config
-  (add-to-list 'completion-at-point-functions #'yasnippet-capf))
-
-(use-package yasnippet-snippets)
 
 ;;;; A few more useful configurations...
 (use-package emacs
@@ -579,22 +565,8 @@
         forge-alist))
 
 ;;;; Project Management
-;;;;; direnv integration
-(use-package envrc
-  :hook (after-init . envrc-global-mode))
 ;;;;; Projectile
 (use-package project)
-
-(defun qqh-project--open-org-file ()
-  "Open the project.org file at the root of the current project.
- If no project.org file is found, create a new one from a template."
-  (interactive)
-  (let ((file     (projectile-expand-root "project.org"))
-        (template (expand-file-name "templates/project-template.org"
-                                    qqh--modules-dir)))
-    (unless (file-exists-p file)
-      (copy-file template file))
-    (find-file file)))
 
 (use-package projectile
   :bind (:map projectile-mode-map
@@ -786,7 +758,6 @@
   (eglot-send-changes-idle-time 0.1)
   (eglot-extend-to-xref t) ; activate Eglot in referenced non-project files
   (eglot-autoshutdown t)
-  :hook ((tuareg-mode python-mode python-ts-mode c-mode c++-mode nix-mode go-mode) . eglot-ensure)
   :config
   ;; Disable inlay hints globally
   (add-to-list 'eglot-ignored-server-capabilities :inlayHintProvider)
@@ -1064,6 +1035,7 @@ This function falls back to `consult-fd' if we're not in a project."
 (transient-define-prefix qqh-transient--code ()
   ["code..."
    ("c" "compile" projectile-compile-project)
+   ("e" "eglot" eglot)
    ("f" "format" format-all-region-or-buffer)
    ("v" "activate environment" pyvenv-workon)])
 
@@ -1269,17 +1241,6 @@ This function falls back to `consult-fd' if we're not in a project."
   :after magit
   :config (magit-todos-mode 1))
 
-;; highlight intendation regions
-(use-package indent-bars
-  :after rainbow-delimiters
-  :hook ((python-mode python-ts-mode c++-mode) . indent-bars-mode)
-  :config
-  (setq
-   indent-bars-prefer-character t
-   indent-bars-no-stipple-char ?|
-   indent-bars-color '(highlight :face-bg t :blend 0.0)
-   indent-bars-color-by-depth '(:regexp "rainbow-delimiters-depth-\\([0-9]*\\)-face" :blend 1.0)))
-
 ;; dim inactive buffrs
 (use-package solaire-mode
   :config
@@ -1330,7 +1291,7 @@ By default, this shows the information specified by `global-mode-string'."
 
   ;; move the majpr mode in the main modeline to the left
   (doom-modeline-def-modeline 'main
-    '(eldoc bar window-state workspace-name window-number modals matches follow buffer-info remote-host qqh-dm--sep major-mode word-count)
+    '(eldoc bar window-state workspace-name window-number modals matches follow buffer-info remote-host buffer-position qqh-dm--sep major-mode word-count)
     '(compilation objed-state qqh-dm--misc project-name persp-name grip github debug repl lsp minor-modes indent-info process vcs check time bar)))
 
 ;;;; Buffer display configuration
@@ -1350,10 +1311,6 @@ By default, this shows the information specified by `global-mode-string'."
 (add-to-list 'display-buffer-alist
 	         '("\\*\\(Ibuffer\\|vc-dir\\|vc-diff\\|vc-change-log\\|Async Shell Command\\)\\*"
 	           (display-buffer-full-frame)))
-
-(add-to-list 'display-buffer-alist
-             '("\\*vterminal.*\\*"
-               (display-buffer-reuse-window)))
 
 ;; pop up management
 (use-package popper
@@ -1392,20 +1349,6 @@ By default, this shows the information specified by `global-mode-string'."
 ;;; Customization file
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (load custom-file 'noerror)
-
-(when (qqh--is-work)
-  (use-package copilot
-    :custom
-    (copilot-idle-delay nil)
-    :straight (:host github :repo "copilot-emacs/copilot.el" :files ("*.el"))
-    :hook (eglot-connected-hook . copilot-mode)
-    :ensure t)
-  (evil-define-key '(normal insert) 'copilot-mode (kbd "C-M-S-<tab>") 'copilot-complete)
-  (add-hook 'post-command-hook (lambda ()
-                                 (require 'copilot)
-                                 (copilot-clear-overlay)))
-  (evil-define-key '(normal insert) 'copilot-completion-map (kbd "C-M-<tab>") 'copilot-accept-completion)
-  (evil-define-key '(normal insert) 'copilot-completion-map (kbd "C-M-TAB") 'copilot-accept-completion))
 
 ;;; Cleanup
 (add-hook 'after-init-hook
