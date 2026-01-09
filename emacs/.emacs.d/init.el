@@ -56,7 +56,7 @@
   (straight-built-in-pseudo-packages '(emacs nadvice python image-mode project flymake xref))
   (straight-use-package-by-default t)
   :config
-  (setq straight-vc-git-default-protocol (if (qqh--macos-p) 'https 'ssh)))
+  (setq straight-vc-git-default-protocol 'https))
 
 ;; always load the newest bytecode
 (setq load-prefer-newer t)
@@ -111,7 +111,7 @@
 (setq indicate-empty-lines t)
 (setq inhibit-startup-message t)
 (require 'windmove)
-(windmove-default-keybindings 'control)                   ;; Move through windows with Control-<arrow keys>
+(windmove-default-keybindings 'shift)                   ;; Move through windows with Control-<arrow keys>
 (setopt sentence-end-double-space nil)                    ;; Fix archaic defaults
 (defalias 'yes-or-no-p 'y-or-n-p)                         ;; only "y or n" prompts
 (global-set-key (kbd "<escape>") 'keyboard-quit)          ;; Make ESC quit prompts
@@ -508,6 +508,8 @@
          (vterm-mode . evil-emacs-state))
   :bind (:map vterm-mode-map
               ("C-c C-x" . vterm--self-insert))
+  :custom
+  (vterm-shell "/bin/zsh")
   :config
   (unbind-key (kbd "M-'") 'vterm-mode-map)
   (unbind-key (kbd "M-]") 'vterm-mode-map))
@@ -569,11 +571,8 @@
 (use-package project)
 
 (use-package projectile
-  :bind (:map projectile-mode-map
-              ("<f8>" . projectile-command-map)
-              ("<f7>" . multi-vterm-project)
-              :map projectile-command-map
-              (";" . qqh-project--open-org-file))
+  :bind (:map projectile-command-map
+              ("t" . multi-vterm-project))
   :init
   (projectile-mode +1)
 
@@ -606,12 +605,11 @@
   (persp-autokill-buffer-on-remove 'kill-weak)
   (persp-add-buffer-on-after-change-major-mode 'free)
   (persp-kill-foreign-buffer-behaviour 'kill)
-  (persp-keymap-prefix (kbd "<f5>"))
-  :bind (:map persp-mode-map
-              ("<f6>" . persp-switch))
+  (persp-keymap-prefix (kbd "C-c p"))
   :config
   ;; Override persp-switch to make it exclude the nil perspective
   (cl-defun persp-frame-switch (name &optional (frame (selected-frame)))
+
     (interactive "i")
     (unless name
       (setq name (persp-read-persp "to switch(in frame)" nil nil nil t t)))
@@ -631,16 +629,18 @@
     name)
 
   ;; Perspective-exclusive tabs, ala tmux windows
-  (add-hook 'persp-before-deactivate-functions
-            (defun qqh-persp--save-tab-bar-data (_)
-              (when (get-current-persp)
-                (set-persp-parameter
-                 'tab-bar-tabs (tab-bar-tabs)))))
+  (when (display-graphic-p)
+    (add-hook 'persp-before-deactivate-functions
+              (defun qqh-persp--save-tab-bar-data (_)
+                (when (get-current-persp)
+                  (set-persp-parameter
+                   'tab-bar-tabs (tab-bar-tabs)))))
 
-  (add-hook 'persp-activated-functions
-            (defun qqh-persp--load-tab-bar-data (_)
-              (tab-bar-tabs-set (persp-parameter 'tab-bar-tabs))
-              (tab-bar--update-tab-bar-lines t)))
+    (add-hook 'persp-activated-functions
+              (defun qqh-persp--load-tab-bar-data (_)
+                (tab-bar-tabs-set (persp-parameter 'tab-bar-tabs))
+                (tab-bar--update-tab-bar-lines t))))
+
 
   (defvar persp-consult-source
     (list :name     "Perspective"
@@ -843,7 +843,8 @@
 (defun qqh--spack-python ()
   "Activate the spack environment in the current project, if there is one."
   (interactive)
-  (setenv "WORKON_HOME" "/opt/homebrew/Caskroom/miniconda/base/envs/")
+  (when (qqh--macos-p)
+    (setenv "WORKON_HOME" "/opt/homebrew/Caskroom/miniconda/base/envs/"))
   (let* ((root-dir (if (projectile-project-root)
                        (projectile-project-root)
                      default-directory))
@@ -855,7 +856,8 @@
 (use-package pyvenv
   :hook (((python-mode python-ts-mode) . qqh--spack-python))
   :config
-  (setenv "WORKON_HOME" "/opt/homebrew/Caskroom/miniconda/base/envs/")
+  (when (qqh--macos-p)
+    (setenv "WORKON_HOME" "/opt/homebrew/Caskroom/miniconda/base/envs/"))
   (pyvenv-mode 1))
 
 ;;;;; Rust
@@ -1081,11 +1083,13 @@ This function falls back to `consult-fd' if we're not in a project."
                       ("," . evil-switch-to-windows-last-buffer)
                       (":" . eval-expression)
                       ("q" . quit-window)
+                      ("t" . multi-vterm)
                       ;; menus
                       ("c" . ("+code" . qqh-transient--code))
                       ("g" . ("+git" . qqh-transient--git))
                       ("o" . ("+open" . qqh-transient--open))
                       ("n" . ("+notes" . qqh-transient--notes))
+                      ("p" . ("+projects" . projectile-command-map))
                       ("s" . ("+search" . qqh-transient--search))
                       (";" . ("+config" . qqh-transient--config))))
 
@@ -1135,8 +1139,7 @@ This function falls back to `consult-fd' if we're not in a project."
   :straight (evil-textobj-tree-sitter :type git
                                       :host github
                                       :repo "meain/evil-textobj-tree-sitter"
-                                      :files (:defaults "queries" "treesit-queries")
-                                      :branch "treesit")
+                                      :files (:defaults "queries" "treesit-queries"))
   :config
   ;; bind `function.outer`(entire function block) to `f` for use in things like `vaf`, `yaf`
   (define-key evil-outer-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.outer"))
@@ -1243,6 +1246,7 @@ This function falls back to `consult-fd' if we're not in a project."
 
 ;; dim inactive buffrs
 (use-package solaire-mode
+  :if (display-graphic-p)
   :config
   (solaire-global-mode +1))
 
