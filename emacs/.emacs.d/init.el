@@ -161,6 +161,13 @@
 
 ;;; Built-Ins.
 
+;;;; TRAMP
+(use-package tramp
+  :straight nil
+  :config
+  (setq-default tramp-default-remote-shell "/bin/zsh")
+  (add-to-list tramp-remote-path 'tramp-own-remote-path))
+
 ;;;; Repeat Mode
 (use-package repeat
   :config (repeat-mode))
@@ -986,7 +993,7 @@
   "Fuzzy find files with `projectile-find-file'.
 This function falls back to `consult-fd' if we're not in a project."
   (interactive)
-  (if (projectile-project-p)
+  (if (and (projectile-project-p) (not (file-remote-p buffer-file-name)))
       (projectile-find-file)
     (consult-fd)))
 
@@ -1351,10 +1358,8 @@ By default, this shows the information specified by `global-mode-string'."
 (load custom-file 'noerror)
 
 ;;; Cleanup
-(add-hook 'after-init-hook
-          (lambda ()
-            (persp-mode 1)
-            (persp-mode-projectile-bridge-mode 1)))
+(persp-mode 1)
+(persp-mode-projectile-bridge-mode 1)
 
 (catppuccin-reload)
 (setq gc-cons-threshold 800000)
