@@ -23,6 +23,10 @@
     dune_3
     ocamlPackages.ocaml-lsp
     ocamlPackages.ocamlformat
+    # rust
+    rustup
+    cargo-generate
+    bacon
     # vterm
     cmake
     libtool

@@ -13,6 +13,7 @@
     shellAliases = {
       l = "eza -la";
       ls = "eza";
+      b = "bat";
 
       update = "cd ~/dotfiles && git add . && sudo nixos-rebuild switch --flake . && hyprctl reload && cd -";
     };

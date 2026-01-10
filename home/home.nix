@@ -11,6 +11,7 @@
   imports = [
     inputs.zen-browser.homeModules.beta
     ./zsh.nix
+    ./desktop.nix
     ./dev.nix
     ./stylix.nix
     ./games.nix
@@ -87,26 +88,12 @@
     feh
     appimage-run
     discord
-    librespot
-    spotify-player
+    spotify
+    kdePackages.ark
   ];
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
-
-  # XDG configuration
-  xdg = {
-    enable = true;
-    portal = {
-      enable = true;
-    };
-    desktopEntries = {
-      poweroff = {
-        name = "poweroff";
-        exec = "poweroff";
-      };
-    };
-  };
 
   # Let home-manager manage my dotfiles
   home.file = {

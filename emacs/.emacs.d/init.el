@@ -230,6 +230,10 @@
   (evil-set-undo-system 'undo-fu)
   (evil-mode 1)
 
+  ;; i hate this key man, make it the localleader
+  (global-unset-key (kbd "<f2>"))
+  (evil-set-leader 'nil (kbd "<f2>") t)
+
   ;; setup leader key
   (evil-set-leader 'normal (kbd "SPC"))      ;; SPC everywhere
   (evil-set-leader 'emacs (kbd "C-SPC"))     ;; C-space in emacs
@@ -1102,10 +1106,6 @@ This function falls back to `consult-fd' if we're not in a project."
 
 ;;;; Global bindings
 
-;; i hate this key man, make it the localleader
-(global-unset-key (kbd "<f2>"))
-(evil-set-leader 'nil (kbd "<f2>") t)
-
 (global-set-key (kbd "<home>") 'beginning-of-line)
 (global-set-key (kbd "<end>") 'end-of-line)
 (global-set-key (kbd "M-[") 'tab-previous)
@@ -1184,10 +1184,12 @@ This function falls back to `consult-fd' if we're not in a project."
   ;; Add my own bracketed movement options
   (kbd "[ b") 'previous-buffer
   (kbd "] b") 'next-buffer
-  (kbd "[ e") 'flymake-goto-prev-error
-  (kbd "] e") 'flymake-goto-next-error
   (kbd "[ d") 'hl-todo-previous
   (kbd "] d") 'hl-todo-next
+  (kbd "[ e") 'flymake-goto-prev-error
+  (kbd "] e") 'flymake-goto-next-error
+  (kbd "[ t") 'multi-vterm-prev
+  (kbd "] t") 'multi-vterm-next
   (kbd "] x") 'smerge-vc-next-conflict)
 
 ;; C-g quits normal mode

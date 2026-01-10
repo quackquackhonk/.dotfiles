@@ -30,6 +30,7 @@
       "$browser" = "zen-beta";
       "$files" = "thunar";
       "$menu" = "tofi-run | zsh";
+      "$dmenu" = "tofi-drun | zsh";
       "$discord" = "ELECTRON_OZONE_PLATFORM_HINT= discord";
       "$emacs" = "emacsclient -c -a=''";
 
@@ -69,7 +70,8 @@
         "udiskie --automount --smart-tray"                                                  # auto mount USBs
         # Auto start some apps
         "[workspace 1 silent] steam"
-        "[workspace 6 silent] $browser"
+        "[workspace 7 silent] spotify"
+        "[workspace 6] $browser"
       ];
 
       # monitors
@@ -187,6 +189,7 @@
           "$mod, F, exec, $files"
           "$mod, Return, exec, $terminal"
           "$mod, Space, exec, $menu"
+          "$mod SHIFT, Space, exec, $dmenu"
           "$mod, Escape, exec, wlogout"
           # emacs
           "$mod, E, exec, $emacs"
@@ -268,23 +271,24 @@ workspace = 7, defaultName:discord
 # See https://wiki.hyprland.org/Configuring/Window-Rules/ for more
 #
 # Pin certain apps to workspaces
-windowrulev2 = workspace name:games silent, class:(steam), title:(.*)
-windowrulev2 = workspace name:games silent, class:(steam.*), title:(.*)
+windowrule = workspace name:games silent, class:(steam), title:(.*)
+windowrule = workspace name:games silent, class:(steam.*), title:(.*)
 # windowrulev2 = workspace name:emacs silent, class:(Emacs), title:(.*)
 
+
 ## Bluetooth manager
-windowrulev2 = float, class:(.blueman-manager-wrapped), title:(.*)
-windowrulev2 = size 800 600, class:(.blueman-manager-wrapped), title:(.*)
-windowrulev2 = center, class:(.blueman-manager-wrapped), title:(.*)
+windowrule = float, class:(.blueman-manager-wrapped), title:(.*)
+windowrule = size 800 600, class:(.blueman-manager-wrapped), title:(.*)
+windowrule = center, class:(.blueman-manager-wrapped), title:(.*)
 ## audio mixer
-windowrulev2 = float, class:(org.pulseaudio.pavucontrol), title:(.*)
-windowrulev2 = size 800 600, class:(org.pulseaudio.pavucontrol), title:(.*)
-windowrulev2 = center, class:(org.pulseaudio.pavucontrol), title:(.*)
+windowrule = float, class:(org.pulseaudio.pavucontrol), title:(.*)
+windowrule = size 800 600, class:(org.pulseaudio.pavucontrol), title:(.*)
+windowrule = center, class:(org.pulseaudio.pavucontrol), title:(.*)
 ## PIP
-windowrulev2 = float, class:(zen), title:(Picture-in-Picture)
-windowrulev2 = move 1286 716, class:(zen), title:(Picture-in-Picture)
+windowrule = float, class:(zen), title:(Picture-in-Picture)
+windowrule = move 1286 716, class:(zen), title:(Picture-in-Picture)
 ## GUI development start as floating window
-windowrulev2 = float, class:(main.exe), title:(.*)
+windowrule = float, class:(main.exe), title:(.*)
 
 ## MISC RULES
 ### Ignore maximize requests from apps. You'll probably like this.

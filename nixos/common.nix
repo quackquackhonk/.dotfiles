@@ -24,6 +24,8 @@ in
     nixfmt-rfc-style
     ghostty
     wget
+    qmk
+    via
     (
       pkgs.catppuccin-sddm.override {
         flavor = "mocha";
@@ -34,6 +36,11 @@ in
       }
     )
   ];
+
+  # for qmk
+  hardware.keyboard.qmk.enable = true;
+  services.udev.packages = [ pkgs.via ];
+
 
   # file manager
   programs.thunar = {
