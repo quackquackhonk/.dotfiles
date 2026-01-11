@@ -9,6 +9,8 @@
     enable = true;
     enableCompletion = true;
     syntaxHighlighting.enable = true;
+    # use legacy zsh configuration location
+    dotDir = "${config.xdg.configHome}/zsh";
 
     shellAliases = {
       l = "eza -la";

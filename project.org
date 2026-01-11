@@ -33,8 +33,7 @@
 Ideally, I want one workspace per app (roughly)
 - so pressing ~S-e~ should not only open emacs, it should also switch to the "emacs" workspace
 - This should NOT double open programs, if its already running, just switch
-** Done waybar
-- State "DONE"       from              [2024-12-12 Thu 16:41]
+** TODO move to waybar
 ** DONE steam
 * Hyprland [4/5]
 ** DONE TARTED Get off HyDE
@@ -59,17 +58,13 @@ I don't like persp-mode and its projcetile integration, I want to move back to p
 I should be able to just fork the main perspective mode and adjust the persp struct to add tabs
 ** DONE remove things that I don't know what they do
 - State "DONE"       from "TODO"       [2025-05-05 Mon 18:31]
-** TODO Projectile switch action should let me choose between a few options
-I want to choose between fuzzy finding, opening the project term, opening project dired, or magit-status
-** Bugs / Behavior I don't like [0/2]
+** Bugs / Behavior I don't like [0/1]
 *** TODO non-included documents aren't being added unless eglot is restarted
-*** TODO ~n~ and ~e~ open files in compilation-mode instead of scrolling output
-I think this is probably becuse of some underlying binding that binds ~C-n~ and ~C-p~ to something that navigates to errors instead of scrolling
 ** Org [0/1]
-*** change the colors of the todo labels
 *** TODO Get started with org-roam
-** Development Settings [3/4]
-*** TODO auto activate / deactivate python spack environments on persp-switch
+** Development Settings [4/4]
+*** DONE auto activate / deactivate python spack environments on persp-switch
+- State "DONE"       from "TODO"       [2026-01-11 Sun 12:42]
 *** OBSOLETE eshell configuration
 - State "OBSOLETE"   from "TODO"       [2025-03-10 Mon 13:26] \\
   not using eshell anymore
@@ -91,7 +86,7 @@ This also causes corfu to crash, complaining about the problems with track chang
 PRIMARILY need lldb support
 ** DONE flatten the config
 - State "DONE"       from "TODO"       [2024-11-04 Mon 17:31]
-** Keybindings [4/6]
+** Keybindings [4/7]
 *** OBSOLETE I want to use meow keypad as my leader
 - State "OBSOLETE"   from "TODO"       [2025-05-05 Mon 18:32] \\
   the transient is so much less restrictive in bindings
@@ -100,17 +95,7 @@ PRIMARILY need lldb support
 *** DONE prefix maps in meow normal mode
 - State "DONE"       from "TODO"       [2024-11-08 Fri 13:45]
 ~g~ and ~z~ prefix maps?
-*** TODO custom meow "things" [2/3]
-**** DONE angled brackets <>
-- State "DONE"       from "WAITING"    [2024-11-07 Thu 18:26]
-**** OBSOLETE single quotes ''
-- State "OBSOLETE"   from "TODO"       [2025-01-31 Fri 15:31] \\
-  handled by the string thing bound to `""
-**** TODO backticks ``
-*** TODO Change keybindings for split management
-Ideally, I want something more like vim's ~C-w <key>~ as opposed to the ~C-x <digit>~ convention.
-
-I think theres a snippet in the meow FAQs about doing this exactly...
+*** TODO unzip + tar support in dired
 *** OBSOLETE can we set up use-package integration?
 - State "OBSOLETE"   from "TODO"       [2024-11-04 Mon 17:22] \\
   already can be implemented using :bind (:map meow-STATE-state-map (...))

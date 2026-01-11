@@ -16,20 +16,14 @@
       inputs.systems.follows = "systems";
     };
 
-    # AGS bar for hyprland
-    hyprpanel.url = "github:Jas-SinghFSU/HyprPanel";
-    hyprpanel.inputs.nixpkgs.follows = "nixpkgs";
-
     # zen-browser
     zen-browser.url = "github:0xc000022070/zen-browser-flake";
 
     # stylix for theming
     stylix = {
       url = "github:danth/stylix";
-
       inputs = {
         nixpkgs.follows = "nixpkgs";
-        home-manager.follows = "home-manager";
       };
     };
 
@@ -67,7 +61,6 @@
             system = "x86_64-linux";
             specialArgs = { inherit inputs outputs; };
             modules = [
-              { nixpkgs.overlays = [inputs.hyprpanel.overlay]; }
               ./nixos/redwood/configuration.nix
               home-manager.nixosModules.home-manager
               {
@@ -76,7 +69,6 @@
                 home-manager.useUserPackages = true;
                 home-manager.extraSpecialArgs = { inherit inputs system; };
                 home-manager.users.sahana.imports = [
-                  inputs.hyprpanel.homeManagerModules.hyprpanel
                   ./home/home.nix
                 ];
               }

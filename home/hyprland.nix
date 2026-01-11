@@ -5,6 +5,7 @@
   ...
 }:
 {
+
   home.packages = with pkgs; [
     grimblast
     xdg-desktop-portal-hyprland
@@ -13,11 +14,11 @@
     hyprcursor
     catppuccin-cursors.mochaDark
     catppuccin-cursors.mochaLight
+    rofi
     tofi
     udiskie
     pavucontrol
   ];
-
   # hyprland config settings
   wayland.windowManager.hyprland = {
     enable = true;
@@ -27,8 +28,7 @@
       # some global variables
       "$mod" = "SUPER";
       "$terminal" = "ghostty";
-      "$browser" = "zen-beta";
-      "$files" = "thunar";
+      "$browser" = "zen-twilight";
       "$menu" = "tofi-run | zsh";
       "$dmenu" = "tofi-drun | zsh";
       "$discord" = "ELECTRON_OZONE_PLATFORM_HINT= discord";
@@ -66,7 +66,6 @@
         "nm-applet"                                                                         # networkmanager applet
         "wl-paste --type text --watch cliphist store"                                       # clipboard store text data
         "wl-paste --type image --watch cliphist store"                                      # clipboard store image data
-        "emacs --daemon"                                                                    # emacs server
         "udiskie --automount --smart-tray"                                                  # auto mount USBs
         # Auto start some apps
         "[workspace 1 silent] steam"
@@ -173,11 +172,6 @@
         };
       };
 
-      # https://wiki.hyprland.org/Configuring/Variables/#gestures
-      gestures = {
-        workspace_swipe = false;
-      };
-
       # keybindings
       bind =
         [
@@ -186,7 +180,6 @@
           # Quick launch programs
           "$mod, B, exec, $browser"
           "$mod, D, exec, $discord"
-          "$mod, F, exec, $files"
           "$mod, Return, exec, $terminal"
           "$mod, Space, exec, $menu"
           "$mod SHIFT, Space, exec, $dmenu"
@@ -254,7 +247,6 @@
 
     extraConfig = ''
 cursor:no_hardware_cursors = true
-render:explicit_sync = 0
 
 #
 # WORKSPACE RULES
@@ -270,31 +262,30 @@ workspace = 7, defaultName:discord
 # WINDOW RULES
 # See https://wiki.hyprland.org/Configuring/Window-Rules/ for more
 #
-# Pin certain apps to workspaces
-windowrule = workspace name:games silent, class:(steam), title:(.*)
-windowrule = workspace name:games silent, class:(steam.*), title:(.*)
-# windowrulev2 = workspace name:emacs silent, class:(Emacs), title:(.*)
 
+# Pin certain apps to workspaces
+windowrule = workspace name:games silent, match:class steam match:title .*
+windowrule = workspace name:games silent, match:class steam.* match:title .*
 
 ## Bluetooth manager
-windowrule = float, class:(.blueman-manager-wrapped), title:(.*)
-windowrule = size 800 600, class:(.blueman-manager-wrapped), title:(.*)
-windowrule = center, class:(.blueman-manager-wrapped), title:(.*)
+windowrule = float on, match:class .blueman-manager-wrapped match:title .*
+windowrule = size 800 600, match:class .blueman-manager-wrapped, match:title .*
+windowrule = center on, match:class .blueman-manager-wrapped, match:title .*
 ## audio mixer
-windowrule = float, class:(org.pulseaudio.pavucontrol), title:(.*)
-windowrule = size 800 600, class:(org.pulseaudio.pavucontrol), title:(.*)
-windowrule = center, class:(org.pulseaudio.pavucontrol), title:(.*)
+windowrule = float on, match:class org.pulseaudio.pavucontrol, match:title .*
+windowrule = size 800 600, match:class org.pulseaudio.pavucontrol, match:title .*
+windowrule = center on, match:class org.pulseaudio.pavucontrol, match:title .*
+
 ## PIP
-windowrule = float, class:(zen), title:(Picture-in-Picture)
-windowrule = move 1286 716, class:(zen), title:(Picture-in-Picture)
+windowrule = float on, match:class zen, match:title Picture-in-Picture
 ## GUI development start as floating window
-windowrule = float, class:(main.exe), title:(.*)
+windowrule = float on, match:class main.exe match:title .*
 
 ## MISC RULES
 ### Ignore maximize requests from apps. You'll probably like this.
-windowrulev2 = suppressevent maximize, class:.*
+windowrule = suppress_event maximize, match:class .*
 ### Fix some dragging issues with XWayland
-windowrulev2 = nofocus,class:^$,title:^$,xwayland:1,floating:1,fullscreen:0,pinned:0
+windowrule = no_focus on, match:class ^$ match:title ^$ match:xwayland 1 match:float 1 match:fullscreen 0 match:pin 0
 '';
 
   };

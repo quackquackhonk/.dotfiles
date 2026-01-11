@@ -4,6 +4,7 @@
   ...
 }:
 {
+  # use emacs as a file manager
   home.file = {
     ".local/share/applications/emacsfm.desktop".source = ../desktop/emacsfm.desktop;
   };

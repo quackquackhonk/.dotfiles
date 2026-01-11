@@ -1,5 +1,7 @@
 {
+  config,
   pkgs,
+  callPackage,
   ...
 }:
 let
@@ -15,13 +17,12 @@ in
   environment.systemPackages = with pkgs; [
     curl
     vim
-    emacs30
     git
     gcc
     gnumake
     gnupg
     networkmanagerapplet
-    nixfmt-rfc-style
+    nixfmt
     ghostty
     wget
     qmk
@@ -45,7 +46,7 @@ in
   # file manager
   programs.thunar = {
     enable = true;
-    plugins = with pkgs.xfce; [
+    plugins = with pkgs; [
       thunar-volman
       thunar-archive-plugin
     ];

@@ -3,9 +3,21 @@
   ...
 }:
 {
+  # emacs my beloved
+  programs.emacs = {
+    enable = true;
+    package = pkgs.emacs30;
+    extraPackages = epkgs: [
+      epkgs.vterm
+    ];
+  };
+  services.emacs = {
+    enable = true;
+  };
   home.file = {
     ".emacs".source = ../emacs/.emacs;
   };
+
   home.packages = with pkgs; [
     # LSP servers
     emacs-lsp-booster
@@ -16,7 +28,6 @@
     erlang
     rebar3
     # nix
-    nixfmt-rfc-style
     nil
     # ocaml
     ocaml
@@ -31,7 +42,6 @@
     cmake
     libtool
     libvterm
-
   ];
 
 }

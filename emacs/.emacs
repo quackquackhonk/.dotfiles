@@ -5,8 +5,9 @@
 ;;; This is the file that gets linked by my home-manager configuration
 
 ;;; Code:
-(load-file (concat (getenv "HOME") "/dotfiles/emacs/.emacs.d/early-init.el"))
+(setq-default early-init-file (concat (getenv "HOME") "/dotfiles/emacs/.emacs.d/early-init.el"))
 (setq-default user-init-file (concat (getenv "HOME") "/dotfiles/emacs/.emacs.d/init.el"))
+(load-file early-init-file)
 (load-file user-init-file)
 
 ;;; .emacs ends here

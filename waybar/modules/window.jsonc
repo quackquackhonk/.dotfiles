@@ -1,6 +1,0 @@
-    "hyprland/window": {
-        "format": "  {}",
-        "rotate": ${r_deg},
-        "separate-outputs": true,
-        "max-length": 30
-    },

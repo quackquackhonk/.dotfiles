@@ -85,7 +85,7 @@
   (which-key-mode))
 
 ;; Catppuccin for using colors in other packages
-(add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
+(add-to-list 'custom-theme-load-path (concat user-emacs-directory "/themes"))
 (use-package catppuccin-theme
   :config
   (setq catppuccin-flavor 'mocha
@@ -111,7 +111,7 @@
 (setq indicate-empty-lines t)
 (setq inhibit-startup-message t)
 (require 'windmove)
-(windmove-default-keybindings 'shift)                   ;; Move through windows with Control-<arrow keys>
+(windmove-default-keybindings 'control)                   ;; Move through windows with Control-<arrow keys>
 (setopt sentence-end-double-space nil)                    ;; Fix archaic defaults
 (defalias 'yes-or-no-p 'y-or-n-p)                         ;; only "y or n" prompts
 (global-set-key (kbd "<escape>") 'keyboard-quit)          ;; Make ESC quit prompts
@@ -144,6 +144,7 @@
 (setq find-program "fd"                                   ;; use the faster programs
       grep-program "rg")
 (use-package rg)
+
 ;; font settings
 (set-face-attribute 'default nil
                     :family "Maple Mono"
@@ -165,8 +166,8 @@
 (use-package tramp
   :straight nil
   :config
-  (setq-default tramp-default-remote-shell "/bin/zsh")
-  (add-to-list tramp-remote-path 'tramp-own-remote-path))
+  (setq-default tramp-default-remote-shell "/bin/zsh"))
+  ;;(add-to-list tramp-remote-path 'tramp-own-remote-path))
 
 ;;;; Repeat Mode
 (use-package repeat
@@ -193,15 +194,6 @@
               ("<C-backtab>" . outline-cycle-buffer)
               ("C-<tab>" . outline-cycle))
   :hook (emacs-lisp-mode . outline-minor-mode))
-
-;;;; whitespace-mode
-(use-package whitespace-mode
-  :straight nil
-  :custom
-  (whitespace-style '(face lines-tail))
-  (whitespace-line-column 100)
-  :init
-  (global-whitespace-mode +1))
 
 ;; Don't show trailing whitespace, and delete when saving
 (setopt show-trailing-whitespace nil)
@@ -519,9 +511,8 @@
          (vterm-mode . evil-emacs-state))
   :bind (:map vterm-mode-map
               ("C-c C-x" . vterm--self-insert))
-  :custom
-  (vterm-shell "/bin/zsh")
   :config
+  (setq vterm-shell (getenv "SHELL"))
   (unbind-key (kbd "M-'") 'vterm-mode-map)
   (unbind-key (kbd "M-]") 'vterm-mode-map))
 
@@ -640,17 +631,18 @@
     name)
 
   ;; Perspective-exclusive tabs, ala tmux windows
-  (when (display-graphic-p)
-    (add-hook 'persp-before-deactivate-functions
-              (defun qqh-persp--save-tab-bar-data (_)
-                (when (get-current-persp)
-                  (set-persp-parameter
-                   'tab-bar-tabs (tab-bar-tabs)))))
+  ;; FIXME: idk why this doesnt work anymore
+  ;; (when (display-graphic-p)
+  ;;   (add-hook 'persp-before-deactivate-functions
+  ;;             (defun qqh-persp--save-tab-bar-data (_)
+  ;;               (when (get-current-persp)
+  ;;                 (set-persp-parameter
+  ;;                  'tab-bar-tabs (tab-bar-tabs)))))
 
-    (add-hook 'persp-activated-functions
-              (defun qqh-persp--load-tab-bar-data (_)
-                (tab-bar-tabs-set (persp-parameter 'tab-bar-tabs))
-                (tab-bar--update-tab-bar-lines t))))
+  ;;   (add-hook 'persp-activated-functions
+  ;;             (defun qqh-persp--load-tab-bar-data (_)
+  ;;               (tab-bar-tabs-set (persp-parameter 'tab-bar-tabs))
+  ;;               (tab-bar--update-tab-bar-lines t))))
 
 
   (defvar persp-consult-source
@@ -1147,15 +1139,16 @@ This function falls back to `consult-fd' if we're not in a project."
                                       :host github
                                       :repo "meain/evil-textobj-tree-sitter"
                                       :files (:defaults "queries" "treesit-queries"))
-  :config
-  ;; bind `function.outer`(entire function block) to `f` for use in things like `vaf`, `yaf`
-  (define-key evil-outer-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.outer"))
-  (define-key evil-outer-text-objects-map "c" (evil-textobj-tree-sitter-get-textobj "class.outer"))
-  (define-key evil-outer-text-objects-map "/" (evil-textobj-tree-sitter-get-textobj "comment.outer"))
-  ;; bind `function.inner`(function block without name and args) to `f` for use in things like `vif`, `yif`
-  (define-key evil-inner-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.inner"))
-  (define-key evil-inner-text-objects-map "c" (evil-textobj-tree-sitter-get-textobj "class.inner"))
-  (define-key evil-inner-text-objects-map "/" (evil-textobj-tree-sitter-get-textobj "comment.inner")))
+  ;;:config
+  ;;;; bind `function.outer`(entire function block) to `f` for use in things like `vaf`, `yaf`
+  ;;(define-key evil-outer-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.outer"))
+  ;;(define-key evil-outer-text-objects-map "c" (evil-textobj-tree-sitter-get-textobj "class.outer"))
+  ;;(define-key evil-outer-text-objects-map "/" (evil-textobj-tree-sitter-get-textobj "comment.outer"))
+  ;;;; bind `function.inner`(function block without name and args) to `f` for use in things like `vif`, `yif`
+  ;;(define-key evil-inner-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.inner"))
+  ;;(define-key evil-inner-text-objects-map "c" (evil-textobj-tree-sitter-get-textobj "class.inner"))
+  ;;(define-key evil-inner-text-objects-map "/" (evil-textobj-tree-sitter-get-textobj "comment.inner"))
+  )
 
 
 ;;;; Evil Bindings
@@ -1235,18 +1228,6 @@ This function falls back to `consult-fd' if we're not in a project."
 
 (use-package hl-todo
   :config
-  (defface qqh-hl-todo--todo-face
-    `((t . (:bold t :background ,(catppuccin-color 'sky) :foreground ,(catppuccin-color 'base))))
-    "The face highlighting TODOs in projects."
-    :group 'qqh)
-
-  (setq hl-todo-keyword-faces
-        `(("TODO" . ,(catppuccin-color 'sky))
-          ("HACK" . ,(catppuccin-color 'peach))
-          ("FIXME" . ,(catppuccin-color 'red))
-          ("NOTE" . ,(catppuccin-color 'mauve))
-          ("PERF" . ,(catppuccin-color 'lavender))))
-
   (global-hl-todo-mode))
 
 (use-package magit-todos
@@ -1262,7 +1243,7 @@ This function falls back to `consult-fd' if we're not in a project."
 (use-package fancy-compilation
   :config
   (set-face-attribute 'fancy-compilation-default-face nil
-                      :background (catppuccin-color 'base))
+                     :background (catppuccin-color 'base))
   (fancy-compilation-mode))
 
 ;; disable the tab bar

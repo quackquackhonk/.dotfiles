@@ -9,7 +9,7 @@
 {
   # you can import other home-manager modules here
   imports = [
-    inputs.zen-browser.homeModules.beta
+    inputs.zen-browser.homeModules.twilight-official
     ./zsh.nix
     ./desktop.nix
     ./dev.nix
@@ -33,15 +33,19 @@
 
   programs.git = {
     enable = true;
-    userName = "Sahana Tankala";
-    userEmail = "sahanatankala@gmail.com";
+    settings = {
+      user.name = "Sahana Tankala";
+      user.email = "sahanatankala@gmail.com";
+    };
   };
 
+  # browser
   programs.zen-browser = {
     enable = true;
     policies.DisableTelemetry = true;
     nativeMessagingHosts = [pkgs.firefoxpwa];
   };
+
 
   # The home.packages option allows you to install Nix packages into your
   # environment.
