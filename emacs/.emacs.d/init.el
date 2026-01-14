@@ -195,6 +195,15 @@
               ("C-<tab>" . outline-cycle))
   :hook (emacs-lisp-mode . outline-minor-mode))
 
+;;;; whitespace-mode
+(use-package whitespace-mode
+  :straight nil
+  :custom
+  (whitespace-style '(face lines-tail))
+  (whitespace-line-column 120)
+  :init
+  (global-whitespace-mode +1))
+
 ;; Don't show trailing whitespace, and delete when saving
 (setopt show-trailing-whitespace nil)
 (add-hook 'before-save-hook
@@ -510,11 +519,13 @@
   :hook ((vterm-mode . goto-address-mode)
          (vterm-mode . evil-emacs-state))
   :bind (:map vterm-mode-map
+              ("C-w" . vterm-send-next-key)
               ("C-c C-x" . vterm--self-insert))
   :config
   (setq vterm-shell (getenv "SHELL"))
   (unbind-key (kbd "M-'") 'vterm-mode-map)
-  (unbind-key (kbd "M-]") 'vterm-mode-map))
+  (unbind-key (kbd "M-]") 'vterm-mode-map)
+  (unbind-key (kbd "C-@") 'vterm-mode-map))
 
 (use-package multi-vterm
   :custom
@@ -781,17 +792,7 @@
 
   ;; server configurations
   (setq-default eglot-workspace-configuration
-                '((:pylsp . (:plugins (:pycodestyle (:enabled :json-false)
-                                                    :mccabe (:enabled :json-false)
-                                                    :pyflakes (:enabled :json-false)
-                                                    :flake8 (:enabled :json-false
-                                                                      :maxLineLength 100)
-                                                    :pylsp_mypy (:enabled t)
-                                                    :ruff (:enabled t
-                                                                    :lineLength 100)
-                                                    :pydocstyle (:enabled :json-false)
-                                                    :yapf (:enabled :json-false)
-                                                    :autopep8 (:enabled :json-false)))))))
+                '((:basedpyright :typeCheckingMode "recommended"))))
 
 (use-package eglot-booster
   :straight (eglot-booster :type git :host github :repo "jdtsmith/eglot-booster")
@@ -1085,6 +1086,7 @@ This function falls back to `consult-fd' if we're not in a project."
 (qqh--leader-define '(("SPC" . consult-buffer)
                       ("," . evil-switch-to-windows-last-buffer)
                       (":" . eval-expression)
+                      ("'" . popper-toggle)
                       ("q" . quit-window)
                       ("t" . multi-vterm)
                       ;; menus
@@ -1100,8 +1102,9 @@ This function falls back to `consult-fd' if we're not in a project."
 
 (global-set-key (kbd "<home>") 'beginning-of-line)
 (global-set-key (kbd "<end>") 'end-of-line)
-(global-set-key (kbd "M-[") 'tab-previous)
-(global-set-key (kbd "M-]") 'tab-next)
+(when (display-graphic-p)
+  (global-set-key (kbd "M-[") 'tab-previous)
+  (global-set-key (kbd "M-]") 'tab-next))
 
 (global-set-key (kbd "M-<mouse-1>") 'goto-address-at-mouse)
 
@@ -1310,8 +1313,11 @@ By default, this shows the information specified by `global-mode-string'."
 (use-package popper
   :straight t
   :bind (("C-'"   . popper-toggle)
+         ("C-M-_" . popper-toggle)
          ("M-'"   . popper-cycle)
-         ("C-M-'" . popper-toggle-type))
+         ("C-M-'" . popper-toggle-type)
+         :map vterm-mode-map
+         ("C-M-_" . popper-toggle))
   :init
   (setq popper-reference-buffers '("\\*Messages\\*"
                                    "\\*eldoc\\*"

@@ -10,7 +10,7 @@ export PATH=/Library/PostgreSQL/16/bin:$PATH
 export PATH=$HOME/opt/grpc/bin:$PATH
 export PATH=/Library/Frameworks/Python.framework/Versions/3.11/bin:$PATH
 
-export PKG_CONFIG_PATH="/opt/homebrew/lib/pkgconfig"
+# export PKG_CONFIG_PATH="/opt/homebrew/lib/pkgconfig"
 
 export DOCKER_DEFAULT_PLATFORM=linux/amd64
 export DOCKER_BUILDKIT=0
@@ -22,7 +22,10 @@ export CMAKE_OSX_SYSROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk
 
 unsetopt PROMPT_SP
 
-export EDITOR="emacsclient -c -a=''"
+export EDITOR="vim"
+
+export TERM=xterm-256color
+export COLORTERM=truecolor
 
 # homebrew stuff
 # source ~/.zprofile
@@ -100,8 +103,10 @@ alias l='eza -lah'
 # aliases
 alias zshsrc="source ~/.zshrc"
 
-alias emd='emacs --debug-init --fg-daemon'
+alias emd='emacs --daemon'
+alias emdebug='emacs --debug-init --fg-daemon'
 alias emkill='emacsclient -e "(kill-emacs)"'
+alias ec='emacsclient -nw -a ""'
 
 # work
 alias cirrus='ssh -i ~/.ssh/stankala_id.key stankala@cirrus.veriskweather.net -t "zsh"'
@@ -113,9 +118,11 @@ alias production-login='okta-aws-cli web --profile production --expiry-aws-varia
 alias awsnp='aws --profile nonprod'
 alias awsprod='aws --profile production'
 
-alias docker='podman'
-alias nonprod='eval "$(aws configure export-credentials --profile nonprod --format env)" && aws ecr get-login-password --region us-west-2 | podman login --username AWS --password-stdin 589310964831.dkr.ecr.us-west-2.amazonaws.com && export AWS_PROFILE="nonprod"'
-alias nonprod-east='eval "$(aws configure export-credentials --profile nonprod-east --format env)" && aws ecr get-login-password --region us-east-1 | podman login --username AWS --password-stdin 589310964831.dkr.ecr.us-east-1.amazonaws.com && export AWS_PROFILE="nonprod-east"'
+if [[ $HOST == "LVV3TW207K" ]]; then
+    alias docker='podman'
+fi
+alias nonprod='eval "$(aws configure export-credentials --profile nonprod --format env)" && aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 589310964831.dkr.ecr.us-west-2.amazonaws.com && export AWS_PROFILE="nonprod"'
+alias nonprod-east='eval "$(aws configure export-credentials --profile nonprod-east --format env)" && aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 589310964831.dkr.ecr.us-east-1.amazonaws.com && export AWS_PROFILE="nonprod-east"'
 
 alias production='eval "$(aws configure export-credentials --profile production --format env)"'
 
@@ -144,22 +151,18 @@ eval "$(zoxide init zsh)"
 eval "$(starship init zsh)"
 eval "$(direnv hook zsh)"
 
-if [[ $HOST == "LVV3TW207K" ]]; then
-    . /Users/i34866/opt/git/spack/share/spack/setup-env.sh
-else
-    . /storage/stankala/opt/git/spack/share/spack/setup-env.sh
-fi
+. ~/opt/git/spack/share/spack/setup-env.sh
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/opt/homebrew/Caskroom/miniconda/base/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+__conda_setup="$('/storage/stankala/miniconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
 if [ $? -eq 0 ]; then
     eval "$__conda_setup"
 else
-    if [ -f "/opt/homebrew/Caskroom/miniconda/base/etc/profile.d/conda.sh" ]; then
-        . "/opt/homebrew/Caskroom/miniconda/base/etc/profile.d/conda.sh"
+    if [ -f "/storage/stankala/miniconda3/etc/profile.d/conda.sh" ]; then
+        . "/storage/stankala/miniconda3/etc/profile.d/conda.sh"
     else
-        export PATH="/opt/homebrew/Caskroom/miniconda/base/bin:$PATH"
+        export PATH="/storage/stankala/miniconda3/bin:$PATH"
     fi
 fi
 unset __conda_setup
