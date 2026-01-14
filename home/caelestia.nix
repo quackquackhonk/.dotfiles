@@ -36,9 +36,19 @@ in
         };
       };
 
+      launcher = {
+        enableDangerousActions = true;
+        maxShown = 10;
+      };
+
       general = {
         apps = {
-          terminal = [ "ghostty" ];
+          terminal = ["ghostty"];
+          audio = ["pavucontrol"];
+          explorer = ["thunar"];
+        };
+        idle = {
+          timeouts = [];
         };
       };
 
@@ -49,15 +59,37 @@ in
         thickness = 5;
       };
 
+      workspaces = {
+        showWindows = false;
+      };
+
+      utilities = {
+        enabled = true;
+        maxToasts = 4;
+        toasts = {
+          audioInputChanged = true;
+          audioOutputChanged = true;
+          capsLockChanged = false;
+          chargingChanged = false;
+          configLoaded = false;
+          dndChanged = true;
+          gameModeChanged = true;
+          numLockChanged = false;
+          nowPlaying = true;
+          kbLayoutChanged = false;
+        };
+      };
       # TODO: adjust the workspaces one
       # TODO: we need to figure out the broken textures
-
 
       bar = {
         status = {
           showBattery = false;
           showAudio = true;
         };
+
+        persistent = true;
+        showOnHover = true;
         entries = [
           {
             id = "logo";
@@ -94,11 +126,8 @@ in
         ];
       };
 
-      persistent = false;
-      showOnHover = true;
-
       sidebar = {
-        enabled = false;
+        enabled = true;
       };
 
       paths = {
@@ -107,7 +136,7 @@ in
       };
 
       tray = {
-        background = false;
+        background = true;
         recolour = false;
       };
 
@@ -137,13 +166,6 @@ in
 
   wayland.windowManager.hyprland = {
     settings = {
-      # startup
-      exec-once = [
-        "caelestia resizer -d"
-        "caelestia shell -d"
-        "caelestia scheme set -n custom"
-      ];
-
       # bindings
       bindin = [
         # Launcher
@@ -173,8 +195,6 @@ in
         # "$mod+Alt, R, exec, caelestia record -s" # Record screen with sound
         # "Ctrl+Alt, R, exec, caelestia record" # Record screen
         # "$mod+Shift+Alt, R, exec, caelestia record -r" # Record region
-
-        "$mod+Shift, E, exec, pkill fuzzel || caelestia emoji -p"
       ];
       bindl = [
         # Media

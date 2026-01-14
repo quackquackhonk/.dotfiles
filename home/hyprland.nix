@@ -12,15 +12,12 @@ let
   inactive-opacity = config.theme.inactive-opacity;
   rounding = config.theme.rounding;
   blur = config.theme.blur;
-
-  background = "rgba(" + config.lib.stylix.colors.base00 + "77)";
 in
 {
   home.packages = with pkgs; [
     grimblast
     xdg-desktop-portal-hyprland
     hyprpolkitagent
-    hyprpaper
     hyprcursor
     catppuccin-cursors.mochaDark
     catppuccin-cursors.mochaLight
@@ -38,9 +35,6 @@ in
       "$mod" = "SUPER";
       "$terminal" = "ghostty";
       "$browser" = "zen-twilight";
-      "$menu" = "tofi-run | zsh";
-      "$dmenu" = "tofi-drun | zsh";
-      "$togglebar" = "hyprpanel toggleWindow bar-0";
       "$discord" = "ELECTRON_OZONE_PLATFORM_HINT= discord";
       "$emacs" = "emacsclient -c -a=''";
 
@@ -98,7 +92,6 @@ in
         "10, monitor:DP-2, persistent:true"
       ];
 
-
       general = {
         gaps_in = gaps-in;
         gaps_out = gaps-out;
@@ -110,26 +103,6 @@ in
         resize_on_border = true;
         allow_tearing = false;
         layout = "dwindle";
-      };
-
-      animations = {
-        enabled = true;
-        bezier = [
-          "wind, 0.05, 0.9, 0.1, 1.0"
-          "winIn, 0.1, 1.1, 0.1, 1.0"
-          "winOut, 0.3, -0.3, 0, 1"
-          "liner, 1, 1, 1, 1"
-        ];
-        animation = [
-          "windows, 1, 8, wind, popin"
-          "windowsIn, 1, 8, winIn, popin"
-          "windowsOut, 1, 7, winOut, popin"
-          "windowsMove, 1, 7, wind, popin"
-          "border, 1, 1, liner"
-          "borderangle, 1, 30, liner, loop"
-          "fade, 1, 10, default"
-          "workspaces, 1, 7, wind, fade"
-        ];
       };
 
       decoration = {
@@ -187,6 +160,7 @@ in
       };
 
       # keybindings
+      # TODO: I should unify the caelestia and hyprland bindings
       bind =
         [
           "$mod, Q, killactive,"
@@ -195,9 +169,6 @@ in
           "$mod, B, exec, $browser"
           "$mod, D, exec, $discord"
           "$mod, Return, exec, $terminal"
-          "$mod, Space, exec, $menu"
-          "$mod SHIFT, Space, exec, $dmenu"
-          "$mod, W, exec, $togglebar"
 
           # emacs
           "$mod, E, exec, $emacs"
@@ -239,22 +210,6 @@ in
       bindm = [
         "$mod, mouse:272, movewindow"
         "$mod, mouse:273, resizewindow"
-      ];
-
-      bindel = [
-        ",XF86AudioRaiseVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+"
-        ",XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
-        ",XF86AudioMute, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
-        ",XF86AudioMicMute, exec, wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"
-        ",XF86MonBrightnessUp, exec, brightnessctl s 10%+"
-        ",XF86MonBrightnessDown, exec, brightnessctl s 10%-"
-      ];
-
-      bindl = [
-        ", XF86AudioNext, exec, playerctl next"
-        ", XF86AudioPause, exec, playerctl play-pause"
-        ", XF86AudioPlay, exec, playerctl play-pause"
-        ", XF86AudioPrev, exec, playerctl previous"
       ];
 
       # TODO: move from the extra config to here

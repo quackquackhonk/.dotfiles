@@ -16,11 +16,11 @@ in
     default = {
       rounding = 10;
       gaps-in = 5;
-      gaps-out = 15;
+      gaps-out = 10;
       active-opacity = 1.0;
       inactive-opacity = 0.95;
       blur = true;
-      border-size = 4;
+      border-size = 2;
       animation-speed = "fast"; # "fast" | "medium" | "slow"
       fetch = "none"; # "nerdfetch" | "neofetch" | "pfetch" | "none"
       textColorOnWallpaper = config.lib.stylix.colors.base00; # Color of the text displayed on the wallpaper (Lockscreen, display manager, ...)
