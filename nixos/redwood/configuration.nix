@@ -12,7 +12,7 @@
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
     ../common.nix
-    ../stylix.nix
+    # ../stylix.nix
   ];
 
   # Bootloader.

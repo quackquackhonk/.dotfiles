@@ -4,8 +4,18 @@
   lib,
   ...
 }:
-{
+let
+  border-size = config.theme.border-size;
+  gaps-in = config.theme.gaps-in;
+  gaps-out = config.theme.gaps-out;
+  active-opacity = config.theme.active-opacity;
+  inactive-opacity = config.theme.inactive-opacity;
+  rounding = config.theme.rounding;
+  blur = config.theme.blur;
 
+  background = "rgba(" + config.lib.stylix.colors.base00 + "77)";
+in
+{
   home.packages = with pkgs; [
     grimblast
     xdg-desktop-portal-hyprland
@@ -15,7 +25,6 @@
     catppuccin-cursors.mochaDark
     catppuccin-cursors.mochaLight
     rofi
-    tofi
     udiskie
     pavucontrol
   ];
@@ -31,6 +40,7 @@
       "$browser" = "zen-twilight";
       "$menu" = "tofi-run | zsh";
       "$dmenu" = "tofi-drun | zsh";
+      "$togglebar" = "hyprpanel toggleWindow bar-0";
       "$discord" = "ELECTRON_OZONE_PLATFORM_HINT= discord";
       "$emacs" = "emacsclient -c -a=''";
 
@@ -38,8 +48,6 @@
       env = [
         "PATH,$PATH:$scrPath"
         "XDG_CURRENT_DESKTOP,Hyprland"
-        # "XDG_SESSION_TYPE,wayland"
-        # "XDG_SESSION_DESKTOP,Hyprland"
         "GDK_SCALE,1"
         "HYPRCURSOR_NAME,'Catppuccin Mocha Light'"
         "HYPRCURSOR_SIZE,24"
@@ -59,8 +67,6 @@
         "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"  # for XDPH
         "dbus-update-activation-environment --systemd --all"                                # for XDPH
         "systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"           # for XDPH
-        "hyprpaper"                                                                         # wallpapers
-        "hyprpanel"                                                                         # bar and notis
         "systemctl --user start hyprpolkitagent"                                            # application authentication agent
         "blueman-applet"                                                                    # bluetooth manager applet
         "nm-applet"                                                                         # networkmanager applet
@@ -69,7 +75,6 @@
         "udiskie --automount --smart-tray"                                                  # auto mount USBs
         # Auto start some apps
         "[workspace 1 silent] steam"
-        "[workspace 7 silent] spotify"
         "[workspace 6] $browser"
       ];
 
@@ -95,9 +100,9 @@
 
 
       general = {
-        gaps_in = 4;
-        gaps_out = 4;
-        border_size = 2;
+        gaps_in = gaps-in;
+        gaps_out = gaps-out;
+        border_size = border-size;
 
         "col.active_border" = lib.mkForce "rgb(${config.lib.stylix.colors.base04})";
         "col.inactive_border" = lib.mkForce "rgb(${config.lib.stylix.colors.base01})";
@@ -128,13 +133,13 @@
       };
 
       decoration = {
-        rounding = 0;
-        active_opacity = 1.0;
-        inactive_opacity = 1.0;
+        rounding = rounding;
+        active_opacity = active-opacity;
+        inactive_opacity = inactive-opacity;
 
         # https://wiki.hyprland.org/Configuring/Variables/#blur
         blur = {
-          enabled = true;
+          enabled = blur;
           size = 6;
           passes = 3;
           new_optimizations = true;
@@ -154,6 +159,15 @@
 
       misc = {
         force_default_wallpaper = 0; # Set to 0 to disable anime wallpapers
+        vfr = true;
+        disable_hyprland_logo = true;
+        disable_splash_rendering = true;
+        disable_autoreload = true;
+        focus_on_activate = true;
+      };
+
+      cursor = {
+        no_hardware_cursors = true;
       };
 
       input = {
@@ -183,7 +197,8 @@
           "$mod, Return, exec, $terminal"
           "$mod, Space, exec, $menu"
           "$mod SHIFT, Space, exec, $dmenu"
-          "$mod, Escape, exec, wlogout"
+          "$mod, W, exec, $togglebar"
+
           # emacs
           "$mod, E, exec, $emacs"
           "$mod SHIFT, E, exec, emacsclient -e '(kill-emacs)'"
@@ -242,12 +257,13 @@
         ", XF86AudioPrev, exec, playerctl previous"
       ];
 
+      # TODO: move from the extra config to here
+      # windowrule = [];
 
     };
 
-    extraConfig = ''
-cursor:no_hardware_cursors = true
 
+    extraConfig = ''
 #
 # WORKSPACE RULES
 # See https://wiki.hyprland.org/Configuring/Workspace-Rules/ for workspace rules
