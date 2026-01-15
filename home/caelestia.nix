@@ -15,6 +15,8 @@ in
 
   home.packages = with pkgs; [
     papirus-icon-theme
+    material-icons
+    material-symbols
   ];
 
   programs.caelestia = {
@@ -52,7 +54,9 @@ in
         };
       };
 
-      background.enabled = false;
+      background = {
+        enabled = false;
+      };
 
       border = {
         inherit rounding;
@@ -60,7 +64,7 @@ in
       };
 
       workspaces = {
-        showWindows = false;
+        showWindows = true;
       };
 
       utilities = {

@@ -12,6 +12,21 @@ let
   inactive-opacity = config.theme.inactive-opacity;
   rounding = config.theme.rounding;
   blur = config.theme.blur;
+
+  animationSpeed = config.theme.animation-speed;
+
+  animationDuration =
+    if animationSpeed == "slow"
+    then "4"
+    else if animationSpeed == "medium"
+    then "2.5"
+    else "1.5";
+  borderDuration =
+    if animationSpeed == "slow"
+    then "10"
+    else if animationSpeed == "medium"
+    then "6"
+    else "3";
 in
 {
   home.packages = with pkgs; [
@@ -58,15 +73,15 @@ in
 
       # startup applications
       exec-once = [
-        "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"  # for XDPH
-        "dbus-update-activation-environment --systemd --all"                                # for XDPH
-        "systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"           # for XDPH
-        "systemctl --user start hyprpolkitagent"                                            # application authentication agent
-        "blueman-applet"                                                                    # bluetooth manager applet
-        "nm-applet"                                                                         # networkmanager applet
-        "wl-paste --type text --watch cliphist store"                                       # clipboard store text data
-        "wl-paste --type image --watch cliphist store"                                      # clipboard store image data
-        "udiskie --automount --smart-tray"                                                  # auto mount USBs
+        "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP" # for XDPH
+        "dbus-update-activation-environment --systemd --all" # for XDPH
+        "systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP" # for XDPH
+        "systemctl --user start hyprpolkitagent" # application authentication agent
+        "blueman-applet" # bluetooth manager applet
+        "nm-applet" # networkmanager applet
+        "wl-paste --type text --watch cliphist store" # clipboard store text data
+        "wl-paste --type image --watch cliphist store" # clipboard store image data
+        "udiskie --automount --smart-tray" # auto mount USBs
         # Auto start some apps
         "[workspace 1 silent] steam"
         "[workspace 6] $browser"
@@ -91,6 +106,40 @@ in
         "9, monitor:DP-2, persistent:true"
         "10, monitor:DP-2, persistent:true"
       ];
+
+      animations = {
+        enabled = true;
+        bezier = [
+          "linear, 0, 0, 1, 1"
+          "md3_standard, 0.2, 0, 0, 1"
+          "md3_decel, 0.05, 0.7, 0.1, 1"
+          "md3_accel, 0.3, 0, 0.8, 0.15"
+          "overshot, 0.05, 0.9, 0.1, 1.1"
+          "crazyshot, 0.1, 1.5, 0.76, 0.92"
+          "hyprnostretch, 0.05, 0.9, 0.1, 1.0"
+          "menu_decel, 0.1, 1, 0, 1"
+          "menu_accel, 0.38, 0.04, 1, 0.07"
+          "easeInOutCirc, 0.85, 0, 0.15, 1"
+          "easeOutCirc, 0, 0.55, 0.45, 1"
+          "easeOutExpo, 0.16, 1, 0.3, 1"
+          "softAcDecel, 0.26, 0.26, 0.15, 1"
+          "md2, 0.4, 0, 0.2, 1"
+        ];
+
+        animation = [
+          "windows, 1, ${animationDuration}, md3_decel, popin 60%"
+          "windowsIn, 1, ${animationDuration}, md3_decel, popin 60%"
+          "windowsOut, 1, ${animationDuration}, md3_accel, popin 60%"
+          "border, 1, ${borderDuration}, default"
+          "fade, 1, ${animationDuration}, md3_decel"
+          "layersIn, 1, ${animationDuration}, menu_decel, slide"
+          "layersOut, 1, ${animationDuration}, menu_accel"
+          "fadeLayersIn, 1, ${animationDuration}, menu_decel"
+          "fadeLayersOut, 1, ${animationDuration}, menu_accel"
+          "workspaces, 1, ${animationDuration}, menu_decel, slide"
+          "specialWorkspace, 1, ${animationDuration}, md3_decel, slidevert"
+        ];
+      };
 
       general = {
         gaps_in = gaps-in;
@@ -161,51 +210,54 @@ in
 
       # keybindings
       # TODO: I should unify the caelestia and hyprland bindings
-      bind =
-        [
-          "$mod, Q, killactive,"
-          "$mod, T, togglefloating"
-          # Quick launch programs
-          "$mod, B, exec, $browser"
-          "$mod, D, exec, $discord"
-          "$mod, Return, exec, $terminal"
+      bind = [
+        "$mod, Q, killactive,"
+        "$mod, T, togglefloating"
+        # Quick launch programs
+        "$mod, B, exec, $browser"
+        "$mod, D, exec, $discord"
+        "$mod, Return, exec, $terminal"
 
-          # emacs
-          "$mod, E, exec, $emacs"
-          "$mod SHIFT, E, exec, emacsclient -e '(kill-emacs)'"
+        # emacs
+        "$mod, E, exec, $emacs"
+        "$mod SHIFT, E, exec, emacsclient -e '(kill-emacs)'"
 
-          # Move focus with arrow keys
-          "$mod, left, movefocus, l"
-          "$mod, right, movefocus, r"
-          "$mod, up, movefocus, u"
-          "$mod, down, movefocus, d"
+        # Move focus with arrow keys
+        "$mod, left, movefocus, l"
+        "$mod, right, movefocus, r"
+        "$mod, up, movefocus, u"
+        "$mod, down, movefocus, d"
 
-          # Switch to a relative workspace
-          "$mod, bracketright, workspace, r+1"
-          "$mod, bracketleft, workspace, r-1"
+        # Switch to a relative workspace
+        "$mod, bracketright, workspace, r+1"
+        "$mod, bracketleft, workspace, r-1"
 
-          # Move focused window to a relative workspace
-          "$mainMod+Alt, rightbracket, movetoworkspace, r+1"
-          "$mainMod+Alt, leftbracket, movetoworkspace, r-1"
+        # Move focused window to a relative workspace
+        "$mainMod+Alt, rightbracket, movetoworkspace, r+1"
+        "$mainMod+Alt, leftbracket, movetoworkspace, r-1"
 
-          # special workspace (scratchpad)
-          "$mod, backslash, togglespecialworkspace, magic"
-          "$mod SHIFT, backslash, movetoworkspace, special:magic"
+        # special workspace (scratchpad)
+        "$mod, backslash, togglespecialworkspace, magic"
+        "$mod SHIFT, backslash, movetoworkspace, special:magic"
 
-          ", Print, exec, grimblast copy area"
-        ]
-        ++ (
-          # workspaces
-          # binds $mod + [shift +] {1..9} to [move to] workspace {1..9}
-          builtins.concatLists (builtins.genList (i:
-            let ws = i + 1;
-            in [
+        ", Print, exec, grimblast copy area"
+      ]
+      ++ (
+        # workspaces
+        # binds $mod + [shift +] {1..9} to [move to] workspace {1..9}
+        builtins.concatLists (
+          builtins.genList (
+            i:
+            let
+              ws = i + 1;
+            in
+            [
               "$mod, code:1${toString i}, workspace, ${toString ws}"
               "$mod SHIFT, code:1${toString i}, movetoworkspace, ${toString ws}"
             ]
-          )
-            9)
-        );
+          ) 9
+        )
+      );
 
       bindm = [
         "$mod, mouse:272, movewindow"
@@ -217,47 +269,46 @@ in
 
     };
 
-
     extraConfig = ''
-#
-# WORKSPACE RULES
-# See https://wiki.hyprland.org/Configuring/Workspace-Rules/ for workspace rules
-#
-# Set workspace names
-workspace = 1, defaultName:games
-workspace = 2, defaultName:emacs
-workspace = 6, defaultName:browser
-workspace = 7, defaultName:discord
+      #
+      # WORKSPACE RULES
+      # See https://wiki.hyprland.org/Configuring/Workspace-Rules/ for workspace rules
+      #
+      # Set workspace names
+      workspace = 1, defaultName:games
+      workspace = 2, defaultName:emacs
+      workspace = 6, defaultName:browser
+      workspace = 7, defaultName:discord
 
-#
-# WINDOW RULES
-# See https://wiki.hyprland.org/Configuring/Window-Rules/ for more
-#
+      #
+      # WINDOW RULES
+      # See https://wiki.hyprland.org/Configuring/Window-Rules/ for more
+      #
 
-# Pin certain apps to workspaces
-windowrule = workspace name:games silent, match:class steam match:title .*
-windowrule = workspace name:games silent, match:class steam.* match:title .*
+      # Pin certain apps to workspaces
+      windowrule = workspace name:games silent, match:class steam match:title .*
+      windowrule = workspace name:games silent, match:class steam.* match:title .*
 
-## Bluetooth manager
-windowrule = float on, match:class .blueman-manager-wrapped match:title .*
-windowrule = size 800 600, match:class .blueman-manager-wrapped, match:title .*
-windowrule = center on, match:class .blueman-manager-wrapped, match:title .*
-## audio mixer
-windowrule = float on, match:class org.pulseaudio.pavucontrol, match:title .*
-windowrule = size 800 600, match:class org.pulseaudio.pavucontrol, match:title .*
-windowrule = center on, match:class org.pulseaudio.pavucontrol, match:title .*
+      ## Bluetooth manager
+      windowrule = float on, match:class .blueman-manager-wrapped match:title .*
+      windowrule = size 800 600, match:class .blueman-manager-wrapped, match:title .*
+      windowrule = center on, match:class .blueman-manager-wrapped, match:title .*
+      ## audio mixer
+      windowrule = float on, match:class org.pulseaudio.pavucontrol, match:title .*
+      windowrule = size 800 600, match:class org.pulseaudio.pavucontrol, match:title .*
+      windowrule = center on, match:class org.pulseaudio.pavucontrol, match:title .*
 
-## PIP
-windowrule = float on, match:class zen, match:title Picture-in-Picture
-## GUI development start as floating window
-windowrule = float on, match:class main.exe match:title .*
+      ## PIP
+      windowrule = float on, match:class zen, match:title Picture-in-Picture
+      ## GUI development start as floating window
+      windowrule = float on, match:class main.exe match:title .*
 
-## MISC RULES
-### Ignore maximize requests from apps. You'll probably like this.
-windowrule = suppress_event maximize, match:class .*
-### Fix some dragging issues with XWayland
-windowrule = no_focus on, match:class ^$ match:title ^$ match:xwayland 1 match:float 1 match:fullscreen 0 match:pin 0
-'';
+      ## MISC RULES
+      ### Ignore maximize requests from apps. You'll probably like this.
+      windowrule = suppress_event maximize, match:class .*
+      ### Fix some dragging issues with XWayland
+      windowrule = no_focus on, match:class ^$ match:title ^$ match:xwayland 1 match:float 1 match:fullscreen 0 match:pin 0
+    '';
 
   };
 }
