@@ -63,9 +63,20 @@
 
 ;;; Some initial packages
 
+;; Terminal Keybinding support
+(use-package term-keys
+  :straight (term-keys :type git :host github :repo "CyberShadow/term-keys")
+  :config
+  (term-keys-mode 1)
+  ;; (require 'term-keys-wezterm)
+  ;; (with-temp-buffer
+  ;;   (insert (term-keys/wezterm-conf))
+  ;;   (write-region (point-min) (point-max) "~/.wezterm-for-term-keys.lua"))
+  )
+
 ;; exec-path-from-shell for macos
 (use-package exec-path-from-shell
-  :if (qqh--macos-p)
+  :if (and (display-graphic-p) (qqh--macos-p))
   :config
   (exec-path-from-shell-initialize))
 ;; direnv integration for everywhere else
@@ -510,6 +521,10 @@
   :hook ((vterm-mode . goto-address-mode)
          (vterm-mode . evil-emacs-state))
   :bind (:map vterm-mode-map
+              ("C-<left>" . 'windmove-left)
+              ("C-<right>" . 'windmove-right)
+              ("C-<up>" . 'windmove-up)
+              ("C-<down>" . 'windmove-down)
               ("C-c C-x" . vterm--self-insert))
   :config
   (setq vterm-shell (getenv "SHELL"))
@@ -1102,6 +1117,11 @@ This function falls back to `consult-fd' if we're not in a project."
 (global-set-key (kbd "<end>") 'end-of-line)
 (global-set-key (kbd "M-[") 'tab-previous)
 (global-set-key (kbd "M-]") 'tab-next)
+
+(global-set-key (kbd "C-<left>") 'windmove-left)
+(global-set-key (kbd "C-<right>") 'windmove-right)
+(global-set-key (kbd "C-<up>") 'windmove-up)
+(global-set-key (kbd "C-<down>") 'windmove-down)
 
 (global-set-key (kbd "M-<mouse-1>") 'goto-address-at-mouse)
 
