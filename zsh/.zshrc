@@ -106,7 +106,7 @@ alias zshsrc="source ~/.zshrc"
 alias emd='emacs --daemon'
 alias emdebug='emacs --debug-init --fg-daemon'
 alias emkill='emacsclient -e "(kill-emacs)"'
-alias ec='emacsclient -nw -a ""'
+alias ec='emacsclient -nw -c -a""'
 
 # work
 alias cirrus='ssh -i ~/.ssh/stankala_id.key stankala@cirrus.veriskweather.net -t "zsh"'

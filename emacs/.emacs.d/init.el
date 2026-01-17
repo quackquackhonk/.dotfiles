@@ -25,7 +25,10 @@
 
 (defun qqh--is-work ()
   "Check if the current system is for work."
-  (member (system-name) (list "LVV3TW207K")))
+  (member (system-name)
+          (list
+           "ip-10-97-122-31" ;; cirrus
+           "LVV3TW207K")))
 
 ;;; Straight initialization
 
@@ -68,6 +71,7 @@
   :if (qqh--macos-p)
   :config
   (exec-path-from-shell-initialize))
+
 ;; direnv integration for everywhere else
 (use-package envrc
   ;; TODO: disable envrc in magit buffers
@@ -136,6 +140,7 @@
 (setopt compilation-scroll-output t)                      ;; follow compilation output by default
 (setq frame-resize-pixelwise t)
 (setq-default tab-bar-show nil)                           ;; disable the tab bar
+(tab-bar-mode -1)
 (column-number-mode +1)
 (global-hl-line-mode +1)
 
@@ -379,14 +384,13 @@
 ;; I'm not sure why this needs to be its own thing, :bind doesn't work
 (evil-define-key
   '(normal visual emacs) 'global
-  (kbd "C-;") 'embark-act
-  (kbd "M-;") 'embark-dwim        ;; good alternative: M-.
+  (kbd "M-.") 'embark-act
   (kbd "C-h B") 'embark-bindings)  ;; alternative for `describe-bindings'
 
 (use-package embark-consult
   :after (embark consult)
   :config
-  (bind-key (kbd "C-;") 'embark-act 'minibuffer-mode-map))
+  (bind-key (kbd "M-.") 'embark-act 'minibuffer-mode-map))
 
 
 ;; Vertico: better vertical completion for minibuffer commands
@@ -522,7 +526,9 @@
               ("C-w" . vterm-send-next-key)
               ("C-c C-x" . vterm--self-insert))
   :config
-  (setq vterm-shell (getenv "SHELL"))
+  (setq vterm-shell (if (qqh--is-work)
+                        "/bin/zsh"
+                      (getenv "SHELL")))
   (unbind-key (kbd "M-'") 'vterm-mode-map)
   (unbind-key (kbd "M-]") 'vterm-mode-map)
   (unbind-key (kbd "C-@") 'vterm-mode-map))
@@ -640,21 +646,6 @@
       (let ((persp-inhibit-switch-for (cons window persp-inhibit-switch-for)))
         (persp-activate (persp-add-new name) window)))
     name)
-
-  ;; Perspective-exclusive tabs, ala tmux windows
-  ;; FIXME: idk why this doesnt work anymore
-  ;; (when (display-graphic-p)
-  ;;   (add-hook 'persp-before-deactivate-functions
-  ;;             (defun qqh-persp--save-tab-bar-data (_)
-  ;;               (when (get-current-persp)
-  ;;                 (set-persp-parameter
-  ;;                  'tab-bar-tabs (tab-bar-tabs)))))
-
-  ;;   (add-hook 'persp-activated-functions
-  ;;             (defun qqh-persp--load-tab-bar-data (_)
-  ;;               (tab-bar-tabs-set (persp-parameter 'tab-bar-tabs))
-  ;;               (tab-bar--update-tab-bar-lines t))))
-
 
   (defvar persp-consult-source
     (list :name     "Perspective"
@@ -792,7 +783,7 @@
 
   ;; server configurations
   (setq-default eglot-workspace-configuration
-                '((:basedpyright :typeCheckingMode "recommended"))))
+                '((:basedpyright :typeCheckingMode "basic"))))
 
 (use-package eglot-booster
   :straight (eglot-booster :type git :host github :repo "jdtsmith/eglot-booster")
@@ -1142,16 +1133,15 @@ This function falls back to `consult-fd' if we're not in a project."
                                       :host github
                                       :repo "meain/evil-textobj-tree-sitter"
                                       :files (:defaults "queries" "treesit-queries"))
-  ;;:config
-  ;;;; bind `function.outer`(entire function block) to `f` for use in things like `vaf`, `yaf`
-  ;;(define-key evil-outer-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.outer"))
-  ;;(define-key evil-outer-text-objects-map "c" (evil-textobj-tree-sitter-get-textobj "class.outer"))
-  ;;(define-key evil-outer-text-objects-map "/" (evil-textobj-tree-sitter-get-textobj "comment.outer"))
-  ;;;; bind `function.inner`(function block without name and args) to `f` for use in things like `vif`, `yif`
-  ;;(define-key evil-inner-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.inner"))
-  ;;(define-key evil-inner-text-objects-map "c" (evil-textobj-tree-sitter-get-textobj "class.inner"))
-  ;;(define-key evil-inner-text-objects-map "/" (evil-textobj-tree-sitter-get-textobj "comment.inner"))
-  )
+  :config
+  ;; bind `function.outer`(entire function block) to `f` for use in things like `vaf`, `yaf`
+  (define-key evil-outer-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.outer"))
+  (define-key evil-outer-text-objects-map "c" (evil-textobj-tree-sitter-get-textobj "class.outer"))
+  (define-key evil-outer-text-objects-map "/" (evil-textobj-tree-sitter-get-textobj "comment.outer"))
+  ;; bind `function.inner`(function block without name and args) to `f` for use in things like `vif`, `yif`
+  (define-key evil-inner-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.inner"))
+  (define-key evil-inner-text-objects-map "c" (evil-textobj-tree-sitter-get-textobj "class.inner"))
+  (define-key evil-inner-text-objects-map "/" (evil-textobj-tree-sitter-get-textobj "comment.inner")))
 
 
 ;;;; Evil Bindings
@@ -1230,8 +1220,16 @@ This function falls back to `consult-fd' if we're not in a project."
   :hook (prog-mode . rainbow-delimiters-mode))
 
 (use-package hl-todo
-  :config
-  (global-hl-todo-mode))
+  :custom
+  (hl-todo-keyword-faces (("TODO" . ,(catppuccin-color 'sky))
+                          ("HACK" . ,(catppuccin-color 'peach))
+                          ("FIXME" . ,(catppuccin-color 'red))
+                          ("NOTE" . ,(catppuccin-color 'mauve))
+                          ("PERF" . ,(catppuccin-color 'lavender))))
+  (hl-todo-highlight-punctuation ":")
+
+  (global-hl-line-mode))
+
 
 (use-package magit-todos
   :after magit
@@ -1249,11 +1247,6 @@ This function falls back to `consult-fd' if we're not in a project."
                      :background (catppuccin-color 'base))
   (fancy-compilation-mode))
 
-;; disable the tab bar
-(tab-bar-mode -1)
-
-(set-face-attribute 'tab-bar nil :box nil :background (catppuccin-color 'mantle))
-(set-face-attribute 'tab-bar-tab nil :foreground (catppuccin-color 'mauve) :background (catppuccin-color 'base))
 
 ;;;; Modeline configurtaion
 (use-package doom-modeline
@@ -1276,7 +1269,7 @@ This function falls back to `consult-fd' if we're not in a project."
   :config
 
   (doom-modeline-def-segment qqh-dm--sep
-    (propertize " |" 'face '(:inherit (doom-modeline font-lock-comment-face))))
+    (propertize " |" 'face '(:inherit (doom-modeline font-lock-comment-delimiter-face))))
 
   (doom-modeline-def-segment qqh-dm--misc
     "Mode line construct for miscellaneous information.
@@ -1284,7 +1277,7 @@ By default, this shows the information specified by `global-mode-string'."
     (when (or doom-modeline-display-misc-in-all-mode-lines
               (doom-modeline--segment-visible 'misc-info))
       (propertize (format-mode-line mode-line-misc-info)
-                  'face '(:inherit (doom-modeline font-lock-comment-face)))))
+                  'face '(:inherit (doom-modeline font-lock-comment-delimiter-face)))))
 
   ;; move the majpr mode in the main modeline to the left
   (doom-modeline-def-modeline 'main
@@ -1326,21 +1319,22 @@ By default, this shows the information specified by `global-mode-string'."
                                    "\\*OCaml\\*"
                                    "magit.*"
                                    "\\*vterm:.*\\*"
+                                   "\\*Help\\*"
+                                   "\\*Customize.*\\*"
                                    vterm-mode
                                    magit-mode
                                    help-mode
+                                   custom-mode
                                    compilation-mode
                                    comint-mode)
         popper-group-function #'popper-group-by-projectile
-        popper-echo-dispatch-keys '(?1 ?2 ?3 ?4 ?5 ?6 ?7 ?8 ?9 ?0))
-
-  (setq
-   popper-mode-line t
-   popper-window-height (lambda (win)
-                          (fit-window-to-buffer
-                           win
-                           (floor (frame-height) 2)
-                           (floor (frame-height) 2))))
+        popper-echo-dispatch-keys '(?1 ?2 ?3 ?4 ?5 ?6 ?7 ?8 ?9 ?0)
+        popper-mode-line t
+        popper-window-height (lambda (win)
+                               (fit-window-to-buffer
+                                win
+                                (floor (frame-height) 2)
+                                (floor (frame-height) 2))))
 
   (popper-mode +1)
   ;; echo area hints
