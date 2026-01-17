@@ -11,6 +11,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # some helpful utils
     flake-utils = {
       url = "github:numtide/flake-utils";
       inputs.systems.follows = "systems";
@@ -27,6 +28,12 @@
       };
     };
 
+    # caelestia for shell / bar
+    caelestia-shell = {
+      url = "github:caelestia-dots/shell";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
   };
 
   outputs =
@@ -36,6 +43,7 @@
       stylix,
       zen-browser,
       home-manager,
+      caelestia-shell,
       ...
     }@inputs:
     let
@@ -69,6 +77,7 @@
                 home-manager.useUserPackages = true;
                 home-manager.extraSpecialArgs = { inherit inputs system; };
                 home-manager.users.sahana.imports = [
+                  stylix.homeModules.stylix
                   ./home/home.nix
                 ];
               }

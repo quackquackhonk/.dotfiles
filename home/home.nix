@@ -13,10 +13,11 @@
     ./zsh.nix
     ./desktop.nix
     ./dev.nix
-    ./stylix.nix
     ./games.nix
     ./hyprland.nix
-    ./hyprpanel.nix
+    # ./hyprpanel.nix
+    ./caelestia.nix
+    ./variables.nix
   ];
 
   services.gpg-agent = {
@@ -43,9 +44,8 @@
   programs.zen-browser = {
     enable = true;
     policies.DisableTelemetry = true;
-    nativeMessagingHosts = [pkgs.firefoxpwa];
+    nativeMessagingHosts = [ pkgs.firefoxpwa ];
   };
-
 
   # The home.packages option allows you to install Nix packages into your
   # environment.
@@ -101,6 +101,9 @@
 
   # Let home-manager manage my dotfiles
   home.file = {
+    # Import a profile picture, used by the caelestia dashboard
+    # ".face" = {source = ../profile_picture.png;};
+
     ".config/starship".source = ../starship/.config/starship.toml;
     ".config/ghostty" = {
       source = ../ghostty;

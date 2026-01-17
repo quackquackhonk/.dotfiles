@@ -1,5 +1,6 @@
 {
   config,
+  lib,
   pkgs,
   callPackage,
   ...
@@ -10,7 +11,7 @@ in
 {
   # Enable dynamic libraries
   programs.nix-ld.enable = true;
-  programs.nix-ld.libraries = with pkgs; [];
+  programs.nix-ld.libraries = with pkgs; [ ];
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
@@ -27,21 +28,18 @@ in
     wget
     qmk
     via
-    (
-      pkgs.catppuccin-sddm.override {
-        flavor = "mocha";
-        font  = "Maple Mono";
-        fontSize = "12";
-        background = "${../wallpapers/space.png}";
-        loginBackground = true;
-      }
-    )
+    (pkgs.catppuccin-sddm.override {
+      flavor = "mocha";
+      font = "Maple Mono";
+      fontSize = "12";
+      background = "${../wallpapers/space.png}";
+      loginBackground = true;
+    })
   ];
 
   # for qmk
   hardware.keyboard.qmk.enable = true;
   services.udev.packages = [ pkgs.via ];
-
 
   # file manager
   programs.thunar = {
@@ -52,9 +50,9 @@ in
     ];
   };
   # needed for xfce apps
-  programs.xfconf.enable = true;       # save preferences
-  services.gvfs.enable = true;         # mounting / trash / etc
-  services.tumbler.enable = true;      # thumbnails for images
+  programs.xfconf.enable = true; # save preferences
+  services.gvfs.enable = true; # mounting / trash / etc
+  services.tumbler.enable = true; # thumbnails for images
 
   # manage removeable media
   services.udisks2.enable = true;
