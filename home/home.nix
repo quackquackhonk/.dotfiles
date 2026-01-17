@@ -44,9 +44,8 @@
   programs.zen-browser = {
     enable = true;
     policies.DisableTelemetry = true;
-    nativeMessagingHosts = [pkgs.firefoxpwa];
+    nativeMessagingHosts = [ pkgs.firefoxpwa ];
   };
-
 
   # The home.packages option allows you to install Nix packages into your
   # environment.
