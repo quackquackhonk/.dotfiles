@@ -678,12 +678,15 @@
   (setq markdown-list-indent-width 2))
 
 (use-package yaml-mode)
-(use-package json-mode)
+(use-package json-mode
+  :mode "\\.json\\'")
 (use-package protobuf-mode)
 (use-package dts-mode
   :mode "\\.keymap\\'")
 (use-package just-mode)
 (use-package cmake-mode)
+
+(add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-ts-mode))
 
 ;;;; Documentation and Diagnostics
 ;;;;; Eldoc
@@ -1041,8 +1044,6 @@ This function falls back to `consult-fd' if we're not in a project."
           ("b" "branch" magit-branch)
           ("c" "commit" magit-commit)
           ("g" "status" magit)
-          ("s" "stage file" (lambda () (interactive)
-                              (magit-stage-file (magit-current-file))))
           ("P" "push" magit-push)
           ("p" "pull" magit-pull)
           ("B" "blame" magit-blame)])

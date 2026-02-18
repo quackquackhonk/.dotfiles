@@ -22,8 +22,6 @@ export CMAKE_OSX_SYSROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk
 
 unsetopt PROMPT_SP
 
-export EDITOR="vim"
-
 export TERM=xterm-256color
 export COLORTERM=truecolor
 
@@ -106,7 +104,7 @@ alias zshsrc="source ~/.zshrc"
 alias emd='emacs --daemon'
 alias emdebug='emacs --debug-init --fg-daemon'
 alias emkill='emacsclient -e "(kill-emacs)"'
-alias ec='emacsclient -nw -c -a""'
+alias ec='emacsclient -nw -c -a=""'
 
 # work
 alias cirrus='ssh -i ~/.ssh/stankala_id.key stankala@cirrus.veriskweather.net -t "zsh"'
