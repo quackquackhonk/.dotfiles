@@ -639,7 +639,6 @@
   :config
   ;; Override persp-switch to make it exclude the nil perspective
   (cl-defun persp-frame-switch (name &optional (frame (selected-frame)))
-
     (interactive "i")
     (unless name
       (setq name (persp-read-persp "to switch(in frame)" nil nil nil t t)))
@@ -696,6 +695,8 @@
   :mode "\\.keymap\\'")
 (use-package just-mode)
 (use-package cmake-mode)
+(use-package lua-mode
+  :mode "\\.lua\\'")
 
 (add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-ts-mode))
 
@@ -812,7 +813,8 @@
   (format-all-show-errors 'never)
   :config
   (setq-default format-all-formatters
-                '(("Python" (black)))))
+                '(("Python" (black))
+                  ("Nix" (nixfmt)))))
 
 ;;;; Language specific configuration
 
@@ -1082,8 +1084,7 @@ This function falls back to `consult-fd' if we're not in a project."
   [:class transient-row "edit config for..."
           ("c" "emacs" qqh-emacs--open-config)
           ("f" "flake" qqh-config--open-nix-flake :if (lambda () (not (qqh--macos-p))))
-          ("h" "hyprland" qqh-config--hyprland :if (lambda () (not (qqh--macos-p))))
-          ("n" "home-manager" qqh-config--open-nix-home :if (lambda () (not (qqh--macos-p))))])
+          ("h" "home-manager" qqh-config--open-nix-home :if (lambda () (not (qqh--macos-p))))])
 
 
 (qqh--leader-define '(("SPC" . consult-buffer)
@@ -1238,13 +1239,13 @@ This function falls back to `consult-fd' if we're not in a project."
 
 (use-package hl-todo
   :custom
-  (hl-todo-keyword-faces (("TODO" . ,(catppuccin-color 'sky))
-                          ("HACK" . ,(catppuccin-color 'peach))
-                          ("FIXME" . ,(catppuccin-color 'red))
-                          ("NOTE" . ,(catppuccin-color 'mauve))
-                          ("PERF" . ,(catppuccin-color 'lavender))))
+  (hl-todo-keyword-faces `(("TODO" . ,(catppuccin-color 'sky))
+                           ("HACK" . ,(catppuccin-color 'peach))
+                           ("FIXME" . ,(catppuccin-color 'red))
+                           ("NOTE" . ,(catppuccin-color 'mauve))
+                           ("PERF" . ,(catppuccin-color 'lavender))))
   (hl-todo-highlight-punctuation ":")
-
+  :config
   (global-hl-line-mode))
 
 
@@ -1283,8 +1284,9 @@ This function falls back to `consult-fd' if we're not in a project."
   (doom-modeline-evil-user-state ((t :bold t :background ,(catppuccin-color 'yellow) :foreground ,(catppuccin-color 'base))))
 
   (doom-modeline-bar ((t :inherit nil :foreground ,(catppuccin-color 'rosewater) :background ,(catppuccin-color 'rosewater))))
-  :config
+  (mode-line-emphasis ((t :inherit nil :foreground ,(catppuccin-color 'rosewater) :slant normal)))
 
+  :config
   (doom-modeline-def-segment qqh-dm--sep
     (propertize " |" 'face '(:inherit (doom-modeline font-lock-comment-delimiter-face))))
 

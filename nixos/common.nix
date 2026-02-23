@@ -28,14 +28,30 @@ in
     wget
     qmk
     via
+
     (pkgs.catppuccin-sddm.override {
       flavor = "mocha";
+      accent = "mauve";
       font = "Maple Mono";
       fontSize = "12";
       background = "${../wallpapers/space.png}";
       loginBackground = true;
     })
+
   ];
+
+  # hyprland + SDDM
+  programs.hyprland = {
+    enable = true;
+    xwayland.enable = true;
+  };
+  services.xserver.enable = true;
+  services.displayManager.sddm = {
+    enable = true;
+    wayland.enable = true;
+    theme = "catppuccin-mocha";
+  };
+
 
   # for qmk
   hardware.keyboard.qmk.enable = true;

@@ -1,21 +1,23 @@
 {
+  inputs,
+  system,
   pkgs,
   ...
 }:
 {
   home.packages = with pkgs; [
+    # launcer
     (prismlauncher.override {
       additionalLibs = [
+        libxkbcommon
         xorg.libXtst
         xorg.libXt
-        libxkbcommon
       ];
      })
 
-    (retroarch.withCores (cores: with cores; [
-      dolphin
-      mupen64plus
-      beetle-psx-hw
-    ]))
+    # for MCSR
+    piper
+    waywall
   ];
+
 }

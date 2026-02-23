@@ -4,9 +4,12 @@
   ...
 }:
 {
+  imports = [];
+
   # use emacs as a file manager
   home.file = {
-    ".local/share/applications/emacsfm.desktop".source = ../desktop/emacsfm.desktop;
+    ".local/share/applications/emacsfm.desktop".source = ../../desktop/emacsfm.desktop;
+    ".local/share/applications/oot.desktop".source = ../../desktop/ocarina_of_time.desktop;
   };
 
   # XDG configuration
