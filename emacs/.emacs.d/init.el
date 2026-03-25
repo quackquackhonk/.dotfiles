@@ -8,6 +8,15 @@
 (when (< emacs-major-version 30)
   (error "[qqh] config requires Emacs version 30+, currently running %s!" emacs-major-version))
 
+;; package initialization
+(require 'package)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(package-initialize)
+(require 'use-package)
+(setq use-package-verbose t)
+(setq use-package-always-ensure t)
+(setq load-prefer-newer t)
+
 ;;; Top Level Definitions
 (defgroup qqh nil
   "User options for my Emacs configuration."
@@ -30,52 +39,13 @@
            "ip-10-97-122-31" ;; cirrus
            "LVV3TW207K")))
 
-;;; Straight initialization
-
-;;;; bootstrap straight
-(defvar bootstrap-version)
-(let ((bootstrap-file
-       (expand-file-name
-        "straight/repos/straight.el/bootstrap.el"
-        (or (bound-and-true-p straight-base-dir)
-            user-emacs-directory)))
-      (bootstrap-version 7))
-  (unless (file-exists-p bootstrap-file)
-    (with-current-buffer
-        (url-retrieve-synchronously
-         "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
-         'silent 'inhibit-cookies)
-      (goto-char (point-max))
-      (eval-print-last-sexp)))
-  (load bootstrap-file nil 'nomessage))
-
-(straight-use-package 'use-package)
-
-;;;; Setup use-package for straight
-(use-package straight
-  :custom
-  ;; add project and flymake to the pseudo-packages variable so straight.el doesn't download a
-  ;; separate version than what eglot downloads.
-  (straight-built-in-pseudo-packages '(emacs nadvice python image-mode project flymake xref))
-  (straight-use-package-by-default t)
-  :config
-  (setq straight-vc-git-default-protocol 'https))
-
-;; always load the newest bytecode
-(setq load-prefer-newer t)
-
 ;;; Some initial packages
 
 ;; Terminal Keybinding support
 (use-package term-keys
-  :straight (term-keys :type git :host github :repo "CyberShadow/term-keys")
+  :vc (:url "git@github.com:CyberShadow/term-keys")
   :config
-  (term-keys-mode 1)
-  ;; (require 'term-keys-wezterm)
-  ;; (with-temp-buffer
-  ;;   (insert (term-keys/wezterm-conf))
-  ;;   (write-region (point-min) (point-max) "~/.wezterm-for-term-keys.lua"))
-  )
+  (term-keys-mode 1))
 
 ;; exec-path-from-shell for macos
 (use-package exec-path-from-shell
@@ -180,7 +150,6 @@
 
 ;;;; TRAMP
 (use-package tramp
-  :straight nil
   :config
   (setq-default tramp-default-remote-shell "/bin/zsh"))
   ;;(add-to-list tramp-remote-path 'tramp-own-remote-path))
@@ -191,13 +160,11 @@
 
 ;;;; Dired
 (use-package dired
-  :straight nil
   :config
   (setq dired-kill-when-opening-new-dired-buffer t))
 
 ;;;; Outline-mode
 (use-package outline
-  :straight nil
   :config
   (define-key outline-minor-mode-map (kbd "C-c C-c")
               (lookup-key outline-minor-mode-map (kbd "C-c @")))
@@ -213,7 +180,6 @@
 
 ;;;; whitespace-mode
 (use-package whitespace-mode
-  :straight nil
   :custom
   (whitespace-style '(face lines-tail))
   (whitespace-line-column 120)
@@ -228,7 +194,7 @@
 
 ;;; Evil mode
 (use-package undo-fu
-  :straight (undo-fu :type git :host github :repo "emacsmirror/undo-fu"))
+  :vc (:url "git@github.com:emacsmirror/undo-fu"))
 
 (use-package evil
   :ensure t
@@ -415,7 +381,6 @@
   (vertico-mode))
 
 (use-package vertico-directory
-  :straight nil
   :after vertico
   :bind
   (:map vertico-map
@@ -457,7 +422,6 @@
 
 ;;;;; Corfu popupinfo
 (use-package corfu-popupinfo
-  :straight nil
   :after corfu
   :hook (corfu-mode . corfu-popupinfo-mode)
   :custom
@@ -481,7 +445,6 @@
 
 ;;;; A few more useful configurations...
 (use-package emacs
-  :straight nil
   :hook
   ;; Auto parenthesis matching
   ((prog-mode . electric-pair-mode))
@@ -587,6 +550,7 @@
 
 (use-package forge
   :config
+  :after magit
   ;; Configure auth source
   (setq auth-sources '("~/.authinfo"))
   ;; setup VWS gitlab
@@ -612,8 +576,8 @@
   (when (qqh--macos-p)
     (setq projectile-fd-executable "/opt/homebrew/bin/fd"))
 
-  (setq projectile-enable-caching t
-        projectile-auto-discover t
+  (setq projectile-enable-caching 'persistent
+        projectile-auto-discover nil
         projectile-project-search-path '(("~/code/" . 3)
 					                     "~/sources/"))
   :config
@@ -627,60 +591,22 @@
 				                    :test-suffix "_test"))
 
 ;;;;; Perspectives
-(use-package persp-mode
+(use-package perspective
   :after consult
   :custom
-  (persp-auto-resume-time -1.0)
-  (persp-auto-save-opt 1)
-  (persp-autokill-buffer-on-remove 'kill-weak)
-  (persp-add-buffer-on-after-change-major-mode 'free)
-  (persp-kill-foreign-buffer-behaviour 'kill)
-  (persp-keymap-prefix (kbd "C-c p"))
+  (persp-mode-prefix-key (kbd "C-c p"))  ; pick your own prefix key here
+  (persp-modestring-short t)
+  (persp-sort 'access)
+  :init
+  (persp-mode)
   :config
-  ;; Override persp-switch to make it exclude the nil perspective
-  (cl-defun persp-frame-switch (name &optional (frame (selected-frame)))
-
-    (interactive "i")
-    (unless name
-      (setq name (persp-read-persp "to switch(in frame)" nil nil nil t t)))
-    (unless (memq frame persp-inhibit-switch-for)
-      (run-hook-with-args 'persp-before-switch-functions name frame)
-      (let ((persp-inhibit-switch-for (cons frame persp-inhibit-switch-for)))
-        (persp-activate (persp-add-new name) frame)))
-    name)
-  (cl-defun persp-window-switch (name &optional (window (selected-window)))
-    (interactive "i")
-    (unless name
-      (setq name (persp-read-persp "to switch(in window)" nil nil nil t t)))
-    (unless (memq window persp-inhibit-switch-for)
-      (run-hook-with-args 'persp-before-switch-functions name window)
-      (let ((persp-inhibit-switch-for (cons window persp-inhibit-switch-for)))
-        (persp-activate (persp-add-new name) window)))
-    name)
-
-  (defvar persp-consult-source
-    (list :name     "Perspective"
-          :narrow   ?s
-          :category 'buffer
-          :state    #'consult--buffer-state
-          :history  'buffer-name-history
-          :default  t
-          :items
-          #'(lambda ()
-              (mapcar #'buffer-name
-                      (persp-filter-out-bad-buffers)))))
-  (consult-customize consult--source-buffer :hidden t :default nil)
+  (consult-customize consult-source-buffer :hidden t :default nil)
   (add-to-list 'consult-buffer-sources persp-consult-source))
 
-(use-package persp-mode-projectile-bridge
-  :custom
-  (persp-mode-projectile-bridge-persp-name-prefix "")
-  :config
-  (add-hook 'persp-mode-projectile-bridge-mode-hook
-            #'(lambda ()
-                (if persp-mode-projectile-bridge-mode
-                    (persp-mode-projectile-bridge-find-perspectives-for-all-buffers)
-                  (persp-mode-projectile-bridge-kill-perspectives)))))
+(use-package persp-projectile
+  :after perspective
+  :bind (:map projectile-command-map
+        ("p" . 'projectile-persp-switch-project)))
 
 ;;;; Miscellaneous file types
 (use-package markdown-mode
@@ -701,8 +627,7 @@
 
 ;;;; Documentation and Diagnostics
 ;;;;; Eldoc
-(use-package eldoc
-  :straight (:type built-in))
+(use-package eldoc)
 ;; show the right characters for HTML escapes
 ;; https://emacs.stackexchange.com/questions/80740/how-to-correctly-format-nbsp-in-eldoc-using-eglot
 (defvar rb--eldoc-html-patterns
@@ -724,6 +649,7 @@
 
 (defun rb--eldoc-preprocess (orig-fun &rest args)
   "Preprocess the docs to be displayed by eldoc to replace HTML escapes."
+
   (let ((doc (car args)))
     ;; The first argument is a list of (STRING :KEY VALUE ...) entries
     ;; we replace the text in each such string
@@ -758,7 +684,6 @@
 
 ;;;;; Flymake
 (use-package flymake
-  :straight (:type built-in)
   :custom
   (flymake-mode-line-format '(" " flymake-mode-line-counters flymake-mode-line-exception))
   (flymake-margin-indicators-string '((error "X" compilation-error)
@@ -772,7 +697,6 @@
 
 ;;;; Eglot
 (use-package eglot
-  :straight (:type built-in)
   :custom
   (eglot-send-changes-idle-time 0.1)
   (eglot-extend-to-xref t) ; activate Eglot in referenced non-project files
@@ -800,7 +724,7 @@
                 '((:basedpyright :typeCheckingMode "basic"))))
 
 (use-package eglot-booster
-  :straight (eglot-booster :type git :host github :repo "jdtsmith/eglot-booster")
+  :vc (:url "git@github.com:jdtsmith/eglot-booster")
   :after eglot
   :config (eglot-booster-mode))
 
@@ -849,21 +773,7 @@
   ;; Remove guess indent python message
   (python-indent-guess-indent-offset-verbose nil))
 
-(defun qqh--spack-python ()
-  "Activate the spack environment in the current project, if there is one."
-  (interactive)
-  (when (qqh--macos-p)
-    (setenv "WORKON_HOME" "/opt/homebrew/Caskroom/miniconda/base/envs/"))
-  (let* ((root-dir (if (projectile-project-root)
-                       (projectile-project-root)
-                     default-directory))
-         (env-dir (expand-file-name "spack_env/.spack-env/view" root-dir)))
-    (if (file-exists-p env-dir)
-        (pyvenv-activate env-dir)
-      (ignore))))
-
 (use-package pyvenv
-  :hook (((python-mode python-ts-mode) . qqh--spack-python))
   :config
   (when (qqh--macos-p)
     (setenv "WORKON_HOME" "/opt/homebrew/Caskroom/miniconda/base/envs/"))
@@ -1038,9 +948,8 @@ This function falls back to `consult-fd' if we're not in a project."
         ("C-g" . transient-quit-all)))
 
 (use-package transient-showcase
-  :straight '(transient-showcase
-              :type git :host github
-              :repo "positron-solutions/transient-showcase"))
+  :ensure t
+  :vc (:url "git@github.com:positron-solutions/transient-showcase"))
 
 ;; Set up some transient maps for additional leaders
 (transient-define-prefix qqh-transient--code ()
@@ -1146,10 +1055,6 @@ This function falls back to `consult-fd' if we're not in a project."
 
 (use-package evil-textobj-tree-sitter
   :after evil
-  :straight (evil-textobj-tree-sitter :type git
-                                      :host github
-                                      :repo "meain/evil-textobj-tree-sitter"
-                                      :files (:defaults "queries" "treesit-queries"))
   :config
   ;; bind `function.outer`(entire function block) to `f` for use in things like `vaf`, `yaf`
   (define-key evil-outer-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.outer"))
@@ -1238,13 +1143,13 @@ This function falls back to `consult-fd' if we're not in a project."
 
 (use-package hl-todo
   :custom
-  (hl-todo-keyword-faces (("TODO" . ,(catppuccin-color 'sky))
-                          ("HACK" . ,(catppuccin-color 'peach))
-                          ("FIXME" . ,(catppuccin-color 'red))
-                          ("NOTE" . ,(catppuccin-color 'mauve))
-                          ("PERF" . ,(catppuccin-color 'lavender))))
+  (hl-todo-keyword-faces `(("TODO" . ,(catppuccin-color 'sky))
+                           ("HACK" . ,(catppuccin-color 'peach))
+                           ("FIXME" . ,(catppuccin-color 'red))
+                           ("NOTE" . ,(catppuccin-color 'mauve))
+                           ("PERF" . ,(catppuccin-color 'lavender))))
   (hl-todo-highlight-punctuation ":")
-
+  :config
   (global-hl-line-mode))
 
 
@@ -1321,7 +1226,7 @@ By default, this shows the information specified by `global-mode-string'."
 
 ;; pop up management
 (use-package popper
-  :straight t
+  :ensure t
   :bind (("C-'"   . popper-toggle)
          ("C-M-_" . popper-toggle)
          ("M-'"   . popper-cycle)
@@ -1361,12 +1266,39 @@ By default, this shows the information specified by `global-mode-string'."
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (load custom-file 'noerror)
 
-;;; Cleanup
-(persp-mode 1)
-(persp-mode-projectile-bridge-mode 1)
+(when (qqh--is-work)
+  (use-package copilot
+    :ensure t
+    :hook (prog-mode . copilot-mode)
+    :bind (:map copilot-mode-map
+                ("C-<tab>" . copilot-complete)
+                ("C-TAB" . copilot-complete)
+           :map copilot-completion-map
+                ("<tab>" . copilot-accept-completion)
+                ("TAB" . copilot-accept-completion)
+                ("C-<tab>" . copilot-accept-completion-by-word)
+                ("C-TAB" . copilot-accept-completion-by-word)
+                ("C-n" . copilot-next-completion)
+                ("C-p" . copilot-previous-completion))))
 
+;;; Cleanup
 (catppuccin-reload)
 (setq gc-cons-threshold 800000)
 
 (put 'downcase-region 'disabled nil)
 ;;; init.el ends here
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-vc-selected-packages
+   '((eglot-booster :url "git@github.com:jdtsmith/eglot-booster")
+     (undo-fu :url "git@github.com:emacsmirror/undo-fu")
+     (term-keys :url "git@github.com:CyberShadow/term-keys"))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )

@@ -95,10 +95,23 @@ alias spackon='spack env activate -d spack_env/.'
 alias spackoff='spack env deactivate'
 alias python='python3.11'
 
+function spackpythoncert () {
+    SPACK_CERT_PATH=$(spack-python -c 'import site; print(site.getsitepackages()[0] + "/certifi/cacert.pem")')
+    cat ~/cert/ZscalerRootCertificate-2048-SHA256.crt >> $SPACK_CERT_PATH
+    export SSL_CERT_FILE=$SPACK_CERT_PATH
+}
+
 function spackcert () {
     SPACK_CERT_PATH=$(python -c 'import site; print(site.getsitepackages()[0] + "/certifi/cacert.pem")')
     cat ~/cert/ZscalerRootCertificate-2048-SHA256.crt >> $SPACK_CERT_PATH
     export SSL_CERT_FILE=$SPACK_CERT_PATH
+}
+
+function condacert() {
+    CERT_PATH=$(conda run python -c 'import site; print(site.getsitepackages()[0] + "/certifi/cacert.pem")')
+    cat ~/cert/ZscalerRootCertificate-2048-SHA256.crt >> $CERT_PATH
+    export SSL_CERT_FILE=$CERT_PATH
+
 }
 
 export CERT_PATH=$(python3 -c 'import site; print(site.getsitepackages()[0] + "/certifi/cacert.pem")')
@@ -114,25 +127,32 @@ export FZF_DEFAULT_OPTS=" \
 eval "$(zoxide init zsh)"
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 eval "$(starship init zsh)"
-eval "$(direnv hook zsh)"
 
 . ~/opt/git/spack/share/spack/setup-env.sh
 
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# >>> my export init >>>
+export iam="$(whoami)"
+export CONDA_HOME="/opt/homebrew/Caskroom/miniconda"
+[[ ":${PATH}:" != *":${CONDA_HOME}/bin:"* ]] && export PATH="${CONDA_HOME}/bin:${PATH}"
+# <<< my export init <<<
+
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/storage/stankala/miniconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+__conda_setup="$('/opt/homebrew/Caskroom/miniconda/base/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
 if [ $? -eq 0 ]; then
     eval "$__conda_setup"
 else
-    if [ -f "/storage/stankala/miniconda3/etc/profile.d/conda.sh" ]; then
-        . "/storage/stankala/miniconda3/etc/profile.d/conda.sh"
+    if [ -f "/opt/homebrew/Caskroom/miniconda/base/etc/profile.d/conda.sh" ]; then
+        . "/opt/homebrew/Caskroom/miniconda/base/etc/profile.d/conda.sh"
     else
-        export PATH="/storage/stankala/miniconda3/bin:$PATH"
+        export PATH="/opt/homebrew/Caskroom/miniconda/base/bin:$PATH"
     fi
 fi
 unset __conda_setup
 # <<< conda initialize <<<
 
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+eval "$(direnv hook zsh)"
