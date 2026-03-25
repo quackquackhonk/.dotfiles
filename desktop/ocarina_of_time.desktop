@@ -1,0 +1,8 @@
+[Desktop Entry]
+Encoding=UTF-8
+Version=1.0
+Type=Application
+Path=/home/sahana/drives/games/roms/ShipOfHarkinian/
+Exec=appimage-run soh.appimage
+Name=Ocarina of Time
+Categories=Game;

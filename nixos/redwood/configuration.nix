@@ -53,8 +53,23 @@
     LC_TELEPHONE = "en_US.UTF-8";
     LC_TIME = "en_US.UTF-8";
   };
+
   # unfree
   nixpkgs.config.allowUnfree = true;
+
+  # overlays
+  nixpkgs.overlays = [
+    (prev: final: {
+      glfw = prev.glfw.override (oldAttrs: rec {
+        patches = oldAttrs.patches ++ [
+          (prev.fetchpatch {
+            url = "https://raw.githubusercontent.com/tesselslate/waywall/be3e018bb5f7c25610da73cc320233a26dfce948/contrib/glfw.patch";
+            excludes = [ ".SRCINFO" "PKGBUILD" "README.md" ];
+          })
+        ];
+      });
+    })
+  ];
 
   # NVIDIA settings
   services.xserver.videoDrivers = [ "nvidia" ];
@@ -62,19 +77,6 @@
     xwayland
     wayland-utils
   ];
-
-  # hyprland + SDDM
-  programs.hyprland = {
-    enable = true;
-    xwayland.enable = true;
-  };
-  services.xserver.enable = true;
-  services.displayManager.sddm = {
-    enable = true;
-    wayland.enable = true;
-    theme = "catppuccin-mocha";
-    package = pkgs.kdePackages.sddm;
-  };
 
   programs.light.enable = true;
   services.printing.enable = true;
@@ -93,6 +95,8 @@
   services.libinput.enable = true;
 
   services.openssh.enable = true;
+
+  services.ratbagd.enable = true;
 
   # install flatpak
   services.flatpak.enable = true;

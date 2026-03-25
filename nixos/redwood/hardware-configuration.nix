@@ -59,6 +59,7 @@
       rocmPackages.clr
     ];
   };
+
   hardware.nvidia = {
     modesetting.enable = true;
     powerManagement.enable = false;

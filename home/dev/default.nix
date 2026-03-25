@@ -3,6 +3,9 @@
   ...
 }:
 {
+  imports = [
+    ./zsh.nix
+  ];
   # emacs my beloved
   programs.emacs = {
     enable = true;
@@ -15,7 +18,7 @@
     enable = true;
   };
   home.file = {
-    ".emacs".source = ../emacs/.emacs;
+    ".emacs".source = ../../emacs/.emacs;
   };
 
   home.packages = with pkgs; [
@@ -27,6 +30,8 @@
     gleam
     erlang
     rebar3
+    # java
+    jdk
     # nix
     nil
     # ocaml

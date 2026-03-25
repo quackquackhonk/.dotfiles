@@ -16,17 +16,19 @@ let
   animationSpeed = config.theme.animation-speed;
 
   animationDuration =
-    if animationSpeed == "slow"
-    then "4"
-    else if animationSpeed == "medium"
-    then "2.5"
-    else "1.5";
+    if animationSpeed == "slow" then
+      "4"
+    else if animationSpeed == "medium" then
+      "2.5"
+    else
+      "1.5";
   borderDuration =
-    if animationSpeed == "slow"
-    then "10"
-    else if animationSpeed == "medium"
-    then "6"
-    else "3";
+    if animationSpeed == "slow" then
+      "10"
+    else if animationSpeed == "medium" then
+      "6"
+    else
+      "3";
 in
 {
   home.packages = with pkgs; [
@@ -59,9 +61,9 @@ in
         "XDG_CURRENT_DESKTOP,Hyprland"
         "GDK_SCALE,1"
         "HYPRCURSOR_NAME,'Catppuccin Mocha Light'"
-        "HYPRCURSOR_SIZE,24"
+        "HYPRCURSOR_SIZE,16"
         "XCURSOR_NAME,'Catppuccin Mocha Light'"
-        "XCURSOR_SIZE,24"
+        "XCURSOR_SIZE,16"
         "SUDO_ASKPASS,hyprpolkitagent"
 
         # for nvidia
@@ -90,21 +92,26 @@ in
       # monitors
       monitor = [
         "DP-1,preffered,0x0,auto"
-        "DP-2,preffered,2560x0,auto"
+        "DP-3,1920x1080@144.00,-1920x0,auto"
       ];
 
       # some workspace rules
       workspace = [
-        "1, monitor:DP-1, persistent:true"
-        "2, monitor:DP-1, persistent:true"
+        #
+        # WORKSPACE RULES
+        # See https://wiki.hyprland.org/Configuring/Workspace-Rules/ for workspace rules
+        #
+        # Set workspace names
+        "1, monitor:DP-1, persistent:true, defaultName:games"
+        "2, monitor:DP-1, persistent:true, defaultName:emacs"
         "3, monitor:DP-1, persistent:true"
         "4, monitor:DP-1, persistent:true"
         "5, monitor:DP-1, persistent:true"
-        "6, monitor:DP-2, persistent:true"
-        "7, monitor:DP-2, persistent:true"
-        "8, monitor:DP-2, persistent:true"
-        "9, monitor:DP-2, persistent:true"
-        "10, monitor:DP-2, persistent:true"
+        "6, monitor:DP-3, persistent:true, defaultName:browser"
+        "7, monitor:DP-3, persistent:true, defaultName:music"
+        "8, monitor:DP-3, persistent:true"
+        "9, monitor:DP-3, persistent:true"
+        "10, monitor:DP-3, persistent:true"
       ];
 
       animations = {
@@ -199,7 +206,7 @@ in
         kb_options = "";
         kb_rules = "";
 
-        sensitivity = -0.2;
+        sensitivity = 0.0;
         follow_mouse = 1;
         force_no_accel = true;
 
@@ -208,107 +215,36 @@ in
         };
       };
 
-      # keybindings
-      # TODO: I should unify the caelestia and hyprland bindings
-      bind = [
-        "$mod, Q, killactive,"
-        "$mod, T, togglefloating"
-        # Quick launch programs
-        "$mod, B, exec, $browser"
-        "$mod, D, exec, $discord"
-        "$mod, Return, exec, $terminal"
+      # TODO: move from the extra config to here
+      windowrule = [
+        # WINDOW RULES
+        # See https://wiki.hyprland.org/Configuring/Window-Rules/ for more
+        # Pin certain apps to workspaces
+        "workspace 1, match:class steam, match:title .*"
+        "workspace 1, match:class steam.*, match:title .*"
+        "workspace 7, match:class Spotify"
 
-        # emacs
-        "$mod, E, exec, $emacs"
-        "$mod SHIFT, E, exec, emacsclient -e '(kill-emacs)'"
+        ## Bluetooth manager
+        "float on, match:class .blueman-manager-wrapped, match:title .*"
+        "size 800 600, match:class .blueman-manager-wrapped, match:title .*"
+        "center on, match:class .blueman-manager-wrapped, match:title .*"
+        ## audio mixer
+        "float on, match:class org.pulseaudio.pavucontrol, match:title .*"
+        "size 800 600, match:class org.pulseaudio.pavucontrol, match:title .*"
+        "center on, match:class org.pulseaudio.pavucontrol, match:title .*"
 
-        # Move focus with arrow keys
-        "$mod, left, movefocus, l"
-        "$mod, right, movefocus, r"
-        "$mod, up, movefocus, u"
-        "$mod, down, movefocus, d"
+        ## PIP
+        "float on, match:class zen, match:title Picture-in-Picture"
+        ## GUI development start as floating window
+        "float on, match:class main.exe, match:title .*"
 
-        # Switch to a relative workspace
-        "$mod, bracketright, workspace, r+1"
-        "$mod, bracketleft, workspace, r-1"
-
-        # Move focused window to a relative workspace
-        "$mainMod+Alt, rightbracket, movetoworkspace, r+1"
-        "$mainMod+Alt, leftbracket, movetoworkspace, r-1"
-
-        # special workspace (scratchpad)
-        "$mod, backslash, togglespecialworkspace, magic"
-        "$mod SHIFT, backslash, movetoworkspace, special:magic"
-
-        ", Print, exec, grimblast copy area"
-      ]
-      ++ (
-        # workspaces
-        # binds $mod + [shift +] {1..9} to [move to] workspace {1..9}
-        builtins.concatLists (
-          builtins.genList (
-            i:
-            let
-              ws = i + 1;
-            in
-            [
-              "$mod, code:1${toString i}, workspace, ${toString ws}"
-              "$mod SHIFT, code:1${toString i}, movetoworkspace, ${toString ws}"
-            ]
-          ) 9
-        )
-      );
-
-      bindm = [
-        "$mod, mouse:272, movewindow"
-        "$mod, mouse:273, resizewindow"
+        ## MISC RULES
+        ### Ignore maximize requests from apps. You'll probably like this.
+        "suppress_event maximize, match:class .*"
+        ### Fix some dragging issues with XWayland
+        "no_focus on, match:class ^$ match:title ^$ match:xwayland 1 match:float 1 match:fullscreen 0 match:pin 0"
       ];
 
-      # TODO: move from the extra config to here
-      # windowrule = [];
-
     };
-
-    extraConfig = ''
-      #
-      # WORKSPACE RULES
-      # See https://wiki.hyprland.org/Configuring/Workspace-Rules/ for workspace rules
-      #
-      # Set workspace names
-      workspace = 1, defaultName:games
-      workspace = 2, defaultName:emacs
-      workspace = 6, defaultName:browser
-      workspace = 7, defaultName:discord
-
-      #
-      # WINDOW RULES
-      # See https://wiki.hyprland.org/Configuring/Window-Rules/ for more
-      #
-
-      # Pin certain apps to workspaces
-      windowrule = workspace name:games silent, match:class steam match:title .*
-      windowrule = workspace name:games silent, match:class steam.* match:title .*
-
-      ## Bluetooth manager
-      windowrule = float on, match:class .blueman-manager-wrapped match:title .*
-      windowrule = size 800 600, match:class .blueman-manager-wrapped, match:title .*
-      windowrule = center on, match:class .blueman-manager-wrapped, match:title .*
-      ## audio mixer
-      windowrule = float on, match:class org.pulseaudio.pavucontrol, match:title .*
-      windowrule = size 800 600, match:class org.pulseaudio.pavucontrol, match:title .*
-      windowrule = center on, match:class org.pulseaudio.pavucontrol, match:title .*
-
-      ## PIP
-      windowrule = float on, match:class zen, match:title Picture-in-Picture
-      ## GUI development start as floating window
-      windowrule = float on, match:class main.exe match:title .*
-
-      ## MISC RULES
-      ### Ignore maximize requests from apps. You'll probably like this.
-      windowrule = suppress_event maximize, match:class .*
-      ### Fix some dragging issues with XWayland
-      windowrule = no_focus on, match:class ^$ match:title ^$ match:xwayland 1 match:float 1 match:fullscreen 0 match:pin 0
-    '';
-
   };
 }

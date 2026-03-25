@@ -10,13 +10,9 @@
   # you can import other home-manager modules here
   imports = [
     inputs.zen-browser.homeModules.twilight-official
-    ./zsh.nix
-    ./desktop.nix
-    ./dev.nix
-    ./games.nix
-    ./hyprland.nix
-    # ./hyprpanel.nix
-    ./caelestia.nix
+    ./desktop
+    ./games
+    ./dev
     ./variables.nix
   ];
 
@@ -47,6 +43,11 @@
     nativeMessagingHosts = [ pkgs.firefoxpwa ];
   };
 
+  # spicetify
+  programs.spicetify = {
+    enable = true;
+  };
+
   # The home.packages option allows you to install Nix packages into your
   # environment.
   home.packages = with pkgs; [
@@ -74,6 +75,7 @@
     gnupg
     btop # replacement of htop/nmon
     lsof # list open files
+    stow
 
     # networking tools
     mtr
@@ -92,7 +94,6 @@
     feh
     appimage-run
     discord
-    spotify
     kdePackages.ark
   ];
 

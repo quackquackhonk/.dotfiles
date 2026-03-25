@@ -22,8 +22,7 @@ in
       blur = true;
       border-size = 2;
       animation-speed = "medium"; # "fast" | "medium" | "slow"
-      fetch = "none"; # "nerdfetch" | "neofetch" | "pfetch" | "none"
-      textColorOnWallpaper = config.lib.stylix.colors.base00; # Color of the text displayed on the wallpaper (Lockscreen, display manager, ...)
+      textColorOnWallpaper = config.lib.stylix.colors.base00;
     };
     description = "Theme configuration options";
   };
@@ -43,6 +42,11 @@ in
       hyprland.hyprpaper.enable = true;
       qt.enable = true;
       gtk.enable = true;
+      zen-browser = {
+        enable = true;
+        profileNames = ["sahana"];
+      };
+      spicetify.enable = true;
     };
 
     base16Scheme = {
