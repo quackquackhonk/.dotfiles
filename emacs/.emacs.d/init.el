@@ -322,15 +322,15 @@
    ("M-s L" . consult-line-multi))     ; needed by consult-line to detect isearch
 
   :config
-  (consult-customize consult--source-bookmark :hidden t :default :nil)
+  (consult-customize consult-source-bookmark :hidden t :default :nil)
   (setq-default consult-buffer-sources
-                '(consult--source-hidden-buffer
-                  consult--source-modified-buffer
-                  consult--source-buffer
-                  consult--source-recent-file
-                  consult--source-file-register
-                  consult--source-project-buffer-hidden
-                  consult--source-project-recent-file-hidden))
+                '(consult-source-hidden-buffer
+                  consult-source-modified-buffer
+                  consult-source-buffer
+                  consult-source-recent-file
+                  consult-source-file-register
+                  consult-source-project-buffer-hidden
+                  consult-source-project-recent-file-hidden))
 
 
   ;; Narrowing lets you restrict results to certain groups of candidates
