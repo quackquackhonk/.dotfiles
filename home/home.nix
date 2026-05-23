@@ -11,8 +11,9 @@
   imports = [
     inputs.zen-browser.homeModules.twilight-official
     ./desktop
-    ./games
     ./dev
+    ./games
+    ./music.nix
     ./variables.nix
   ];
 
@@ -30,6 +31,7 @@
 
   programs.git = {
     enable = true;
+    signing.format = null;
     settings = {
       user.name = "Sahana Tankala";
       user.email = "sahanatankala@gmail.com";
@@ -41,11 +43,6 @@
     enable = true;
     policies.DisableTelemetry = true;
     nativeMessagingHosts = [ pkgs.firefoxpwa ];
-  };
-
-  # spicetify
-  programs.spicetify = {
-    enable = true;
   };
 
   # The home.packages option allows you to install Nix packages into your
@@ -95,6 +92,7 @@
     appimage-run
     discord
     kdePackages.ark
+    spotify
   ];
 
   # Let Home Manager install and manage itself.

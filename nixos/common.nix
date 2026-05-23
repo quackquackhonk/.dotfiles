@@ -1,3 +1,4 @@
+
 {
   config,
   lib,
@@ -9,9 +10,13 @@ let
   comic-code-font = pkgs.callPackage ./packages/comic-code-font.nix { inherit pkgs; };
 in
 {
+
+  imports = [
+    ./udev
+  ];
   # Enable dynamic libraries
   programs.nix-ld.enable = true;
-  programs.nix-ld.libraries = with pkgs; [ ];
+  programs.nix-ld.libraries = with pkgs; [ icu ];
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
@@ -51,7 +56,6 @@ in
     wayland.enable = true;
     theme = "catppuccin-mocha";
   };
-
 
   # for qmk
   hardware.keyboard.qmk.enable = true;

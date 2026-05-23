@@ -10,8 +10,8 @@
     (prismlauncher.override {
       additionalLibs = [
         libxkbcommon
-        xorg.libXtst
-        xorg.libXt
+        libxtst
+        libxt
       ];
      })
 

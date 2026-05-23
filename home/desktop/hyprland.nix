@@ -54,6 +54,7 @@ in
       "$browser" = "zen-twilight";
       "$discord" = "ELECTRON_OZONE_PLATFORM_HINT= discord";
       "$emacs" = "emacsclient -c -a=''";
+      "$dms" = "dms ipc call";
 
       # environment variables
       env = [
@@ -222,7 +223,7 @@ in
         # Pin certain apps to workspaces
         "workspace 1, match:class steam, match:title .*"
         "workspace 1, match:class steam.*, match:title .*"
-        "workspace 7, match:class Spotify"
+        "workspace 7, match:class spotify"
 
         ## Bluetooth manager
         "float on, match:class .blueman-manager-wrapped, match:title .*"

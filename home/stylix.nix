@@ -31,6 +31,7 @@ in
     nwg-look
   ];
 
+
   config.stylix = {
     enable = true;
     autoEnable = true;

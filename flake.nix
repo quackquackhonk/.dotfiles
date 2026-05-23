@@ -20,8 +20,6 @@
     # zen-browser
     zen-browser.url = "github:0xc000022070/zen-browser-flake";
 
-    spicetify-nix.url = "github:Gerg-L/spicetify-nix";
-
     # stylix for theming
     stylix = {
       url = "github:danth/stylix";
@@ -35,7 +33,6 @@
       url = "github:caelestia-dots/shell";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
   };
 
   outputs =
@@ -44,7 +41,6 @@
       nixpkgs,
       stylix,
       zen-browser,
-      spicetify-nix,
       home-manager,
       caelestia-shell,
       ...
@@ -81,7 +77,6 @@
                 home-manager.extraSpecialArgs = { inherit inputs system; };
                 home-manager.users.sahana.imports = [
                   stylix.homeModules.stylix
-                  spicetify-nix.homeManagerModules.spicetify
                   ./home/home.nix
                 ];
               }

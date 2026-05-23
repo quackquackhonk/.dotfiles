@@ -58,18 +58,20 @@
   nixpkgs.config.allowUnfree = true;
 
   # overlays
-  nixpkgs.overlays = [
-    (prev: final: {
-      glfw = prev.glfw.override (oldAttrs: rec {
-        patches = oldAttrs.patches ++ [
-          (prev.fetchpatch {
-            url = "https://raw.githubusercontent.com/tesselslate/waywall/be3e018bb5f7c25610da73cc320233a26dfce948/contrib/glfw.patch";
-            excludes = [ ".SRCINFO" "PKGBUILD" "README.md" ];
-          })
-        ];
-      });
-    })
-  ];
+  # FIXME: I forget what this was for, but it was causing an infinite loop when used. If you get runtime errors running
+  #        something, its probably this
+  # nixpkgs.overlays = [
+  #   (prev: final: {
+  #     glfw = prev.glfw.override (oldAttrs: rec {
+  #       patches = oldAttrs.patches ++ [
+  #         (prev.fetchpatch {
+  #           url = "https://raw.githubusercontent.com/tesselslate/waywall/be3e018bb5f7c25610da73cc320233a26dfce948/contrib/glfw.patch";
+  #           excludes = [ ".SRCINFO" "PKGBUILD" "README.md" ];
+  #         })
+  #       ];
+  #     });
+  #   })
+  # ];
 
   # NVIDIA settings
   services.xserver.videoDrivers = [ "nvidia" ];
@@ -78,7 +80,6 @@
     wayland-utils
   ];
 
-  programs.light.enable = true;
   services.printing.enable = true;
 
   # audio & bluetooth
@@ -111,6 +112,7 @@
       "networkmanager"
       "docker"
       "video"
+      "input"
     ];
   };
 

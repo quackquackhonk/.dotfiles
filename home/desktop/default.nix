@@ -7,7 +7,10 @@
 {
   imports = [
     ./xdg.nix
-    ./bar.nix
+    ./caelestia.nix
+    # ./dms.nix
+    # ./noctalia.nix
+    # ./niri.nix
     ./hyprland.nix
     ./binds.nix
   ];
