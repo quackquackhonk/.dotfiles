@@ -40,11 +40,11 @@
   (setenv "LIBRARY_PATH"
           "/opt/homebrew/opt/gcc/lib/gcc/14:/opt/homebrew/opt/libgccjit/lib/gcc/14:/opt/homebrew/opt/gcc/lib/gcc/14/gcc/aarch64-apple-darwin23/14")
   (setenv "XDG_CONFIG_HOME" "/Users/i34866/.config")
+  (setenv "NODE_EXTRA_CA_CERTS" "/Users/i34866/cert/ZscalerRootCertificate-2048-SHA256.crt")
   (add-to-list 'exec-path "/Library/Frameworks/Python.framework/Versions/3.11/bin")
   (add-to-list 'exec-path "/opt/homebrew/bin")
   (add-to-list 'exec-path "/opt/homebrew/opt/llvm/bin")
-  (add-to-list 'exec-path "/opt/homebrew/Caskroom/miniconda/base/bin")
-  )
+  (add-to-list 'exec-path "/opt/homebrew/Caskroom/miniconda/base/bin"))
 
 (when (not (eq system-type 'darwin))
   (add-to-list 'exec-path "/etc/profiles/per-user/sahana/bin"))

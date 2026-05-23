@@ -14,7 +14,7 @@
 (package-initialize)
 (require 'use-package)
 (setq use-package-verbose t)
-(setq use-package-always-ensure t)
+(setq use-package-always-ensure nil)
 (setq load-prefer-newer t)
 
 ;;; Top Level Definitions
@@ -43,18 +43,21 @@
 
 ;; Terminal Keybinding support
 (use-package term-keys
+  :ensure t
   :vc (:url "git@github.com:CyberShadow/term-keys")
   :config
   (term-keys-mode 1))
 
 ;; exec-path-from-shell for macos
 (use-package exec-path-from-shell
+  :ensure t
   :if (and (display-graphic-p) (qqh--macos-p))
   :config
   (exec-path-from-shell-initialize))
 
 ;; direnv integration for everywhere else
 (use-package envrc
+  :ensure t
   ;; TODO: disable envrc in magit buffers
   :hook (after-init . envrc-global-mode))
 
@@ -64,6 +67,7 @@
 ;; which-key: shows a popup of available keybindings when typing a long key
 ;; sequence (e.g. C-x ...)
 (use-package which-key
+  :ensure nil
   :custom
   (which-key-show-transient-maps t)
   :config
@@ -72,6 +76,7 @@
 ;; Catppuccin for using colors in other packages
 (add-to-list 'custom-theme-load-path (concat user-emacs-directory "/themes"))
 (use-package catppuccin-theme
+  :ensure t
   :config
   (setq catppuccin-flavor 'mocha
 	    catppuccin-italic-comments t
@@ -150,21 +155,25 @@
 
 ;;;; TRAMP
 (use-package tramp
+  :ensure nil
   :config
   (setq-default tramp-default-remote-shell "/bin/zsh"))
   ;;(add-to-list tramp-remote-path 'tramp-own-remote-path))
 
 ;;;; Repeat Mode
 (use-package repeat
+  :ensure nil
   :config (repeat-mode))
 
 ;;;; Dired
 (use-package dired
+  :ensure nil
   :config
   (setq dired-kill-when-opening-new-dired-buffer t))
 
 ;;;; Outline-mode
 (use-package outline
+  :ensure nil
   :config
   (define-key outline-minor-mode-map (kbd "C-c C-c")
               (lookup-key outline-minor-mode-map (kbd "C-c @")))
@@ -180,6 +189,7 @@
 
 ;;;; whitespace-mode
 (use-package whitespace-mode
+  :ensure nil
   :custom
   (whitespace-style '(face lines-tail))
   (whitespace-line-column 120)
@@ -194,6 +204,7 @@
 
 ;;; Evil mode
 (use-package undo-fu
+  :ensure t
   :vc (:url "git@github.com:emacsmirror/undo-fu"))
 
 (use-package evil
@@ -254,7 +265,7 @@
 
 ;;; Misc. editing enhancements
 (use-package avy
-  :demand t
+  :ensure t
   :config
   (setq avy-keys '(?a ?s ?d ?f ?r ?u ?j ?k ?l ?\;)
         avy-background nil))
@@ -269,6 +280,7 @@
 ;;; Minibuffer & Completion
 ;;;; Embark and Consult
 (use-package consult
+  :ensure t
   ;; Enable automatic preview at point in the *Completions* buffer. This is
   ;; relevant when you use the default completion UI.
   :hook (completion-list-mode . consult-preview-at-point-mode)
@@ -322,15 +334,15 @@
    ("M-s L" . consult-line-multi))     ; needed by consult-line to detect isearch
 
   :config
-  (consult-customize consult--source-bookmark :hidden t :default :nil)
+  (consult-customize consult-source-bookmark :hidden t :default :nil)
   (setq-default consult-buffer-sources
-                '(consult--source-hidden-buffer
-                  consult--source-modified-buffer
-                  consult--source-buffer
-                  consult--source-recent-file
-                  consult--source-file-register
-                  consult--source-project-buffer-hidden
-                  consult--source-project-recent-file-hidden))
+                '(consult-source-hidden-buffer
+                  consult-source-modified-buffer
+                  consult-source-buffer
+                  consult-source-recent-file
+                  consult-source-file-register
+                  consult-source-project-buffer-hidden
+                  consult-source-project-recent-file-hidden))
 
 
   ;; Narrowing lets you restrict results to certain groups of candidates
@@ -373,6 +385,7 @@
 ;; Vertico: better vertical completion for minibuffer commands
 ;;;; Vertico
 (use-package vertico
+  :ensure t
   :custom
   (vertico-count 30)
   (vertico-resize t)
@@ -403,9 +416,10 @@
 
 ;;;; Corfu: Popup completion-at-point
 (use-package corfu
+  :ensure t
   :custom
   (corfu-cycle t)           ;; Enable cycling for `corfu-next/previous'
-  (corfu-auto t)            ;; auto completion
+  (corfu-auto nil)            ;; auto completion
   (corfu-quit-no-match t)   ;; Quit when no matches
   (corfu-preselect 'prompt) ;; Always preselect the prompt
   :bind (:map corfu-map
@@ -445,6 +459,7 @@
 
 ;;;; A few more useful configurations...
 (use-package emacs
+  :ensure nil
   :hook
   ;; Auto parenthesis matching
   ((prog-mode . electric-pair-mode))
@@ -494,12 +509,14 @@
 
 ;;;; Vterm: Terminal Emulation
 (use-package vterm
+  :ensure t
   :hook ((vterm-mode . goto-address-mode)
          (vterm-mode . evil-emacs-state))
   :bind (:map vterm-mode-map
               ("C-w" . vterm-send-next-key)
               ("C-c C-x" . vterm--self-insert))
   :config
+  (setq vterm-max-scrollback 10000)
   (setq vterm-shell (if (qqh--is-work)
                         "/bin/zsh"
                       (getenv "SHELL")))
@@ -508,6 +525,7 @@
   (unbind-key (kbd "C-@") 'vterm-mode-map))
 
 (use-package multi-vterm
+  :ensure t
   :custom
   (multi-vterm-buffer-name "vterm")
   :config
@@ -544,6 +562,7 @@
 
 ;;;; Magit: best Git client to ever exist
 (use-package magit
+  :ensure t
   :custom
   (magit-commit-show-diff nil)
   (magit-commit-diff-inhibit-same-window nil))
@@ -562,9 +581,11 @@
 
 ;;;; Project Management
 ;;;;; Projectile
-(use-package project)
+(use-package project
+  :ensure nil)
 
 (use-package projectile
+  :ensure t
   :bind (:map projectile-command-map
               ("t" . multi-vterm-project))
   :init
@@ -592,6 +613,7 @@
 
 ;;;;; Perspectives
 (use-package perspective
+  :ensure t
   :after consult
   :custom
   (persp-mode-prefix-key (kbd "C-c p"))  ; pick your own prefix key here
@@ -604,6 +626,7 @@
   (add-to-list 'consult-buffer-sources persp-consult-source))
 
 (use-package persp-projectile
+  :ensure t
   :after perspective
   :bind (:map projectile-command-map
         ("p" . 'projectile-persp-switch-project)))
@@ -629,7 +652,8 @@
 
 ;;;; Documentation and Diagnostics
 ;;;;; Eldoc
-(use-package eldoc)
+(use-package eldoc
+  :ensure nil)
 ;; show the right characters for HTML escapes
 ;; https://emacs.stackexchange.com/questions/80740/how-to-correctly-format-nbsp-in-eldoc-using-eglot
 (defvar rb--eldoc-html-patterns
@@ -686,6 +710,7 @@
 
 ;;;;; Flymake
 (use-package flymake
+  :ensure nil
   :custom
   (flymake-mode-line-format '(" " flymake-mode-line-counters flymake-mode-line-exception))
   (flymake-margin-indicators-string '((error "X" compilation-error)
@@ -699,6 +724,7 @@
 
 ;;;; Eglot
 (use-package eglot
+  :ensure nil
   :custom
   (eglot-send-changes-idle-time 0.1)
   (eglot-extend-to-xref t) ; activate Eglot in referenced non-project files
@@ -824,6 +850,7 @@
 
 ;;;; Org package
 (use-package org
+  :ensure nil
   :hook ((org-mode . visual-line-mode))  ; wrap lines at word breaks
 
   :config
@@ -942,6 +969,7 @@ This function falls back to `consult-fd' if we're not in a project."
 
 ;;;; transient: so many leader keys
 (use-package transient
+  :ensure t
   :config
   (transient-bind-q-to-quit)
   :bind
@@ -958,6 +986,7 @@ This function falls back to `consult-fd' if we're not in a project."
 (transient-define-prefix qqh-transient--code ()
   ["code..."
    ("c" "compile" projectile-compile-project)
+   ("C" "copilot" copilot-mode)
    ("e" "eglot" eglot)
    ("f" "format" format-all-region-or-buffer)
    ("v" "activate environment" pyvenv-workon)])
@@ -1246,13 +1275,14 @@ By default, this shows the information specified by `global-mode-string'."
                                    "\\*vterm:.*\\*"
                                    "\\*Help\\*"
                                    "\\*Customize.*\\*"
+                                   "\\*opencode.*"
                                    vterm-mode
                                    magit-mode
                                    help-mode
                                    custom-mode
                                    compilation-mode
                                    comint-mode)
-        popper-group-function #'popper-group-by-projectile
+        popper-group-function #'popper-group-by-perspective
         popper-echo-dispatch-keys '(?1 ?2 ?3 ?4 ?5 ?6 ?7 ?8 ?9 ?0)
         popper-mode-line t
         popper-window-height (lambda (win)
@@ -1270,19 +1300,15 @@ By default, this shows the information specified by `global-mode-string'."
 (load custom-file 'noerror)
 
 (when (qqh--is-work)
-  (use-package copilot
-    :ensure t
-    :hook (prog-mode . copilot-mode)
-    :bind (:map copilot-mode-map
-                ("C-<tab>" . copilot-complete)
-                ("C-TAB" . copilot-complete)
-           :map copilot-completion-map
-                ("<tab>" . copilot-accept-completion)
-                ("TAB" . copilot-accept-completion)
-                ("C-<tab>" . copilot-accept-completion-by-word)
-                ("C-TAB" . copilot-accept-completion-by-word)
-                ("C-n" . copilot-next-completion)
-                ("C-p" . copilot-previous-completion))))
+  (use-package ai-code
+    :after evil
+    :config
+    (ai-code-set-backend 'opencode)
+    ;; Optional: use a narrower transient menu on smaller frames
+    (setq ai-code-menu-layout 'two-columns)
+    (global-set-key (kbd "C-c a") #'ai-code-menu)
+
+    (evil-set-initial-state 'ai-code-menu-mode 'emacs)))
 
 ;;; Cleanup
 (catppuccin-reload)
