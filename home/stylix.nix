@@ -46,7 +46,7 @@ in
         enable = true;
         profileNames = ["sahana"];
       };
-      spicetify.enable = true;
+      spicetify.enable = false;
     };
 
     base16Scheme = {
