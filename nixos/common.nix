@@ -4,6 +4,7 @@
   lib,
   pkgs,
   callPackage,
+  inputs,
   ...
 }:
 let
@@ -54,7 +55,7 @@ in
   services.displayManager.sddm = {
     enable = true;
     wayland.enable = true;
-    theme = "catppuccin-mocha";
+    theme = "catppuccin-mocha-mauve";
   };
 
   # for qmk

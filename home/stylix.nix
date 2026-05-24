@@ -31,6 +31,7 @@ in
     nwg-look
   ];
 
+  config.gtk.gtk4.theme = config.gtk.theme;
 
   config.stylix = {
     enable = true;

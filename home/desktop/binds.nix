@@ -5,22 +5,11 @@
   # Hyprland bindings
   wayland.windowManager.hyprland = {
     settings = {
+      "$shell" = "dms ipc call";
 
       bindm = [
         "$mod, mouse:272, movewindow"
         "$mod, mouse:273, resizewindow"
-      ];
-      # bindings
-      bindin = [
-        # Launcher
-        "$mod, mouse:272, global, caelestia:launcherInterrupt"
-        "$mod, mouse:273, global, caelestia:launcherInterrupt"
-        "$mod, mouse:274, global, caelestia:launcherInterrupt"
-        "$mod, mouse:275, global, caelestia:launcherInterrupt"
-        "$mod, mouse:276, global, caelestia:launcherInterrupt"
-        "$mod, mouse:277, global, caelestia:launcherInterrupt"
-        "$mod, mouse_up, global, caelestia:launcherInterrupt"
-        "$mod, mouse_down, global, caelestia:launcherInterrupt"
       ];
       bind = [
         "$mod, Q, killactive,"
@@ -31,10 +20,9 @@
         "$mod, F11, fullscreen, 0, toggle"
         "$mod, Return, exec, $terminal"
         # Launder
-        "$mod, SPACE, global, caelestia:launcher"
+        "$mod, SPACE, exec, $shell launcher toggle"
         # TODO: I want GUI SHIFT Space to launch cli commands
         # "$mod, SPACE, global, caelestia:launcher"
-        "$mod, Escape, global, caelestia:session" # Powermenu
 
         # emacs
         "$mod, E, exec, $emacs"
@@ -57,13 +45,9 @@
         "$mod, backslash, togglespecialworkspace, magic"
         "$mod SHIFT, backslash, movetoworkspace, special:magic"
 
-        # Misc
-        "$mod, N, exec, caelestia shell drawers toggle sidebar"
-
         # Utilities
-        "$mod+Shift, G, exec, caelestia shell gameMode toggle" # Toggle Focus/Game mode
-        "$mod+Shift, S, global, caelestia:screenshot" # Capture region (freeze)
-        "$mod+Shift+Alt, S, exec, caelestia screenshot" # Fullscreen capture > clipboard
+        "$mod+Shift, S, exec, dms screenshot" # Capture region (freeze)
+        "$mod+Shift+Alt, S, exec, dms screenshot full" # Fullscreen capture > clipboard
         # "$mod+Alt, R, exec, caelestia record -s" # Record screen with sound
         # "Ctrl+Alt, R, exec, caelestia record" # Record screen
         # "$mod+Shift+Alt, R, exec, caelestia record -r" # Record region

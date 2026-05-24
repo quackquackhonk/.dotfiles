@@ -63,9 +63,9 @@ in
         thickness = 5;
       };
 
-      workspaces = {
-        showWindows = true;
-      };
+      # workspaces = {
+      #   showWindows = true;
+      # };
 
       utilities = {
         enabled = true;

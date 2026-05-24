@@ -18,6 +18,10 @@
     systemDirs.data = ["/home/sahana/.local/share/applications/"];
     portal = {
       enable = true;
+      extraPortals = with pkgs; [
+        xdg-desktop-portal-gtk
+      ];
+      config.common.default = "*";
     };
     mimeApps = {
       enable = true;

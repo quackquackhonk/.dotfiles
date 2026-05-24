@@ -32,15 +32,9 @@ let
 in
 {
   home.packages = with pkgs; [
-    grimblast
     xdg-desktop-portal-hyprland
     hyprpolkitagent
     hyprcursor
-    catppuccin-cursors.mochaDark
-    catppuccin-cursors.mochaLight
-    rofi
-    udiskie
-    pavucontrol
   ];
   # hyprland config settings
   wayland.windowManager.hyprland = {
@@ -54,8 +48,8 @@ in
       "$browser" = "zen-twilight";
       "$discord" = "ELECTRON_OZONE_PLATFORM_HINT= discord";
       "$emacs" = "emacsclient -c -a=''";
-      "$dms" = "dms ipc call";
 
+      ecosystem.no_update_news = true;
       # environment variables
       env = [
         "PATH,$PATH:$scrPath"
@@ -82,6 +76,7 @@ in
         "systemctl --user start hyprpolkitagent" # application authentication agent
         "blueman-applet" # bluetooth manager applet
         "nm-applet" # networkmanager applet
+        "noctalia-shell" # start the bar
         "wl-paste --type text --watch cliphist store" # clipboard store text data
         "wl-paste --type image --watch cliphist store" # clipboard store image data
         "udiskie --automount --smart-tray" # auto mount USBs
@@ -159,7 +154,6 @@ in
 
         resize_on_border = true;
         allow_tearing = false;
-        layout = "dwindle";
       };
 
       decoration = {
@@ -178,18 +172,12 @@ in
         };
       };
 
-      dwindle = {
-        pseudotile = true;
-        preserve_split = true;
-      };
-
       master = {
         new_status = "master";
       };
 
       misc = {
         force_default_wallpaper = 0; # Set to 0 to disable anime wallpapers
-        vfr = true;
         disable_hyprland_logo = true;
         disable_splash_rendering = true;
         disable_autoreload = true;

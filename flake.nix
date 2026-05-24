@@ -10,16 +10,16 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
     # some helpful utils
     flake-utils = {
       url = "github:numtide/flake-utils";
       inputs.systems.follows = "systems";
     };
-
     # zen-browser
-    zen-browser.url = "github:0xc000022070/zen-browser-flake";
-
+    zen-browser = {
+     url = "github:0xc000022070/zen-browser-flake";
+     inputs.nixpkgs.follows = "nixpkgs";
+    };
     # stylix for theming
     stylix = {
       url = "github:danth/stylix";
@@ -27,10 +27,9 @@
         nixpkgs.follows = "nixpkgs";
       };
     };
-
-    # caelestia for shell / bar
-    caelestia-shell = {
-      url = "github:caelestia-dots/shell";
+    # dms for shell / bar
+    dms = {
+      url = "github:AvengeMedia/DankMaterialShell/stable";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -42,7 +41,7 @@
       stylix,
       zen-browser,
       home-manager,
-      caelestia-shell,
+      dms,
       ...
     }@inputs:
     let
@@ -59,7 +58,7 @@
             modules = [
               inputs.flake-programs-sqlite.nixosModules.programs-sqlite
               ./nixos/monstera/configuration.nix
-              { environment.systemPackages = []; }
+              # { environment.systemPackages = []; }
             ];
           };
 

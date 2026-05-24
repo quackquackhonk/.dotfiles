@@ -9,7 +9,7 @@
 {
   # you can import other home-manager modules here
   imports = [
-    inputs.zen-browser.homeModules.twilight-official
+    inputs.zen-browser.homeModules.twilight
     ./desktop
     ./dev
     ./games

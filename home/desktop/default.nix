@@ -7,11 +7,20 @@
 {
   imports = [
     ./xdg.nix
-    ./caelestia.nix
-    # ./dms.nix
+    # ./caelestia.nix
+    ./dms.nix
     # ./noctalia.nix
-    # ./niri.nix
     ./hyprland.nix
     ./binds.nix
   ];
+
+  home.packages = with pkgs; [
+    grimblast
+    catppuccin-cursors.mochaDark
+    catppuccin-cursors.mochaLight
+    rofi
+    udiskie
+    pavucontrol
+  ];
+
 }

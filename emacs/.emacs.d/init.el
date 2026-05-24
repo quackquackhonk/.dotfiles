@@ -986,7 +986,6 @@ This function falls back to `consult-fd' if we're not in a project."
 (transient-define-prefix qqh-transient--code ()
   ["code..."
    ("c" "compile" projectile-compile-project)
-   ("C" "copilot" copilot-mode)
    ("e" "eglot" eglot)
    ("f" "format" format-all-region-or-buffer)
    ("v" "activate environment" pyvenv-workon)])
@@ -1181,7 +1180,7 @@ This function falls back to `consult-fd' if we're not in a project."
                            ("PERF" . ,(catppuccin-color 'lavender))))
   (hl-todo-highlight-punctuation ":")
   :config
-  (global-hl-line-mode))
+  (global-hl-line-mode +1))
 
 
 (use-package magit-todos
