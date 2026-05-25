@@ -32,6 +32,16 @@
       url = "github:AvengeMedia/DankMaterialShell/stable";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    dgop = {
+      url = "github:AvengeMedia/dgop";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    # moving over to a custom quickshell bar
+    quickshell = {
+      # add ?ref=<tag> to track a tag
+      url = "github:quickshell-mirror/quickshell?ref=v0.3.0";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -42,6 +52,7 @@
       zen-browser,
       home-manager,
       dms,
+      quickshell,
       ...
     }@inputs:
     let

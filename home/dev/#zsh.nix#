@@ -17,7 +17,7 @@
       ls = "eza";
       b = "bat";
 
-      update = "cd ~/dotfiles && git add . && sudo nixos-rebuild switch --flake .; cd -";
+      update = "cd ~/dotfiles && git add . && sudo nixos-rebuild switch --flake .; cd - && hyprctl reload || dms restart";
     };
 
     oh-my-zsh = {

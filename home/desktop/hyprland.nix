@@ -40,6 +40,8 @@ in
   wayland.windowManager.hyprland = {
     enable = true;
     xwayland.enable = true;
+    # NOTE: Until we get better docs about lua config + nix, keep this using legacy config language
+    configType = "hyprlang";
 
     settings = {
       # some global variables
@@ -212,6 +214,10 @@ in
         "workspace 1, match:class steam, match:title .*"
         "workspace 1, match:class steam.*, match:title .*"
         "workspace 7, match:class spotify"
+
+        # DMS settings menu
+        "float on, match:class org.quickshell, match:title Settings"
+        "center on, match:class org.quickshell, match:title Settings"
 
         ## Bluetooth manager
         "float on, match:class .blueman-manager-wrapped, match:title .*"

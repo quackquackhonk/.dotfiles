@@ -43,7 +43,7 @@
 
 ;; Terminal Keybinding support
 (use-package term-keys
-  :ensure t
+  :if (not (display-graphic-p))
   :vc (:url "git@github.com:CyberShadow/term-keys")
   :config
   (term-keys-mode 1))
@@ -350,7 +350,7 @@
 
 (use-package embark
   :demand t
-  :after '(avy)
+  :after avy
   :hook (embark-collect-mode . consult-preview-at-point-mode)
   :init
   ;; Optionally replace the key help with a completing-read interface
@@ -568,8 +568,9 @@
   (magit-commit-diff-inhibit-same-window nil))
 
 (use-package forge
-  :config
+  :ensure t
   :after magit
+  :config
   ;; Configure auth source
   (setq auth-sources '("~/.authinfo"))
   ;; setup VWS gitlab
@@ -717,9 +718,9 @@
                                       (warning "!" compilation-warning)
                                       (note "?" compilation-info)))
   :custom-face
-  (flymake-note ((t :underline ,(catppuccin-color 'green))))
-  (flymake-warning ((t :underline ,(catppuccin-color 'yellow))))
-  (flymake-error ((t :underline ,(catppuccin-color 'red))))
+  (flymake-note ((t :background unspecified :underline ,(catppuccin-color 'green))))
+  (flymake-warning ((t :background unspecified :underline ,(catppuccin-color 'yellow))))
+  (flymake-error ((t :background unspecified :underline ,(catppuccin-color 'red))))
   :hook (prog-mode . flymake-mode))
 
 ;;;; Eglot
@@ -819,8 +820,14 @@
 
 (use-package cargo
   :after rust-mode)
-;;; Org Mode
 
+;;;;; Quickshell (qml)
+(use-package qml-ts-mode
+  :config
+  (add-hook 'qml-ts-mode-hook (lambda ()
+                                (setq-local electric-indent-chars '(?\n ?\( ?\) ?{ ?} ?\[ ?\] ?\; ?,))
+                                (eglot-ensure))))
+;;; Org Mode
 ;;;; Settings
 ;; Agenda variables
 (setq org-directory "~/org/")         ; Non-absolute paths for agenda and
@@ -977,10 +984,6 @@ This function falls back to `consult-fd' if we're not in a project."
         ("C-g" . transient-quit-all)
         :map transient-sticky-map
         ("C-g" . transient-quit-all)))
-
-(use-package transient-showcase
-  :ensure t
-  :vc (:url "git@github.com:positron-solutions/transient-showcase"))
 
 ;; Set up some transient maps for additional leaders
 (transient-define-prefix qqh-transient--code ()
@@ -1172,6 +1175,7 @@ This function falls back to `consult-fd' if we're not in a project."
   :hook (prog-mode . rainbow-delimiters-mode))
 
 (use-package hl-todo
+  :demand t
   :custom
   (hl-todo-keyword-faces `(("TODO" . ,(catppuccin-color 'sky))
                            ("HACK" . ,(catppuccin-color 'peach))
@@ -1180,7 +1184,7 @@ This function falls back to `consult-fd' if we're not in a project."
                            ("PERF" . ,(catppuccin-color 'lavender))))
   (hl-todo-highlight-punctuation ":")
   :config
-  (global-hl-line-mode +1))
+  (global-hl-line-mode 1))
 
 
 (use-package magit-todos
@@ -1257,6 +1261,7 @@ By default, this shows the information specified by `global-mode-string'."
 
 ;; pop up management
 (use-package popper
+  :after perspective
   :ensure t
   :bind (("C-'"   . popper-toggle)
          ("C-M-_" . popper-toggle)
@@ -1264,7 +1269,7 @@ By default, this shows the information specified by `global-mode-string'."
          ("C-M-'" . popper-toggle-type)
          :map vterm-mode-map
          ("C-M-_" . popper-toggle))
-  :init
+  :config
   (setq popper-reference-buffers '("\\*Messages\\*"
                                    "\\*eldoc\\*"
                                    "Output\\*$"
