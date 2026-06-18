@@ -14,11 +14,13 @@
       bind = [
         "$mod, Q, killactive,"
         "$mod, T, togglefloating"
+
         # Quick launch programs
         "$mod, B, exec, $browser"
         "$mod, D, exec, $discord"
         "$mod, F11, fullscreen, 0, toggle"
         "$mod, Return, exec, $terminal"
+        "$mod+Control+Alt, Escape, exec, $shell powermenu toggle"
         # Launder
         "$mod, SPACE, exec, $shell launcher toggle"
         # TODO: I want GUI SHIFT Space to launch cli commands

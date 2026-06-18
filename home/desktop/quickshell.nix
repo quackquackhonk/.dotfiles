@@ -10,6 +10,10 @@ let
   };
 in
 {
+  home.packages = with pkgs; [
+    quickshell
+    qt6.qtwayland
+  ];
   programs.quickshell = {
     enable = true;
     activeConfig = configs;

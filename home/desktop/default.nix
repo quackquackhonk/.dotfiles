@@ -8,7 +8,7 @@
   imports = [
     ./xdg.nix
     ./dms.nix
-    ./quickshell.nix
+    # ./quickshell.nix
     ./hyprland.nix
     ./binds.nix
   ];

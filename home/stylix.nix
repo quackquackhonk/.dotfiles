@@ -8,50 +8,34 @@
 
 let
   fontSize = 12;
-in
-{
-  # imports = with inputs.stylix.nixosModules; [ stylix ];
-  options.theme = lib.mkOption {
-    type = lib.types.attrs;
-    default = {
-      rounding = 10;
-      gaps-in = 5;
-      gaps-out = 10;
-      active-opacity = 1.0;
-      inactive-opacity = 0.95;
-      blur = true;
-      border-size = 2;
-      animation-speed = "medium"; # "fast" | "medium" | "slow"
-      textColorOnWallpaper = config.lib.stylix.colors.base00;
+
+  everforest = {
+    scheme = "Everforest";
+    slug = "everforest";
+    author = "Sainnhe Park (https://github.com/sainnhe)";
+    description = "Comfortable & pleasant color scheme (originally for Vim)";
+    polarity = "dark";
+    palette = {
+      base00 = "2f383e";
+      base01 = "374247";
+      base02 = "4a555b";
+      base03 = "859289";
+      base04 = "9da9a0";
+      base05 = "d3c6aa";
+      base06 = "e4e1cd";
+      base07 = "fdf6e3";
+      base08 = "7fbbb3";
+      base09 = "d699b6";
+      base0A = "dbbc7f";
+      base0B = "83c092";
+      base0C = "e69875";
+      base0D = "a7c080";
+      base0E = "e67e80";
+      base0F = "eaedc8";
     };
-    description = "Theme configuration options";
   };
 
-  config.home.packages = with pkgs; [
-    nwg-look
-  ];
-
-  config.gtk.gtk4.theme = config.gtk.theme;
-
-  config.stylix = {
-    enable = true;
-    autoEnable = true;
-    image = ../wallpapers/space.png;
-    polarity = "dark";
-
-    targets = {
-      hyprland.enable = true;
-      hyprland.hyprpaper.enable = true;
-      qt.enable = true;
-      gtk.enable = true;
-      zen-browser = {
-        enable = true;
-        profileNames = ["sahana"];
-      };
-      spicetify.enable = false;
-    };
-
-    base16Scheme = {
+  catppuccin = {
       system = "base16";
       name = "Catppuccin Mocha";
       author = "https://github.com/catppuccin/catppuccin";
@@ -76,6 +60,50 @@ in
         base0F = "f2cdcd"; # flamingo
       };
     };
+in
+{
+  # imports = with inputs.stylix.nixosModules; [ stylix ];
+  options.theme = lib.mkOption {
+    type = lib.types.attrs;
+    default = {
+      rounding = 10;
+      gaps-in = 5;
+      gaps-out = 10;
+      active-opacity = 1.0;
+      inactive-opacity = 0.95;
+      blur = true;
+      border-size = 2;
+      animation-speed = "medium"; # "fast" | "medium" | "slow"
+      textColorOnWallpaper = config.lib.stylix.colors.base00;
+    };
+    description = "Theme configuration options";
+  };
+
+  config.home.packages = with pkgs; [
+    nwg-look
+  ];
+
+  config.gtk.gtk4.theme = lib.mkForce config.gtk.theme;
+
+  config.stylix = {
+    enable = true;
+    autoEnable = true;
+    image = ../wallpapers/space.png;
+    polarity = "dark";
+
+    targets = {
+      hyprland.enable = true;
+      hyprland.hyprpaper.enable = true;
+      qt.enable = true;
+      gtk.enable = true;
+      zen-browser = {
+        enable = true;
+        profileNames = ["sahana"];
+      };
+      spicetify.enable = false;
+    };
+
+    base16Scheme = catppuccin;
 
     fonts = {
 

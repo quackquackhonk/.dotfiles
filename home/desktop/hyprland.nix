@@ -83,7 +83,7 @@ in
         "wl-paste --type image --watch cliphist store" # clipboard store image data
         "udiskie --automount --smart-tray" # auto mount USBs
         # Auto start some apps
-        "[workspace 1 silent] steam"
+        "steam"
         "[workspace 6] $browser"
       ];
 
@@ -229,7 +229,9 @@ in
         "center on, match:class org.pulseaudio.pavucontrol, match:title .*"
 
         ## PIP
-        "float on, match:class zen, match:title Picture-in-Picture"
+        "float on, match:class zen.*, match:title Picture-in-Picture"
+        "float on, match:class zen.*, match:title Extension:.*"
+        ## Bitwarden
         ## GUI development start as floating window
         "float on, match:class main.exe, match:title .*"
 

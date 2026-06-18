@@ -42,11 +42,11 @@
 ;;; Some initial packages
 
 ;; Terminal Keybinding support
-(use-package term-keys
-  :if (not (display-graphic-p))
-  :vc (:url "git@github.com:CyberShadow/term-keys")
-  :config
-  (term-keys-mode 1))
+(when (qqh--is-work)
+  (use-package term-keys
+    :ensure t
+    :vc (:url "git@github.com:CyberShadow/term-keys")
+    (term-keys-mode +1)))
 
 ;; exec-path-from-shell for macos
 (use-package exec-path-from-shell
@@ -74,9 +74,11 @@
   (which-key-mode))
 
 ;; Catppuccin for using colors in other packages
-(add-to-list 'custom-theme-load-path (concat user-emacs-directory "/themes"))
+
 (use-package catppuccin-theme
   :ensure t
+  :init
+  (add-to-list 'custom-theme-load-path (concat user-emacs-directory "/themes"))
   :config
   (setq catppuccin-flavor 'mocha
 	    catppuccin-italic-comments t
@@ -86,6 +88,14 @@
 
   (load-theme 'catppuccin :no-confirm t)
   (catppuccin-reload))
+
+;; (use-package everforest
+;;   :ensure t
+;;   :vc (:url "git@github.com:theorytoe/everforest-emacs")
+;;   :init
+;;   (add-to-list 'custom-theme-load-path "~/.emacs.d/everforest-theme")
+;;   :config
+;;   (load-theme 'everforest-hard-dark t))
 
 ;; TODO: I want a way to refer to colors thats theme independent
 
@@ -186,15 +196,6 @@
               ("<C-backtab>" . outline-cycle-buffer)
               ("C-<tab>" . outline-cycle))
   :hook (emacs-lisp-mode . outline-minor-mode))
-
-;;;; whitespace-mode
-(use-package whitespace-mode
-  :ensure nil
-  :custom
-  (whitespace-style '(face lines-tail))
-  (whitespace-line-column 120)
-  :init
-  (global-whitespace-mode +1))
 
 ;; Don't show trailing whitespace, and delete when saving
 (setopt show-trailing-whitespace nil)
@@ -566,20 +567,6 @@
   :custom
   (magit-commit-show-diff nil)
   (magit-commit-diff-inhibit-same-window nil))
-
-(use-package forge
-  :ensure t
-  :after magit
-  :config
-  ;; Configure auth source
-  (setq auth-sources '("~/.authinfo"))
-  ;; setup VWS gitlab
-  (push '("gitlab.veriskweather.net"               ; GITHOST
-          "gitlab.veriskweather.net/api/v4"        ; APIHOST
-          "gitlab.veriskweather.net"               ; WEBHOST and INSTANCE-ID
-          forge-gitlab-repository)                 ; CLASS
-        forge-alist))
-
 ;;;; Project Management
 ;;;;; Projectile
 (use-package project
@@ -821,12 +808,6 @@
 (use-package cargo
   :after rust-mode)
 
-;;;;; Quickshell (qml)
-(use-package qml-ts-mode
-  :config
-  (add-hook 'qml-ts-mode-hook (lambda ()
-                                (setq-local electric-indent-chars '(?\n ?\( ?\) ?{ ?} ?\[ ?\] ?\; ?,))
-                                (eglot-ensure))))
 ;;; Org Mode
 ;;;; Settings
 ;; Agenda variables
@@ -1326,9 +1307,7 @@ By default, this shows the information specified by `global-mode-string'."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-vc-selected-packages
-   '((eglot-booster :url "git@github.com:jdtsmith/eglot-booster")
-     (undo-fu :url "git@github.com:emacsmirror/undo-fu")
-     (term-keys :url "git@github.com:CyberShadow/term-keys"))))
+   '((everforest :url "git@github.com:theorytoe/everforest-emacs"))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
