@@ -12,6 +12,7 @@ export PATH=/Library/Frameworks/Python.framework/Versions/3.11/bin:$PATH
 
 # export PKG_CONFIG_PATH="/opt/homebrew/lib/pkgconfig"
 
+export DOCKER_HOST="unix:///run/user/1000/podman/podman.sock"
 export DOCKER_DEFAULT_PLATFORM=linux/amd64
 export DOCKER_BUILDKIT=0
 export HOMEBREW_NO_AUTO_UPDATE=1
@@ -64,6 +65,7 @@ source $ZSH/oh-my-zsh.sh
 
 alias ls='eza'
 alias l='eza -lah'
+alias b='bat'
 
 # aliases
 alias zshsrc="source ~/.zshrc"
@@ -93,7 +95,6 @@ alias production='eval "$(aws configure export-credentials --profile production 
 
 alias spackon='spack env activate -d spack_env/.'
 alias spackoff='spack env deactivate'
-alias python='python3.11'
 
 function spackpythoncert () {
     SPACK_CERT_PATH=$(spack-python -c 'import site; print(site.getsitepackages()[0] + "/certifi/cacert.pem")')

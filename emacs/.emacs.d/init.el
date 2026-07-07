@@ -14,7 +14,7 @@
 (package-initialize)
 (require 'use-package)
 (setq use-package-verbose t)
-(setq use-package-always-ensure t)
+(setq use-package-always-ensure nil)
 (setq load-prefer-newer t)
 
 ;;; Top Level Definitions
@@ -73,30 +73,15 @@
   :config
   (which-key-mode))
 
-;; Catppuccin for using colors in other packages
-
-(use-package catppuccin-theme
+;; batppuccin is catppuccin but it works with emacs
+(use-package batppuccin
   :ensure t
-  :init
-  (add-to-list 'custom-theme-load-path (concat user-emacs-directory "/themes"))
   :config
-  (setq catppuccin-flavor 'mocha
-	    catppuccin-italic-comments t
-	    catppuccin-highlight-matches t)
+  ;; face customizations
+  (batppuccin-with-colors
+    (set-face-attribute 'font-lock-comment-delimiter-face nil :slant 'normal))
 
-  (add-hook 'server-after-make-frame-hook #'catppuccin-reload)
-
-  (load-theme 'catppuccin :no-confirm t)
-  (catppuccin-reload))
-
-;; (use-package everforest
-;;   :ensure t
-;;   :vc (:url "git@github.com:theorytoe/everforest-emacs")
-;;   :init
-;;   (add-to-list 'custom-theme-load-path "~/.emacs.d/everforest-theme")
-;;   :config
-;;   (load-theme 'everforest-hard-dark t))
-
+  (load-theme 'batppuccin-latte t))
 ;; TODO: I want a way to refer to colors thats theme independent
 
 ;;; Basic settings
@@ -383,8 +368,7 @@
   (bind-key (kbd "M-.") 'embark-act 'minibuffer-mode-map))
 
 
-;; Vertico: better vertical completion for minibuffer commands
-;;;; Vertico
+;;;; Vertico: better vertical completion for minibuffer commands
 (use-package vertico
   :ensure t
   :custom
@@ -464,9 +448,9 @@
   :hook
   ;; Auto parenthesis matching
   ((prog-mode . electric-pair-mode))
-  :custom-face
-  (window-divider ((t :background ,(catppuccin-color 'mantle) :foreground ,(catppuccin-color 'mantle))))
-  (fringe ((t :background ,(catppuccin-color 'mantle))))
+  ;; :custom-face
+  ;; (window-divider ((t :background ,(batppuccin-get-color "bat-mantle") :foreground ,(batppuccin-get-color "bat-mantle"))))
+  ;; (fringe ((t :background ,(batppuccin-get-color "bat-mantle"))))
   :custom
   ;; Hide commands in M-x which do not work in the current mode.
   (read-extended-command-predicate #'command-completion-default-include-p)
@@ -703,10 +687,10 @@
   (flymake-margin-indicators-string '((error "X" compilation-error)
                                       (warning "!" compilation-warning)
                                       (note "?" compilation-info)))
-  :custom-face
-  (flymake-note ((t :background unspecified :underline ,(catppuccin-color 'green))))
-  (flymake-warning ((t :background unspecified :underline ,(catppuccin-color 'yellow))))
-  (flymake-error ((t :background unspecified :underline ,(catppuccin-color 'red))))
+  ;; :custom-face
+  ;; (flymake-note ((t :background unspecified :underline ,(batppuccin-get-color "bat-green"))))
+  ;; (flymake-warning ((t :background unspecified :underline ,(batppuccin-get-color "bat-yellow"))))
+  ;; (flymake-error ((t :background unspecified :underline ,(batppuccin-get-color "bat-red"))))
   :hook (prog-mode . flymake-mode))
 
 ;;;; Eglot
@@ -1130,6 +1114,7 @@ This function falls back to `consult-fd' if we're not in a project."
 
 ;;;; Face customizations
 ;;;; Variable customizations
+;; this is mostly for doom-modeline
 (setq evil-emacs-state-tag    " EMC "
       evil-normal-state-tag   " NOR "
       evil-insert-state-tag   " INS "
@@ -1157,15 +1142,17 @@ This function falls back to `consult-fd' if we're not in a project."
 
 (use-package hl-todo
   :demand t
+  :hook (after-init. global-hl-todo-mode)
   :custom
-  (hl-todo-keyword-faces `(("TODO" . ,(catppuccin-color 'sky))
-                           ("HACK" . ,(catppuccin-color 'peach))
-                           ("FIXME" . ,(catppuccin-color 'red))
-                           ("NOTE" . ,(catppuccin-color 'mauve))
-                           ("PERF" . ,(catppuccin-color 'lavender))))
   (hl-todo-highlight-punctuation ":")
   :config
-  (global-hl-line-mode 1))
+  ;; FIXME: i would love if this worked, but the foreground colors is just red
+  (setq hl-todo-keyword-faces (batppuccin-with-colors
+                                `(("TODO" .  ,bat-sky)
+                                  ("HACK" .  ,bat-peach)
+                                  ("FIXME" . ,bat-red)
+                                  ("NOTE" .  ,bat-mauve)
+                                  ("PERF" .  ,bat-lavender)))))
 
 
 (use-package magit-todos
@@ -1181,7 +1168,7 @@ This function falls back to `consult-fd' if we're not in a project."
 (use-package fancy-compilation
   :config
   (set-face-attribute 'fancy-compilation-default-face nil
-                     :background (catppuccin-color 'base))
+                     :background (batppuccin-get-color "bat-base"))
   (fancy-compilation-mode))
 
 
@@ -1192,18 +1179,6 @@ This function falls back to `consult-fd' if we're not in a project."
   (doom-modeline-icon nil)
   (doom-modeline-vcs-max-length qqh--trunc-len)
   (doom-modeline-check-simple-format nil)
-  :custom-face
-  (doom-modeline-evil-emacs-state ((t :bold t :background ,(catppuccin-color 'rosewater) :foreground ,(catppuccin-color 'base))))
-  (doom-modeline-evil-normal-state ((t :bold t :background ,(catppuccin-color 'mauve) :foreground ,(catppuccin-color 'base))))
-  (doom-modeline-evil-insert-state ((t :bold t :background ,(catppuccin-color 'green) :foreground ,(catppuccin-color 'base))))
-  (doom-modeline-evil-visual-state ((t :bold t :background ,(catppuccin-color 'yellow) :foreground ,(catppuccin-color 'base))))
-  (doom-modeline-evil-replace-state ((t :bold t :background ,(catppuccin-color 'red) :foreground ,(catppuccin-color 'base))))
-  (doom-modeline-evil-motion-state ((t :bold t :background ,(catppuccin-color 'peach) :foreground ,(catppuccin-color 'base))))
-  (doom-modeline-evil-operator-state ((t :bold t :background ,(catppuccin-color 'mantle) :foreground ,(catppuccin-color 'text))))
-  (doom-modeline-evil-user-state ((t :bold t :background ,(catppuccin-color 'yellow) :foreground ,(catppuccin-color 'base))))
-
-  (doom-modeline-bar ((t :inherit nil :foreground ,(catppuccin-color 'rosewater) :background ,(catppuccin-color 'rosewater))))
-  (mode-line-emphasis ((t :inherit nil :foreground ,(catppuccin-color 'rosewater) :slant normal)))
 
   :config
   (doom-modeline-def-segment qqh-dm--sep
@@ -1288,7 +1263,7 @@ By default, this shows the information specified by `global-mode-string'."
   (use-package ai-code
     :after evil
     :config
-    (ai-code-set-backend 'opencode)
+    (ai-code-set-backend 'claude-code)
     ;; Optional: use a narrower transient menu on smaller frames
     (setq ai-code-menu-layout 'two-columns)
     (global-set-key (kbd "C-c a") #'ai-code-menu)
@@ -1303,9 +1278,7 @@ By default, this shows the information specified by `global-mode-string'."
                                          (window-height . fit-window-to-buffer)))))
 
 ;;; Cleanup
-(catppuccin-reload)
 (setq gc-cons-threshold 800000)
-
 (put 'downcase-region 'disabled nil)
 ;;; init.el ends here
 (custom-set-variables
