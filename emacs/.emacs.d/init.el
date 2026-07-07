@@ -14,7 +14,7 @@
 (package-initialize)
 (require 'use-package)
 (setq use-package-verbose t)
-(setq use-package-always-ensure nil)
+(setq use-package-always-ensure t)
 (setq load-prefer-newer t)
 
 ;;; Top Level Definitions
@@ -374,7 +374,7 @@
 (evil-define-key
   '(normal visual emacs) 'global
   (kbd "M-.") 'embark-act
-  (kbd "C-h B") 'embark-bindings)  ;; alternative for `describe-bindings'
+  (kbd "<f1> B") 'embark-bindings)  ;; alternative for `describe-bindings'
 
 (use-package embark-consult
   :after (embark consult)
@@ -419,7 +419,7 @@
   :ensure t
   :custom
   (corfu-cycle t)           ;; Enable cycling for `corfu-next/previous'
-  (corfu-auto nil)            ;; auto completion
+  (corfu-auto nil)          ;; auto completion
   (corfu-quit-no-match t)   ;; Quit when no matches
   (corfu-preselect 'prompt) ;; Always preselect the prompt
   :bind (:map corfu-map
@@ -615,7 +615,6 @@
 ;;;;; Perspectives
 (use-package perspective
   :ensure t
-  :after consult
   :custom
   (persp-mode-prefix-key (kbd "C-c p"))  ; pick your own prefix key here
   (persp-modestring-short t)
@@ -703,7 +702,7 @@
 
 ;;;;; Devdocs.io integration
 (use-package devdocs
-  :bind (("C-h D" . devdocs-lookup))
+  :bind (("<f1> D" . devdocs-lookup))
   :hook ((tuareg-mode . (lambda () (setq-local devdocs-current-docs '("ocaml~5.0"))))
          ((python-mode python-ts-mode) . (lambda () (setq-local devdocs-current-docs '("python~3.11"))))
          (c-mode . (lambda () (setq-local devdocs-current-docs '("c"))))
@@ -996,11 +995,12 @@ This function falls back to `consult-fd' if we're not in a project."
 (transient-define-prefix qqh-transient--git ()
   [:class transient-row "git..."
           ("b" "branch" magit-branch)
+          ("B" "blame" magit-blame)
           ("c" "commit" magit-commit)
           ("g" "status" magit)
+          ("m" "merge" magit-merge)
           ("P" "push" magit-push)
-          ("p" "pull" magit-pull)
-          ("B" "blame" magit-blame)])
+          ("p" "pull" magit-pull)])
 
 (transient-define-prefix qqh-transient--open ()
   [:class transient-row "open..."
@@ -1261,7 +1261,6 @@ By default, this shows the information specified by `global-mode-string'."
 
 ;; pop up management
 (use-package popper
-  :after perspective
   :ensure t
   :bind (("C-'"   . popper-toggle)
          ("C-M-_" . popper-toggle)
@@ -1269,6 +1268,8 @@ By default, this shows the information specified by `global-mode-string'."
          ("C-M-'" . popper-toggle-type)
          :map vterm-mode-map
          ("C-M-_" . popper-toggle))
+  :custom
+  (popper-group-function #'popper-group-by-perspective)
   :config
   (setq popper-reference-buffers '("\\*Messages\\*"
                                    "\\*eldoc\\*"
@@ -1280,13 +1281,12 @@ By default, this shows the information specified by `global-mode-string'."
                                    "\\*Help\\*"
                                    "\\*Customize.*\\*"
                                    "\\*opencode.*"
-                                   vterm-mode
                                    magit-mode
                                    help-mode
                                    custom-mode
                                    compilation-mode
                                    comint-mode)
-        popper-group-function #'popper-group-by-perspective
+        ;; popper-group-function #'popper-group-by-perspective
         popper-echo-dispatch-keys '(?1 ?2 ?3 ?4 ?5 ?6 ?7 ?8 ?9 ?0)
         popper-mode-line t
         popper-window-height (lambda (win)
@@ -1312,7 +1312,14 @@ By default, this shows the information specified by `global-mode-string'."
     (setq ai-code-menu-layout 'two-columns)
     (global-set-key (kbd "C-c a") #'ai-code-menu)
 
-    (evil-set-initial-state 'ai-code-menu-mode 'emacs)))
+    (evil-set-initial-state 'ai-code-menu-mode 'emacs)
+    ;; ideally this won't resize any splits I have, but its ok for now
+    (add-to-list 'display-buffer-alist '("\\*opencode.*\\*"
+                                         (display-buffer-in-side-window)
+                                         (side . right)
+                                         (preserve-size t)
+                                         (window-width . 0.4)
+                                         (window-height . fit-window-to-buffer)))))
 
 ;;; Cleanup
 (catppuccin-reload)
