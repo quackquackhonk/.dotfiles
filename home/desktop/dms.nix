@@ -37,7 +37,7 @@
         catppuccin = {
           dark = {
             flavor = "mocha";
-            accent = "lavender";
+            accent = "mauve";
           };
         };
       };
@@ -61,6 +61,9 @@
       # launcher
       launcherLogoMode = "os";
 
+      # on screen display
+      osdAlwaysShowValue = true;
+
       barConfigs = [
         {
           id = "default";
@@ -72,18 +75,21 @@
           leftWidgets = [
             "launcherButton"
             "workspaceSwitcher"
-            "focusedWindow"
+            {
+              id = "focusedWindow";
+              enabled = true;
+              focusedWindowCompactMode = true;
+            }
           ];
           centerWidgets = [
             "clock"
-            "weather"
+            "music"
           ];
           rightWidgets = [
-            "music"
-            "clipboard"
             "notificationButton"
             "systemTray"
             "controlCenterButton"
+            "powerMenuButton"
           ];
           spacing = 4;
           innerPadding = 4;

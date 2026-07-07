@@ -89,6 +89,7 @@
 
     # apps
     feh
+    thunderbird
     appimage-run
     discord
     kdePackages.ark

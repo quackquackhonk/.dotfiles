@@ -26,10 +26,6 @@
     emacs-lsp-booster
     # python
     python3
-    # gleam
-    gleam
-    erlang
-    rebar3
     # java
     jdk
     # nix
