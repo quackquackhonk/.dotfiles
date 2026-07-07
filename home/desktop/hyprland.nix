@@ -5,6 +5,7 @@
   ...
 }:
 let
+  # passthrough stylix options
   border-size = config.theme.border-size;
   gaps-in = config.theme.gaps-in;
   gaps-out = config.theme.gaps-out;
@@ -12,6 +13,9 @@ let
   inactive-opacity = config.theme.inactive-opacity;
   rounding = config.theme.rounding;
   blur = config.theme.blur;
+
+  active-border = config.lib.stylix.colors.base0E;
+  inactive-border = config.lib.stylix.colors.base01;
 
   animationSpeed = config.theme.animation-speed;
 
@@ -29,6 +33,7 @@ let
       "6"
     else
       "3";
+
 in
 {
   home.packages = with pkgs; [
@@ -36,7 +41,47 @@ in
     hyprpolkitagent
     hyprcursor
   ];
-  # hyprland config settings
+
+  home.file = {
+    #".config/hypr/hyprland.lua".source = ../../hypr/hyprland.lua;
+    ".config/hypr/qqh/binds.lua".source = ../../hypr/binds.lua;
+    ".config/hypr/qqh/rules.lua".source = ../../hypr/rules.lua;
+    ".config/hypr/qqh/stylix.lua".text = ''
+      hl.config({
+          general = {
+              gaps_in  = ${builtins.toString gaps-in},
+              gaps_out = ${builtins.toString gaps-out},
+
+              border_size = ${builtins.toString border-size},
+
+              col = {
+                  active_border   = "rgb(${active-border})",
+                  inactive_border = "rgb(${inactive-border})",
+              },
+          },
+
+          decoration = {
+              rounding       = ${builtins.toString rounding},
+
+              -- Change transparency of focused and unfocused windows
+              active_opacity   = ${builtins.toString active-opacity},
+              inactive_opacity = ${builtins.toString inactive-opacity},
+
+
+              blur = {
+                  enabled   = ${builtins.toString blur},
+                  size      = 3,
+                  passes    = 1,
+                  vibrancy  = 0.1696,
+              },
+          },
+
+          animations = {
+              enabled = true,
+          },
+      })
+    '';
+  };
   wayland.windowManager.hyprland = {
     enable = true;
     xwayland.enable = true;
@@ -89,6 +134,18 @@ in
 
       # monitors
       monitor = [
+        # {
+        #   output = "DP-1";
+        #   preffered = true;
+        #   mode = "auto";
+        #   position = "0x0";
+        # }
+        # {
+        #   output = "DP-3";
+        #   mode = "1920x1080@144.00";
+        #   position = "-1920x0";
+        # }
+
         "DP-1,preffered,0x0,auto"
         "DP-3,1920x1080@144.00,-1920x0,auto"
       ];

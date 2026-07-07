@@ -30,6 +30,8 @@
     jdk
     # nix
     nil
+    #lua
+    stylua
     # ocaml
     ocaml
     dune_3

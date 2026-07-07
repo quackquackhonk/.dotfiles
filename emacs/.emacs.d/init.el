@@ -14,7 +14,7 @@
 (package-initialize)
 (require 'use-package)
 (setq use-package-verbose t)
-(setq use-package-always-ensure nil)
+(setq use-package-always-ensure t)
 (setq load-prefer-newer t)
 
 ;;; Top Level Definitions
@@ -335,7 +335,7 @@
   (setq consult-narrow-key "<"))
 
 (use-package embark
-  :demand t
+  :ensure t
   :after avy
   :hook (embark-collect-mode . consult-preview-at-point-mode)
   :init
@@ -363,6 +363,7 @@
   (kbd "<f1> B") 'embark-bindings)  ;; alternative for `describe-bindings'
 
 (use-package embark-consult
+  :ensure t
   :after (embark consult)
   :config
   (bind-key (kbd "M-.") 'embark-act 'minibuffer-mode-map))
@@ -908,9 +909,7 @@
   "Fuzzy find files with `projectile-find-file'.
 This function falls back to `consult-fd' if we're not in a project."
   (interactive)
-  (if (and (projectile-project-p) (not (file-remote-p buffer-file-name)))
-      (projectile-find-file)
-    (consult-fd)))
+  (or (projectile-find-file) (consult-fd)))
 
 (defun qqh-emacs--reload ()
   "Load my Emacs configuration."
@@ -1218,6 +1217,7 @@ By default, this shows the information specified by `global-mode-string'."
 ;; pop up management
 (use-package popper
   :ensure t
+  :after perspective
   :bind (("C-'"   . popper-toggle)
          ("C-M-_" . popper-toggle)
          ("M-'"   . popper-cycle)

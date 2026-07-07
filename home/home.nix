@@ -13,6 +13,7 @@
     ./desktop
     ./dev
     ./games
+    ./scripts
     ./music.nix
     ./variables.nix
   ];

@@ -17,7 +17,6 @@
       ls = "eza";
       b = "bat";
 
-      update = "cd ~/dotfiles && git add . && sudo nixos-rebuild switch --flake .; cd -";
     };
 
     oh-my-zsh = {
@@ -25,6 +24,7 @@
       plugins = [ "git" ];
     };
   };
+  # cli tools
   programs.direnv = {
     enable = true;
     nix-direnv.enable = true;
