@@ -2,7 +2,13 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("Activity: camel8"
+(("org-capture-last-stored"
+ (filename . "~/org/roam/main/python3_13_lambda_updates.org")
+ (front-context-string)
+ (rear-context-string . "-lambda-updates\n")
+ (position . 103)
+ (last-modified 27206 29206 300709 0))
+("Activity: camel8"
  (activities-name . "camel8")
  (handler . activities-bookmark-handler))
 ("Activity: configuration"

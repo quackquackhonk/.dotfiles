@@ -1,4 +1,4 @@
-;;; init.el --- My emacs configurtion -*- lexical-binding: t -*-
+;; init.el --- My emacs configurtion -*- lexical-binding: t -*-
 
 ;;; Commentary:
 
@@ -79,9 +79,16 @@
   :config
   ;; face customizations
   (batppuccin-with-colors
-    (set-face-attribute 'font-lock-comment-delimiter-face nil :slant 'normal))
+    (set-face-attribute 'font-lock-comment-delimiter-face nil :slant 'normal)))
 
-  (load-theme 'batppuccin-latte t))
+;; auto-dark to switch themes on os-theme
+(use-package auto-dark
+  :ensure t
+  :custom
+  (auto-dark-themes '((batppuccin-mocha) (batppuccin-latte)))
+  (auto-dark-allow-osascript t)
+  :init (auto-dark-mode))
+
 ;; TODO: I want a way to refer to colors thats theme independent
 
 ;;; Basic settings
@@ -179,8 +186,7 @@
   ;; TODO: make this play nice with repeat-mode
   :bind (:map outline-minor-mode-map
               ("<C-backtab>" . outline-cycle-buffer)
-              ("C-<tab>" . outline-cycle))
-  :hook (emacs-lisp-mode . outline-minor-mode))
+              ("C-<tab>" . outline-cycle)))
 
 ;; Don't show trailing whitespace, and delete when saving
 (setopt show-trailing-whitespace nil)
@@ -687,10 +693,10 @@
   (flymake-margin-indicators-string '((error "X" compilation-error)
                                       (warning "!" compilation-warning)
                                       (note "?" compilation-info)))
-  ;; :custom-face
-  ;; (flymake-note ((t :background unspecified :underline ,(batppuccin-get-color "bat-green"))))
-  ;; (flymake-warning ((t :background unspecified :underline ,(batppuccin-get-color "bat-yellow"))))
-  ;; (flymake-error ((t :background unspecified :underline ,(batppuccin-get-color "bat-red"))))
+  :custom-face
+  (flymake-note ((t :background unspecified :underline ,(batppuccin-get-color "bat-green"))))
+  (flymake-warning ((t :background unspecified :underline ,(batppuccin-get-color "bat-yellow"))))
+  (flymake-error ((t :background unspecified :underline ,(batppuccin-get-color "bat-red"))))
   :hook (prog-mode . flymake-mode))
 
 ;;;; Eglot
@@ -1179,7 +1185,9 @@ This function falls back to `consult-fd' if we're not in a project."
   (doom-modeline-icon nil)
   (doom-modeline-vcs-max-length qqh--trunc-len)
   (doom-modeline-check-simple-format nil)
-
+  :custom-face
+  (doom-modeline-persp-name ((t :inherit doom-modeline-highlight)))
+  (doom-modeline-project-name ((t :inherit doom-modeline-highlight)))
   :config
   (doom-modeline-def-segment qqh-dm--sep
     (propertize " |" 'face '(:inherit (doom-modeline font-lock-comment-delimiter-face))))
