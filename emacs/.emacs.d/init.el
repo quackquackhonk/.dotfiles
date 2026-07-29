@@ -230,6 +230,7 @@
   (evil-set-initial-state 'messages-buffer-mode 'normal)
   (evil-set-initial-state 'dired-mode 'emacs)
   (evil-set-initial-state 'compilation-mode 'emacs)
+  (evil-set-initial-state 'ghostel-mode 'emacs)
 
   (add-hook 'git-commit-setup-hook 'evil-insert-state))
 
@@ -409,9 +410,10 @@
 ;;;; Corfu: Popup completion-at-point
 (use-package corfu
   :ensure t
+  :hook (corfu-mode . corfu-popupinfo-mode)
   :custom
   (corfu-cycle t)           ;; Enable cycling for `corfu-next/previous'
-  (corfu-auto nil)          ;; auto completion
+  (corfu-auto t)            ;; auto completion
   (corfu-quit-no-match t)   ;; Quit when no matches
   (corfu-preselect 'prompt) ;; Always preselect the prompt
   :bind (:map corfu-map
@@ -424,17 +426,24 @@
   ;; Recommended: Enable Corfu globally.  This is recommended since Dabbrev can
   ;; be used globally (M-/).  See also the customization variable
   ;; `global-corfu-modes' to exclude certain modes.
-  (global-corfu-mode))
+  (global-corfu-mode)
+  :config
+  (add-hook 'minibuffer-mode-hook (lambda ()
+                                    (setq-local corfu-auto nil)
+                                    (corfu-mode +1)))
+  (add-hook 'ghostel-mode-hook (lambda ()
+                                 (setq-local corfu-auto nil)
+                                 (corfu-mode +1))))
 
 ;;;;; Corfu popupinfo
-(use-package corfu-popupinfo
-  :after corfu
-  :hook (corfu-mode . corfu-popupinfo-mode)
-  :custom
-  (corfu-popupinfo-delay '(0.25 . 0.1))
-  (corfu-popupinfo-hide nil)
-  :config
-  (corfu-popupinfo-mode))
+;; (use-package corfu-popupinfo
+;;   :after corfu
+;;   :hook (corfu-mode . corfu-popupinfo-mode)
+;;   :custom
+;;   (corfu-popupinfo-delay '(0.25 . 0.1))
+;;   (corfu-popupinfo-hide nil)
+;;   :config
+;;   (corfu-popupinfo-mode))
 
 ;;;;; Make corfu popup come up in terminal overlay
 (use-package corfu-terminal
@@ -499,58 +508,46 @@
   ;;        this was causing some problems with C/C++ lsp
   (setq track-changes-record-errors nil))
 
-;;;; Vterm: Terminal Emulation
-(use-package vterm
+;;;; ghostel: Terminal Emulation
+;; Vterm: Terminal Emulation
+;; (use-package vterm
+;;   :ensure t
+;;   :hook ((vterm-mode . goto-address-mode)
+;;          (vterm-mode . evil-emacs-state))
+;;   :bind (:map vterm-mode-map
+;;               ("C-w" . vterm-send-next-key)
+;;               ("C-c C-x" . vterm--self-insert))
+;;   :config
+;;   (setq vterm-max-scrollback 10000)
+;;   (setq vterm-shell (if (qqh--is-work)
+;;                         "/bin/zsh"
+;;                       (getenv "SHELL")))
+;;   (unbind-key (kbd "M-'") 'vterm-mode-map)
+;;   (unbind-key (kbd "M-]") 'vterm-mode-map)
+;;   (unbind-key (kbd "C-@") 'vterm-mode-map))
+(use-package ghostel
   :ensure t
-  :hook ((vterm-mode . goto-address-mode)
-         (vterm-mode . evil-emacs-state))
-  :bind (:map vterm-mode-map
-              ("C-w" . vterm-send-next-key)
-              ("C-c C-x" . vterm--self-insert))
+  :bind (:map ghostel-semi-char-mode-map
+         ("C-s"  . consult-line)
+         ("C-k"  . qqh--ghostel-send-C-k-and-kill)
+         ;; I'm used to go up/down the shell history with M-n/p from eshell
+         ;; Simulate this behavior in ghostel by sending C-p and C-n
+         ("M-p" . (lambda () (interactive) (ghostel-send-key "p" "ctrl")))
+         ("M-n" . (lambda () (interactive) (ghostel-send-key "n" "ctrl"))))
   :config
-  (setq vterm-max-scrollback 10000)
-  (setq vterm-shell (if (qqh--is-work)
-                        "/bin/zsh"
-                      (getenv "SHELL")))
-  (unbind-key (kbd "M-'") 'vterm-mode-map)
-  (unbind-key (kbd "M-]") 'vterm-mode-map)
-  (unbind-key (kbd "C-@") 'vterm-mode-map))
+  (defun qqh--ghostel-send-C-k-and-kill ()
+    "Send `C-k' to ghostel.
+Like normal Emacs `C-k'.  Kill to end of line and put content in kill-ring."
+    (interactive)
+    (kill-ring-save (point) (line-end-position))
+    (ghostel-send-key "k" "ctrl"))
 
-(use-package multi-vterm
-  :ensure t
-  :custom
-  (multi-vterm-buffer-name "vterm")
-  :config
-  (defun multi-vterm-format-buffer-name (name)
-    "Format vterm buffer NAME."
-    (let* ((dirs (file-name-split name))
-           (dirs (cl-remove-if-not (lambda (s) (not (string= s ""))) dirs))
-           (name (car (last dirs))))
-      (format "*%s: %s*" multi-vterm-buffer-name (file-name-nondirectory name)))))
+  (unbind-key (kbd "M-'") 'ghostel-mode-map)
+  (unbind-key (kbd "M-]") 'ghostel-mode-map)
+  (unbind-key (kbd "C-@") 'ghostel-mode-map))
 
-(defun multi-vterm ()
-  "Create new vterm buffer, using `display-buffer' instaed of `switch-to-buffer'."
-  (interactive)
-  (let* ((vterm-buffer (multi-vterm-get-buffer)))
-    (setq multi-vterm-buffer-list (nconc multi-vterm-buffer-list (list vterm-buffer)))
-    (set-buffer vterm-buffer)
-    (multi-vterm-internal)
-    (display-buffer vterm-buffer)))
-
-(defun multi-vterm-project ()
-  "Create new vterm buffer, using `display-buffer' instead of `switch-to-buffer'."
-  (interactive)
-  (if (multi-vterm-project-root)
-      (if (buffer-live-p (get-buffer (multi-vterm-project-get-buffer-name)))
-          (if (string-equal (buffer-name (current-buffer)) (multi-vterm-project-get-buffer-name))
-              (delete-window (selected-window))
-            (display-buffer (multi-vterm-project-get-buffer-name)))
-        (let* ((vterm-buffer (multi-vterm-get-buffer 'project))
-               (multi-vterm-buffer-list (nconc multi-vterm-buffer-list (list vterm-buffer))))
-          (set-buffer vterm-buffer)
-          (multi-vterm-internal)
-          (display-buffer vterm-buffer)))
-    (message "This file is not in a project")))
+(use-package ghostel-compile
+  :hook (after-init . ghostel-compile-global-mode))
 
 ;;;; Magit: best Git client to ever exist
 (use-package magit
@@ -566,7 +563,7 @@
 (use-package projectile
   :ensure t
   :bind (:map projectile-command-map
-              ("t" . multi-vterm-project))
+              ("t" . ghostel-project))
   :init
   (projectile-mode +1)
 
@@ -1003,7 +1000,6 @@ This function falls back to `consult-fd' if we're not in a project."
                       (":" . eval-expression)
                       ("'" . popper-toggle)
                       ("q" . quit-window)
-                      ("t" . multi-vterm)
                       ;; menus
                       ("c" . ("+code" . qqh-transient--code))
                       ("g" . ("+git" . qqh-transient--git))
@@ -1099,8 +1095,6 @@ This function falls back to `consult-fd' if we're not in a project."
   (kbd "] d") 'hl-todo-next
   (kbd "[ e") 'flymake-goto-prev-error
   (kbd "] e") 'flymake-goto-next-error
-  (kbd "[ t") 'multi-vterm-prev
-  (kbd "] t") 'multi-vterm-next
   (kbd "] x") 'smerge-vc-next-conflict)
 
 ;; C-g quits normal mode
@@ -1230,7 +1224,7 @@ By default, this shows the information specified by `global-mode-string'."
          ("C-M-_" . popper-toggle)
          ("M-'"   . popper-cycle)
          ("C-M-'" . popper-toggle-type)
-         :map vterm-mode-map
+         :map ghostel-mode-map
          ("C-M-_" . popper-toggle))
   :custom
   (popper-group-function #'popper-group-by-perspective)
@@ -1242,6 +1236,8 @@ By default, this shows the information specified by `global-mode-string'."
                                    "\\*OCaml\\*"
                                    "magit.*"
                                    "\\*vterm:.*\\*"
+                                   "\\*ghostel.*\\*"
+                                   "\\*.*-ghostel\\*"
                                    "\\*Help\\*"
                                    "\\*Customize.*\\*"
                                    "\\*opencode.*"
@@ -1274,6 +1270,10 @@ By default, this shows the information specified by `global-mode-string'."
     (ai-code-set-backend 'claude-code)
     ;; Optional: use a narrower transient menu on smaller frames
     (setq ai-code-menu-layout 'two-columns)
+    ;; Optional: Try ghostel as an backend infra
+    (setq ai-code-backends-infra-terminal-backend 'ghostel)
+    ;; Optional: Disable @ file completion in comments and AI sessions
+    (ai-code-prompt-filepath-completion-mode -1)
     (global-set-key (kbd "C-c a") #'ai-code-menu)
 
     (evil-set-initial-state 'ai-code-menu-mode 'emacs)
