@@ -10,7 +10,13 @@
 
 ;; package initialization
 (require 'package)
+;; HACK: uncomment to use a mirror of the elpa repos if you can't access them
+;;       this is basically only a problem on my work laptop
+;; (setq package-archives
+;;       '(("gnu"    . "https://raw.githubusercontent.com/d12frosted/elpa-mirror/master/gnu/")
+;;         ("nongnu" . "https://raw.githubusercontent.com/d12frosted/elpa-mirror/master/nongnu/")))
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(setq package-install-upgrade-built-in t)
 (package-initialize)
 (require 'use-package)
 (setq use-package-verbose t)
@@ -82,12 +88,14 @@
     (set-face-attribute 'font-lock-comment-delimiter-face nil :slant 'normal)))
 
 ;; auto-dark to switch themes on os-theme
-(use-package auto-dark
+(use-package circadian
   :ensure t
-  :custom
-  (auto-dark-themes '((batppuccin-mocha) (batppuccin-latte)))
-  (auto-dark-allow-osascript t)
-  :init (auto-dark-mode))
+  :config
+  (setq calendar-latitude 42.360081)
+  (setq calendar-longitude -71.058884)
+  (setq circadian-themes '((:sunrise . batppuccin-latte)
+                           (:sunset  . batppuccin-mocha)))
+  (circadian-setup))
 
 ;; TODO: I want a way to refer to colors thats theme independent
 
@@ -154,6 +162,11 @@
 
 
 ;;; Built-Ins.
+
+;;;;
+(use-package compat
+  :ensure t
+  :vc (:url "https://github.com/emacs-compat/compat"))
 
 ;;;; TRAMP
 (use-package tramp
@@ -386,12 +399,6 @@
   ;; You'll want to make sure that e.g. fido-mode isn't enabled
   (vertico-mode))
 
-(use-package vertico-directory
-  :after vertico
-  :bind
-  (:map vertico-map
-        ("M-DEL" . vertico-directory-delete-word)))
-
 ;;;; Marginalia: annotations for minibuffer
 (use-package marginalia
   :config
@@ -436,20 +443,14 @@
                                  (corfu-mode +1))))
 
 ;;;;; Corfu popupinfo
-;; (use-package corfu-popupinfo
-;;   :after corfu
-;;   :hook (corfu-mode . corfu-popupinfo-mode)
-;;   :custom
-;;   (corfu-popupinfo-delay '(0.25 . 0.1))
-;;   (corfu-popupinfo-hide nil)
-;;   :config
-;;   (corfu-popupinfo-mode))
-
-;;;;; Make corfu popup come up in terminal overlay
-(use-package corfu-terminal
-  :if (not (display-graphic-p))
+(use-package corfu-popupinfo
+  :after corfu
+  :hook (corfu-mode . corfu-popupinfo-mode)
+  :custom
+  (corfu-popupinfo-delay '(0.25 . 0.1))
+  (corfu-popupinfo-hide nil)
   :config
-  (corfu-terminal-mode))
+  (corfu-popupinfo-mode))
 
 ;;;; Cape: Fancy completion-at-point functions
 ;; there's too much in the cape package to configure here; dive in when you're comfortable!
@@ -509,22 +510,6 @@
   (setq track-changes-record-errors nil))
 
 ;;;; ghostel: Terminal Emulation
-;; Vterm: Terminal Emulation
-;; (use-package vterm
-;;   :ensure t
-;;   :hook ((vterm-mode . goto-address-mode)
-;;          (vterm-mode . evil-emacs-state))
-;;   :bind (:map vterm-mode-map
-;;               ("C-w" . vterm-send-next-key)
-;;               ("C-c C-x" . vterm--self-insert))
-;;   :config
-;;   (setq vterm-max-scrollback 10000)
-;;   (setq vterm-shell (if (qqh--is-work)
-;;                         "/bin/zsh"
-;;                       (getenv "SHELL")))
-;;   (unbind-key (kbd "M-'") 'vterm-mode-map)
-;;   (unbind-key (kbd "M-]") 'vterm-mode-map)
-;;   (unbind-key (kbd "C-@") 'vterm-mode-map))
 (use-package ghostel
   :ensure t
   :bind (:map ghostel-semi-char-mode-map
@@ -589,6 +574,7 @@ Like normal Emacs `C-k'.  Kill to end of line and put content in kill-ring."
 
 ;;;;; Perspectives
 (use-package perspective
+  :after consult
   :ensure t
   :custom
   (persp-mode-prefix-key (kbd "C-c p"))  ; pick your own prefix key here
@@ -610,7 +596,23 @@ Like normal Emacs `C-k'.  Kill to end of line and put content in kill-ring."
 (use-package markdown-mode
   :hook ((markdown-mode . visual-line-mode))
   :config
-  (setq markdown-list-indent-width 2))
+  (setq markdown-list-indent-width 2
+        markdown-enable-math t
+        markdown-enable-highlighting-syntax t
+        markdown-fontify-code-blocks-natively t)
+
+  ;; fix some of the faces
+  (set-face-attribute 'markdown-code-face nil :extend t)
+  (set-face-attribute 'markdown-pre-face nil :extend t))
+;; mermaid diagrams in markdown
+(use-package markdown-mermaid
+  :vc (:url "https://github.com/pasunboneleve/markdown-mermaid" :rev :newest)
+  :bind (:map markdown-mode-map
+              ("C-c m" . markdown-mermaid-preview))
+  :init
+  (setq markdown-mermaid-mmdc-path (executable-find "mmdc")))
+;; math-preview for latex in markdown / org file
+(use-package math-preview)
 
 (use-package yaml-mode)
 (use-package json-mode
@@ -717,10 +719,6 @@ Like normal Emacs `C-k'.  Kill to end of line and put content in kill-ring."
 
   ;; PERF: dont log every event
   (fset #'jsonrpc--log-event #'ignore)
-
-  ;; Remove the eglot indicator from the mode-line-misc-info variable
-  ;; (setq mode-line-misc-info
-  ;;       (delete '(eglot--managed-mode (" [" eglot--mode-line-format "] ")) mode-line-misc-info))
 
   ;; server configurations
   (setq-default eglot-workspace-configuration
@@ -862,7 +860,9 @@ Like normal Emacs `C-k'.  Kill to end of line and put content in kill-ring."
   ;; Babel Language activation
   (org-babel-do-load-languages
    'org-babel-load-languages
-   '((shell . t))))
+   '((emacs-lisp . t)
+     (python . t)
+     (shell . t))))
 
 ;;;; Org-roam
 (use-package org-roam
@@ -892,6 +892,18 @@ Like normal Emacs `C-k'.  Kill to end of line and put content in kill-ring."
   :config
   (org-roam-db-autosync-mode))
 
+;;;; enable eglot in org source buffers
+(use-package org-eglot
+  :vc (:url "https://github.com/Anoncheg1/org-eglot")
+  :init
+
+  (defun qqh--eglot-starter ()
+    (eglot-shutdown-all)
+    (eglot-ensure))
+
+  (setq org-eglot-starter #'qqh--eglot-starter))
+
+
 ;;; Keybindings
 
 ;;;; Definitions
@@ -912,7 +924,9 @@ Like normal Emacs `C-k'.  Kill to end of line and put content in kill-ring."
   "Fuzzy find files with `projectile-find-file'.
 This function falls back to `consult-fd' if we're not in a project."
   (interactive)
-  (or (projectile-find-file) (consult-fd)))
+  (if (projectile-project-p)
+      (projectile-find-file)
+    (consult-fd)))
 
 (defun qqh-emacs--reload ()
   "Load my Emacs configuration."
@@ -1141,7 +1155,7 @@ This function falls back to `consult-fd' if we're not in a project."
 
 (use-package hl-todo
   :demand t
-  :hook (after-init. global-hl-todo-mode)
+  :hook (after-init . global-hl-todo-mode)
   :custom
   (hl-todo-highlight-punctuation ":")
   :config
@@ -1173,6 +1187,7 @@ This function falls back to `consult-fd' if we're not in a project."
 
 ;;;; Modeline configurtaion
 (use-package doom-modeline
+  :ensure t
   :hook (after-init . doom-modeline-mode)
   :custom
   (doom-modeline-icon nil)
@@ -1225,6 +1240,7 @@ By default, this shows the information specified by `global-mode-string'."
          ("M-'"   . popper-cycle)
          ("C-M-'" . popper-toggle-type)
          :map ghostel-mode-map
+         ("M-'" . popper-cycle)
          ("C-M-_" . popper-toggle))
   :custom
   (popper-group-function #'popper-group-by-perspective)
@@ -1240,11 +1256,12 @@ By default, this shows the information specified by `global-mode-string'."
                                    "\\*.*-ghostel\\*"
                                    "\\*Help\\*"
                                    "\\*Customize.*\\*"
-                                   "\\*opencode.*"
+                                   "\\*compilation\\*"
                                    magit-mode
                                    help-mode
                                    custom-mode
                                    compilation-mode
+                                   ghostel-mode
                                    comint-mode)
         ;; popper-group-function #'popper-group-by-perspective
         popper-echo-dispatch-keys '(?1 ?2 ?3 ?4 ?5 ?6 ?7 ?8 ?9 ?0)
@@ -1263,28 +1280,6 @@ By default, this shows the information specified by `global-mode-string'."
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (load custom-file 'noerror)
 
-(when (qqh--is-work)
-  (use-package ai-code
-    :after evil
-    :config
-    (ai-code-set-backend 'claude-code)
-    ;; Optional: use a narrower transient menu on smaller frames
-    (setq ai-code-menu-layout 'two-columns)
-    ;; Optional: Try ghostel as an backend infra
-    (setq ai-code-backends-infra-terminal-backend 'ghostel)
-    ;; Optional: Disable @ file completion in comments and AI sessions
-    (ai-code-prompt-filepath-completion-mode -1)
-    (global-set-key (kbd "C-c a") #'ai-code-menu)
-
-    (evil-set-initial-state 'ai-code-menu-mode 'emacs)
-    ;; ideally this won't resize any splits I have, but its ok for now
-    (add-to-list 'display-buffer-alist '("\\*opencode.*\\*"
-                                         (display-buffer-in-side-window)
-                                         (side . right)
-                                         (preserve-size t)
-                                         (window-width . 0.4)
-                                         (window-height . fit-window-to-buffer)))))
-
 ;;; Cleanup
 (setq gc-cons-threshold 800000)
 (put 'downcase-region 'disabled nil)
@@ -1295,7 +1290,9 @@ By default, this shows the information specified by `global-mode-string'."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-vc-selected-packages
-   '((everforest :url "git@github.com:theorytoe/everforest-emacs"))))
+   '((eglot-booster :url "git@github.com:jdtsmith/eglot-booster")
+     (undo-fu :url "git@github.com:emacsmirror/undo-fu")
+     (term-keys :url "git@github.com:CyberShadow/term-keys"))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

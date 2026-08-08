@@ -37,14 +37,20 @@
   (add-to-list 'exec-path (format "%s/.local/bin" (getenv "HOME")))
   (add-to-list 'exec-path (format "%s/.cargo/bin" (getenv "HOME")))
 
-  (setenv "LIBRARY_PATH"
-          "/opt/homebrew/opt/gcc/lib/gcc/14:/opt/homebrew/opt/libgccjit/lib/gcc/14:/opt/homebrew/opt/gcc/lib/gcc/14/gcc/aarch64-apple-darwin23/14")
+  ;;(setenv "LIBRARY_PATH" "/opt/homebrew/opt/gcc/lib/gcc/14:/opt/homebrew/opt/libgccjit/lib/gcc/14:/opt/homebrew/opt/gcc/lib/gcc/14/gcc/aarch64-apple-darwin23/14")
+  (setenv "PATH" (concat "/opt/homebrew/bin:/opt/homebrew/sbin:" (getenv "PATH")))
+  (setenv "LIBRARY_PATH" (concat "/opt/homebrew/lib:" (getenv "LIBRARY_PATH")))
+
   (setenv "XDG_CONFIG_HOME" "/Users/i34866/.config")
   (setenv "NODE_EXTRA_CA_CERTS" "/Users/i34866/cert/ZscalerRootCertificate-2048-SHA256.crt")
   (add-to-list 'exec-path "/Library/Frameworks/Python.framework/Versions/3.11/bin")
   (add-to-list 'exec-path "/opt/homebrew/bin")
   (add-to-list 'exec-path "/opt/homebrew/opt/llvm/bin")
-  (add-to-list 'exec-path "/opt/homebrew/Caskroom/miniconda/base/bin"))
+  (add-to-list 'exec-path "/opt/homebrew/Caskroom/miniconda/base/bin")
+  ;; gnutls
+  (with-eval-after-load 'gnutls
+   (add-to-list 'gnutls-trustfiles "/opt/homebrew/etc/openssl@3/cert.pem")
+   (add-to-list 'gnutls-trustfiles "~/cert/ZscalerRootCA.pem")))
 
 (when (not (eq system-type 'darwin))
   (add-to-list 'exec-path "/etc/profiles/per-user/sahana/bin"))
