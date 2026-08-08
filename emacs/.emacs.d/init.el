@@ -20,7 +20,6 @@
 (package-initialize)
 (require 'use-package)
 (setq use-package-verbose t)
-(setq use-package-always-ensure t)
 (setq load-prefer-newer t)
 
 ;;; Top Level Definitions
@@ -44,6 +43,7 @@
           (list
            "ip-10-97-122-31" ;; cirrus
            "LVV3TW207K")))
+(setq use-package-always-ensure (not (qqh--is-work)))
 
 ;;; Some initial packages
 
@@ -83,11 +83,20 @@
 (use-package batppuccin
   :ensure t
   :config
+  (load-theme 'batppuccin-mocha t)
   ;; face customizations
   (batppuccin-with-colors
-    (set-face-attribute 'font-lock-comment-delimiter-face nil :slant 'normal)))
+    (set-face-attribute 'font-lock-comment-delimiter-face nil :slant 'normal)
+    (set-face-attribute 'outline-1 nil :foreground bat-red)
+    (set-face-attribute 'outline-2 nil :foreground bat-maroon)
+    (set-face-attribute 'outline-3 nil :foreground bat-peach)
+    (set-face-attribute 'outline-4 nil :foreground bat-yellow)
+    (set-face-attribute 'outline-5 nil :foreground bat-green)
+    (set-face-attribute 'outline-6 nil :foreground bat-blue)
+    (set-face-attribute 'outline-7 nil :foreground bat-blue)
+    (set-face-attribute 'outline-8 nil :foreground bat-lavender)))
 
-;; auto-dark to switch themes on os-theme
+;; circadian to switch themes on os-theme
 (use-package circadian
   :ensure t
   :config
@@ -138,7 +147,6 @@
 (setq-default tab-bar-show nil)                           ;; disable the tab bar
 (tab-bar-mode -1)
 (column-number-mode +1)
-(global-hl-line-mode +1)
 
 (unless (executable-find "fd")                            ;; try to use the faster programs
   (add-to-list 'exec-path "/home/sahana/.local/bin"))
@@ -163,7 +171,7 @@
 
 ;;; Built-Ins.
 
-;;;;
+;;;; ensure that compat gets updated
 (use-package compat
   :ensure t
   :vc (:url "https://github.com/emacs-compat/compat"))
@@ -185,21 +193,6 @@
   :ensure nil
   :config
   (setq dired-kill-when-opening-new-dired-buffer t))
-
-;;;; Outline-mode
-(use-package outline
-  :ensure nil
-  :config
-  (define-key outline-minor-mode-map (kbd "C-c C-c")
-              (lookup-key outline-minor-mode-map (kbd "C-c @")))
-
-  (setq outline-minor-mode-highlight 'append)
-  (setq outline-minor-mode-cycle t)
-
-  ;; TODO: make this play nice with repeat-mode
-  :bind (:map outline-minor-mode-map
-              ("<C-backtab>" . outline-cycle-buffer)
-              ("C-<tab>" . outline-cycle)))
 
 ;; Don't show trailing whitespace, and delete when saving
 (setopt show-trailing-whitespace nil)
@@ -1290,9 +1283,7 @@ By default, this shows the information specified by `global-mode-string'."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-vc-selected-packages
-   '((eglot-booster :url "git@github.com:jdtsmith/eglot-booster")
-     (undo-fu :url "git@github.com:emacsmirror/undo-fu")
-     (term-keys :url "git@github.com:CyberShadow/term-keys"))))
+   '((org-eglot :url "https://github.com/Anoncheg1/org-eglot"))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
