@@ -42,46 +42,6 @@ in
     hyprcursor
   ];
 
-  home.file = {
-    #".config/hypr/hyprland.lua".source = ../../hypr/hyprland.lua;
-    ".config/hypr/qqh/binds.lua".source = ../../hypr/binds.lua;
-    ".config/hypr/qqh/rules.lua".source = ../../hypr/rules.lua;
-    ".config/hypr/qqh/stylix.lua".text = ''
-      hl.config({
-          general = {
-              gaps_in  = ${builtins.toString gaps-in},
-              gaps_out = ${builtins.toString gaps-out},
-
-              border_size = ${builtins.toString border-size},
-
-              col = {
-                  active_border   = "rgb(${active-border})",
-                  inactive_border = "rgb(${inactive-border})",
-              },
-          },
-
-          decoration = {
-              rounding       = ${builtins.toString rounding},
-
-              -- Change transparency of focused and unfocused windows
-              active_opacity   = ${builtins.toString active-opacity},
-              inactive_opacity = ${builtins.toString inactive-opacity},
-
-
-              blur = {
-                  enabled   = ${builtins.toString blur},
-                  size      = 3,
-                  passes    = 1,
-                  vibrancy  = 0.1696,
-              },
-          },
-
-          animations = {
-              enabled = true,
-          },
-      })
-    '';
-  };
   wayland.windowManager.hyprland = {
     enable = true;
     xwayland.enable = true;
@@ -129,7 +89,7 @@ in
         "udiskie --automount --smart-tray" # auto mount USBs
         # Auto start some apps
         "steam"
-        "[workspace 6] $browser"
+        "$browser"
       ];
 
       # monitors

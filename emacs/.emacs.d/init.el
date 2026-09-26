@@ -15,6 +15,7 @@
 ;; (setq package-archives
 ;;       '(("gnu"    . "https://raw.githubusercontent.com/d12frosted/elpa-mirror/master/gnu/")
 ;;         ("nongnu" . "https://raw.githubusercontent.com/d12frosted/elpa-mirror/master/nongnu/")))
+
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (setq package-install-upgrade-built-in t)
 (package-initialize)
@@ -79,10 +80,13 @@
   :config
   (which-key-mode))
 
+;; TODO: I want a way to refer to colors thats theme independent
 ;; batppuccin is catppuccin but it works with emacs
 (use-package batppuccin
   :ensure t
   :config
+  (add-hook 'server-after-make-frame-hook
+            (lambda () (load-theme 'batppuccin-mocha t)))
   (load-theme 'batppuccin-mocha t)
   ;; face customizations
   (batppuccin-with-colors
@@ -95,18 +99,6 @@
     (set-face-attribute 'outline-6 nil :foreground bat-blue)
     (set-face-attribute 'outline-7 nil :foreground bat-blue)
     (set-face-attribute 'outline-8 nil :foreground bat-lavender)))
-
-;; circadian to switch themes on os-theme
-(use-package circadian
-  :ensure t
-  :config
-  (setq calendar-latitude 42.360081)
-  (setq calendar-longitude -71.058884)
-  (setq circadian-themes '((:sunrise . batppuccin-latte)
-                           (:sunset  . batppuccin-mocha)))
-  (circadian-setup))
-
-;; TODO: I want a way to refer to colors thats theme independent
 
 ;;; Basic settings
 (setopt inhibit-splash-screen t)
@@ -1006,6 +998,8 @@ This function falls back to `consult-fd' if we're not in a project."
                       ("," . evil-switch-to-windows-last-buffer)
                       (":" . eval-expression)
                       ("'" . popper-toggle)
+                      ("!" . shell-command)
+                      ("&" . async-shell-command)
                       ("q" . quit-window)
                       ;; menus
                       ("c" . ("+code" . qqh-transient--code))
@@ -1166,10 +1160,10 @@ This function falls back to `consult-fd' if we're not in a project."
   :config (magit-todos-mode 1))
 
 ;; dim inactive buffrs
-(use-package solaire-mode
-  :if (display-graphic-p)
-  :config
-  (solaire-global-mode +1))
+;; (use-package solaire-mode
+;;   :if (display-graphic-p)
+;;   :config
+;;   (solaire-global-mode +1))
 
 (use-package fancy-compilation
   :config
@@ -1283,7 +1277,8 @@ By default, this shows the information specified by `global-mode-string'."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-vc-selected-packages
-   '((org-eglot :url "https://github.com/Anoncheg1/org-eglot"))))
+   '((org-eglot :url "https://github.com/Anoncheg1/org-eglot")
+     (eglot-booster :url "git@github.com:jdtsmith/eglot-booster"))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
