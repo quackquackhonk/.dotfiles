@@ -1,94 +1,103 @@
 {
+  lib,
   ...
 }:
 {
   # Hyprland bindings
   wayland.windowManager.hyprland = {
-    settings = {
-      "$shell" = "dms ipc call";
+    settings =
+      let
+        lua = lib.generators.mkLuaInline;
+        bind = key: action: {
+          _args = [
+            key
+            (lua action)
+          ];
+        };
+        bindo = key: action: opts: {
+          _args = [
+            key
+            (lua action)
+            (lua opts)
+          ];
+        };
 
-      bindm = [
-        "$mod, mouse:272, movewindow"
-        "$mod, mouse:273, resizewindow"
-      ];
-      bind = [
-        "$mod, Q, killactive,"
-        "$mod, T, togglefloating"
+        # bind shortcuts
+        exec = cmd: ''hl.dsp.exec_cmd("${cmd}")'';
+        ws = n: ''hl.dsp.focus({ workspace = "${n}" })'';
+        mvws = n: ''hl.dsp.window.move({ workspace = "${n}" })'';
+        special = ''hl.dsp.workspace.toggle_special()'';
+        shell = cmd: ''hl.dsp.exec_cmd("dms ipc call ${cmd}")'';
+        fs = ''hl.dsp.window.fullscreen({ mode = "fullscreen"})'';
+        volumeUp = (exec "wpctl set-mute @DEFAULT_AUDIO_SINK@ 0; wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+");
+        volumeMute = (exec "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle");
+        volumeDown = (exec "wpctl set-mute @DEFAULT_AUDIO_SINK@ 0; wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%-");
 
-        # Quick launch programs
-        "$mod, B, exec, $browser"
-        "$mod, D, exec, $discord"
-        "$mod, F11, fullscreen, 0, toggle"
-        "$mod, Return, exec, $terminal"
-        "$mod, Escape, exec, $shell powermenu toggle"
-        # Launder
-        "$mod, SPACE, exec, $shell launcher toggle"
-        # TODO: I want GUI SHIFT Space to launch cli commands
-        # "$mod, SPACE, global, caelestia:launcher"
 
-        # emacs
-        "$mod, E, exec, $emacs"
-        "$mod SHIFT, E, exec, emacsclient -e '(kill-emacs)'"
+        # some global variables
+        terminal = "ghostty";
+        browser = "zen-twilight";
+        discord = "ELECTRON_OZONE_PLATFORM_HINT= discord";
+        emacs = "emacsclient -c -a=''";
 
-        # Move focus with arrow keys
-        "$mod, left, movefocus, l"
-        "$mod, right, movefocus, r"
-        "$mod, up, movefocus, u"
-        "$mod, down, movefocus, d"
-
-        # Switch to a relative workspace
-        "$mod, bracketright, workspace, r+1"
-        "$mod, bracketleft, workspace, r-1"
-        # Move focused window to a relative workspace
-        "$mainMod+Shift, rightbracket, movetoworkspace, r+1"
-        "$mainMod+Shift, leftbracket, movetoworkspace, r-1"
-
-        # special workspace (scratchpad)
-        "$mod, backslash, togglespecialworkspace, magic"
-        "$mod SHIFT, backslash, movetoworkspace, special:magic"
-
-        # Utilities
-        "$mod+Shift, S, exec, dms screenshot" # Capture region (freeze)
-        "$mod+Shift+Alt, S, exec, dms screenshot full" # Fullscreen capture > clipboard
-        # "$mod+Alt, R, exec, caelestia record -s" # Record screen with sound
-        # "Ctrl+Alt, R, exec, caelestia record" # Record screen
-        # "$mod+Shift+Alt, R, exec, caelestia record -r" # Record region
-      ]
-      ++ (
-        # workspaces
-        # binds $mod + [shift +] {1..9} to [move to] workspace {1..9}
-        builtins.concatLists (
+        workspaceBinds = builtins.concatLists (
           builtins.genList (
             i:
             let
-              ws = i + 1;
+              w = i + 1;
             in
             [
-              "$mod, code:1${toString i}, workspace, ${toString ws}"
-              "$mod SHIFT, code:1${toString i}, movetoworkspace, ${toString ws}"
+              (bind "SUPER + ${toString w}" (ws (toString w)))
+              (bind "SUPER + SHIFT + ${toString w}" (mvws (toString w)))
             ]
           ) 9
-        )
-      );
-      bindl = [
-        # Media
-        ", XF86AudioPlay, global, caelestia:mediaToggle"
-        ", XF86AudioPause, global, caelestia:mediaToggle"
-        ", XF86AudioNext, global, caelestia:mediaNext"
-        ", XF86AudioPrev, global, caelestia:mediaPrev"
-        ", XF86AudioStop, global, caelestia:mediaStop"
+        );
+      in
+      {
+        bind = [
+          # common utils
+          (bind "SUPER + Q" "hl.dsp.window.close()")
+					(bind "SUPER + F11" fs)
 
-        # Sound
-        ", XF86AudioMute, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
+					# Move windows with mouse drag
+					(bindo "SUPER + mouse:272" ''hl.dsp.window.drag()'' ''{ drag = true }'')
+          # TODO: resize window
 
-        # Utilities
-        ", Print, global, caelestia:screenshotFreeze" # capture reigon + freeze
-      ];
-      bindle = [
-        ", XF86AudioRaiseVolume, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ 0; wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+"
-        ", XF86AudioLowerVolume, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ 0; wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
-      ];
-    };
+          # Quick launch programs
+					(bind "SUPER + B" (exec browser))
+					(bind "SUPER + E" (exec emacs))
+					(bind "SUPER + SHIFT + E" (exec "emacsclient -e '(kill-emacs)'"))
+					(bind "SUPER + D" (exec discord))
+					(bind "SUPER + Return" (exec terminal))
+
+          # shell commands
+					(bind "SUPER + Space" (shell "launcher toggle"))
+					(bind "SUPER + Escape" (shell "powermenu toggle"))
+          (bind "SUPER + SHIFT + S" (exec "dms screenshot"))
+          (bind "SUPER + SHIFT + ALT + S" (exec "dms screenshot full"))
+
+          # Move focus
+          (bind "SUPER + left" ''hl.dsp.focus({ direction = "left" })'')
+          (bind "SUPER + right" ''hl.dsp.focus({ direction = "right" })'')
+          (bind "SUPER + up" ''hl.dsp.focus({ direction = "up" })'')
+          (bind "SUPER + down" ''hl.dsp.focus({ direction = "down" })'')
+
+          # Special workspace
+          (bind "SUPER + backslash" special)
+          (bind "SUPER + SHIFT + backslash" (mvws "special"))
+
+          # Switch/Move to a relative workspace
+          (bind "SUPER + bracketleft" (ws "e-1"))
+          (bind "SUPER + bracketright" (ws "e+1"))
+          (bind "SUPER + SHIFT + bracketleft" (ws "e-1"))
+          (bind "SUPER + SHIFT + bracketright" (ws "e+1"))
+
+
+          (bindo "XF86AudioLowerVolume" volumeUp ''{ locked = true, repeating = true }'')
+					(bindo "XF86AudioMute" volumeMute ''{ locked = true }'')
+					(bindo "XF86AudioMicMute" volumeDown ''{ locked = true, repeating = true}'')
+        ] ++ workspaceBinds;
+      };
   };
 
 }

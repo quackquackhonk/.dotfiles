@@ -5,6 +5,8 @@
   ...
 }:
 let
+  lua = lib.generators.mkLuaInline;
+
   # passthrough stylix options
   border-size = config.theme.border-size;
   gaps-in = config.theme.gaps-in;
@@ -46,219 +48,158 @@ in
     enable = true;
     xwayland.enable = true;
     # NOTE: Until we get better docs about lua config + nix, keep this using legacy config language
-    configType = "hyprlang";
+    configType = "lua";
 
     settings = {
-      # some global variables
-      "$mod" = "SUPER";
-      "$terminal" = "ghostty";
-      "$browser" = "zen-twilight";
-      "$discord" = "ELECTRON_OZONE_PLATFORM_HINT= discord";
-      "$emacs" = "emacsclient -c -a=''";
-
-      ecosystem.no_update_news = true;
+      # ecosystem.no_update_news = true;
       # environment variables
-      env = [
-        "PATH,$PATH:$scrPath"
-        "XDG_CURRENT_DESKTOP,Hyprland"
-        "GDK_SCALE,1"
-        "HYPRCURSOR_NAME,'Catppuccin Mocha Light'"
-        "HYPRCURSOR_SIZE,16"
-        "XCURSOR_NAME,'Catppuccin Mocha Light'"
-        "XCURSOR_SIZE,16"
-        "SUDO_ASKPASS,hyprpolkitagent"
-
-        # for nvidia
-        "LIBVA_DRIVER_NAME,nvidia"
-        "__GLX_VENDOR_LIBRARY_NAME,nvidia"
-        "__GL_VRR_ALLOWED,1"
-        "WLR_DRM_NO_ATOMIC,1"
-      ];
-
-      # startup applications
-      exec-once = [
-        "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP" # for XDPH
-        "dbus-update-activation-environment --systemd --all" # for XDPH
-        "systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP" # for XDPH
-        "systemctl --user start hyprpolkitagent" # application authentication agent
-        "blueman-applet" # bluetooth manager applet
-        "nm-applet" # networkmanager applet
-        "noctalia-shell" # start the bar
-        "wl-paste --type text --watch cliphist store" # clipboard store text data
-        "wl-paste --type image --watch cliphist store" # clipboard store image data
-        "udiskie --automount --smart-tray" # auto mount USBs
-        # Auto start some apps
-        "steam"
-        "$browser"
-      ];
 
       # monitors
       monitor = [
-        # {
-        #   output = "DP-1";
-        #   preffered = true;
-        #   mode = "auto";
-        #   position = "0x0";
-        # }
-        # {
-        #   output = "DP-3";
-        #   mode = "1920x1080@144.00";
-        #   position = "-1920x0";
-        # }
-
-        "DP-1,preffered,0x0,auto"
-        "DP-3,1920x1080@144.00,-1920x0,auto"
+        {
+          output = "DP-1";
+          mode = "auto";
+          preferred = true;
+          position = "0x0";
+        }
+        {
+          output = "DP-3";
+          mode = "1920x1080@144.00";
+          position = "-1920x0";
+        }
       ];
 
-      # some workspace rules
-      workspace = [
-        #
-        # WORKSPACE RULES
-        # See https://wiki.hyprland.org/Configuring/Workspace-Rules/ for workspace rules
-        #
-        # Set workspace names
-        "1, monitor:DP-1, persistent:true, defaultName:games"
-        "2, monitor:DP-1, persistent:true, defaultName:emacs"
-        "3, monitor:DP-1, persistent:true"
-        "4, monitor:DP-1, persistent:true"
-        "5, monitor:DP-1, persistent:true"
-        "6, monitor:DP-3, persistent:true, defaultName:browser"
-        "7, monitor:DP-3, persistent:true, defaultName:music"
-        "8, monitor:DP-3, persistent:true"
-        "9, monitor:DP-3, persistent:true"
-        "10, monitor:DP-3, persistent:true"
-      ];
+      config = {
+        general = {
+          gaps_in = gaps-in;
+          gaps_out = gaps-out;
+          border_size = border-size;
 
-      animations = {
-        enabled = true;
-        bezier = [
-          "linear, 0, 0, 1, 1"
-          "md3_standard, 0.2, 0, 0, 1"
-          "md3_decel, 0.05, 0.7, 0.1, 1"
-          "md3_accel, 0.3, 0, 0.8, 0.15"
-          "overshot, 0.05, 0.9, 0.1, 1.1"
-          "crazyshot, 0.1, 1.5, 0.76, 0.92"
-          "hyprnostretch, 0.05, 0.9, 0.1, 1.0"
-          "menu_decel, 0.1, 1, 0, 1"
-          "menu_accel, 0.38, 0.04, 1, 0.07"
-          "easeInOutCirc, 0.85, 0, 0.15, 1"
-          "easeOutCirc, 0, 0.55, 0.45, 1"
-          "easeOutExpo, 0.16, 1, 0.3, 1"
-          "softAcDecel, 0.26, 0.26, 0.15, 1"
-          "md2, 0.4, 0, 0.2, 1"
-        ];
+          "col.active_border" = lib.mkForce "rgb(${config.lib.stylix.colors.base04})";
+          "col.inactive_border" = lib.mkForce "rgb(${config.lib.stylix.colors.base01})";
 
-        animation = [
-          "windows, 1, ${animationDuration}, md3_decel, popin 60%"
-          "windowsIn, 1, ${animationDuration}, md3_decel, popin 60%"
-          "windowsOut, 1, ${animationDuration}, md3_accel, popin 60%"
-          "border, 1, ${borderDuration}, default"
-          "fade, 1, ${animationDuration}, md3_decel"
-          "layersIn, 1, ${animationDuration}, menu_decel, slide"
-          "layersOut, 1, ${animationDuration}, menu_accel"
-          "fadeLayersIn, 1, ${animationDuration}, menu_decel"
-          "fadeLayersOut, 1, ${animationDuration}, menu_accel"
-          "workspaces, 1, ${animationDuration}, menu_decel, slide"
-          "specialWorkspace, 1, ${animationDuration}, md3_decel, slidevert"
-        ];
-      };
-
-      general = {
-        gaps_in = gaps-in;
-        gaps_out = gaps-out;
-        border_size = border-size;
-
-        "col.active_border" = lib.mkForce "rgb(${config.lib.stylix.colors.base04})";
-        "col.inactive_border" = lib.mkForce "rgb(${config.lib.stylix.colors.base01})";
-
-        resize_on_border = true;
-        allow_tearing = false;
-      };
-
-      decoration = {
-        rounding = rounding;
-        active_opacity = active-opacity;
-        inactive_opacity = inactive-opacity;
-
-        # https://wiki.hyprland.org/Configuring/Variables/#blur
-        blur = {
-          enabled = blur;
-          size = 6;
-          passes = 3;
-          new_optimizations = true;
-          ignore_opacity = true;
-          xray = false;
+          resize_on_border = true;
+          allow_tearing = false;
         };
-      };
-
-      master = {
-        new_status = "master";
-      };
-
-      misc = {
-        force_default_wallpaper = 0; # Set to 0 to disable anime wallpapers
-        disable_hyprland_logo = true;
-        disable_splash_rendering = true;
-        disable_autoreload = true;
-        focus_on_activate = true;
-      };
-
-      cursor = {
-        no_hardware_cursors = true;
-      };
-
-      input = {
-        kb_layout = "us";
-        kb_variant = "";
-        kb_model = "";
-        kb_options = "";
-        kb_rules = "";
-
-        sensitivity = 0.0;
-        follow_mouse = 1;
-        force_no_accel = true;
-
-        touchpad = {
-          natural_scroll = false;
+        master = {
+          new_status = "master";
         };
+
+        misc = {
+          force_default_wallpaper = 0; # Set to 0 to disable anime wallpapers
+          disable_hyprland_logo = true;
+          disable_splash_rendering = true;
+          disable_autoreload = true;
+          focus_on_activate = true;
+        };
+
+        # cursor = {
+        #   no_hardware_cursors = true;
+        # };
+
+        input = {
+          kb_layout = "us";
+          kb_variant = "";
+          kb_model = "";
+          kb_options = "";
+          kb_rules = "";
+
+          sensitivity = 0.0;
+          follow_mouse = 1;
+          force_no_accel = true;
+
+          touchpad = {
+            natural_scroll = false;
+          };
+        };
+
       };
+
+      # decoration = {
+      #   rounding = rounding;
+      #   active_opacity = active-opacity;
+      #   inactive_opacity = inactive-opacity;
+
+      #   # https://wiki.hyprland.org/Configuring/Variables/#blur
+      #   blur = {
+      #     enabled = blur;
+      #     size = 6;
+      #     passes = 3;
+      #     new_optimizations = true;
+      #     ignore_opacity = true;
+      #     xray = false;
+      #   };
+      # };
 
       # TODO: move from the extra config to here
-      windowrule = [
-        # WINDOW RULES
-        # See https://wiki.hyprland.org/Configuring/Window-Rules/ for more
-        # Pin certain apps to workspaces
-        "workspace 1, match:class steam, match:title .*"
-        "workspace 1, match:class steam.*, match:title .*"
-        "workspace 7, match:class spotify"
+      # windowrule = [
+      #   # WINDOW RULES
+      #   # See https://wiki.hyprland.org/Configuring/Window-Rules/ for more
+      #   # Pin certain apps to workspaces
+      #   "workspace 1, match:class steam, match:title .*"
+      #   "workspace 1, match:class steam.*, match:title .*"
+      #   "workspace 7, match:class spotify"
 
-        # DMS settings menu
-        "float on, match:class org.quickshell, match:title Settings"
-        "center on, match:class org.quickshell, match:title Settings"
+      #   # DMS settings menu
+      #   "float on, match:class org.quickshell, match:title Settings"
+      #   "center on, match:class org.quickshell, match:title Settings"
 
-        ## Bluetooth manager
-        "float on, match:class .blueman-manager-wrapped, match:title .*"
-        "size 800 600, match:class .blueman-manager-wrapped, match:title .*"
-        "center on, match:class .blueman-manager-wrapped, match:title .*"
-        ## audio mixer
-        "float on, match:class org.pulseaudio.pavucontrol, match:title .*"
-        "size 800 600, match:class org.pulseaudio.pavucontrol, match:title .*"
-        "center on, match:class org.pulseaudio.pavucontrol, match:title .*"
+      #   ## Bluetooth manager
+      #   "float on, match:class .blueman-manager-wrapped, match:title .*"
+      #   "size 800 600, match:class .blueman-manager-wrapped, match:title .*"
+      #   "center on, match:class .blueman-manager-wrapped, match:title .*"
+      #   ## audio mixer
+      #   "float on, match:class org.pulseaudio.pavucontrol, match:title .*"
+      #   "size 800 600, match:class org.pulseaudio.pavucontrol, match:title .*"
+      #   "center on, match:class org.pulseaudio.pavucontrol, match:title .*"
 
-        ## PIP
-        "float on, match:class zen.*, match:title Picture-in-Picture"
-        "float on, match:class zen.*, match:title Extension:.*"
-        ## Bitwarden
-        ## GUI development start as floating window
-        "float on, match:class main.exe, match:title .*"
+      #   ## PIP
+      #   "float on, match:class zen.*, match:title Picture-in-Picture"
+      #   "float on, match:class zen.*, match:title Extension:.*"
+      #   ## Bitwarden
+      #   ## GUI development start as floating window
+      #   "float on, match:class main.exe, match:title .*"
 
-        ## MISC RULES
-        ### Ignore maximize requests from apps. You'll probably like this.
-        "suppress_event maximize, match:class .*"
-        ### Fix some dragging issues with XWayland
-        "no_focus on, match:class ^$ match:title ^$ match:xwayland 1 match:float 1 match:fullscreen 0 match:pin 0"
-      ];
-
+      #   ## MISC RULES
+      #   ### Ignore maximize requests from apps. You'll probably like this.
+      #   "suppress_event maximize, match:class .*"
+      #   ### Fix some dragging issues with XWayland
+      #   "no_focus on, match:class ^$ match:title ^$ match:xwayland 1 match:float 1 match:fullscreen 0 match:pin 0"
+      # ];
     };
+
+    extraConfig = ''
+      hl.env("PATH", "$PATH:$scrPath")
+      hl.env("XDG_CURRENT_DESKTOP", "Hyprland")
+      hl.env("GDK_SCALE", "1")
+      hl.env("HYPRCURSOR_NAME", "'Catppuccin Mocha Light'")
+      hl.env("HYPRCURSOR_SIZE", "16")
+      hl.env("XCURSOR_NAME", "'Catppuccin Mocha Light'")
+      hl.env("XCURSOR_SIZE", "16")
+      hl.env("SUDO_ASKPASS", "hyprpolkitagent")
+
+      -- for nvidia
+      hl.env("LIBVA_DRIVER_NAME", "nvidia")
+      hl.env("__GLX_VENDOR_LIBRARY_NAME", "nvidia")
+      hl.env("__GL_VRR_ALLOWED", "1")
+      hl.env("WLR_DRM_NO_ATOMIC", "1")
+
+      hl.on("hyprland.start", function()
+          hl.exec_cmd("dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP")
+          hl.exec_cmd("dbus-update-activation-environment --systemd --all")
+          hl.exec_cmd("systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP")
+          hl.exec_cmd("systemctl --user start hyprpolkitagent")
+          hl.exec_cmd("blueman-applet")
+          hl.exec_cmd("nm-applet")
+          hl.exec_cmd("noctalia-shell")
+          hl.exec_cmd("wl-paste --type text --watch cliphist store")
+          hl.exec_cmd("wl-paste --type image --watch cliphist store")
+          hl.exec_cmd("udiskie --automount --smart-tray")
+          hl.exec_cmd("dms run")
+          hl.exec_cmd("steam")
+       end)
+    '';
+
+
   };
 }

@@ -92,7 +92,7 @@ in
     polarity = "dark";
 
     targets = {
-      hyprland.enable = true;
+      hyprland.enable = false;
       hyprland.hyprpaper.enable = true;
       qt.enable = true;
       gtk.enable = true;
