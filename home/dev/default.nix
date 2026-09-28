@@ -9,10 +9,7 @@
   # emacs my beloved
   programs.emacs = {
     enable = true;
-    package = pkgs.emacs30;
-    extraPackages = epkgs: [
-      epkgs.vterm
-    ];
+    package = pkgs.emacs;
   };
   services.emacs = {
     enable = true;

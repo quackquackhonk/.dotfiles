@@ -25,7 +25,6 @@
 (package-initialize)
 (require 'use-package)
 (setq use-package-verbose t)
-(setq use-package-always-ensure t)
 (setq load-prefer-newer t)
 
 ;;; Top Level Definitions
@@ -45,6 +44,7 @@
           (list
            "ip-10-97-122-31" ;; cirrus
            "LVV3TW207K")))
+(setq use-package-always-ensure (not (qqh--is-work)))
 
 ;;; Some initial packages
 
@@ -80,25 +80,25 @@
   :config
   (which-key-mode))
 
+;; TODO: I want a way to refer to colors thats theme independent
 ;; batppuccin is catppuccin but it works with emacs
 (use-package batppuccin
   :ensure t
   :config
+  (add-hook 'server-after-make-frame-hook
+            (lambda () (load-theme 'batppuccin-mocha t)))
+  (load-theme 'batppuccin-mocha t)
   ;; face customizations
   (batppuccin-with-colors
-    (set-face-attribute 'font-lock-comment-delimiter-face nil :slant 'normal)))
-
-;; auto-dark to switch themes on os-theme
-(use-package circadian
-  :ensure t
-  :config
-  (setq calendar-latitude 42.360081)
-  (setq calendar-longitude -71.058884)
-  (setq circadian-themes '((:sunrise . batppuccin-latte)
-                           (:sunset  . batppuccin-mocha)))
-  (circadian-setup))
-
-;; TODO: I want a way to refer to colors thats theme independent
+    (set-face-attribute 'font-lock-comment-delimiter-face nil :slant 'normal)
+    (set-face-attribute 'outline-1 nil :foreground bat-red)
+    (set-face-attribute 'outline-2 nil :foreground bat-maroon)
+    (set-face-attribute 'outline-3 nil :foreground bat-peach)
+    (set-face-attribute 'outline-4 nil :foreground bat-yellow)
+    (set-face-attribute 'outline-5 nil :foreground bat-green)
+    (set-face-attribute 'outline-6 nil :foreground bat-blue)
+    (set-face-attribute 'outline-7 nil :foreground bat-blue)
+    (set-face-attribute 'outline-8 nil :foreground bat-lavender)))
 
 ;;; Basic settings
 (setopt inhibit-splash-screen t)
@@ -139,7 +139,6 @@
 (setq-default tab-bar-show nil)                           ;; disable the tab bar
 (tab-bar-mode -1)
 (column-number-mode +1)
-(global-hl-line-mode +1)
 
 (unless (executable-find "fd")                            ;; try to use the faster programs
   (add-to-list 'exec-path "/home/sahana/.local/bin"))
@@ -164,7 +163,7 @@
 
 ;;; Built-Ins.
 
-;;;;
+;;;; ensure that compat gets updated
 (use-package compat
   :ensure t
   :vc (:url "https://github.com/emacs-compat/compat"))
@@ -186,21 +185,6 @@
   :ensure nil
   :config
   (setq dired-kill-when-opening-new-dired-buffer t))
-
-;;;; Outline-mode
-(use-package outline
-  :ensure nil
-  :config
-  (define-key outline-minor-mode-map (kbd "C-c C-c")
-              (lookup-key outline-minor-mode-map (kbd "C-c @")))
-
-  (setq outline-minor-mode-highlight 'append)
-  (setq outline-minor-mode-cycle t)
-
-  ;; TODO: make this play nice with repeat-mode
-  :bind (:map outline-minor-mode-map
-              ("<C-backtab>" . outline-cycle-buffer)
-              ("C-<tab>" . outline-cycle)))
 
 ;; Don't show trailing whitespace, and delete when saving
 (setopt show-trailing-whitespace nil)
@@ -1008,6 +992,8 @@ This function falls back to `consult-fd' if we're not in a project."
                       ("," . evil-switch-to-windows-last-buffer)
                       (":" . eval-expression)
                       ("'" . popper-toggle)
+                      ("!" . shell-command)
+                      ("&" . async-shell-command)
                       ("q" . quit-window)
                       ;; menus
                       ("c" . ("+code" . qqh-transient--code))
@@ -1172,10 +1158,10 @@ This function falls back to `consult-fd' if we're not in a project."
   :config (magit-todos-mode 1))
 
 ;; dim inactive buffrs
-(use-package solaire-mode
-  :if (display-graphic-p)
-  :config
-  (solaire-global-mode +1))
+;; (use-package solaire-mode
+;;   :if (display-graphic-p)
+;;   :config
+;;   (solaire-global-mode +1))
 
 (use-package fancy-compilation
   :config
@@ -1332,9 +1318,8 @@ By default, this shows the information specified by `global-mode-string'."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-vc-selected-packages
-   '((eglot-booster :url "git@github.com:jdtsmith/eglot-booster")
-     (undo-fu :url "git@github.com:emacsmirror/undo-fu")
-     (term-keys :url "git@github.com:CyberShadow/term-keys"))))
+   '((org-eglot :url "https://github.com/Anoncheg1/org-eglot")
+     (eglot-booster :url "git@github.com:jdtsmith/eglot-booster"))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
