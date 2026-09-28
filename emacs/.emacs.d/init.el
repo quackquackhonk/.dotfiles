@@ -87,18 +87,7 @@
   :config
   (add-hook 'server-after-make-frame-hook
             (lambda () (load-theme 'batppuccin-mocha t)))
-  (load-theme 'batppuccin-mocha t)
-  ;; face customizations
-  (batppuccin-with-colors
-    (set-face-attribute 'font-lock-comment-delimiter-face nil :slant 'normal)
-    (set-face-attribute 'outline-1 nil :foreground bat-red)
-    (set-face-attribute 'outline-2 nil :foreground bat-maroon)
-    (set-face-attribute 'outline-3 nil :foreground bat-peach)
-    (set-face-attribute 'outline-4 nil :foreground bat-yellow)
-    (set-face-attribute 'outline-5 nil :foreground bat-green)
-    (set-face-attribute 'outline-6 nil :foreground bat-blue)
-    (set-face-attribute 'outline-7 nil :foreground bat-blue)
-    (set-face-attribute 'outline-8 nil :foreground bat-lavender)))
+  (load-theme 'batppuccin-mocha t))
 
 ;;; Basic settings
 (setopt inhibit-splash-screen t)
@@ -194,8 +183,8 @@
 
 ;;; Evil mode
 (use-package undo-fu
-  :ensure t
-  :vc (:url "git@github.com:emacsmirror/undo-fu"))
+  :ensure t)
+ ;; :vc (:url "git@github.com:emacsmirror/undo-fu"))
 
 (use-package evil
   :ensure t
@@ -402,7 +391,6 @@
 ;;;; Corfu: Popup completion-at-point
 (use-package corfu
   :ensure t
-  :hook (corfu-mode . corfu-popupinfo-mode)
   :custom
   (corfu-cycle t)           ;; Enable cycling for `corfu-next/previous'
   (corfu-auto t)            ;; auto completion
@@ -428,14 +416,14 @@
                                  (corfu-mode +1))))
 
 ;;;;; Corfu popupinfo
-(use-package corfu-popupinfo
-  :after corfu
-  :hook (corfu-mode . corfu-popupinfo-mode)
-  :custom
-  (corfu-popupinfo-delay '(0.25 . 0.1))
-  (corfu-popupinfo-hide nil)
-  :config
-  (corfu-popupinfo-mode))
+;; (use-package corfu-popupinfo
+;;   :after corfu
+;;   :hook (corfu-mode . corfu-popupinfo-mode)
+;;   :custom
+;;   (corfu-popupinfo-delay '(0.25 . 0.1))
+;;   (corfu-popupinfo-hide nil)
+;;   :config
+;;   (corfu-popupinfo-mode))
 
 ;;;; Cape: Fancy completion-at-point functions
 ;; there's too much in the cape package to configure here; dive in when you're comfortable!
@@ -590,12 +578,13 @@ Like normal Emacs `C-k'.  Kill to end of line and put content in kill-ring."
   (set-face-attribute 'markdown-code-face nil :extend t)
   (set-face-attribute 'markdown-pre-face nil :extend t))
 ;; mermaid diagrams in markdown
-(use-package markdown-mermaid
-  :vc (:url "https://github.com/pasunboneleve/markdown-mermaid" :rev :newest)
-  :bind (:map markdown-mode-map
-              ("C-c m" . markdown-mermaid-preview))
-  :init
-  (setq markdown-mermaid-mmdc-path (executable-find "mmdc")))
+(when (qqh--is-work)
+  (use-package markdown-mermaid
+    :vc (:url "https://github.com/pasunboneleve/markdown-mermaid" :rev :newest)
+    :bind (:map markdown-mode-map
+                ("C-c m" . markdown-mermaid-preview))
+    :init
+    (setq markdown-mermaid-mmdc-path (executable-find "mmdc"))))
 ;; math-preview for latex in markdown / org file
 (use-package math-preview)
 
@@ -709,10 +698,10 @@ Like normal Emacs `C-k'.  Kill to end of line and put content in kill-ring."
   (setq-default eglot-workspace-configuration
                 '((:basedpyright :typeCheckingMode "basic"))))
 
-(use-package eglot-booster
-  :vc (:url "git@github.com:jdtsmith/eglot-booster")
-  :after eglot
-  :config (eglot-booster-mode))
+;; (use-package eglot-booster
+;;   :vc (:url "git@github.com:jdtsmith/eglot-booster")
+;;   :after eglot
+;;   :config (eglot-booster-mode))
 
 ;;;; Code formatting
 (use-package format-all
@@ -876,17 +865,6 @@ Like normal Emacs `C-k'.  Kill to end of line and put content in kill-ring."
            :unnarrowed t)))
   :config
   (org-roam-db-autosync-mode))
-
-;;;; enable eglot in org source buffers
-(use-package org-eglot
-  :vc (:url "https://github.com/Anoncheg1/org-eglot")
-  :init
-
-  (defun qqh--eglot-starter ()
-    (eglot-shutdown-all)
-    (eglot-ensure))
-
-  (setq org-eglot-starter #'qqh--eglot-starter))
 
 
 ;;; Keybindings

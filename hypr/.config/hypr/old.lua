@@ -45,23 +45,18 @@ hl.on("hyprland.start", function()
 	hl.exec_cmd("systemctl --user start hyprpolkitagent") -- application authentication agent
 	hl.exec_cmd("blueman-applet") -- bluetooth manager applet
 	hl.exec_cmd("nm-applet") -- networkmanager applet
-	hl.exec_cmd("noctalia-shell") -- start the bar
 	hl.exec_cmd("wl-paste --type text --watch cliphist store") -- clipboard store text data
 	hl.exec_cmd("wl-paste --type image --watch cliphist store") -- clipboard store image data
 	hl.exec_cmd("udiskie --automount --smart-tray") -- auto mount USBs
 
 	-- Auto start some apps
 	hl.exec_cmd("steam")
-	hl.exec_cmd(browser)
-	hl.exec_cmd("spotify")
-	hl.exec_cmd(discord)
-    hl.exec_cmd(emacs)
+        hl.exec_cmd(emacs)
 end)
 
 --
 -- LOOK AND FEEL
 --
-require("qqh/stylix")
 
 hl.config({
 	dwindle = {
@@ -115,9 +110,9 @@ hl.config({
 --
 -- KEYBINDINGS
 --
-require('qqh/binds')
+require('binds')
 
 --
 -- WINDOW RULES
 --
-require('qqh/rules')
+require('rules')

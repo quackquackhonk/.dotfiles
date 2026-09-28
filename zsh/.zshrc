@@ -128,7 +128,9 @@ eval "$(zoxide init zsh)"
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 eval "$(starship init zsh)"
 
-. ~/opt/git/spack/share/spack/setup-env.sh
+if [[ "$HOST" != "redwood" ]]; then
+    . ~/opt/git/spack/share/spack/setup-env.sh
+fi
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
