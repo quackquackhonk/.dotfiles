@@ -560,7 +560,6 @@ Like normal Emacs `C-k'.  Kill to end of line and put content in kill-ring."
 
 ;;;;; Perspectives
 (use-package perspective
-  :after consult
   :ensure t
   :custom
   (persp-mode-prefix-key (kbd "C-c p"))  ; pick your own prefix key here
@@ -569,8 +568,9 @@ Like normal Emacs `C-k'.  Kill to end of line and put content in kill-ring."
   :init
   (persp-mode)
   :config
-  (consult-customize consult-source-buffer :hidden t :default nil)
-  (add-to-list 'consult-buffer-sources persp-consult-source))
+  (with-eval-after-load 'consult
+    (consult-customize consult-source-buffer :hidden t :default nil)
+    (add-to-list 'consult-buffer-sources persp-consult-source)))
 
 (use-package persp-projectile
   :ensure t
