@@ -8,14 +8,18 @@
 (when (< emacs-major-version 30)
   (error "[qqh] config requires Emacs version 30+, currently running %s!" emacs-major-version))
 
+(defun qqh--macos-p ()
+  "Check if the current frame is an OSX gui frame."
+  (eq system-type 'darwin))
+
 ;; package initialization
 (require 'package)
 ;; HACK: uncomment to use a mirror of the elpa repos if you can't access them
 ;;       this is basically only a problem on my work laptop
-;; (setq package-archives
-;;       '(("gnu"    . "https://raw.githubusercontent.com/d12frosted/elpa-mirror/master/gnu/")
-;;         ("nongnu" . "https://raw.githubusercontent.com/d12frosted/elpa-mirror/master/nongnu/")))
-
+(when (qqh--macos-p)
+  (setq package-archives
+        '(("gnu"    . "https://raw.githubusercontent.com/d12frosted/elpa-mirror/master/gnu/")
+          ("nongnu" . "https://raw.githubusercontent.com/d12frosted/elpa-mirror/master/nongnu/"))))
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (setq package-install-upgrade-built-in t)
 (package-initialize)
@@ -33,10 +37,6 @@
 
 (defvar qqh--trunc-len 24
   "The length to truncate strings to.")
-
-(defun qqh--macos-p ()
-  "Check if the current frame is an OSX gui frame."
-  (eq system-type 'darwin))
 
 (defun qqh--is-work ()
   "Check if the current system is for work."
@@ -485,6 +485,7 @@
 ;;;; ghostel: Terminal Emulation
 (use-package ghostel
   :ensure t
+  :vc (:url "https://github.com/dakra/ghostel" :rev :newest)
   :bind (:map ghostel-semi-char-mode-map
          ("C-s"  . consult-line)
          ("C-k"  . qqh--ghostel-send-C-k-and-kill)
@@ -504,8 +505,8 @@ Like normal Emacs `C-k'.  Kill to end of line and put content in kill-ring."
   (unbind-key (kbd "M-]") 'ghostel-mode-map)
   (unbind-key (kbd "C-@") 'ghostel-mode-map))
 
-(use-package ghostel-compile
-  :hook (after-init . ghostel-compile-global-mode))
+;; (use-package ghostel-compile
+;;   :hook (after-init . ghostel-compile-global-mode))
 
 ;;;; Magit: best Git client to ever exist
 (use-package magit
@@ -547,7 +548,6 @@ Like normal Emacs `C-k'.  Kill to end of line and put content in kill-ring."
 
 ;;;;; Perspectives
 (use-package perspective
-  :after consult
   :ensure t
   :custom
   (persp-mode-prefix-key (kbd "C-c p"))  ; pick your own prefix key here
@@ -556,8 +556,9 @@ Like normal Emacs `C-k'.  Kill to end of line and put content in kill-ring."
   :init
   (persp-mode)
   :config
-  (consult-customize consult-source-buffer :hidden t :default nil)
-  (add-to-list 'consult-buffer-sources persp-consult-source))
+  (with-eval-after-load 'consult
+    (consult-customize consult-source-buffer :hidden t :default nil)
+    (add-to-list 'consult-buffer-sources persp-consult-source)))
 
 (use-package persp-projectile
   :ensure t
@@ -771,8 +772,11 @@ Like normal Emacs `C-k'.  Kill to end of line and put content in kill-ring."
 ;;;; Settings
 ;; Agenda variables
 (setq org-directory "~/org/")         ; Non-absolute paths for agenda and
-                                        ; capture templates will look here.
+                                      ; capture templates will look here.
+(setq org-default-notes-file (concat org-directory "inbox.org"))
 (setq org-agenda-files '("inbox.org"))
+
+
 ;; Default tags
 (setq org-tag-alist '(;; locale
                       (:startgroup)
@@ -799,9 +803,10 @@ Like normal Emacs `C-k'.  Kill to end of line and put content in kill-ring."
 (use-package org
   :ensure nil
   :hook ((org-mode . visual-line-mode))  ; wrap lines at word breaks
-
   :config
   (unbind-key (kbd "C-'") 'org-mode-map)
+
+
   ;; Make org-open-at-point follow file links in the same window
   (setf (cdr (assoc 'file org-link-frame-setup)) 'find-file)
 
@@ -842,8 +847,8 @@ Like normal Emacs `C-k'.  Kill to end of line and put content in kill-ring."
 (use-package org-roam
   :init
   ;; Org-roam variables
-  (setq org-roam-directory "~/org/roam/")
-  (setq org-roam-index-file "~/org/roam/index.org")
+  (setq org-roam-directory "~/org/")
+  (setq org-roam-index-file "~/org/index.org")
 
   (setq org-roam-completion-everywhere nil)
   (setq org-roam-capture-templates
@@ -1003,6 +1008,8 @@ This function falls back to `consult-fd' if we're not in a project."
 
 (global-set-key (kbd "M-<mouse-1>") 'goto-address-at-mouse)
 
+(global-set-key (kbd "M-<f11>") 'maximize-window)
+
 ;;;; Evil plugins
 (use-package evil-collection
   :after evil
@@ -1050,6 +1057,8 @@ This function falls back to `consult-fd' if we're not in a project."
 
 (evil-define-key nil 'global
   (kbd "C-l") 'evil-scroll-up)
+
+(define-key evil-window-map "/" 'transpose-frame)
 
 (evil-define-key '(normal insert emacs) 'global
   (kbd "<prior>") 'evil-scroll-up
@@ -1198,6 +1207,7 @@ By default, this shows the information specified by `global-mode-string'."
 
 ;; pop up management
 (use-package popper
+  :after ghostel
   :ensure t
   :after perspective
   :bind (("C-'"   . popper-toggle)
@@ -1241,6 +1251,48 @@ By default, this shows the information specified by `global-mode-string'."
   ;; echo area hints
   (popper-echo-mode +1))
 
+(when (qqh--macos-p)
+
+  (use-package inheritenv
+    :vc (:url "https://github.com/purcell/inheritenv" :rev :newest))
+
+  (use-package monet
+    :vc (:url "https://github.com/stevemolitor/monet" :rev :newest))
+
+  ;; claude code integration
+  (use-package claude-code
+    :ensure t
+    :vc (:url "https://github.com/stevemolitor/claude-code.el" :rev :newest)
+    :config
+    (setq claude-code-terminal-backend 'ghostel)
+    ;; optional IDE integration with Monet
+    (add-hook 'claude-code-process-environment-functions #'monet-start-server-function)
+    (monet-mode 1)
+    (claude-code-mode)
+    :bind-keymap ("C-c a" . claude-code-command-map)
+    ;; Optionally define a repeat map so that "M" will cycle thru Claude auto-accept/plan/confirm modes after invoking claude-code-cycle-mode / C-c M.
+    :bind
+    (:repeat-map my-claude-code-map
+                 ("M" . claude-code-cycle-mode)
+                 :map claude-code-command-map
+                 ("a" . claude-code)))
+
+  ;; copilot for ai autocomplete
+  (use-package copilot
+    :ensure t
+    :vc (:url "https://github.com/copilot-emacs/copilot.el"
+              :rev :newest
+              :branch "main")
+    :hook (prog-mode . copilot-mode)
+    :custom
+    (copilot-idle-delay nil)
+    :bind (:map copilot-completion-map
+                ("<tab>" . copilot-accept-completion)
+                ("TAB" . copilot-accept-completion)
+                ("C-M-<tab>" . copilot-complete)
+                ("C-M-TAB" . copilot-complete)
+                ("M-n" . copilot-next-completion)
+                ("M-p" . copilot-previous-completion))))
 ;;; Customization file
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (load custom-file 'noerror)
