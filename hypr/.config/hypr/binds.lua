@@ -16,8 +16,13 @@ local mod = "SUPER" -- Sets "Windows" key as main modifier
 local exec = function(cmd)
 	return hl.dsp.exec_cmd(cmd)
 end
+
 local ipc = function(cmd)
 	return hl.dsp.exec_cmd("dms ipc call "  .. cmd)
+end
+
+function focus_or_open(cmd, class)
+    return hl.dsp.exec_cmd("echo 'TODO'")
 end
 
 hl.bind(mod .. " + Return", exec(terminal))
