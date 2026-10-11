@@ -21,10 +21,6 @@ local ipc = function(cmd)
 	return hl.dsp.exec_cmd("dms ipc call "  .. cmd)
 end
 
-function focus_or_open(cmd, class)
-    return hl.dsp.exec_cmd("echo 'TODO'")
-end
-
 hl.bind(mod .. " + Return", exec(terminal))
 hl.bind(mod .. " + Q", hl.dsp.window.close())
 
@@ -64,9 +60,6 @@ hl.bind(mod .. " + bracketleft", hl.dsp.focus({ workspace = "e-1" }))
 -- Move/resize windows with mod + LMB/RMB and dragging
 hl.bind(mod .. " + mouse:272", hl.dsp.window.drag(), { mouse = true })
 hl.bind(mod .. " + mouse:273", hl.dsp.window.resize(), { mouse = true })
-
--- === Cheat sheet
-hl.bind("SUPER + SHIFT + Slash", hl.dsp.exec_cmd("dms ipc call keybinds toggle hyprland"))
 
 -- === Security ===
 hl.bind("SUPER + ALT + L", hl.dsp.exec_cmd("dms ipc call lock lock"))
