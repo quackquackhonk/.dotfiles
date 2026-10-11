@@ -1,0 +1,58 @@
+#!/usr/bin/python
+
+import os
+from dataclasses import dataclass, field
+import socket
+from typing import List, Dict, Optional
+
+COMPONENTS = ["hypr", "emacs", "ghostty", "zsh", "bat", "bin", "desktop"]
+
+
+def expand(path: str):
+    return os.path.expanduser(os.path.expandvars(path))
+
+
+@dataclass
+class Component:
+    name: str
+    dst: str
+    src: Optional[str] = None
+    folder: bool = False
+
+    def link(self):
+        srcpath = expand(f"./{self.src if self.src else self.name}")
+
+        # if the destination is a directory, we link the file into that dir
+        if self.dst.endswith("/"):
+            dstpath = expand(f"~/{self.dst}{self.name}")
+        else:
+            dstpath = expand(f"~/{self.dst}")
+
+        print(f"Linking {srcpath} to {dstpath}{" recursively" if self.folder else ""}!")
+
+
+hypr = Component("hypr", ".config/", folder=True)
+emacs = Component("emacs", ".emacs.d", folder=True)
+ghostty = Component("ghostty", ".config/", folder=True)
+zsh = Component("zsh", ".zshsrc", src="zsh/.zshrc")
+
+
+@dataclass
+class Registry:
+    registry: Dict[str, List[Component]] = field(default_factory=dict)
+
+    def register(self, hostname: str, comps: List[Component]):
+        self.registry[hostname] = comps
+
+    def make_links(self):
+        host = socket.gethostname()
+        comps = self.registry[host]
+        for c in comps:
+            c.link()
+
+
+if __name__ == "__main__":
+    registry = Registry()
+    registry.register("redwood", [hypr, ghostty, emacs, zsh])
+
+    registry.make_links()
