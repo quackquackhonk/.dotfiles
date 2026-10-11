@@ -25,6 +25,14 @@ plugins=(git)
 
 source $ZSH/oh-my-zsh.sh
 
+# zsh - add to ~/.zshrc:
+if [[ "${${INSIDE_EMACS-}%%,*}" = 'ghostel' ]]; then
+    source "$EMACS_GHOSTEL_PATH/etc/shell/ghostel.zsh"
+    export EDITOR="emacsclient"
+    export VISUAL="emacsclient"
+else
+fi
+
 # User configuration
 
 alias ls='eza'
@@ -37,8 +45,9 @@ alias zshsrc="source ~/.zshrc"
 alias emd='emacs --daemon'
 alias emdebug='emacs --debug-init --fg-daemon'
 alias emkill='emacsclient -e "(kill-emacs)"'
-alias ec='emacsclient -nw -c -a=""'
 
+# emacs integration
+[[ "${${INSIDE_EMACS-}%%,*}" = 'ghostel' ]] && source "$EMACS_GHOSTEL_PATH/etc/shell/ghostel.zsh"
 # work
 
 
