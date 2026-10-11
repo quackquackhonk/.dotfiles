@@ -30,7 +30,6 @@ if [[ "${${INSIDE_EMACS-}%%,*}" = 'ghostel' ]]; then
     source "$EMACS_GHOSTEL_PATH/etc/shell/ghostel.zsh"
     export EDITOR="emacsclient"
     export VISUAL="emacsclient"
-else
 fi
 
 # User configuration

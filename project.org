@@ -1,41 +1,6 @@
 
 #+TITLE: Dotfiles Organization
-
-* Configuration files
-
-** Justfile
-#+begin_src just :tangle justfile
-  # This is an example justfile
-  up:
-      echo "TODO: Make this stow necessary conf files"
-
-  down:
-      echo "TODO: Make this unstow necessary conf files"
-#+end_src
-
-** Project dir-locals
-
-#+begin_src emacs-lisp :tangle .dir-locals.el
- ((nil . ((compile-command . "just build"))))
-#+end_src
-
-* Links
-* Tasks
-* NixOS [3/3]
-** DONE login manager (SDDM)
-- State "DONE"       from "TODO"       [2025-03-10 Mon 13:26]
-** OBSOLETE wlogout theming
-
-- State "OBSOLETE"   from "TODO"       [2025-05-05 Mon 18:53] \\
-  Im just gonna use tofi
-** Hyprland [0/1]
-*** TODO Better workspace management
-Ideally, I want one workspace per app (roughly)
-- so pressing ~S-e~ should not only open emacs, it should also switch to the "emacs" workspace
-- This should NOT double open programs, if its already running, just switch
-** TODO move to waybar
-** DONE steam
-* Hyprland [4/5]
+* Hyprland [5/5]
 ** DONE TARTED Get off HyDE
 - State "DONE"       from              [2024-12-12 Thu 16:40]
 - State "STARTED"    from "TODO"       [2024-11-07 Thu 18:27]
@@ -50,18 +15,11 @@ Hyde kind of defeats the point of not going with a DE, I should rip out the guts
   I got this with the logitech app,
 ** DONE mouse sens is odd, double scrolling as well
 - State "DONE"       from "TODO"       [2025-05-05 Mon 18:31]
-** TODO delay before key repeat should be less
+** OBSOLETE delay before key repeat should be less
+- State "OBSOLETE"   from "TODO"       [2026-10-11 Sun 12:51]
 * Emacs [2/3]
-** Figure out persistent tabs with perspective-mode
-I don't like persp-mode and its projcetile integration, I want to move back to perspective
-
-I should be able to just fork the main perspective mode and adjust the persp struct to add tabs
 ** DONE remove things that I don't know what they do
 - State "DONE"       from "TODO"       [2025-05-05 Mon 18:31]
-** Bugs / Behavior I don't like [0/1]
-*** TODO non-included documents aren't being added unless eglot is restarted
-** Org [0/1]
-*** TODO Get started with org-roam
 ** Development Settings [4/4]
 *** DONE auto activate / deactivate python spack environments on persp-switch
 - State "DONE"       from "TODO"       [2026-01-11 Sun 12:42]
@@ -99,26 +57,21 @@ PRIMARILY need lldb support
 *** OBSOLETE can we set up use-package integration?
 - State "OBSOLETE"   from "TODO"       [2024-11-04 Mon 17:22] \\
   already can be implemented using :bind (:map meow-STATE-state-map (...))
-** Theming / UI [2/3]
-*** DONE display-buffer customization
-- State "DONE"       from "TODO"       [2025-02-09 Sun 12:22]
-- [X] compilation buffer always in a new tab, switch back on "close"
-- [X] ~eat-project~ as full horizontal split
-- --- ~eat~ in a new tab (auto close tab)
-- --- magit buffer in new tab (auto close tab)
-*** DONE Modeline configuration [4/4]
-- State "DONE"       from "STARTED"    [2025-02-09 Sun 12:21]
-- State "STARTED"    from "TODO"       [2024-11-13 Wed 18:07]
-**** DONE Colors on the modeline!!!
-- State "DONE"       from "TODO"       [2025-02-09 Sun 12:21]
-**** DONE truncate git branch length
-- State "DONE"       from "TODO"       [2025-02-09 Sun 12:21]
-**** DONE extract flycheck from mode-line-modes, remove mode-line-modes from modeline
-- State "DONE"       from "TODO"       [2025-02-09 Sun 12:21]
-**** DONE extract projectile from mode-line-modes
-- State "DONE"       from "TODO"       [2024-11-20 Wed 16:02]
-*** TODO hl-todo customizations
-- [ ] Swap the background / foreground of current todo highlighting
-- [ ] Explore changing the entire /comment/ to the highlight color
 
-* Questions
+* Archive
+** OBSOLETE NixOS [3/3]
+- State "OBSOLETE"   from              [2026-10-11 Sun 12:51] \\
+  WE HATE NIXOS
+*** DONE login manager (SDDM)
+- State "DONE"       from "TODO"       [2025-03-10 Mon 13:26]
+*** OBSOLETE wlogout theming
+
+- State "OBSOLETE"   from "TODO"       [2025-05-05 Mon 18:53] \\
+  Im just gonna use tofi
+*** Hyprland [0/1]
+**** TODO Better workspace management
+Ideally, I want one workspace per app (roughly)
+- so pressing ~S-e~ should not only open emacs, it should also switch to the "emacs" workspace
+- This should NOT double open programs, if its already running, just switch
+*** TODO move to waybar
+*** DONE steam
