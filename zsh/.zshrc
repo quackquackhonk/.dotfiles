@@ -10,11 +10,6 @@ export PATH=/Library/PostgreSQL/16/bin:$PATH
 export PATH=$HOME/opt/grpc/bin:$PATH
 export PATH=/Library/Frameworks/Python.framework/Versions/3.11/bin:$PATH
 
-export PKG_CONFIG_PATH="/opt/homebrew/lib/pkgconfig"
-
-export DOCKER_HOST="unix:///run/user/1000/podman/podman.sock"
-export DOCKER_DEFAULT_PLATFORM=linux/amd64
-export DOCKER_BUILDKIT=0
 export HOMEBREW_NO_AUTO_UPDATE=1
 
 export CMAKE_COLOR_DIAGNOSTICS=ON
@@ -61,27 +56,34 @@ alias emkill='emacsclient -e "(kill-emacs)"'
 
 
 # WORK ONLY
+
 if [[ "$HOST" != "redwood" ]]; then
-    # export PKG_CONFIG_PATH="/opt/homebrew/lib/pkgconfig"
-    export PATH=$HOME/opt/grpc/bin:$PATH
-    export PATH=/Library/Frameworks/Python.framework/Versions/3.11/bin:$PATH
-    export PATH=/Library/PostgreSQL/16/bin:$PATH
-    export DOCKER_HOST="unix:///run/user/1000/podman/podman.sock"
-    export DOCKER_DEFAULT_PLATFORM=linux/amd64
-    export DOCKER_BUILDKIT=0
-    export HOMEBREW_NO_AUTO_UPDATE=1
 
-    # homebrew stuff
-    # source ~/.zprofile
-    alias brew=/opt/homebrew/bin/brew
-    function brewlink() {
-        ln -s /opt/homebrew/bin/${1} ~/.local/bin/${1}
-    }
-    function brewlinksys() {
-        sudo ln -s /opt/homebrew/bin/${1} /usr/local/bin/${1}
-    }
+    # local laptop only
+    if [[ $HOST == "LVV3TW207K" ]]; then
+        # export PKG_CONFIG_PATH="/opt/homebrew/lib/pkgconfig"
+        export PATH=$HOME/opt/grpc/bin:$PATH
+        export PATH=/Library/Frameworks/Python.framework/Versions/3.11/bin:$PATH
+        export PATH=/Library/PostgreSQL/16/bin:$PATH
 
-    alias cirrus='ssh -i ~/.ssh/stankala_id.key stankala@cirrus.veriskweather.net -t "zsh"'
+        export PKG_CONFIG_PATH="/opt/homebrew/lib/pkgconfig"
+        export DOCKER_HOST="unix:///run/user/1000/podman/podman.sock"
+        export DOCKER_DEFAULT_PLATFORM=linux/amd64
+        export DOCKER_BUILDKIT=0
+        # homebrew stuff
+        # source ~/.zprofile
+        alias brew=/opt/homebrew/bin/brew
+        function brewlink() {
+            ln -s /opt/homebrew/bin/${1} ~/.local/bin/${1}
+        }
+        function brewlinksys() {
+            sudo ln -s /opt/homebrew/bin/${1} /usr/local/bin/${1}
+        }
+
+        alias cirrus='ssh -i ~/.ssh/stankala_id.key stankala@cirrus.veriskweather.net -t "zsh"'
+        alias docker='podman'
+    fi
+
 
     alias nonprod-login='okta-aws-cli web --profile nonprod  --expiry-aws-variables --cache-access-token --write-aws-credentials'
     alias nonprod-east-login='okta-aws-cli web --profile nonprod-east  --expiry-aws-variables --cache-access-token --write-aws-credentials'
@@ -91,7 +93,6 @@ if [[ "$HOST" != "redwood" ]]; then
     alias awsprod='aws --profile production'
 
 
-    alias docker='podman'
     alias nonprod='eval "$(aws configure export-credentials --profile nonprod --format env)" && aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 589310964831.dkr.ecr.us-west-2.amazonaws.com && export AWS_PROFILE="nonprod"'
     alias nonprod-east='eval "$(aws configure export-credentials --profile nonprod-east --format env)" && aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 589310964831.dkr.ecr.us-east-1.amazonaws.com && export AWS_PROFILE="nonprod-east"'
 
@@ -128,6 +129,9 @@ if [[ "$HOST" != "redwood" ]]; then
 --color=marker:#f5e0dc,fg+:#cdd6f4,prompt:#cba6f7,hl+:#f38ba8"
 
     . ~/opt/git/spack/share/spack/setup-env.sh
+fi
+
+
 fi
 
 # integration
