@@ -1,0 +1,23 @@
+;;;; Emacs Bookmark Format Version 1;;;; -*- coding: utf-8-emacs; mode: lisp-data -*-
+;;; This format is meant to be slightly human-readable;
+;;; nevertheless, you probably don't want to edit it.
+;;; -*- End Of Bookmark File Format Version Stamp -*-
+(("org-capture-last-stored"
+ (filename . "~/org/main/ep_week.org")
+ (front-context-string)
+ (rear-context-string . "+title: ep-week\n")
+ (position . 85)
+ (last-modified 27314 57788 476225 0))
+("Activity: camel8"
+ (activities-name . "camel8")
+ (handler . activities-bookmark-handler))
+("Activity: configuration"
+ (activities-name . "configuration")
+ (handler . activities-bookmark-handler))
+("org-refile-last-stored"
+ (filename . "~/.dotfiles/project.org")
+ (front-context-string . "** TODO non-incl")
+ (rear-context-string . "ighlight color\n\n")
+ (position . 3264)
+ (last-modified 26430 19793 390068 0))
+)

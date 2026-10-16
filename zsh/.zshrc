@@ -6,6 +6,16 @@ umask 002
 export PATH=$HOME/bin:/usr/local/bin:$PATH
 export PATH=$HOME/.local/bin:$PATH
 export PATH=$HOME/.cargo/bin:$PATH
+export PATH=/Library/PostgreSQL/16/bin:$PATH
+export PATH=$HOME/opt/grpc/bin:$PATH
+export PATH=/Library/Frameworks/Python.framework/Versions/3.11/bin:$PATH
+
+export PKG_CONFIG_PATH="/opt/homebrew/lib/pkgconfig"
+
+export DOCKER_HOST="unix:///run/user/1000/podman/podman.sock"
+export DOCKER_DEFAULT_PLATFORM=linux/amd64
+export DOCKER_BUILDKIT=0
+export HOMEBREW_NO_AUTO_UPDATE=1
 
 export CMAKE_COLOR_DIAGNOSTICS=ON
 export CMAKE_EXPORT_COMPILE_COMMANDS=1
@@ -51,7 +61,7 @@ alias emkill='emacsclient -e "(kill-emacs)"'
 
 
 # WORK ONLY
-if [[ $HOST == "LVV3TW207K" ]]; then
+if [[ "$HOST" != "redwood" ]]; then
     # export PKG_CONFIG_PATH="/opt/homebrew/lib/pkgconfig"
     export PATH=$HOME/opt/grpc/bin:$PATH
     export PATH=/Library/Frameworks/Python.framework/Versions/3.11/bin:$PATH
@@ -116,6 +126,8 @@ if [[ $HOST == "LVV3TW207K" ]]; then
 --color=bg+:#313244,bg:#1e1e2e,spinner:#f5e0dc,hl:#f38ba8 \
 --color=fg:#cdd6f4,header:#f38ba8,info:#cba6f7,pointer:#f5e0dc \
 --color=marker:#f5e0dc,fg+:#cdd6f4,prompt:#cba6f7,hl+:#f38ba8"
+
+    . ~/opt/git/spack/share/spack/setup-env.sh
 fi
 
 # integration
@@ -123,9 +135,6 @@ eval "$(zoxide init zsh)"
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 eval "$(starship init zsh)"
 
-if [[ "$HOST" != "redwood" ]]; then
-    . ~/opt/git/spack/share/spack/setup-env.sh
-fi
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
