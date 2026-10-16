@@ -131,9 +131,6 @@ if [[ "$HOST" != "redwood" ]]; then
     . ~/opt/git/spack/share/spack/setup-env.sh
 fi
 
-
-fi
-
 # integration
 eval "$(zoxide init zsh)"
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
