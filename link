@@ -1,15 +1,21 @@
 #!/usr/bin/python
 
-import os
+
+from argparse import ArgumentParser, Namespace
+import shutil
+from pathlib import Path
 from dataclasses import dataclass, field
 import socket
 from typing import List, Dict, Optional
 
-COMPONENTS = ["hypr", "emacs", "ghostty", "zsh", "bat", "bin", "desktop"]
+
+def expand(path: str) -> Path:
+    return Path(path).expanduser()
 
 
-def expand(path: str):
-    return os.path.expanduser(os.path.expandvars(path))
+def log(msg: str, comp: Optional[str] = None):
+    pref = "" if not comp else f"[{comp}]: "
+    print(f"{pref}{msg}")
 
 
 @dataclass
@@ -18,23 +24,63 @@ class Component:
     dst: str
     src: Optional[str] = None
     folder: bool = False
+    subdirectory: bool = False
 
-    def link(self):
-        srcpath = expand(f"./{self.src if self.src else self.name}")
+    def __post_init__(self):
 
-        # if the destination is a directory, we link the file into that dir
-        if self.dst.endswith("/"):
-            dstpath = expand(f"~/{self.dst}{self.name}")
+        if self.subdirectory:
+            # if subdirectory is set, we also set folder
+            self.folder = self.subdirectory
+
+    def link(self, override=False, dry=False):
+        dst = expand(f"~/{self.dst}")
+
+        if self.subdirectory:
+            # if we want a subdirectory, add it to dstpath
+            dstpath = dst / self.name
         else:
-            dstpath = expand(f"~/{self.dst}")
+            # otherwise, `dst` is the output path
+            dstpath = dst
 
-        print(f"Linking {srcpath} to {dstpath}{" recursively" if self.folder else ""}!")
+        if override and dstpath.exists():
+            log(f"Removing existing link at {dstpath}", comp=self.name)
+            if dstpath.is_dir():
+                shutil.rmtree(dstpath)
+            else:
+                dstpath.unlink()
+
+        if self.folder:
+            # create the subdirectory if its not there
+            if not dstpath.exists():
+                log(f"Creating subdirectory {dst}", comp=self.name)
+                dstpath.mkdir()
+
+            srcprefix = expand(f"{Path.cwd()}/{self.src if self.src else self.name}/")
+            dstprefix = dstpath
+
+            # loop through all files in the folder
+            for srcfile in srcprefix.iterdir():
+                # link each one to dstpath
+                srcpath = srcprefix / srcfile.name
+                dstpath = dstprefix / srcfile.name
+
+                log(f"Linking {dstpath} to {srcpath}!", comp=self.name)
+
+                if not dry:
+                    dstpath.symlink_to(srcpath)
+        else:
+            srcpath = expand(f"{Path.cwd()}/{self.src if self.src else self.name}")
+            log(f"Linking {dstpath} to {srcpath}!")
+
+            if not dry:
+                dstpath.symlink_to(srcpath)
 
 
-hypr = Component("hypr", ".config/", folder=True)
+hypr = Component("hypr", ".config", subdirectory=True)
 emacs = Component("emacs", ".emacs.d", folder=True)
-ghostty = Component("ghostty", ".config/", folder=True)
-zsh = Component("zsh", ".zshsrc", src="zsh/.zshrc")
+ghostty = Component("ghostty", ".config", subdirectory=True)
+zsh = Component("zsh", ".zshrc", src="zsh/.zshrc")
+starship = Component("starship", ".config/starship.toml", src="starship.toml")
 
 
 @dataclass
@@ -44,15 +90,29 @@ class Registry:
     def register(self, hostname: str, comps: List[Component]):
         self.registry[hostname] = comps
 
-    def make_links(self):
+    def make_links(self, override=False, dry=False):
         host = socket.gethostname()
         comps = self.registry[host]
         for c in comps:
-            c.link()
+            c.link(override=override, dry=dry)
+
+
+def parse_args() -> Namespace:
+    parser = ArgumentParser()
+
+    parser.add_argument(
+        "--dry", help="Do not generate symlinks, just output logs.", action="store_true"
+    )
+    parser.add_argument(
+        "--override", help="Overwrite any existing symlinks.", action="store_true"
+    )
+
+    return parser.parse_args()
 
 
 if __name__ == "__main__":
     registry = Registry()
-    registry.register("redwood", [hypr, ghostty, emacs, zsh])
+    registry.register("redwood", [hypr, ghostty, emacs, zsh, starship])
 
-    registry.make_links()
+    args = parse_args()
+    registry.make_links(override=args.override, dry=args.dry)
