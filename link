@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 
+from abc import abstractmethod
 from argparse import ArgumentParser, Namespace
 import shutil
 from pathlib import Path
@@ -10,7 +11,7 @@ from typing import List, Dict, Optional
 
 
 def expand(path: str) -> Path:
-    return Path(path).expanduser()
+    return Path(path).expanduser().resolve()
 
 
 def log(msg: str, comp: Optional[str] = None):
@@ -19,82 +20,137 @@ def log(msg: str, comp: Optional[str] = None):
 
 
 @dataclass
+class Configuration:
+    override: bool
+    dry: bool
+    verbose: bool
+
+    @staticmethod
+    def from_args(args: Namespace) -> Configuration:
+        return Configuration(args.override, args.dry, args.verbose)
+
+
+@dataclass
 class Component:
-    name: str
-    dst: str
-    src: Optional[str] = None
-    folder: bool = False
-    subdirectory: bool = False
+    name: str  # name of the component
+    dst: str  # where should the file / dir be linked to?
 
-    def __post_init__(self):
+    def handle_override(self, dstpath: Path, override: bool) -> bool:
+        """Handle the override logic for a target symlink.
 
-        if self.subdirectory:
-            # if subdirectory is set, we also set folder
-            self.folder = self.subdirectory
+        Args:
+            dstpath (Path): The target.
+            override (bool): Is override enabled?
 
-    def link(self, override=False, dry=False):
-        dst = expand(f"~/{self.dst}")
+        Returns:
+            bool: should we exit early?
+        """
+        if dstpath.exists():
+            if not override:
+                log(
+                    f"Config files exist and --override is not set! Skipping...",
+                    comp=self.name,
+                )
+                return True
 
-        if self.subdirectory:
-            # if we want a subdirectory, add it to dstpath
-            dstpath = dst / self.name
-        else:
-            # otherwise, `dst` is the output path
-            dstpath = dst
-
-        if override and dstpath.exists():
-            log(f"Removing existing link at {dstpath}", comp=self.name)
             if dstpath.is_dir():
+                log(f"Removing existing folder at {dstpath}", comp=self.name)
                 shutil.rmtree(dstpath)
             else:
+                log(f"Removing existing file at {dstpath}", comp=self.name)
                 dstpath.unlink()
 
-        if self.folder:
-            # create the subdirectory if its not there
-            if not dstpath.exists():
-                log(f"Creating subdirectory {dst}", comp=self.name)
-                dstpath.mkdir()
+        return False
 
-            srcprefix = expand(f"{Path.cwd()}/{self.src if self.src else self.name}/")
-            dstprefix = dstpath
+    @abstractmethod
+    def link(self, cfg: Configuration):
+        pass
 
-            # loop through all files in the folder
-            for srcfile in srcprefix.iterdir():
-                # link each one to dstpath
-                srcpath = srcprefix / srcfile.name
-                dstpath = dstprefix / srcfile.name
 
-                log(f"Linking {dstpath} to {srcpath}!", comp=self.name)
+@dataclass
+class FileComponent(Component):
+    src: str
 
-                if not dry:
-                    dstpath.symlink_to(srcpath)
+    def link(self, cfg: Configuration):
+        srcpath = expand(f"{Path.cwd()}/{self.src}")
+
+        target = expand(f"~/{self.dst}")
+        if target.is_dir():
+            target = target / srcpath.name
+
+        if self.handle_override(target, cfg.override):
+            return
+
+        log(f"Linking {target} to {srcpath}!")
+
+        if not cfg.dry:
+            target.symlink_to(srcpath)
+
+
+@dataclass
+class FolderComponent(Component):
+    mk_subdir: bool = (
+        False  # If set, files go into dst/name/*. Otherwise they go into dst.
+    )
+
+    def link(self, cfg: Configuration):
+        dst = expand(f"~/{self.dst}")
+
+        if self.mk_subdir:
+            # if we want a subdirectory, add it to dstpath
+            dstprefix = dst / self.name
         else:
-            srcpath = expand(f"{Path.cwd()}/{self.src if self.src else self.name}")
-            log(f"Linking {dstpath} to {srcpath}!")
+            # otherwise, `dst` is the output path
+            dstprefix = dst
 
-            if not dry:
-                dstpath.symlink_to(srcpath)
+        if self.handle_override(dstprefix, cfg.override):
+            return
+
+        # create the output directory if its not there
+        if not dstprefix.exists():
+            log(f"Creating subdirectory {dst}", comp=self.name)
+            dstprefix.mkdir(parents=True)
+
+        srcprefix = expand(f"{Path.cwd()}/{self.name}/")
+
+        # loop through all files in the folder
+        for srcfile in srcprefix.iterdir():
+            # link each one to dstpath
+            srcpath = srcprefix / srcfile.name
+            target = dstprefix / srcfile.name
+
+            log(f"Linking {target} to {srcpath}!", comp=self.name)
+
+            if not cfg.dry:
+                target.symlink_to(srcpath)
 
 
-hypr = Component("hypr", ".config", subdirectory=True)
-emacs = Component("emacs", ".emacs.d", folder=True)
-ghostty = Component("ghostty", ".config", subdirectory=True)
-zsh = Component("zsh", ".zshrc", src="zsh/.zshrc")
-starship = Component("starship", ".config/starship.toml", src="starship.toml")
+hypr = FolderComponent("hypr", ".config", mk_subdir=True)
+emacs = FolderComponent("emacs", ".emacs.d")
+ghostty = FolderComponent("ghostty", ".config", mk_subdir=True)
+zsh = FileComponent("zsh", ".zshrc", src="zsh/.zshrc")
+starship = FileComponent("starship", ".config/starship.toml", src="starship.toml")
 
 
 @dataclass
 class Registry:
+    cfg: Configuration
     registry: Dict[str, List[Component]] = field(default_factory=dict)
+    required_components: List[Component] = field(
+        default_factory=lambda: [emacs, ghostty, zsh, starship]
+    )
 
     def register(self, hostname: str, comps: List[Component]):
         self.registry[hostname] = comps
 
-    def make_links(self, override=False, dry=False):
+    def make_links(self):
         host = socket.gethostname()
+
         comps = self.registry[host]
+        comps.extend(self.required_components)
+
         for c in comps:
-            c.link(override=override, dry=dry)
+            c.link(self.cfg)
 
 
 def parse_args() -> Namespace:
@@ -103,16 +159,26 @@ def parse_args() -> Namespace:
     parser.add_argument(
         "--dry", help="Do not generate symlinks, just output logs.", action="store_true"
     )
+
     parser.add_argument(
         "--override", help="Overwrite any existing symlinks.", action="store_true"
+    )
+
+    parser.add_argument(
+        "--verbose", help="Enable verbose logging.", action="store_true"
     )
 
     return parser.parse_args()
 
 
 if __name__ == "__main__":
-    registry = Registry()
-    registry.register("redwood", [hypr, ghostty, emacs, zsh, starship])
-
     args = parse_args()
-    registry.make_links(override=args.override, dry=args.dry)
+
+    registry = Registry(Configuration.from_args(args))
+    registry.register("redwood", [hypr])
+
+    # TODO: this needs actual hostnames
+    registry.register("work", [])
+    registry.register("cirrus", [])
+
+    registry.make_links()
