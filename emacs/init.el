@@ -485,7 +485,7 @@
 ;;;; ghostel: Terminal Emulation
 (use-package ghostel
   :ensure t
-  :vc (:url "https://github.com/dakra/ghostel" :rev :newest)
+  :hook (after-init . ghostel-status-indicator-mode)
   :bind (:map ghostel-semi-char-mode-map
          ("C-s"  . consult-line)
          ("C-k"  . qqh--ghostel-send-C-k-and-kill)
@@ -521,8 +521,7 @@ Like normal Emacs `C-k'.  Kill to end of line and put content in kill-ring."
 
 (use-package projectile
   :ensure t
-  :bind (:map projectile-command-map
-              ("t" . ghostel-project))
+  :after ghostel
   :init
   (projectile-mode +1)
 
@@ -545,6 +544,12 @@ Like normal Emacs `C-k'.  Kill to end of line and put content in kill-ring."
                                     :src-dir "src/"
                                     :test-dir "test/"
 				                    :test-suffix "_test"))
+(use-package ghostel-project
+  :after projectile
+  :ensure t
+  :bind (:map projectile-command-map
+              ("t" . ghostel-project)))
+
 
 ;;;;; Perspectives
 (use-package perspective
@@ -1275,24 +1280,7 @@ By default, this shows the information specified by `global-mode-string'."
     (:repeat-map my-claude-code-map
                  ("M" . claude-code-cycle-mode)
                  :map claude-code-command-map
-                 ("a" . claude-code)))
-
-  ;; copilot for ai autocomplete
-  (use-package copilot
-    :ensure t
-    :vc (:url "https://github.com/copilot-emacs/copilot.el"
-              :rev :newest
-              :branch "main")
-    :hook (prog-mode . copilot-mode)
-    :custom
-    (copilot-idle-delay nil)
-    :bind (:map copilot-completion-map
-                ("<tab>" . copilot-accept-completion)
-                ("TAB" . copilot-accept-completion)
-                ("C-M-<tab>" . copilot-complete)
-                ("C-M-TAB" . copilot-complete)
-                ("M-n" . copilot-next-completion)
-                ("M-p" . copilot-previous-completion))))
+                 ("a" . claude-code))))
 ;;; Customization file
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (load custom-file 'noerror)
