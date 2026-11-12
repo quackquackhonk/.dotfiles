@@ -1008,7 +1008,7 @@ This function falls back to `consult-fd' if we're not in a project."
 
 (global-set-key (kbd "M-<mouse-1>") 'goto-address-at-mouse)
 
-(global-set-key (kbd "M-<f11>") 'maximize-window)
+(evil-define-key nil 'global (kbd "M-<f11>") 'maximize-window)
 
 ;;;; Evil plugins
 (use-package evil-collection

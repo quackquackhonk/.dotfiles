@@ -55,7 +55,7 @@ alias emkill='emacsclient -e "(kill-emacs)"'
 
 if [[ "$HOST" != "redwood" ]]; then
     # local laptop only
-    if [[ $HOST == "LVV3TW207K" ]]; then
+    if [[ $HOST == "VA-LV3TW207K" ]]; then
         # export PKG_CONFIG_PATH="/opt/homebrew/lib/pkgconfig"
         export PATH=$HOME/opt/grpc/bin:$PATH
         export PATH=/Library/Frameworks/Python.framework/Versions/3.11/bin:$PATH
@@ -76,6 +76,9 @@ if [[ "$HOST" != "redwood" ]]; then
         }
 
         alias cirrus='ssh -i ~/.ssh/stankala_id.key stankala@cirrus.veriskweather.net -t "zsh"'
+        function cirruscp() {
+            scp -r stankala@cirrus.veriskweather.net:${1} ~/Downloads/${2}
+        }
         alias docker='podman'
     fi
 
