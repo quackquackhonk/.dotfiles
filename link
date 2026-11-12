@@ -1,6 +1,5 @@
 #!/usr/bin/python
-
-
+from __future__ import annotations
 from abc import abstractmethod
 from argparse import ArgumentParser, Namespace
 import shutil
@@ -35,18 +34,19 @@ class Component:
     name: str  # name of the component
     dst: str  # where should the file / dir be linked to?
 
-    def handle_override(self, dstpath: Path, override: bool) -> bool:
+    def handle_override(self, dstpath: Path, cfg: Configuration) -> bool:
         """Handle the override logic for a target symlink.
 
         Args:
             dstpath (Path): The target.
+            cfg (Configuration): The configuration
             override (bool): Is override enabled?
 
         Returns:
             bool: should we exit early?
         """
         if dstpath.exists():
-            if not override:
+            if not cfg.override:
                 log(
                     f"Config files exist and --override is not set! Skipping...",
                     comp=self.name,
@@ -55,10 +55,12 @@ class Component:
 
             if dstpath.is_dir():
                 log(f"Removing existing folder at {dstpath}", comp=self.name)
-                shutil.rmtree(dstpath)
+                if not cfg.dry:
+                    shutil.rmtree(dstpath)
             else:
                 log(f"Removing existing file at {dstpath}", comp=self.name)
-                dstpath.unlink()
+                if not cfg.dry:
+                    dstpath.unlink()
 
         return False
 
@@ -73,12 +75,15 @@ class FileComponent(Component):
 
     def link(self, cfg: Configuration):
         srcpath = expand(f"{Path.cwd()}/{self.src}")
-
+        # FIXME: if the target exists, we can get recursive links
+        # since we follow this link back to `srcpath` and then
+        # we try to link `srcpath` to itself
         target = expand(f"~/{self.dst}")
+
         if target.is_dir():
             target = target / srcpath.name
 
-        if self.handle_override(target, cfg.override):
+        if self.handle_override(target, cfg):
             return
 
         log(f"Linking {target} to {srcpath}!")
@@ -103,9 +108,6 @@ class FolderComponent(Component):
             # otherwise, `dst` is the output path
             dstprefix = dst
 
-        if self.handle_override(dstprefix, cfg.override):
-            return
-
         # create the output directory if its not there
         if not dstprefix.exists():
             log(f"Creating subdirectory {dst}", comp=self.name)
@@ -119,6 +121,9 @@ class FolderComponent(Component):
             srcpath = srcprefix / srcfile.name
             target = dstprefix / srcfile.name
 
+            if self.handle_override(target, cfg):
+                return
+
             log(f"Linking {target} to {srcpath}!", comp=self.name)
 
             if not cfg.dry:
@@ -129,7 +134,12 @@ hypr = FolderComponent("hypr", ".config", mk_subdir=True)
 emacs = FolderComponent("emacs", ".emacs.d")
 ghostty = FolderComponent("ghostty", ".config", mk_subdir=True)
 zsh = FileComponent("zsh", ".zshrc", src="zsh/.zshrc")
-starship = FileComponent("starship", ".config/starship.toml", src="starship.toml")
+starship = FileComponent("starship", ".config/starship.toml", src="starship/starship.toml")
+
+HOST_ALIASES = {
+    "VA-LV3TW207K": "work",
+    "ip-10-97-122-31": "cirrus"
+}
 
 
 @dataclass
@@ -146,7 +156,10 @@ class Registry:
     def make_links(self):
         host = socket.gethostname()
 
-        comps = self.registry[host]
+        # Get the alias if there is one
+        host_alias = HOST_ALIASES.get(host, host)
+
+        comps = self.registry[host_alias]
         comps.extend(self.required_components)
 
         for c in comps:
@@ -177,7 +190,6 @@ if __name__ == "__main__":
     registry = Registry(Configuration.from_args(args))
     registry.register("redwood", [hypr])
 
-    # TODO: this needs actual hostnames
     registry.register("work", [])
     registry.register("cirrus", [])
 
