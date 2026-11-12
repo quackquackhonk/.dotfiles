@@ -2,7 +2,7 @@
 -- VARIABLES
 --
 local terminal = "ghostty"
-local browser = {class = "app.zen_browser.zen", cmd = "flatpak run app.zen_browser.zen"}
+local browser = {class = "app.zen_browser.zen", cmd = "flatpak run app.zen_browser.zen", workspace=6}
 local emacs = {class = "Emacs", cmd = "emacsclient -c -a=''"}
 local spotify = {class = "Spotify", cmd = "spotify"}
 local steam = {class = "steam", cmd = "steam"}
@@ -22,22 +22,25 @@ local ipc = function(cmd)
 	return hl.dsp.exec_cmd("dms ipc call "  .. cmd)
 end
 
-local function run_or_raise(class_name, launch_cmd)
+local function run_or_raise(app)
     local windows = hl.get_windows()
 
     for _, win in ipairs(windows) do
-        if win.class == class_name then
-            return hl.dsp.focus({window = "address:" .. win.address})
+        if win.class:lower() == app.class:lower() then
+            if app.workspace ~= nil then
+                return focus({workspace = app.workspace})
+            end
+            return focus({window = "address:" .. win.address})
         end
     end
 
     if not found then
-        return hl.dsp.exec_cmd(launch_cmd)
+        return exec(app.cmd)
     end
 end
 
 local function app_binding(key, app)
-    hl.bind(mod .. " + " .. key, run_or_raise(app.class, app.cmd))
+    hl.bind(mod .. " + " .. key, run_or_raise(app))
     hl.bind(mod .. " + SHIFT + " .. key, exec(app.cmd))
 end
 
@@ -48,10 +51,9 @@ hl.bind(mod .. " + Return", exec(terminal))
 app_binding("G", steam)
 app_binding("E", emacs)
 app_binding("B", browser)
--- FIXME: this one doesnt focus
 app_binding("S", spotify)
 
--- noctalia
+-- shell
 hl.bind(mod .. " + Space", ipc("spotlight toggle"))
 hl.bind("ALT + Space", ipc("spotlight-bar toggle"))
 hl.bind(mod .. " + Escape", ipc("powermenu toggle"))

@@ -25,3 +25,18 @@ hl.config({
 		},
 	},
 })
+
+-- Effect colors exist only on newer Hyprland; skip them elsewhere instead of raising config errors
+local function themed(key, value)
+	local ok, current = pcall(hl.get_config, key)
+	if ok and current ~= nil then
+		hl.config({ [key] = value })
+	end
+end
+
+themed("decoration.glow.color", "rgba(cba6f7ee)")
+themed("decoration.glow.color_inactive", "rgba(6c7086ee)")
+themed("decoration.blur.acrylic.tint", "rgba(cba6f714)")
+themed("decoration.blur.aurora.color1", "rgba(cba6f729)")
+themed("decoration.blur.aurora.color2", "rgba(b4befe7a)")
+themed("decoration.blur.fluid_jar.color", "rgba(cba6f7cc)")
