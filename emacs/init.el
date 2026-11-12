@@ -43,7 +43,7 @@
   (member (system-name)
           (list
            "ip-10-97-122-31" ;; cirrus
-           "LVV3TW207K")))
+           "VA-LV3TW207K")))
 (setq use-package-always-ensure (not (qqh--is-work)))
 
 ;;; Some initial packages
