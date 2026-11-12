@@ -50,15 +50,10 @@ alias emd='emacs --daemon'
 alias emdebug='emacs --debug-init --fg-daemon'
 alias emkill='emacsclient -e "(kill-emacs)"'
 
-# emacs integration
-[[ "${${INSIDE_EMACS-}%%,*}" = 'ghostel' ]] && source "$EMACS_GHOSTEL_PATH/etc/shell/ghostel.zsh"
 # work
-
-
 # WORK ONLY
 
 if [[ "$HOST" != "redwood" ]]; then
-
     # local laptop only
     if [[ $HOST == "VA-LV3TW207K" ]]; then
         # export PKG_CONFIG_PATH="/opt/homebrew/lib/pkgconfig"
