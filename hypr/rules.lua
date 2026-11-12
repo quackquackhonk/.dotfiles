@@ -27,29 +27,11 @@ local suppressMaximizeRule = hl.window_rule({
 -- Move windows to specific workspaces
 hl.window_rule({ match = { class = steam, title = ".*" }, workspace = 1 })
 hl.window_rule({ match = { class = steam, title = ".*" }, workspace = 1})
-hl.window_rule({ match = { class = "spotify" }, workspace = "name:music" })
+hl.window_rule({ match = { class = "Spotify" }, workspace = 7 })
 
 -- browser pop-ups
 hl.window_rule({ match = { class = zen, title = "Picture-in-Picture" }, float = true })
 hl.window_rule({ match = { class = zen, title = "Extension:.*" }, float = true })
-
--- noctalia settings
-hl.window_rule({
-	match = { class = "dev.noctalia.Noctalia" },
-	float = true,
-	size = { 1080, 920 },
-})
-
-hl.layer_rule({
-	name = "noctalia",
-	match = {
-		namespace = "^noctalia-(bar-.+|notification|dock|panel|attached-panel|osd|window-switcher)$",
-	},
-	no_anim = true,
-	ignore_alpha = 0.5,
-	blur = true,
-	blur_popups = true,
-})
 
 hl.window_rule({
 	-- Fix some dragging issues with XWayland

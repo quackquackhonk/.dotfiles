@@ -656,7 +656,7 @@ Like normal Emacs `C-k'.  Kill to end of line and put content in kill-ring."
 (use-package devdocs
   :bind (("<f1> D" . devdocs-lookup))
   :hook ((tuareg-mode . (lambda () (setq-local devdocs-current-docs '("ocaml~5.0"))))
-         ((python-mode python-ts-mode) . (lambda () (setq-local devdocs-current-docs '("python~3.11"))))
+         ((python-mode python-ts-mode) . (lambda () (setq-local devdocs-current-docs '("python~3.14" "python~3.11"))))
          (c-mode . (lambda () (setq-local devdocs-current-docs '("c"))))
          (c++-mode . (lambda () (setq-local devdocs-current-docs '("cpp"))))))
 
